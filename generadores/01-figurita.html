@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Figurita Mundial 2026 · Generador</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --verde: #0d3b26;
+    --verde-2: #145c39;
+    --verde-fluo: #4ade80;
+    --dorado: #d4a82e;
+    --dorado-2: #f4cd60;
+    --crema: #f4ecd8;
+    --negro: #0a0a0a;
+    --rojo: #dc2626;
+  }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--verde);
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(212,168,46,0.15), transparent 50%),
+      radial-gradient(circle at 80% 90%, rgba(74,222,128,0.1), transparent 50%);
+    min-height: 100vh;
+    color: var(--crema);
+    padding: 2rem 1rem;
+  }
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .header-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    color: var(--dorado);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  h1 {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    letter-spacing: 0.05em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+  h1 span {
+    color: var(--dorado);
+    display: inline-block;
+  }
+  .subtitle {
+    font-size: 0.95rem;
+    opacity: 0.8;
+    max-width: 600px;
+    margin: 1rem auto 0;
+  }
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+  }
+  .panel {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(212,168,46,0.3);
+    border-radius: 16px;
+    padding: 1.5rem;
+    backdrop-filter: blur(10px);
+  }
+  .panel-title {
+    font-family: 'Anton', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.1em;
+    color: var(--dorado);
+    margin-bottom: 1.2rem;
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--dorado);
+    padding-bottom: 0.5rem;
+  }
+  .form-group { margin-bottom: 1.1rem; }
+  label {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--verde-fluo);
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  input[type="text"], input[type="number"], select {
+    width: 100%;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(244,236,216,0.2);
+    border-radius: 8px;
+    padding: 0.7rem 0.9rem;
+    color: var(--crema);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+  }
+  input:focus, select:focus {
+    outline: none;
+    border-color: var(--dorado);
+  }
+  .file-upload {
+    border: 2px dashed rgba(212,168,46,0.4);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .file-upload:hover {
+    border-color: var(--dorado);
+    background: rgba(212,168,46,0.05);
+  }
+  .file-upload input { display: none; }
+  .upload-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+  }
+  .stat-input {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .stat-input input[type="range"] {
+    width: 100%;
+    accent-color: var(--dorado);
+  }
+  .stat-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    color: var(--dorado);
+    text-align: right;
+  }
+  .btn {
+    background: linear-gradient(135deg, var(--dorado), var(--dorado-2));
+    color: var(--negro);
+    border: none;
+    padding: 1rem 2rem;
+    font-family: 'Anton', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.15em;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 100%;
+    text-transform: uppercase;
+    transition: transform 0.15s;
+    margin-top: 0.8rem;
+  }
+  .btn:hover { transform: translateY(-2px); }
+
+  /* FIGURITA */
+  .figurita-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 14px; /* margen para que el badge no se corte al descargar */
+  }
+  .figurita {
+    width: 320px;
+    height: 448px; /* 5:7 ratio fijo en px (html2canvas no respeta aspect-ratio) */
+    background: linear-gradient(160deg, var(--dorado-2) 0%, var(--dorado) 30%, #b8860b 100%);
+    border-radius: 16px;
+    padding: 14px;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    overflow: hidden;
+    transition: background 0.4s ease;
+  }
+  .fig-flag-big {
+    position: absolute;
+    top: 12px;
+    left: 14px;
+    font-size: 2.2rem;
+    line-height: 1;
+    z-index: 3;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+  }
+  .figurita::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.05) 10px, rgba(255,255,255,0.05) 11px);
+    pointer-events: none;
+  }
+  .fig-inner {
+    background: linear-gradient(180deg, #145c39 0%, #0d3b26 100%);
+    width: 100%;
+    height: 420px; /* 448 - 28 (padding) fijo en px */
+    border-radius: 8px;
+    padding: 12px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+  }
+  .fig-inner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 50% -10%, rgba(212,168,46,0.3), transparent 60%);
+  }
+  .fig-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--dorado);
+    font-family: 'Anton', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    z-index: 2;
+    position: relative;
+  }
+  .fig-photo {
+    margin: 8px auto;
+    background: rgba(0,0,0,0.3);
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    z-index: 2;
+    /* Foto fija 240x240 - perfectamente cuadrada y deja espacio para los stats abajo */
+    width: 240px;
+    height: 240px;
+    flex: 0 0 240px;
+  }
+  .fig-photo-inner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .fig-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .fig-photo-placeholder {
+    color: rgba(244,236,216,0.4);
+    font-size: 3rem;
+  }
+  .fig-info {
+    z-index: 2;
+    position: relative;
+    color: var(--crema);
+  }
+  .fig-name {
+    font-family: 'Anton', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    line-height: 1;
+    color: var(--dorado);
+  }
+  .fig-position {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    opacity: 0.85;
+    margin: 4px 0 8px;
+  }
+  .fig-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 3px;
+  }
+  .fig-stat {
+    background: rgba(0,0,0,0.4);
+    border-radius: 4px;
+    padding: 3px 4px;
+    text-align: center;
+  }
+  .fig-stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.48rem;
+    color: var(--verde-fluo);
+    letter-spacing: 0.1em;
+  }
+  .fig-stat-val {
+    font-family: 'Anton', sans-serif;
+    font-size: 1.05rem;
+    color: var(--dorado);
+  }
+  .fig-bottom {
+    margin-top: 8px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.5rem;
+    letter-spacing: 0.25em;
+    color: rgba(244,236,216,0.5);
+    z-index: 2;
+    position: relative;
+  }
+  .fig-watermark {
+    position: absolute;
+    bottom: 1px;
+    right: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.5rem;
+    color: rgba(13, 59, 38, 0.9);
+    letter-spacing: 0.1em;
+    z-index: 4;
+    pointer-events: none;
+    font-weight: 800;
+  }
+  .fig-number-badge {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    background: var(--rojo);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Anton', sans-serif;
+    font-size: 1.4rem;
+    border: 3px solid var(--crema);
+    z-index: 5;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  }
+  /* Mini bandera dibujada con CSS (html2canvas la captura bien) */
+  .flag-block {
+    display: inline-block;
+    width: 22px;
+    height: 14px;
+    border: 1px solid rgba(0,0,0,0.4);
+    border-radius: 2px;
+    vertical-align: middle;
+    margin-right: 5px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  }
+  .flag-block.v {
+    background: linear-gradient(to right, var(--fc1) 33%, var(--fc2) 33% 66%, var(--fc3) 66%);
+  }
+  .flag-block.h {
+    background: linear-gradient(to bottom, var(--fc1) 33%, var(--fc2) 33% 66%, var(--fc3) 66%);
+  }
+  /* Bandera grande para el header (reemplaza el emoji) */
+  .flag-block-big {
+    display: inline-block;
+    width: 56px;
+    height: 36px;
+    border: 2px solid rgba(0,0,0,0.4);
+    border-radius: 4px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    vertical-align: middle;
+  }
+  .flag-block-big.v {
+    background: linear-gradient(to right, var(--fc1) 33%, var(--fc2) 33% 66%, var(--fc3) 66%);
+  }
+  .flag-block-big.h {
+    background: linear-gradient(to bottom, var(--fc1) 33%, var(--fc2) 33% 66%, var(--fc3) 66%);
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="header-tag">Generador Oficial · Mundial 2026</div>
+    <h1>TU <span>FIGURITA</span></h1>
+    <p class="subtitle">Subí tu foto, completá tus datos y descargá tu figurita estilo álbum mundialista para compartir.</p>
+  </header>
+
+  <div class="layout">
+    <!-- FORM -->
+    <div class="panel">
+      <div class="panel-title">Tus Datos</div>
+
+      <div class="form-group">
+        <label>Foto</label>
+        <label class="file-upload" for="photo">
+          <div class="upload-icon">📸</div>
+          <div>Hacé click o arrastrá tu foto</div>
+          <input type="file" id="photo" accept="image/*">
+        </label>
+      </div>
+
+      <div class="form-group">
+        <label>Nombre del Jugador</label>
+        <input type="text" id="name" maxlength="14" placeholder="TU APELLIDO">
+      </div>
+
+      <div class="form-group">
+        <label>País (48 selecciones del Mundial 2026)</label>
+        <select id="country"></select>
+      </div>
+
+      <div class="form-group">
+        <label>Número</label>
+        <input type="number" id="number" min="1" max="99" value="10">
+      </div>
+
+      <div class="form-group">
+        <label>Posición</label>
+        <select id="position">
+          <option value="DELANTERO">Delantero</option>
+          <option value="MEDIOCAMPISTA">Mediocampista</option>
+          <option value="DEFENSOR">Defensor</option>
+          <option value="ARQUERO">Arquero</option>
+        </select>
+      </div>
+
+      <label>Stats</label>
+      <div class="stats-grid">
+        <div class="stat-input">
+          <div style="display:flex;justify-content:space-between;font-size:0.8rem;">
+            <span>Ataque</span><span class="stat-value" id="atk-val">85</span>
+          </div>
+          <input type="range" id="atk" min="50" max="99" value="85">
+        </div>
+        <div class="stat-input">
+          <div style="display:flex;justify-content:space-between;font-size:0.8rem;">
+            <span>Velocidad</span><span class="stat-value" id="vel-val">82</span>
+          </div>
+          <input type="range" id="vel" min="50" max="99" value="82">
+        </div>
+        <div class="stat-input">
+          <div style="display:flex;justify-content:space-between;font-size:0.8rem;">
+            <span>Técnica</span><span class="stat-value" id="tec-val">90</span>
+          </div>
+          <input type="range" id="tec" min="50" max="99" value="90">
+        </div>
+        <div class="stat-input">
+          <div style="display:flex;justify-content:space-between;font-size:0.8rem;">
+            <span>Defensa</span><span class="stat-value" id="def-val">70</span>
+          </div>
+          <input type="range" id="def" min="50" max="99" value="70">
+        </div>
+      </div>
+
+      <button class="btn" id="download">⬇ Descargar Figurita</button>
+    </div>
+
+    <!-- PREVIEW -->
+    <div class="figurita-wrapper">
+      <div class="figurita" id="figurita">
+        <div class="fig-number-badge" id="badge-num">10</div>
+        <div class="fig-inner">
+          <div class="fig-top">
+            <span><span class="flag-block h" id="fig-flag"></span><span id="fig-country">ARGENTINA</span></span>
+            <span style="opacity:0.7">2026</span>
+          </div>
+          <div class="fig-photo">
+            <div class="fig-photo-inner">
+              <img id="fig-img" style="display:none">
+              <div class="fig-photo-placeholder" id="fig-placeholder">👤</div>
+            </div>
+          </div>
+          <div class="fig-info">
+            <div class="fig-name" id="fig-name">TU APELLIDO</div>
+            <div class="fig-position" id="fig-position">DELANTERO</div>
+            <div class="fig-stats">
+              <div class="fig-stat"><div class="fig-stat-label">ATK</div><div class="fig-stat-val" id="fig-atk">85</div></div>
+              <div class="fig-stat"><div class="fig-stat-label">VEL</div><div class="fig-stat-val" id="fig-vel">82</div></div>
+              <div class="fig-stat"><div class="fig-stat-label">TEC</div><div class="fig-stat-val" id="fig-tec">90</div></div>
+              <div class="fig-stat"><div class="fig-stat-label">DEF</div><div class="fig-stat-val" id="fig-def">70</div></div>
+            </div>
+          </div>
+          <div class="fig-bottom">★ MUNDIAL 2026 · EDICIÓN ESPECIAL ★</div>
+        </div>
+        <div class="fig-watermark">@juventud_lapampa</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const $ = id => document.getElementById(id);
+
+  // ========================================================================
+  // COLORES OFICIALES DE LAS 48 SELECCIONES DEL MUNDIAL 2026
+  // ========================================================================
+  // c1, c2, c3 son los 3 colores de las franjas (en orden)
+  // dir: 'h' = horizontal, 'v' = vertical
+  // grad: gradiente del borde de la tarjeta
+  const PAIS_COLORS = {
+    // CONCACAF (3 sedes + clasificados)
+    'CANADÁ':           { c1:'#FF0000', c2:'#FFFFFF', c3:'#FF0000', dir:'v', grad:['#FF0000','#FFFFFF','#C8102E'] },
+    'MÉXICO':           { c1:'#006847', c2:'#FFFFFF', c3:'#CE1126', dir:'v', grad:['#006847','#FFFFFF','#CE1126'] },
+    'ESTADOS UNIDOS':   { c1:'#B22234', c2:'#FFFFFF', c3:'#B22234', dir:'h', grad:['#B22234','#FFFFFF','#3C3B6E'] },
+    'CURAZAO':          { c1:'#002B7F', c2:'#F9E814', c3:'#002B7F', dir:'h', grad:['#002B7F','#F9E814','#002B7F'] },
+    'HAITÍ':            { c1:'#00209F', c2:'#D21034', c3:'#00209F', dir:'h', grad:['#00209F','#D21034','#00209F'] },
+    'PANAMÁ':           { c1:'#005AA7', c2:'#FFFFFF', c3:'#DA121A', dir:'h', grad:['#005AA7','#FFFFFF','#DA121A'] },
+    // CONMEBOL (Sudamérica)
+    'ARGENTINA':        { c1:'#75AADB', c2:'#FFFFFF', c3:'#75AADB', dir:'h', grad:['#75AADB','#FFFFFF','#FFD700'] },
+    'BRASIL':           { c1:'#009C3B', c2:'#FFDF00', c3:'#002776', dir:'h', grad:['#009C3B','#FFDF00','#002776'] },
+    'COLOMBIA':         { c1:'#FCD116', c2:'#003893', c3:'#CE1126', dir:'h', grad:['#FCD116','#003893','#CE1126'] },
+    'ECUADOR':          { c1:'#FFDD00', c2:'#0072CE', c3:'#EF3340', dir:'h', grad:['#FFDD00','#0072CE','#EF3340'] },
+    'PARAGUAY':         { c1:'#D52B1E', c2:'#FFFFFF', c3:'#0038A8', dir:'h', grad:['#D52B1E','#FFFFFF','#0038A8'] },
+    'URUGUAY':          { c1:'#FFFFFF', c2:'#0038A8', c3:'#FFFFFF', dir:'h', grad:['#0038A8','#FFFFFF','#FCD116'] },
+    // AFC + OFC (Asia + Oceanía)
+    'AUSTRALIA':        { c1:'#012169', c2:'#012169', c3:'#E4002B', dir:'h', grad:['#012169','#FFFFFF','#E4002B'] },
+    'ARABIA SAUDITA':   { c1:'#006C35', c2:'#006C35', c3:'#FFFFFF', dir:'h', grad:['#006C35','#FFFFFF','#006C35'] },
+    'CATAR':            { c1:'#FFFFFF', c2:'#8A1538', c3:'#8A1538', dir:'v', grad:['#FFFFFF','#8A1538','#8A1538'] },
+    'IRAK':             { c1:'#CE1126', c2:'#FFFFFF', c3:'#000000', dir:'h', grad:['#CE1126','#FFFFFF','#000000'] },
+    'IRÁN':             { c1:'#239F40', c2:'#FFFFFF', c3:'#DA0000', dir:'h', grad:['#239F40','#FFFFFF','#DA0000'] },
+    'JAPÓN':            { c1:'#FFFFFF', c2:'#BC002D', c3:'#FFFFFF', dir:'h', grad:['#BC002D','#FFFFFF','#000000'] },
+    'JORDANIA':         { c1:'#000000', c2:'#FFFFFF', c3:'#007A3D', dir:'h', grad:['#000000','#FFFFFF','#CE1126'] },
+    'COREA DEL SUR':    { c1:'#FFFFFF', c2:'#003478', c3:'#C60C30', dir:'h', grad:['#003478','#FFFFFF','#C60C30'] },
+    'UZBEKISTÁN':       { c1:'#1EB53A', c2:'#FFFFFF', c3:'#0099B5', dir:'h', grad:['#0099B5','#FFFFFF','#1EB53A'] },
+    'NUEVA ZELANDA':    { c1:'#012169', c2:'#FFFFFF', c3:'#C8102E', dir:'h', grad:['#012169','#FFFFFF','#C8102E'] },
+    // CAF (África)
+    'ARGELIA':          { c1:'#006233', c2:'#FFFFFF', c3:'#D21034', dir:'v', grad:['#006233','#FFFFFF','#D21034'] },
+    'CABO VERDE':       { c1:'#003893', c2:'#FFFFFF', c3:'#CF2027', dir:'h', grad:['#003893','#FFFFFF','#CF2027'] },
+    'CONGO RD':         { c1:'#007FFF', c2:'#F7D618', c3:'#CE1021', dir:'h', grad:['#007FFF','#F7D618','#CE1021'] },
+    'COSTA DE MARFIL':  { c1:'#F77F00', c2:'#FFFFFF', c3:'#009E60', dir:'v', grad:['#F77F00','#FFFFFF','#009E60'] },
+    'EGIPTO':           { c1:'#CE1126', c2:'#FFFFFF', c3:'#000000', dir:'h', grad:['#CE1126','#FFFFFF','#000000'] },
+    'GHANA':            { c1:'#CE1126', c2:'#FCD116', c3:'#006B3F', dir:'h', grad:['#CE1126','#FCD116','#006B3F'] },
+    'MARRUECOS':        { c1:'#C1272D', c2:'#C1272D', c3:'#006233', dir:'h', grad:['#C1272D','#006233','#FFFFFF'] },
+    'SENEGAL':          { c1:'#00853F', c2:'#FDEF42', c3:'#E31B23', dir:'v', grad:['#00853F','#FDEF42','#E31B23'] },
+    'SUDÁFRICA':        { c1:'#007A4D', c2:'#FFB81C', c3:'#000000', dir:'h', grad:['#007A4D','#FFB81C','#DE3831'] },
+    'TÚNEZ':            { c1:'#E70013', c2:'#E70013', c3:'#FFFFFF', dir:'h', grad:['#E70013','#FFFFFF','#E70013'] },
+    // UEFA (Europa)
+    'ALEMANIA':         { c1:'#000000', c2:'#DD0000', c3:'#FFCE00', dir:'h', grad:['#000000','#DD0000','#FFCE00'] },
+    'AUSTRIA':          { c1:'#ED2939', c2:'#FFFFFF', c3:'#ED2939', dir:'h', grad:['#ED2939','#FFFFFF','#ED2939'] },
+    'BÉLGICA':          { c1:'#000000', c2:'#FAE042', c3:'#ED2939', dir:'v', grad:['#000000','#FAE042','#ED2939'] },
+    'BOSNIA Y HERZEGOVINA': { c1:'#002F6C', c2:'#FECB00', c3:'#002F6C', dir:'h', grad:['#002F6C','#FECB00','#FFFFFF'] },
+    'CROACIA':          { c1:'#FF0000', c2:'#FFFFFF', c3:'#171796', dir:'h', grad:['#FF0000','#FFFFFF','#171796'] },
+    'ESCOCIA':          { c1:'#005EB8', c2:'#005EB8', c3:'#FFFFFF', dir:'h', grad:['#005EB8','#FFFFFF','#005EB8'] },
+    'ESPAÑA':           { c1:'#AA151B', c2:'#F1BF00', c3:'#AA151B', dir:'h', grad:['#AA151B','#F1BF00','#000000'] },
+    'FRANCIA':          { c1:'#0055A4', c2:'#FFFFFF', c3:'#EF4135', dir:'v', grad:['#0055A4','#FFFFFF','#EF4135'] },
+    'INGLATERRA':       { c1:'#FFFFFF', c2:'#CE1124', c3:'#FFFFFF', dir:'h', grad:['#FFFFFF','#CE1124','#012169'] },
+    'NORUEGA':          { c1:'#EF2B2D', c2:'#FFFFFF', c3:'#002868', dir:'h', grad:['#EF2B2D','#FFFFFF','#002868'] },
+    'PAÍSES BAJOS':     { c1:'#AE1C28', c2:'#FFFFFF', c3:'#21468B', dir:'h', grad:['#FF6600','#FFFFFF','#21468B'] },
+    'PORTUGAL':         { c1:'#006600', c2:'#006600', c3:'#FF0000', dir:'v', grad:['#006600','#FF0000','#FFD700'] },
+    'REPÚBLICA CHECA':  { c1:'#FFFFFF', c2:'#D7141A', c3:'#11457E', dir:'h', grad:['#FFFFFF','#D7141A','#11457E'] },
+    'SUECIA':           { c1:'#006AA7', c2:'#006AA7', c3:'#FECC00', dir:'h', grad:['#006AA7','#FECC00','#006AA7'] },
+    'SUIZA':            { c1:'#FF0000', c2:'#FFFFFF', c3:'#FF0000', dir:'h', grad:['#FF0000','#FFFFFF','#FF0000'] },
+    'TURQUÍA':          { c1:'#E30A17', c2:'#E30A17', c3:'#FFFFFF', dir:'h', grad:['#E30A17','#FFFFFF','#E30A17'] }
+  };
+
+  function hexLuminance(hex) {
+    const r = parseInt(hex.slice(1,3), 16) / 255;
+    const g = parseInt(hex.slice(3,5), 16) / 255;
+    const b = parseInt(hex.slice(5,7), 16) / 255;
+    return 0.299 * r + 0.587 * g + 0.114 * b;
+  }
+
+  // Aplicar colores del país al borde de la tarjeta + bandera CSS
+  function applyPaisColors(countryStr) {
+    // El country viene como "🇦🇷 ARGENTINA" o "ARGENTINA". Limpiamos.
+    const nombre = countryStr.replace(/[\u{1F1E6}-\u{1F1FF}]/gu, '').trim().toUpperCase();
+    const colors = PAIS_COLORS[nombre];
+    if (!colors) return;
+    const fig = document.getElementById('figurita');
+    // Borde de la tarjeta con gradiente del país
+    fig.style.background = `linear-gradient(135deg, ${colors.grad[0]} 0%, ${colors.grad[1]} 50%, ${colors.grad[2]} 100%)`;
+    // Bandera CSS: setear las 3 vars CSS y la dirección
+    const flag = $('fig-flag');
+    flag.style.setProperty('--fc1', colors.c1);
+    flag.style.setProperty('--fc2', colors.c2);
+    flag.style.setProperty('--fc3', colors.c3);
+    flag.className = 'flag-block ' + colors.dir;
+    // Mostrar solo el nombre (sin emoji)
+    $('fig-country').textContent = nombre;
+    // Ajustar color del watermark según fondo
+    const wm = document.querySelector('.fig-watermark');
+    if (wm) {
+      const luma = hexLuminance(colors.grad[1]);
+      wm.style.color = luma > 0.5 ? 'rgba(13,59,38,0.9)' : 'rgba(244,236,216,0.85)';
+    }
+  }
+
+  // Photo upload - usar background-image (html2canvas lo respeta mejor que <img>)
+  $('photo').addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const photo = document.querySelector('.fig-photo');
+      photo.style.backgroundImage = `url(${ev.target.result})`;
+      photo.style.backgroundSize = 'cover';
+      photo.style.backgroundPosition = 'center';
+      // Ocultar img y placeholder, ya no se usan
+      const inner = document.querySelector('.fig-photo-inner');
+      if (inner) inner.style.display = 'none';
+      $('fig-img').style.display = 'none';
+      $('fig-placeholder').style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // Poblar el select con los 48 países del mapa, ordenados por confederación
+  const countrySelect = $('country');
+  const ORDEN_CONFED = [
+    // CONCACAF
+    'CANADÁ','MÉXICO','ESTADOS UNIDOS','CURAZAO','HAITÍ','PANAMÁ',
+    // CONMEBOL
+    'ARGENTINA','BRASIL','COLOMBIA','ECUADOR','PARAGUAY','URUGUAY',
+    // AFC + OFC
+    'AUSTRALIA','ARABIA SAUDITA','CATAR','IRAK','IRÁN','JAPÓN','JORDANIA','COREA DEL SUR','UZBEKISTÁN','NUEVA ZELANDA',
+    // CAF
+    'ARGELIA','CABO VERDE','CONGO RD','COSTA DE MARFIL','EGIPTO','GHANA','MARRUECOS','SENEGAL','SUDÁFRICA','TÚNEZ',
+    // UEFA
+    'ALEMANIA','AUSTRIA','BÉLGICA','BOSNIA Y HERZEGOVINA','CROACIA','ESCOCIA','ESPAÑA','FRANCIA','INGLATERRA',
+    'NORUEGA','PAÍSES BAJOS','PORTUGAL','REPÚBLICA CHECA','SUECIA','SUIZA','TURQUÍA'
+  ];
+  countrySelect.innerHTML = ORDEN_CONFED.map(p => `<option value="${p}">${p}</option>`).join('');
+  countrySelect.value = 'ARGENTINA';
+
+  // Live updates
+  $('name').addEventListener('input', e => {
+    $('fig-name').textContent = e.target.value.toUpperCase() || 'TU APELLIDO';
+  });
+  $('country').addEventListener('change', e => {
+    $('fig-country').textContent = e.target.value;
+    applyPaisColors(e.target.value);
+  });
+  // Aplicar colores iniciales (Argentina por defecto)
+  applyPaisColors($('country').value);
+  $('number').addEventListener('input', e => {
+    $('badge-num').textContent = e.target.value || '0';
+  });
+  $('position').addEventListener('change', e => {
+    $('fig-position').textContent = e.target.value;
+  });
+
+  ['atk','vel','tec','def'].forEach(stat => {
+    $(stat).addEventListener('input', e => {
+      $(stat + '-val').textContent = e.target.value;
+      $('fig-' + stat).textContent = e.target.value;
+    });
+  });
+
+  // Download
+  $('download').addEventListener('click', () => {
+    const node = document.getElementById('figurita');
+    // Forzar dimensiones inline ANTES de capturar (override de cualquier CSS)
+    const origCss = node.getAttribute('style') || '';
+    node.style.cssText = origCss +
+      ';width:320px!important;height:448px!important;' +
+      'max-width:320px!important;max-height:448px!important;' +
+      'overflow:hidden!important;box-sizing:border-box!important;';
+
+    html2canvas(node, {
+      backgroundColor: null,
+      scale: 3,
+      useCORS: true,
+      logging: false,
+      allowTaint: true,
+      width: 320,
+      height: 448,
+      windowWidth: document.documentElement.clientWidth,  // viewport REAL para no romper clamp()
+      windowHeight: document.documentElement.clientHeight,
+      onclone: (doc) => {
+        // Re-forzar en el clon también, por si el CSS del clon hace algo raro
+        const clonedNode = doc.getElementById('figurita');
+        if (clonedNode) {
+          clonedNode.style.width = '320px';
+          clonedNode.style.height = '448px';
+          clonedNode.style.maxWidth = '320px';
+          clonedNode.style.maxHeight = '448px';
+          clonedNode.style.overflow = 'hidden';
+          clonedNode.style.boxSizing = 'border-box';
+        }
+        // Forzar la foto cuadrada también en el clon
+        const photo = doc.querySelector('.fig-photo');
+        if (photo) {
+          photo.style.cssText += ';width:240px!important;height:240px!important;flex:0 0 240px!important;';
+        }
+      }
+    }).then(canvas => {
+      // Restaurar el style original
+      node.setAttribute('style', origCss);
+      const link = document.createElement('a');
+      const name = ($('name').value || 'figurita').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      link.download = `figurita-mundial-2026-${name}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }).catch(err => {
+      node.setAttribute('style', origCss);
+      alert('Error al descargar: ' + err.message);
+    });
+  });
+</script>
+</body>
+</html>

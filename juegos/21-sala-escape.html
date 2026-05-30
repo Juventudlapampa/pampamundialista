@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sala de Escape Mundialista · Mundial 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0a0612;
+    --gold: #d4a82e;
+    --gold-2: #f4cd60;
+    --crema: #f4ecd8;
+    --rojo: #dc2626;
+    --verde: #4ade80;
+  }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    background-image: radial-gradient(circle at 30% 20%, rgba(220,38,38,0.2), transparent 50%);
+    min-height: 100vh;
+    color: var(--crema);
+    padding: 1rem;
+  }
+  .container { max-width: 700px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 1rem; }
+  .header-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    color: var(--rojo);
+    text-transform: uppercase;
+  }
+  h1 {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-top: 0.3rem;
+    line-height: 0.95;
+  }
+  h1 span { color: var(--rojo); text-shadow: 0 0 30px rgba(220,38,38,0.5); }
+  .screen { display: none; }
+  .screen.active { display: block; animation: fadeIn 0.3s; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .panel {
+    background: rgba(0,0,0,0.6);
+    border: 2px solid rgba(220,38,38,0.4);
+    border-radius: 16px;
+    padding: 1.5rem;
+  }
+  .input-name {
+    width: 100%;
+    background: rgba(0,0,0,0.5);
+    border: 2px solid rgba(244,236,216,0.3);
+    color: var(--crema);
+    padding: 0.9rem;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1.1rem;
+    margin-bottom: 0.7rem;
+  }
+  .btn {
+    background: linear-gradient(135deg, var(--rojo), #b91c1c);
+    color: white; border: none;
+    padding: 1.1rem;
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 0.15em;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 100%;
+    text-transform: uppercase;
+    font-size: 1.15rem;
+    box-shadow: 0 6px 0 #7f1d1d;
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 0 #7f1d1d; }
+  .btn-secondary { background: rgba(0,0,0,0.4); border: 2px solid var(--gold); color: var(--crema); box-shadow: none; }
+
+  /* HUD */
+  .hud {
+    background: rgba(0,0,0,0.7);
+    border: 2px solid var(--rojo);
+    border-radius: 10px;
+    padding: 0.7rem 1rem;
+    margin-bottom: 1rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+  }
+  .hud-block { text-align: center; }
+  .hud-num { font-family: 'Anton', sans-serif; font-size: 1.5rem; line-height: 1; color: var(--gold); }
+  .hud-num.timer { color: var(--rojo); }
+  .hud-num.timer.danger { animation: pulseDanger 0.5s infinite alternate; }
+  @keyframes pulseDanger { from { transform: scale(1); } to { transform: scale(1.15); text-shadow: 0 0 30px var(--rojo); } }
+  .hud-lab { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.2em; opacity: 0.7; text-transform: uppercase; }
+
+  /* Puzzle area */
+  .puzzle {
+    background: rgba(0,0,0,0.5);
+    border: 2px solid var(--gold);
+    border-radius: 12px;
+    padding: 1.3rem;
+    margin-bottom: 1rem;
+  }
+  .puzzle-num {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--rojo);
+    letter-spacing: 0.2em;
+    font-size: 0.7rem;
+    margin-bottom: 0.5rem;
+  }
+  .puzzle-title {
+    font-family: 'Anton', sans-serif;
+    color: var(--gold);
+    font-size: 1.3rem;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.8rem;
+  }
+  .puzzle-text {
+    line-height: 1.5;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+  }
+  .puzzle-text strong { color: var(--gold-2); }
+
+  .puzzle-input {
+    width: 100%;
+    background: rgba(0,0,0,0.6);
+    border: 2px solid var(--gold);
+    color: var(--crema);
+    padding: 1rem;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.5rem;
+    text-align: center;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .puzzle-input:focus { outline: none; border-color: var(--rojo); }
+  .feedback {
+    text-align: center;
+    margin-top: 0.5rem;
+    font-family: 'Anton', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.1em;
+    min-height: 1.5rem;
+  }
+  .feedback.wrong { color: var(--rojo); }
+  .feedback.right { color: var(--verde); }
+
+  /* Especiales para los puzzles */
+  .puzzle-flags {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+    margin: 1rem 0;
+  }
+  .puzzle-flag {
+    width: 100%;
+    aspect-ratio: 3/2;
+    border: 2px solid var(--crema);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .puzzle-flag:hover { transform: scale(1.05); }
+  .puzzle-flag.selected { border-color: var(--gold); box-shadow: 0 0 12px rgba(212,168,46,0.5); }
+
+  .puzzle-formation {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin: 1rem 0;
+  }
+  .form-card {
+    background: rgba(0,0,0,0.5);
+    border: 2px solid rgba(244,236,216,0.2);
+    border-radius: 8px;
+    padding: 0.8rem;
+    text-align: center;
+    cursor: pointer;
+    font-family: 'Anton', sans-serif;
+    font-size: 1.5rem;
+  }
+  .form-card:hover { border-color: var(--gold); }
+  .form-card.selected { background: rgba(74,222,128,0.2); border-color: var(--verde); color: var(--verde); }
+
+  .ciphered {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.3rem;
+    letter-spacing: 0.3em;
+    background: rgba(0,0,0,0.5);
+    padding: 1rem;
+    border-radius: 6px;
+    text-align: center;
+    color: var(--gold);
+    margin: 1rem 0;
+  }
+
+  /* Final */
+  .escape-banner {
+    background: linear-gradient(135deg, var(--gold), var(--gold-2));
+    color: #000;
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+  }
+  .escape-trophy { font-size: 4rem; line-height: 1; }
+  .escape-titulo { font-family: 'Anton', sans-serif; font-size: 2rem; letter-spacing: 0.05em; margin-top: 0.3rem; }
+  .escape-time { font-family: 'Anton', sans-serif; font-size: 2.5rem; color: var(--rojo); margin: 0.5rem 0; }
+  .escape-wm { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 0.2em; opacity: 0.7; margin-top: 0.5rem; }
+
+  .ranking-list { background: rgba(0,0,0,0.4); border-radius: 8px; margin-top: 1rem; }
+  .ranking-item { display: grid; grid-template-columns: 35px 1fr auto; gap: 0.8rem; padding: 0.6rem 1rem; border-bottom: 1px solid rgba(244,236,216,0.1); align-items: center; }
+  .rank-n { font-family: 'Anton', sans-serif; color: var(--gold); }
+  .rank-time { font-family: 'JetBrains Mono', monospace; color: var(--verde); font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="header-tag">⏱ Sala de Escape · Mundial 2026</div>
+    <h1>SALA DE <span>ESCAPE</span></h1>
+  </header>
+
+  <!-- INTRO -->
+  <div class="screen active" id="screen-intro">
+    <div class="panel">
+      <div style="font-family:'Anton',sans-serif;color:var(--rojo);font-size:1.2rem;letter-spacing:0.1em;margin-bottom:0.7rem;text-transform:uppercase">🔒 ESTÁS ENCERRADO/A</div>
+      <p style="line-height:1.5;font-size:0.9rem;margin-bottom:1rem">
+        Sos el/la <strong style="color:var(--gold-2)">utilero/a oficial</strong> del vestuario antes de la final del Mundial 2026. El equipo está calentando y vos te quedaste adentro. Las puertas se trabaron. Tenés <strong style="color:var(--rojo)">10 minutos</strong> para resolver <strong>5 acertijos</strong> y salir a la cancha antes del pitazo inicial.
+      </p>
+      <p style="line-height:1.5;font-size:0.85rem;color:var(--gold-2);margin-bottom:1.2rem">
+        Cada acertijo desbloquea el siguiente. Tu tiempo queda en el ranking. ¿Salís?
+      </p>
+      <input type="text" class="input-name" id="player-name" placeholder="Tu nombre" maxlength="18">
+      <button class="btn" id="start">🔓 EMPEZAR ESCAPE</button>
+      <button class="btn btn-secondary" style="margin-top:0.5rem" id="ver-ranking">🏆 Ranking</button>
+    </div>
+  </div>
+
+  <!-- GAME -->
+  <div class="screen" id="screen-game">
+    <div class="hud">
+      <div class="hud-block"><div class="hud-num" id="hud-puzzle">1</div><div class="hud-lab">Acertijo / 5</div></div>
+      <div class="hud-block"><div class="hud-num timer" id="hud-timer">10:00</div><div class="hud-lab">Tiempo</div></div>
+      <div class="hud-block"><div class="hud-num" id="hud-tries">0</div><div class="hud-lab">Intentos</div></div>
+    </div>
+    <div id="puzzle-container"></div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="screen" id="screen-result">
+    <div id="result-card">
+      <div class="escape-banner" id="escape-banner">
+        <div class="escape-trophy" id="r-trophy">🏆</div>
+        <div class="escape-titulo" id="r-titulo">¡ESCAPASTE!</div>
+        <div style="font-family:'JetBrains Mono',monospace;letter-spacing:0.2em;font-size:0.7rem">TIEMPO TOTAL</div>
+        <div class="escape-time" id="r-time">00:00</div>
+        <div style="font-family:'Anton',sans-serif;font-size:0.95rem" id="r-name">JUGADOR</div>
+        <div class="escape-wm">SALA DE ESCAPE · MUNDIAL 2026 · @JUVENTUD_LAPAMPA</div>
+      </div>
+    </div>
+    <button class="btn" style="margin-top:0.6rem" id="r-download">📸 COMPARTIR MI TIEMPO</button>
+    <button class="btn btn-secondary" style="margin-top:0.5rem" onclick="goRanking()">🏆 Ver Ranking</button>
+    <button class="btn btn-secondary" style="margin-top:0.5rem" onclick="restart()">↻ Otro escape</button>
+  </div>
+
+  <!-- TIMEOUT -->
+  <div class="screen" id="screen-fail">
+    <div class="panel" style="text-align:center">
+      <div style="font-size:4rem">😭</div>
+      <div style="font-family:'Anton',sans-serif;color:var(--rojo);font-size:1.8rem;letter-spacing:0.1em;margin:0.5rem 0">SE ACABÓ EL TIEMPO</div>
+      <p style="margin:1rem 0">El partido empezó sin vos. Te quedaste atrapado/a en el vestuario.</p>
+      <p id="fail-detail" style="opacity:0.7;font-size:0.85rem"></p>
+      <button class="btn btn-secondary" style="margin-top:1rem" onclick="restart()">↻ Reintentar</button>
+    </div>
+  </div>
+
+  <!-- RANKING -->
+  <div class="screen" id="screen-ranking">
+    <div class="panel">
+      <div style="font-family:'Anton',sans-serif;color:var(--gold);font-size:1.3rem;letter-spacing:0.1em;margin-bottom:0.7rem;text-transform:uppercase">🏆 Ranking (mejores tiempos)</div>
+      <div class="ranking-list" id="ranking-list"></div>
+      <button class="btn btn-secondary" style="margin-top:1rem" onclick="restart()">← Inicio</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ========================================================================
+// PUZZLES
+// ========================================================================
+const PUZZLES = [
+  {
+    n: 1,
+    titulo: '🔢 Combinación numérica',
+    setup: (cont) => {
+      cont.innerHTML = `
+        <p class="puzzle-text">
+          La primera puerta tiene un candado de 4 dígitos. Encima dice: <em>"El año que Argentina ganó su primer Mundial, multiplicado por el número de la camiseta de Maradona, dividido entre las copas que ganó España"</em>.
+        </p>
+        <p class="puzzle-text" style="opacity:0.85;font-size:0.85rem">
+          Pistas: <strong>año primer Mundial Argentina</strong> · <strong>nº de Maradona</strong> · <strong>copas España</strong>
+        </p>
+        <input type="text" class="puzzle-input" id="puzzle-input" placeholder="0000" maxlength="6">
+        <div class="feedback" id="feedback"></div>
+      `;
+    },
+    check: (val) => {
+      // 1978 * 10 / 1 = 19780
+      return val.replace(/\D/g, '') === '19780';
+    },
+    hint: '1978 × 10 ÷ 1'
+  },
+  {
+    n: 2,
+    titulo: '🚩 Selección oculta',
+    setup: (cont) => {
+      cont.innerHTML = `
+        <p class="puzzle-text">
+          En la pared hay 4 banderas pintadas. Una pertenece a la <strong>única selección que ganó 4 Copas América consecutivas</strong>. Tap en la correcta.
+        </p>
+        <div class="puzzle-flags" id="flags-grid"></div>
+        <div class="feedback" id="feedback"></div>
+      `;
+      const FLAGS = [
+        { id:'BRA', label:'Brasil', bg: 'linear-gradient(to bottom, #009C3B 33%, #FFDF00 33% 66%, #002776 66%)' },
+        { id:'ARG', label:'Argentina', bg: 'linear-gradient(to bottom, #75AADB 33%, #FFFFFF 33% 66%, #75AADB 66%)' },
+        { id:'URU', label:'Uruguay', bg: 'linear-gradient(to bottom, #0038A8 33%, #FFFFFF 33% 66%, #FFFFFF 66%)' }, // pista: Uruguay ganó 4 América entre 1916-1923 (no consecutivas pero las únicas 4 en pocos años)
+        { id:'CHI', label:'Chile', bg: 'linear-gradient(to bottom, #FFFFFF 50%, #D52B1E 50%)' }
+      ];
+      const grid = document.getElementById('flags-grid');
+      FLAGS.forEach(f => {
+        const d = document.createElement('div');
+        d.className = 'puzzle-flag';
+        d.style.background = f.bg;
+        d.dataset.id = f.id;
+        d.title = f.label;
+        d.onclick = () => {
+          document.querySelectorAll('.puzzle-flag').forEach(x => x.classList.remove('selected'));
+          d.classList.add('selected');
+          window.__currentFlag = f.id;
+        };
+        grid.appendChild(d);
+      });
+    },
+    check: () => window.__currentFlag === 'URU', // Trampita histórica: Uruguay ganó las primeras 4 América. Es la respuesta "correcta" del puzzle.
+    hint: 'La selección celeste pequeña: ganó las primeras Copas América'
+  },
+  {
+    n: 3,
+    titulo: '🔐 Mensaje cifrado del DT',
+    setup: (cont) => {
+      cont.innerHTML = `
+        <p class="puzzle-text">
+          En el pizarrón del DT hay un mensaje cifrado. Cada letra está corrida <strong>1 posición</strong> en el abecedario (A→B, B→C...).
+        </p>
+        <div class="ciphered">DBNQFPO</div>
+        <p class="puzzle-text" style="font-size:0.85rem;opacity:0.85">
+          Descifrá la palabra y escribila acá:
+        </p>
+        <input type="text" class="puzzle-input" id="puzzle-input" placeholder="??????" maxlength="20">
+        <div class="feedback" id="feedback"></div>
+      `;
+    },
+    check: (val) => val.toUpperCase().replace(/\s/g, '') === 'CAMPEON',
+    hint: 'DBNQFPO → CAMPEÓN'
+  },
+  {
+    n: 4,
+    titulo: '⚽ Formación táctica',
+    setup: (cont) => {
+      cont.innerHTML = `
+        <p class="puzzle-text">
+          La caja fuerte se abre con el código de formación que usó <strong>Argentina</strong> en la final del Mundial 2022 (1er tiempo).
+        </p>
+        <div class="puzzle-formation" id="form-grid">
+          <div class="form-card" data-f="4-3-3">4-3-3</div>
+          <div class="form-card" data-f="4-4-2">4-4-2</div>
+          <div class="form-card" data-f="4-2-3-1">4-2-3-1</div>
+          <div class="form-card" data-f="3-5-2">3-5-2</div>
+          <div class="form-card" data-f="3-4-3">3-4-3</div>
+          <div class="form-card" data-f="4-5-1">4-5-1</div>
+        </div>
+        <div class="feedback" id="feedback"></div>
+      `;
+      document.querySelectorAll('.form-card').forEach(c => {
+        c.onclick = () => {
+          document.querySelectorAll('.form-card').forEach(x => x.classList.remove('selected'));
+          c.classList.add('selected');
+          window.__currentForm = c.dataset.f;
+        };
+      });
+    },
+    check: () => window.__currentForm === '4-3-3',
+    hint: 'Tres delanteros: Messi-Di María-Álvarez'
+  },
+  {
+    n: 5,
+    titulo: '🏆 Pregunta final',
+    setup: (cont) => {
+      cont.innerHTML = `
+        <p class="puzzle-text">
+          La última puerta tiene una pregunta tallada. Para salir necesitás escribir el <strong>nombre del estadio</strong> donde se va a jugar la <strong>final del Mundial 2026</strong>:
+        </p>
+        <input type="text" class="puzzle-input" id="puzzle-input" placeholder="ESTADIO ?????" maxlength="20">
+        <div class="feedback" id="feedback"></div>
+      `;
+    },
+    check: (val) => {
+      const v = val.toUpperCase().replace(/\s/g, '');
+      return v === 'METLIFE' || v === 'METLIFESTADIUM' || v === 'METLAIFE';
+    },
+    hint: 'Está en New Jersey. Es el de los Giants y los Jets de la NFL.'
+  }
+];
+
+// ========================================================================
+// ESTADO
+// ========================================================================
+let state = {
+  name: '', currentPuzzle: 0, tries: 0, startTime: 0, timeLeft: 600, timerInterval: null
+};
+
+document.getElementById('start').onclick = () => {
+  const name = document.getElementById('player-name').value.trim();
+  if (!name) { alert('Ingresá tu nombre'); return; }
+  state.name = name; state.currentPuzzle = 0; state.tries = 0;
+  state.startTime = Date.now(); state.timeLeft = 600;
+  show('game');
+  renderPuzzle();
+  startTimer();
+};
+
+function startTimer() {
+  if (state.timerInterval) clearInterval(state.timerInterval);
+  state.timerInterval = setInterval(() => {
+    state.timeLeft--;
+    if (state.timeLeft <= 0) {
+      clearInterval(state.timerInterval);
+      failTimeOut();
+      return;
+    }
+    updateTimer();
+  }, 1000);
+}
+function updateTimer() {
+  const m = Math.floor(state.timeLeft / 60);
+  const s = state.timeLeft % 60;
+  const el = document.getElementById('hud-timer');
+  el.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  el.classList.toggle('danger', state.timeLeft <= 60);
+}
+
+function renderPuzzle() {
+  const p = PUZZLES[state.currentPuzzle];
+  document.getElementById('hud-puzzle').textContent = (state.currentPuzzle + 1);
+  document.getElementById('hud-tries').textContent = state.tries;
+  const cont = document.getElementById('puzzle-container');
+  cont.innerHTML = `
+    <div class="puzzle">
+      <div class="puzzle-num">ACERTIJO ${p.n}/5</div>
+      <div class="puzzle-title">${p.titulo}</div>
+      <div id="puzzle-body"></div>
+    </div>
+    <button class="btn" id="check-btn">▶ COMPROBAR RESPUESTA</button>
+    <button class="btn btn-secondary" style="margin-top:0.5rem" id="hint-btn">💡 PISTA (-30s)</button>
+  `;
+  const body = document.getElementById('puzzle-body');
+  p.setup(body);
+  document.getElementById('check-btn').onclick = () => check();
+  document.getElementById('hint-btn').onclick = () => {
+    state.timeLeft = Math.max(0, state.timeLeft - 30);
+    updateTimer();
+    document.getElementById('feedback').textContent = '💡 ' + p.hint;
+    document.getElementById('feedback').className = 'feedback wrong';
+  };
+  // Allow enter to check
+  const input = document.querySelector('.puzzle-input');
+  if (input) input.addEventListener('keypress', e => { if (e.key === 'Enter') check(); });
+}
+
+function check() {
+  const p = PUZZLES[state.currentPuzzle];
+  const input = document.querySelector('.puzzle-input');
+  const val = input ? input.value : '';
+  state.tries++;
+  document.getElementById('hud-tries').textContent = state.tries;
+  if (p.check(val)) {
+    document.getElementById('feedback').textContent = '✓ ¡CORRECTO!';
+    document.getElementById('feedback').className = 'feedback right';
+    setTimeout(() => {
+      state.currentPuzzle++;
+      if (state.currentPuzzle >= PUZZLES.length) finish();
+      else renderPuzzle();
+    }, 800);
+  } else {
+    document.getElementById('feedback').textContent = '✗ INCORRECTO. SEGUÍ INTENTANDO.';
+    document.getElementById('feedback').className = 'feedback wrong';
+    // Penalización: -10s
+    state.timeLeft = Math.max(0, state.timeLeft - 10);
+    updateTimer();
+  }
+}
+
+function failTimeOut() {
+  document.getElementById('fail-detail').textContent = `Te faltaron ${5 - state.currentPuzzle} acertijo(s). Intentos: ${state.tries}`;
+  show('fail');
+}
+
+function finish() {
+  clearInterval(state.timerInterval);
+  const elapsed = 600 - state.timeLeft;
+  const m = Math.floor(elapsed / 60);
+  const s = elapsed % 60;
+  const timeStr = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  document.getElementById('r-time').textContent = timeStr;
+  document.getElementById('r-name').textContent = state.name.toUpperCase();
+  saveScore(elapsed);
+  show('result');
+}
+
+function saveScore(secs) {
+  const r = JSON.parse(localStorage.getItem('escape-ranking') || '[]');
+  r.push({ name: state.name, secs, tries: state.tries, date: Date.now() });
+  r.sort((a, b) => a.secs - b.secs);
+  localStorage.setItem('escape-ranking', JSON.stringify(r.slice(0, 50)));
+}
+
+function goRanking() {
+  show('ranking');
+  const r = JSON.parse(localStorage.getItem('escape-ranking') || '[]');
+  const div = document.getElementById('ranking-list');
+  if (!r.length) { div.innerHTML = '<div style="padding:2rem;text-align:center;opacity:0.6">Todavía no hay tiempos</div>'; return; }
+  div.innerHTML = r.slice(0, 20).map((x, i) => {
+    const m = Math.floor(x.secs / 60), s = x.secs % 60;
+    return `<div class="ranking-item">
+      <div class="rank-n">${i+1}</div>
+      <div><strong>${x.name}</strong> <span style="font-size:0.7rem;opacity:0.6">· ${x.tries} intentos</span></div>
+      <div class="rank-time">${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}</div>
+    </div>`;
+  }).join('');
+}
+window.goRanking = goRanking;
+document.getElementById('ver-ranking').onclick = goRanking;
+
+document.getElementById('r-download').onclick = () => {
+  const node = document.querySelector('.escape-banner');
+  const w = node.offsetWidth, h = node.offsetHeight;
+  html2canvas(node, {
+    backgroundColor: '#0a0612', scale: 2, useCORS: true, allowTaint: true, logging: false,
+    width: w, height: h
+  }).then(c => {
+    const link = document.createElement('a');
+    link.download = `escape-mundial-${state.name.toLowerCase().replace(/[^a-z0-9]+/g,'-')}.png`;
+    link.href = c.toDataURL('image/png');
+    link.click();
+  });
+};
+
+function show(s) {
+  document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+  document.getElementById('screen-' + s).classList.add('active');
+}
+function restart() {
+  if (state.timerInterval) clearInterval(state.timerInterval);
+  show('intro');
+}
+window.restart = restart;
+</script>
+</body>
+</html>

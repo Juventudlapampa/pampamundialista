@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>El Picado · Mundial 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  :root { --bg:#050d08; --verde:#0d3b26; --verde-fluo:#4ade80; --gold:#d4a82e; --gold-2:#f4cd60; --crema:#f4ecd8; --rojo:#dc2626; }
+  body { font-family:'DM Sans',sans-serif; background:var(--bg); min-height:100vh; color:var(--crema); padding:1rem; display:flex; flex-direction:column; align-items:center; touch-action:none; }
+  .container { max-width:460px; width:100%; }
+  header { text-align:center; margin-bottom:0.7rem; }
+  .header-tag { font-family:'JetBrains Mono',monospace; font-size:0.7rem; letter-spacing:0.3em; color:var(--gold); text-transform:uppercase; }
+  h1 { font-family:'Anton',sans-serif; font-size:clamp(1.8rem,6vw,2.8rem); letter-spacing:0.04em; text-transform:uppercase; line-height:0.95; }
+  h1 span { color:var(--gold); }
+
+  .screen { display:none; }
+  .screen.active { display:block; }
+  .panel { background:rgba(0,0,0,0.5); border:2px solid rgba(212,168,46,0.3); border-radius:16px; padding:1.3rem; }
+  .btn { background:linear-gradient(135deg,var(--gold),var(--gold-2)); color:#000; border:none; padding:1rem; font-family:'Anton',sans-serif; letter-spacing:0.12em; border-radius:10px; cursor:pointer; width:100%; text-transform:uppercase; font-size:1.05rem; margin-top:0.5rem; }
+  .btn-sec { background:rgba(0,0,0,0.4); color:var(--crema); border:1px solid var(--gold); }
+  .btn-share { background:linear-gradient(135deg,#22c55e,#16a34a); color:#04210f; }
+  .instr { font-size:0.9rem; line-height:1.6; }
+
+  .mode-row { display:flex; gap:0.6rem; margin:0.9rem 0 0.4rem; }
+  .mode-btn { flex:1; background:rgba(0,0,0,0.4); border:2px solid rgba(212,168,46,0.3); color:var(--crema); border-radius:12px; padding:0.8rem 0.5rem; cursor:pointer; text-align:center; font-family:inherit; transition:all 0.15s; }
+  .mode-btn.sel { border-color:var(--gold); background:rgba(212,168,46,0.15); }
+  .mode-btn .mb-ic { font-size:1.6rem; }
+  .mode-btn .mb-t { font-family:'Anton',sans-serif; letter-spacing:0.05em; font-size:0.95rem; margin-top:0.2rem; }
+  .mode-btn .mb-d { font-size:0.7rem; opacity:0.7; margin-top:0.2rem; line-height:1.2; }
+
+  .hud { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; }
+  .hud-box { background:rgba(0,0,0,0.5); border:1px solid var(--gold); border-radius:10px; padding:0.4rem 0.9rem; text-align:center; }
+  .hud-num { font-family:'Anton',sans-serif; color:var(--gold); font-size:1.5rem; line-height:1; }
+  .hud-lbl { font-size:0.5rem; letter-spacing:0.2em; opacity:0.7; text-transform:uppercase; }
+
+  canvas { width:100%; height:auto; display:block; border-radius:12px; border:2px solid rgba(212,168,46,0.3); background:#0d4a2c; touch-action:none; }
+
+  .controls { display:flex; justify-content:space-between; align-items:center; margin-top:0.7rem; gap:0.5rem; }
+  .dpad { display:grid; grid-template-columns:repeat(3,46px); grid-template-rows:repeat(3,46px); gap:4px; }
+  .dpad button { background:rgba(0,0,0,0.5); border:1px solid var(--gold); color:var(--gold-2); font-size:1.3rem; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; user-select:none; }
+  .dpad button:active { background:rgba(212,168,46,0.3); }
+  .dpad .sp { background:none; border:none; }
+  .act-btns { display:flex; flex-direction:column; gap:0.5rem; }
+  .kick-btn { width:96px; height:60px; border-radius:14px; background:radial-gradient(circle at 35% 30%, var(--gold-2), var(--gold)); color:#000; border:none; font-family:'Anton',sans-serif; font-size:0.95rem; letter-spacing:0.05em; cursor:pointer; box-shadow:0 4px 16px rgba(212,168,46,0.4); }
+  .pass-btn { width:96px; height:48px; border-radius:14px; background:rgba(0,0,0,0.5); border:2px solid var(--verde-fluo); color:var(--verde-fluo); font-family:'Anton',sans-serif; font-size:0.9rem; letter-spacing:0.05em; cursor:pointer; display:none; }
+  .kick-btn:active, .pass-btn:active { transform:scale(0.94); }
+  .ctrl-hint { font-size:0.7rem; text-align:center; opacity:0.6; margin-top:0.5rem; font-family:'JetBrains Mono',monospace; }
+  .flash { text-align:center; font-family:'Anton',sans-serif; font-size:1.1rem; letter-spacing:0.1em; height:1.4rem; margin-top:0.3rem; color:var(--verde-fluo); }
+
+  .res-card { text-align:center; background:linear-gradient(160deg,#0d3b26,#050d08); border:2px solid var(--gold); border-radius:16px; padding:2rem 1.5rem; }
+  .res-ball { font-size:4rem; }
+  .res-goals { font-family:'Anton',sans-serif; font-size:4.5rem; color:var(--gold-2); line-height:1; }
+  .res-goals-lbl { font-family:'JetBrains Mono',monospace; letter-spacing:0.3em; font-size:0.7rem; opacity:0.7; }
+  .res-rank { font-family:'Anton',sans-serif; font-size:1.6rem; color:var(--gold); letter-spacing:0.05em; margin-top:0.8rem; text-transform:uppercase; }
+  .res-msg { font-size:0.9rem; margin-top:0.5rem; line-height:1.4; }
+  .res-wm { font-family:'JetBrains Mono',monospace; font-size:0.6rem; letter-spacing:0.2em; color:rgba(212,168,46,0.9); margin-top:1rem; }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="header-tag">El Picado · Mundial 2026</div>
+    <h1>EL <span>PICADO</span></h1>
+  </header>
+
+  <!-- INTRO -->
+  <div class="screen active" id="screen-intro">
+    <div class="panel">
+      <div style="font-family:'Anton',sans-serif;color:var(--gold);font-size:1.2rem;letter-spacing:0.08em;margin-bottom:0.6rem;text-transform:uppercase">⚽ ¿Cuántos goles hacés en 60s?</div>
+      <ul class="instr" style="list-style:none">
+        <li>🕹️ Movés con el <strong>D-pad</strong> o <strong>flechas/WASD</strong>.</li>
+        <li>🏃 Gambeteá al <strong>defensor</strong> (🔴) y picala al <strong>arquero</strong>.</li>
+        <li>🥅 Tocá <strong>PATEAR</strong> (o ESPACIO) cerca del arco para definir.</li>
+        <li>⏱️ <strong>60 segundos</strong>. Al final descargás tu marca y podés <strong>desafiar a un amigo</strong>.</li>
+      </ul>
+      <div class="mode-row">
+        <div class="mode-btn sel" data-mode="solo">
+          <div class="mb-ic">🧍</div><div class="mb-t">Un jugador</div><div class="mb-d">Manejás a uno solo</div>
+        </div>
+        <div class="mode-btn" data-mode="equipo">
+          <div class="mb-ic">👥</div><div class="mb-t">Todo el equipo</div><div class="mb-d">Pasás y cambiás de jugador</div>
+        </div>
+      </div>
+      <button class="btn" id="start">▶ ¡A JUGAR!</button>
+    </div>
+  </div>
+
+  <!-- JUEGO -->
+  <div class="screen" id="screen-game">
+    <div class="hud">
+      <div class="hud-box"><div class="hud-num" id="hud-goals">0</div><div class="hud-lbl">Goles</div></div>
+      <div class="hud-box" style="border-color:var(--verde-fluo)"><div class="hud-num" id="hud-time" style="color:var(--verde-fluo)">60</div><div class="hud-lbl">Segundos</div></div>
+    </div>
+    <canvas id="cv" width="360" height="500"></canvas>
+    <div class="flash" id="flash"></div>
+    <div class="controls">
+      <div class="dpad">
+        <span class="sp"></span><button data-dir="up">▲</button><span class="sp"></span>
+        <button data-dir="left">◀</button><span class="sp"></span><button data-dir="right">▶</button>
+        <span class="sp"></span><button data-dir="down">▼</button><span class="sp"></span>
+      </div>
+      <div class="act-btns">
+        <button class="kick-btn" id="kick">PATEAR</button>
+        <button class="pass-btn" id="pass">PASE</button>
+      </div>
+    </div>
+    <div class="ctrl-hint" id="ctrl-hint">Compu: flechas/WASD mover · ESPACIO patear</div>
+  </div>
+
+  <!-- RESULTADO -->
+  <div class="screen" id="screen-result">
+    <div class="res-card" id="res-card">
+      <div class="res-ball">⚽</div>
+      <div class="res-goals" id="res-goals">0</div>
+      <div class="res-goals-lbl" id="res-goals-lbl">GOLES EN 60 SEGUNDOS</div>
+      <div class="res-rank" id="res-rank">—</div>
+      <div class="res-msg" id="res-msg"></div>
+      <div class="res-wm">EL PICADO · MUNDIAL 2026 · @JUVENTUD_LAPAMPA</div>
+    </div>
+    <button class="btn" id="download">📸 DESCARGAR MI MARCA</button>
+    <button class="btn btn-share" id="share">🔗 DESAFIAR A UN AMIGO</button>
+    <button class="btn btn-sec" id="replay">🔁 Jugar de nuevo</button>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const cv = $('cv'), ctx = cv.getContext('2d');
+const W = cv.width, H = cv.height;
+const GOAL_X1 = 110, GOAL_X2 = 250, GOAL_Y = 16, KEEPER_Y = 38;
+let st = null, raf = null, timerInt = null, mode = 'solo';
+
+document.querySelectorAll('.mode-btn').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.mode-btn').forEach(x => x.classList.remove('sel'));
+  b.classList.add('sel'); mode = b.dataset.mode;
+});
+
+function mk(x,y){ return { x, y, r:13 }; }
+function newState() {
+  const players = mode === 'equipo'
+    ? [ mk(W/2, H-70), mk(W*0.28, H*0.55), mk(W*0.72, H*0.55) ]
+    : [ mk(W/2, H-70) ];
+  const defs = mode === 'equipo'
+    ? [ mk(W*0.4, H*0.45), mk(W*0.6, H*0.4) ]
+    : [ mk(W/2, H/2) ];
+  return {
+    players, active: 0, defs,
+    keeper: { x: W/2, y: KEEPER_Y, r: 13, dir: 1 },
+    ball: { x: W/2, y: H-70, vx:0, vy:0, mode:'carried', target:-1 },
+    input: { up:false, down:false, left:false, right:false },
+    goals: 0, time: 60, flashT: 0, flashMsg: '', cooldown: 0, running: true
+  };
+}
+function activeP(){ return st.players[st.active]; }
+function resetPositions() {
+  st.players.forEach((p,i) => {
+    if (mode==='equipo') { p.x = [W/2, W*0.28, W*0.72][i]; p.y = [H-70, H*0.55, H*0.55][i]; }
+    else { p.x = W/2; p.y = H-70; }
+  });
+  st.active = 0;
+  st.ball = { x: activeP().x, y: activeP().y - 15, vx:0, vy:0, mode:'carried', target:-1 };
+  st.defs.forEach((d,i) => { d.x = W*(0.4+0.2*i); d.y = H*(0.4+0.05*i) + (Math.random()*40-20); });
+}
+function flash(msg, color) { st.flashMsg = msg; st.flashT = 60; $('flash').style.color = color || 'var(--verde-fluo)'; }
+
+const keymap = { ArrowUp:'up', ArrowDown:'down', ArrowLeft:'left', ArrowRight:'right', w:'up', s:'down', a:'left', d:'right', W:'up', S:'down', A:'left', D:'right' };
+window.addEventListener('keydown', e => {
+  if (!st || !st.running) return;
+  if (e.key === ' ') { e.preventDefault(); shoot(); return; }
+  if ((e.key === 'p' || e.key === 'P') && mode==='equipo') { e.preventDefault(); doPass(); return; }
+  const k = keymap[e.key]; if (k) { st.input[k] = true; e.preventDefault(); }
+});
+window.addEventListener('keyup', e => { if (!st) return; const k = keymap[e.key]; if (k) st.input[k] = false; });
+document.querySelectorAll('.dpad button').forEach(b => {
+  const dir = b.dataset.dir;
+  const on = e => { e.preventDefault(); if (st) st.input[dir] = true; };
+  const off = e => { e.preventDefault(); if (st) st.input[dir] = false; };
+  b.addEventListener('pointerdown', on); b.addEventListener('pointerup', off);
+  b.addEventListener('pointerleave', off); b.addEventListener('pointercancel', off);
+});
+$('kick').addEventListener('pointerdown', e => { e.preventDefault(); shoot(); });
+$('pass').addEventListener('pointerdown', e => { e.preventDefault(); doPass(); });
+
+function shoot() {
+  if (!st || !st.running || st.ball.mode !== 'carried' || st.cooldown > 0) return;
+  const p = activeP();
+  let aimX = p.x;
+  if (st.input.left) aimX = GOAL_X1 + 15;
+  else if (st.input.right) aimX = GOAL_X2 - 15;
+  const dx = aimX - p.x, dy = (GOAL_Y - 6) - p.y, d = Math.hypot(dx, dy) || 1;
+  st.ball = { x: p.x, y: p.y - p.r, vx: dx/d*9, vy: dy/d*9, mode:'shot', target:-1 };
+}
+function doPass() {
+  if (!st || !st.running || st.ball.mode !== 'carried' || mode !== 'equipo') return;
+  // elegir compañero más adelantado (menor y) distinto del activo
+  let best = -1, bestScore = Infinity;
+  st.players.forEach((p,i) => {
+    if (i === st.active) return;
+    const score = p.y - (Math.abs(p.x - activeP().x) * 0.2); // prioriza adelantado y no tan lejos
+    if (score < bestScore) { bestScore = score; best = i; }
+  });
+  if (best < 0) return;
+  const p = activeP(), t = st.players[best];
+  const dx = t.x - p.x, dy = t.y - p.y, d = Math.hypot(dx, dy) || 1;
+  st.ball = { x: p.x, y: p.y, vx: dx/d*7.5, vy: dy/d*7.5, mode:'pass', target: best };
+  flash('Pase 🎯', 'var(--gold-2)');
+}
+
+function update() {
+  if (!st.running) return;
+  const sp = 3.3, p = activeP();
+  if (st.input.up) p.y -= sp;
+  if (st.input.down) p.y += sp;
+  if (st.input.left) p.x -= sp;
+  if (st.input.right) p.x += sp;
+  p.x = Math.max(p.r, Math.min(W-p.r, p.x));
+  p.y = Math.max(GOAL_Y+10, Math.min(H-p.r, p.y));
+
+  // compañeros se mueven a posiciones de ataque
+  if (mode === 'equipo') {
+    st.players.forEach((m,i) => {
+      if (i === st.active) return;
+      const tx = i===1 ? W*0.30 : W*0.70;
+      const ty = Math.max(GOAL_Y+60, activeP().y - 120 + (i*10));
+      m.x += (tx - m.x) * 0.02; m.y += (ty - m.y) * 0.03;
+    });
+  }
+
+  if (st.ball.mode === 'carried') { st.ball.x = p.x; st.ball.y = p.y - p.r - 2; }
+
+  // defensores persiguen la pelota
+  st.defs.forEach(d => {
+    const tx = st.ball.x, ty = st.ball.y;
+    const dx = tx-d.x, dy = ty-d.y, dd = Math.hypot(dx,dy)||1;
+    d.x += dx/dd*2.35; d.y += dy/dd*2.35;
+  });
+  // robo (cuando la pelota la lleva alguien)
+  if (st.ball.mode === 'carried' && st.cooldown <= 0) {
+    for (const d of st.defs) {
+      if (Math.hypot(activeP().x-d.x, activeP().y-d.y) < activeP().r + d.r) {
+        flash('¡Te robó! 🔴', '#f87171'); st.cooldown = 30; resetPositions(); break;
+      }
+    }
+  }
+
+  // arquero
+  const k = st.keeper;
+  if (st.ball.mode === 'shot') {
+    const target = Math.max(GOAL_X1+10, Math.min(GOAL_X2-10, st.ball.x));
+    k.x += Math.sign(target - k.x) * Math.min(3.1, Math.abs(target - k.x));
+  } else {
+    k.x += k.dir * 1.4;
+    if (k.x > GOAL_X2-20) k.dir = -1; if (k.x < GOAL_X1+20) k.dir = 1;
+  }
+
+  // pase en vuelo
+  if (st.ball.mode === 'pass') {
+    st.ball.x += st.ball.vx; st.ball.y += st.ball.vy;
+    // intercepción
+    for (const d of st.defs) {
+      if (Math.hypot(st.ball.x-d.x, st.ball.y-d.y) < d.r + 7) {
+        flash('¡Interceptado! 🔴', '#f87171'); st.cooldown = 25; resetPositions(); break;
+      }
+    }
+    const t = st.players[st.ball.target];
+    if (t && Math.hypot(st.ball.x-t.x, st.ball.y-t.y) < t.r + 8) {
+      st.active = st.ball.target; st.ball.mode = 'carried';
+    }
+    if (st.ball.x<-10||st.ball.x>W+10||st.ball.y<-10||st.ball.y>H+10) { resetPositions(); }
+  }
+
+  // tiro en vuelo
+  if (st.ball.mode === 'shot') {
+    st.ball.x += st.ball.vx; st.ball.y += st.ball.vy;
+    if (Math.hypot(st.ball.x-k.x, st.ball.y-k.y) < k.r + 7) {
+      flash('¡Atajó el arquero! 🧤', '#fbbf24'); st.ball.mode='carried'; st.cooldown=25; resetPositions();
+    } else if (st.ball.y <= GOAL_Y) {
+      if (st.ball.x > GOAL_X1 && st.ball.x < GOAL_X2) { st.goals++; $('hud-goals').textContent = st.goals; flash('¡GOOOOL! ⚽', 'var(--verde-fluo)'); }
+      else flash('Afuera 😖', '#f87171');
+      st.ball.mode='carried'; st.cooldown=25; resetPositions();
+    } else if (st.ball.x<-10||st.ball.x>W+10||st.ball.y>H+10) { flash('Afuera 😖', '#f87171'); st.ball.mode='carried'; st.cooldown=20; resetPositions(); }
+  }
+
+  if (st.cooldown > 0) st.cooldown--;
+  if (st.flashT > 0) { st.flashT--; if (st.flashT === 0) st.flashMsg = ''; }
+  $('flash').textContent = st.flashMsg;
+}
+
+function draw() {
+  ctx.clearRect(0,0,W,H);
+  for (let i=0;i<10;i++){ ctx.fillStyle = i%2? '#0d4a2c':'#11572f'; ctx.fillRect(0, i*H/10, W, H/10); }
+  ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 2; ctx.strokeRect(60, GOAL_Y, W-120, 90);
+  ctx.fillStyle = 'rgba(255,255,255,0.9)'; ctx.fillRect(GOAL_X1, GOAL_Y-6, GOAL_X2-GOAL_X1, 6);
+  ctx.strokeStyle = 'rgba(255,255,255,0.6)'; ctx.strokeRect(GOAL_X1, 0, GOAL_X2-GOAL_X1, GOAL_Y);
+  drawDude(st.keeper.x, st.keeper.y, '#f4cd60', '#000');
+  st.defs.forEach(d => drawDude(d.x, d.y, '#dc2626', '#fff'));
+  st.players.forEach((p,i) => {
+    drawDude(p.x, p.y, '#2563eb', i===st.active ? '#f4cd60' : '#fff');
+    if (mode==='equipo' && i===st.active) { // flechita sobre el activo
+      ctx.beginPath(); ctx.moveTo(p.x, p.y-22); ctx.lineTo(p.x-6, p.y-30); ctx.lineTo(p.x+6, p.y-30); ctx.closePath(); ctx.fillStyle='#f4cd60'; ctx.fill();
+    }
+  });
+  const b = st.ball;
+  ctx.beginPath(); ctx.arc(b.x, b.y, 6, 0, 7); ctx.fillStyle='#fff'; ctx.fill(); ctx.strokeStyle='#000'; ctx.lineWidth=1; ctx.stroke();
+}
+function drawDude(x,y,color,ring){ ctx.beginPath(); ctx.arc(x,y,13,0,7); ctx.fillStyle=color; ctx.fill(); ctx.lineWidth=2.5; ctx.strokeStyle=ring; ctx.stroke(); }
+
+function frame() { update(); draw(); if (st.running) raf = requestAnimationFrame(frame); }
+
+function startGame() {
+  st = newState();
+  $('hud-goals').textContent = '0'; $('hud-time').textContent = '60';
+  $('pass').style.display = mode === 'equipo' ? 'block' : 'none';
+  $('ctrl-hint').textContent = mode === 'equipo' ? 'Compu: WASD mover · ESPACIO patear · P pasar' : 'Compu: flechas/WASD mover · ESPACIO patear';
+  showScreen('game');
+  if (raf) cancelAnimationFrame(raf);
+  raf = requestAnimationFrame(frame);
+  if (timerInt) clearInterval(timerInt);
+  timerInt = setInterval(() => { st.time--; $('hud-time').textContent = st.time; if (st.time <= 0) endGame(); }, 1000);
+}
+function endGame() {
+  st.running = false; clearInterval(timerInt); if (raf) cancelAnimationFrame(raf);
+  const g = st.goals;
+  $('res-goals').textContent = g;
+  $('res-goals-lbl').textContent = (mode==='equipo'?'GOLES · MODO EQUIPO':'GOLES EN 60 SEGUNDOS');
+  let rank, msg;
+  if (g >= 10) { rank='🏆 CRACK MUNDIAL'; msg='¡De otro planeta! Scaloni te llama ya.'; }
+  else if (g >= 7) { rank='⭐ FIGURA'; msg='Goleador serio. La rompés.'; }
+  else if (g >= 4) { rank='⚽ TITULAR'; msg='Buen nivel, seguís sumando.'; }
+  else if (g >= 1) { rank='👟 SUPLENTE'; msg='Hay con qué. Dale de nuevo.'; }
+  else { rank='🪑 BANCO'; msg='¡No aflojes! La próxima entran.'; }
+  $('res-rank').textContent = rank; $('res-msg').textContent = msg;
+  showScreen('result');
+}
+function showScreen(s) { document.querySelectorAll('.screen').forEach(el => el.classList.remove('active')); $('screen-' + s).classList.add('active'); }
+
+$('start').onclick = startGame;
+$('replay').onclick = startGame;
+$('download').onclick = () => {
+  const node = $('res-card'); const w = node.offsetWidth, h = node.offsetHeight;
+  html2canvas(node, { backgroundColor:'#050d08', scale:2, useCORS:true, allowTaint:true, logging:false, width:w, height:h, windowWidth:document.documentElement.clientWidth, windowHeight:document.documentElement.clientHeight })
+    .then(canvas => { const link = document.createElement('a'); link.download = 'el-picado-mundial-2026.png'; link.href = canvas.toDataURL('image/png'); link.click(); });
+};
+$('share').onclick = () => {
+  const g = st ? st.goals : 0;
+  shareReto(`⚽ ¡Te reto a superar mis ${g} goles en "El Picado" del Mundial 2026! 🔥\nJugá en la cuenta de @juventud_lapampa`);
+};
+function shareReto(text) {
+  if (navigator.share) { navigator.share({ title:'El Picado · Mundial 2026', text }).catch(()=>{}); }
+  else if (navigator.clipboard) { navigator.clipboard.writeText(text).then(()=>alert('¡Reto copiado! Pegalo y mandáselo a un amigo 📲'), ()=>prompt('Copiá tu reto:', text)); }
+  else { prompt('Copiá tu reto:', text); }
+}
+</script>
+</body>
+</html>

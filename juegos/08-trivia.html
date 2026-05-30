@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trivia Relámpago · Mundial 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0a0a0a;
+    --bg-2: #1a0a1a;
+    --primary: #ff003c;
+    --primary-2: #ff4d6d;
+    --gold: #ffd700;
+    --green: #00ff88;
+    --crema: #f4ecd8;
+    --blue: #00d4ff;
+  }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(255,0,60,0.15), transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(0,212,255,0.1), transparent 50%);
+    min-height: 100vh;
+    color: var(--crema);
+    padding: 1rem;
+    overflow-x: hidden;
+  }
+  body.shaking { animation: shake 0.4s; }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-6px); }
+    80% { transform: translateX(6px); }
+  }
+  .container { max-width: 700px; margin: 0 auto; }
+
+  header { text-align: center; margin-bottom: 1.5rem; }
+  .header-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    color: var(--primary);
+    text-transform: uppercase;
+  }
+  h1 {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(2.5rem, 7vw, 4.5rem);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-top: 0.3rem;
+    line-height: 0.95;
+  }
+  h1 span {
+    color: var(--primary);
+    text-shadow: 0 0 30px rgba(255,0,60,0.6);
+  }
+
+  .screen { display: none; }
+  .screen.active { display: block; animation: fadeIn 0.3s; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .panel {
+    background: rgba(0,0,0,0.6);
+    border: 2px solid rgba(255,0,60,0.3);
+    border-radius: 16px;
+    padding: 2rem 1.5rem;
+    backdrop-filter: blur(10px);
+  }
+  .panel-title {
+    font-family: 'Anton', sans-serif;
+    color: var(--primary);
+    font-size: 1.3rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+  }
+
+  /* INTRO */
+  .intro-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.6rem;
+    margin: 1.2rem 0;
+  }
+  .stat-box {
+    background: rgba(255,0,60,0.1);
+    border: 1px solid var(--primary);
+    border-radius: 8px;
+    padding: 0.8rem 0.5rem;
+    text-align: center;
+  }
+  .stat-box-num {
+    font-family: 'Anton', sans-serif;
+    color: var(--gold);
+    font-size: 1.4rem;
+  }
+  .stat-box-lab {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 0.2rem;
+    opacity: 0.8;
+  }
+  .input-name {
+    width: 100%;
+    background: rgba(0,0,0,0.5);
+    border: 2px solid rgba(244,236,216,0.3);
+    color: var(--crema);
+    padding: 0.9rem;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+  }
+  .input-name:focus { outline: none; border-color: var(--primary); }
+
+  .btn {
+    background: linear-gradient(135deg, var(--primary), var(--primary-2));
+    color: white;
+    border: none;
+    padding: 1.1rem;
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 0.15em;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 100%;
+    text-transform: uppercase;
+    font-size: 1.2rem;
+    transition: transform 0.15s;
+    box-shadow: 0 8px 0 #b30029;
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 0 #b30029; }
+  .btn:active { transform: translateY(4px); box-shadow: 0 4px 0 #b30029; }
+  .btn-secondary {
+    background: rgba(0,0,0,0.4);
+    color: var(--crema);
+    border: 2px solid var(--primary);
+    box-shadow: none;
+  }
+
+  /* QUIZ */
+  .hud {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    margin-bottom: 1rem;
+    gap: 1rem;
+  }
+  .hud-score {
+    font-family: 'Anton', sans-serif;
+    color: var(--gold);
+    font-size: 1.5rem;
+    letter-spacing: 0.1em;
+  }
+  .hud-racha {
+    text-align: right;
+    font-family: 'Anton', sans-serif;
+    font-size: 1.2rem;
+  }
+  .hud-racha-num { color: var(--primary); }
+  .hud-racha.fire .hud-racha-num {
+    color: var(--gold);
+    text-shadow: 0 0 15px var(--gold);
+    animation: fire 0.6s infinite alternate;
+  }
+  @keyframes fire {
+    from { transform: scale(1); }
+    to { transform: scale(1.1); }
+  }
+
+  .timer-container {
+    width: 100px;
+    height: 100px;
+    position: relative;
+  }
+  .timer-svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .timer-bg { fill: none; stroke: rgba(244,236,216,0.1); stroke-width: 8; }
+  .timer-fg {
+    fill: none;
+    stroke: var(--green);
+    stroke-width: 8;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.1s linear, stroke 0.3s;
+  }
+  .timer-fg.warning { stroke: var(--gold); }
+  .timer-fg.danger { stroke: var(--primary); animation: pulseTimer 0.5s infinite alternate; }
+  @keyframes pulseTimer {
+    from { stroke-width: 8; }
+    to { stroke-width: 11; }
+  }
+  .timer-num {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Anton', sans-serif;
+    font-size: 2.8rem;
+    color: var(--crema);
+  }
+  .timer-num.danger {
+    color: var(--primary);
+    animation: pulseNum 0.4s infinite alternate;
+  }
+  @keyframes pulseNum {
+    from { transform: scale(1); }
+    to { transform: scale(1.15); }
+  }
+
+  .progress-mini {
+    height: 4px;
+    background: rgba(0,0,0,0.5);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+  .progress-mini-fill {
+    height: 100%;
+    background: var(--primary);
+    transition: width 0.3s;
+  }
+
+  .question-text {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(1.4rem, 4vw, 1.9rem);
+    line-height: 1.2;
+    text-align: center;
+    margin: 1.5rem 0;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  .answers-vf {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+  }
+  .ans-btn {
+    background: rgba(0,0,0,0.5);
+    border: 3px solid;
+    padding: 1.5rem 0.8rem;
+    border-radius: 12px;
+    cursor: pointer;
+    font-family: 'Anton', sans-serif;
+    font-size: 1.6rem;
+    color: white;
+    letter-spacing: 0.1em;
+    transition: all 0.15s;
+  }
+  .ans-v { border-color: var(--green); }
+  .ans-v:hover:not(.disabled) { background: rgba(0,255,136,0.2); transform: translateY(-3px); }
+  .ans-f { border-color: var(--primary); }
+  .ans-f:hover:not(.disabled) { background: rgba(255,0,60,0.2); transform: translateY(-3px); }
+  .ans-btn.correct {
+    background: var(--green) !important;
+    color: black;
+    border-color: var(--green);
+    transform: scale(1.05);
+  }
+  .ans-btn.wrong {
+    background: var(--primary) !important;
+    color: white;
+    border-color: var(--primary);
+  }
+  .ans-btn.disabled { pointer-events: none; opacity: 0.5; }
+
+  .feedback {
+    text-align: center;
+    margin-top: 1rem;
+    font-family: 'Anton', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.1em;
+    height: 30px;
+  }
+  .feedback.correct { color: var(--green); }
+  .feedback.wrong { color: var(--primary); }
+
+  /* RACHA POPUP */
+  .racha-pop {
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Anton', sans-serif;
+    font-size: 4rem;
+    color: var(--gold);
+    text-shadow: 0 0 30px var(--gold), 0 0 50px var(--primary);
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0;
+    letter-spacing: 0.1em;
+  }
+  .racha-pop.show { animation: rachaShow 1s ease; }
+  @keyframes rachaShow {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+    30% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+    70% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+  }
+
+  /* RESULT */
+  .result-final { text-align: center; }
+  .result-trophy {
+    font-size: 5rem;
+    margin-bottom: 0.5rem;
+    filter: drop-shadow(0 0 30px var(--gold));
+  }
+  .result-score {
+    font-family: 'Anton', sans-serif;
+    font-size: 4.5rem;
+    color: var(--gold);
+    line-height: 1;
+    text-shadow: 0 0 30px rgba(255,215,0,0.5);
+  }
+  .result-label {
+    font-family: 'JetBrains Mono', monospace;
+    color: rgba(244,236,216,0.7);
+    letter-spacing: 0.2em;
+    font-size: 0.8rem;
+  }
+  .result-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.6rem;
+    margin: 1.5rem 0;
+  }
+  .verdict-text {
+    font-family: 'Anton', sans-serif;
+    font-size: 1.6rem;
+    color: var(--primary-2);
+    margin: 1rem 0;
+    letter-spacing: 0.05em;
+  }
+
+  /* RANKING */
+  .ranking-list {
+    background: rgba(0,0,0,0.4);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 1rem;
+  }
+  .ranking-item {
+    display: grid;
+    grid-template-columns: 35px 1fr auto;
+    gap: 0.8rem;
+    align-items: center;
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid rgba(244,236,216,0.1);
+    font-size: 0.95rem;
+  }
+  .ranking-item.you {
+    background: rgba(255,0,60,0.15);
+    border-left: 3px solid var(--primary);
+  }
+  .rank-n {
+    font-family: 'Anton', sans-serif;
+    color: var(--primary);
+  }
+  .rank-1 { color: gold; }
+  .rank-2 { color: silver; }
+  .rank-3 { color: #cd7f32; }
+  .rank-pts {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--gold);
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="header-tag">10 segundos por pregunta · Mundial 2026</div>
+    <h1>TRIVIA <span>RELÁMPAGO</span></h1>
+  </header>
+
+  <!-- INTRO -->
+  <div class="screen active" id="screen-intro">
+    <div class="panel">
+      <div class="panel-title">⚡ Reglas del juego</div>
+      <p style="line-height:1.6;margin-bottom:0.5rem">20 preguntas tipo verdadero/falso sobre el Mundial. Tenés <strong style="color:var(--primary)">10 segundos por pregunta</strong>. Las rachas multiplican el puntaje.</p>
+      <div class="intro-stats">
+        <div class="stat-box"><div class="stat-box-num">10s</div><div class="stat-box-lab">Tiempo</div></div>
+        <div class="stat-box"><div class="stat-box-num">×5</div><div class="stat-box-lab">Multiplicador</div></div>
+        <div class="stat-box"><div class="stat-box-num">20</div><div class="stat-box-lab">Preguntas</div></div>
+      </div>
+      <input type="text" class="input-name" id="player-name" placeholder="Tu nombre" maxlength="18">
+      <button class="btn" id="start">⚡ EMPEZAR</button>
+      <button class="btn btn-secondary" style="margin-top:0.6rem" id="ver-ranking">🏆 Ver ranking</button>
+    </div>
+  </div>
+
+  <!-- GAME -->
+  <div class="screen" id="screen-game">
+    <div class="panel">
+      <div class="hud">
+        <div class="hud-score">★ <span id="score">0</span></div>
+        <div class="timer-container">
+          <svg class="timer-svg" viewBox="0 0 100 100">
+            <circle class="timer-bg" cx="50" cy="50" r="42"/>
+            <circle class="timer-fg" id="timer-fg" cx="50" cy="50" r="42"
+              stroke-dasharray="263.9" stroke-dashoffset="0"/>
+          </svg>
+          <div class="timer-num" id="timer-num">10</div>
+        </div>
+        <div class="hud-racha" id="hud-racha"><span class="hud-racha-num" id="racha">0</span> 🔥</div>
+      </div>
+      <div class="progress-mini"><div class="progress-mini-fill" id="prog-mini"></div></div>
+      <div class="question-text" id="q-text"></div>
+      <div class="answers-vf">
+        <button class="ans-btn ans-v" id="btn-v">✓ VERDADERO</button>
+        <button class="ans-btn ans-f" id="btn-f">✗ FALSO</button>
+      </div>
+      <div class="feedback" id="feedback"></div>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="screen" id="screen-result">
+    <div class="panel" id="result-panel">
+      <div class="result-final">
+        <div class="result-trophy" id="r-trophy">🏆</div>
+        <div class="result-score" id="r-score">0</div>
+        <div class="result-label">PUNTOS FINALES · <span id="r-name-show"></span></div>
+        <div class="verdict-text" id="r-verdict"></div>
+        <div class="result-stats">
+          <div class="stat-box"><div class="stat-box-num" id="r-correct">0</div><div class="stat-box-lab">Correctas</div></div>
+          <div class="stat-box"><div class="stat-box-num" id="r-streak">0</div><div class="stat-box-lab">Mejor racha</div></div>
+          <div class="stat-box"><div class="stat-box-num" id="r-time">0</div><div class="stat-box-lab">Resp. rápidas</div></div>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;color:rgba(244,236,216,0.5);margin-top:0.6rem">⚡ TRIVIA RELÁMPAGO · MUNDIAL 2026 · @juventud_lapampa</div>
+      </div>
+    </div>
+    <button class="btn" style="margin-top:0.6rem" id="r-download">📸 DESCARGAR / COMPARTIR RESULTADO</button>
+    <button class="btn btn-secondary" style="margin-top:0.5rem" onclick="goRanking()">🏆 Ver Ranking</button>
+    <button class="btn btn-secondary" style="margin-top:0.5rem" onclick="restart()">⚡ Otra partida</button>
+  </div>
+
+  <!-- RANKING -->
+  <div class="screen" id="screen-ranking">
+    <div class="panel">
+      <div class="panel-title">🏆 Ranking Relámpago</div>
+      <div class="ranking-list" id="ranking-list"></div>
+      <button class="btn btn-secondary" style="margin-top:1rem" onclick="restart()">← Inicio</button>
+      <button class="btn btn-secondary" style="margin-top:0.5rem;border-color:var(--primary);color:#fca5a5" onclick="clearRanking()">🗑 Borrar ranking</button>
+    </div>
+  </div>
+</div>
+
+<div class="racha-pop" id="racha-pop"></div>
+
+<script>
+  const preguntas = [
+    // === HISTORIA ===
+    {q:'Argentina ganó tres mundiales antes del 2026', v:true},
+    {q:'Brasil es el único país que jugó todos los mundiales', v:true},
+    {q:'El Mundial 2026 tendrá 64 selecciones', v:false},
+    {q:'Maradona ganó dos mundiales con Argentina', v:false},
+    {q:'El primer Mundial se jugó en Brasil en 1930', v:false},
+    {q:'Italia ganó cuatro mundiales en su historia', v:true},
+    {q:'Uruguay ganó el primer Mundial de la historia', v:true},
+    {q:'El Mundial 1942 se jugó en Italia', v:false},
+    {q:'El Mundial 1946 se jugó en Brasil', v:false},
+    {q:'Hungría ganó dos mundiales en los años 50', v:false},
+    {q:'Inglaterra ganó el Mundial 1966 en su propio país', v:true},
+    {q:'Pelé ganó tres mundiales con Brasil', v:true},
+    {q:'Klose es el máximo goleador histórico de los mundiales', v:true},
+    {q:'El trofeo de la Copa del Mundo está hecho de oro macizo', v:true},
+    {q:'El estadio Maracaná está en Río de Janeiro', v:true},
+    {q:'El Maracanazo lo ganó Uruguay frente a Brasil en 1950', v:true},
+    {q:'La Copa Jules Rimet fue robada en 1983 y nunca se recuperó', v:true},
+    {q:'Sudáfrica fue sede del primer Mundial africano en 2010', v:true},
+    {q:'Japón y Corea organizaron juntos el Mundial 2002', v:true},
+    {q:'Italia fue sede del Mundial 1990', v:true},
+    {q:'Francia organizó el Mundial 1998 y lo ganó', v:true},
+
+    // === MUNDIAL 2026 ===
+    {q:'El Mundial 2026 lo organizan EE.UU., México y Canadá', v:true},
+    {q:'En el Mundial 2026 los grupos serán de 3 equipos', v:false},
+    {q:'En el Mundial 2026 habrá 12 grupos de 4 equipos', v:true},
+    {q:'El Mundial 2026 se jugará en 16 ciudades sede', v:true},
+    {q:'México será sede de un mundial por tercera vez en 2026', v:true},
+    {q:'Canadá nunca había sido sede de un Mundial antes del 2026', v:true},
+    {q:'En el Mundial 2026 habrá un total de 104 partidos', v:true},
+    {q:'La final del Mundial 2026 se juega en Nueva York', v:false},
+    {q:'La final del Mundial 2026 se juega en el MetLife Stadium', v:true},
+    {q:'El estadio Azteca será sede del partido inaugural en 2026', v:true},
+
+    // === MUNDIAL 2022 ===
+    {q:'Catar fue sede del Mundial 2022', v:true},
+    {q:'Lionel Messi fue elegido mejor jugador del Mundial 2022', v:true},
+    {q:'Alemania ganó la Copa del Mundo en 2022', v:false},
+    {q:'Marruecos llegó a semifinales en 2022', v:true},
+    {q:'Mbappé hizo un hat-trick en la final del Mundial 2022', v:true},
+    {q:'La final 2022 terminó 3 a 3 en tiempo extra', v:true},
+    {q:'Emiliano Martínez atajó dos penales en la final 2022', v:false},
+    {q:'Arabia Saudita le ganó a Argentina en fase de grupos 2022', v:true},
+    {q:'Japón le ganó a Alemania en el Mundial 2022', v:true},
+    {q:'Croacia eliminó a Brasil en cuartos de 2022', v:true},
+    {q:'El Mundial 2022 fue el primero que se jugó en invierno europeo', v:true},
+    {q:'Messi hizo 7 goles en el Mundial 2022', v:true},
+    {q:'Lionel Scaloni fue el DT campeón en 2022', v:true},
+    {q:'Lautaro Martínez fue el goleador argentino en el Mundial 2022', v:false},
+    {q:'Bélgica llegó a semifinales en el Mundial 2022', v:false},
+    {q:'El Mundial 2022 se jugó en noviembre y diciembre', v:true},
+
+    // === ARGENTINA ===
+    {q:'Argentina y Brasil se enfrentaron en una final del Mundial', v:false},
+    {q:'Argentina nunca perdió una final del Mundial', v:false},
+    {q:'Argentina perdió la final del Mundial 2014', v:true},
+    {q:'Argentina perdió la final del Mundial 1990', v:true},
+    {q:'Diego Maradona dirigió a Argentina en el Mundial 2010', v:true},
+    {q:'César Luis Menotti dirigió a Argentina en el Mundial 1978', v:true},
+    {q:'Carlos Bilardo dirigió a Argentina en el Mundial 1986', v:true},
+    {q:'Argentina ganó la Copa América 2021 y 2024', v:true},
+    {q:'El "gol del siglo" de Maradona fue contra Inglaterra', v:true},
+    {q:'La "Mano de Dios" fue contra Brasil', v:false},
+    {q:'Mario Kempes fue goleador del Mundial 1978', v:true},
+    {q:'Gabriel Batistuta jugó tres mundiales', v:true},
+    {q:'Argentina ganó la Finalíssima 2022 contra Italia', v:true},
+
+    // === BRASIL ===
+    {q:'En 2014 Alemania le ganó 7-1 a Brasil en semifinales', v:true},
+    {q:'Ronaldinho ganó el Mundial 2002 con Brasil', v:true},
+    {q:'En 2014 el Mundial se jugó en Brasil', v:true},
+    {q:'Brasil tiene 6 estrellas en su escudo', v:false},
+    {q:'Brasil ganó su último mundial en 2002', v:true},
+    {q:'Pelé jugó el Mundial 1974', v:false},
+    {q:'Ronaldo Nazário hizo 8 goles en el Mundial 2002', v:true},
+
+    // === EUROPA ===
+    {q:'España ganó dos mundiales seguidos en 2010 y 2014', v:false},
+    {q:'España ganó su único Mundial en 2010', v:true},
+    {q:'Andrés Iniesta marcó el gol del título en 2010', v:true},
+    {q:'Francia ganó el Mundial 2018 venciendo a Croacia', v:true},
+    {q:'Zinedine Zidane es francés', v:true},
+    {q:'Zidane hizo un cabezazo a Materazzi en la final 2006', v:true},
+    {q:'Italia ganó el Mundial 2006', v:true},
+    {q:'Países Bajos ganó tres copas del mundo', v:false},
+    {q:'Países Bajos perdió tres finales del Mundial', v:true},
+    {q:'Johan Cruyff jugó la final del Mundial 1974', v:true},
+    {q:'Alemania ganó el Mundial 2014 contra Argentina', v:true},
+    {q:'Cristiano Ronaldo nunca llegó a una semifinal de Mundial', v:false},
+    {q:'Bélgica ganó la final del Mundial 2014', v:false},
+    {q:'Bélgica salió tercera en el Mundial 2018', v:true},
+    {q:'Croacia fue subcampeón del mundo en 2018', v:true},
+    {q:'Paolo Rossi fue goleador en el Mundial 1982', v:true},
+    {q:'Davor Suker fue goleador del Mundial 1998', v:true},
+    {q:'Toni Kroos juega para España', v:false},
+    {q:'Inglaterra ganó la Eurocopa 2024', v:false},
+    {q:'Luka Modrić ganó el Balón de Oro 2018', v:true},
+
+    // === ÁFRICA Y ASIA ===
+    {q:'Camerún fue el primer equipo africano en cuartos de final', v:true},
+    {q:'Nigeria nunca clasificó a un Mundial', v:false},
+    {q:'Marruecos fue el primer país africano en llegar a semis', v:true},
+    {q:'Senegal nunca eliminó a Francia en un Mundial', v:false},
+    {q:'Corea del Sur llegó a semifinales en 2002', v:true},
+    {q:'Arabia Saudita ganó el Mundial 1994', v:false},
+    {q:'Australia clasificó a su primer Mundial en 1974', v:true},
+
+    // === JUGADORES ===
+    {q:'Kylian Mbappé jugó su primer Mundial en 2022', v:false},
+    {q:'Mbappé debutó en mundiales en Rusia 2018', v:true},
+    {q:'Mbappé fue campeón del mundo con menos de 20 años', v:true},
+    {q:'Lamine Yamal jugó el Mundial 2022', v:false},
+    {q:'Lewandowski es polaco', v:true},
+    {q:'Erling Haaland jugó el Mundial 2022 con Noruega', v:false},
+    {q:'Noruega no clasificó al Mundial 2022', v:true},
+    {q:'Luis Suárez usó la mano para evitar un gol contra Ghana en 2010', v:true},
+    {q:'Diego Forlán fue mejor jugador del Mundial 2010', v:true},
+    {q:'Iker Casillas es arquero de la selección española', v:true},
+    {q:'Gianluigi Buffon es italiano', v:true},
+    {q:'Manuel Neuer es alemán', v:true},
+
+    // === REGLAS Y CURIOSIDADES ===
+    {q:'El VAR se usó por primera vez en el Mundial 2014', v:false},
+    {q:'El VAR debutó en mundiales en Rusia 2018', v:true},
+    {q:'La tarjeta amarilla se usa por primera vez en 1970', v:true},
+    {q:'El Mundial se juega cada cuatro años desde 1930', v:true},
+    {q:'En 1942 y 1946 no hubo Mundial por la guerra', v:true},
+    {q:'El Mundial Femenino se juega cada cuatro años también', v:true},
+    {q:'Argentina nunca ganó un Mundial Femenino', v:true},
+    {q:'Estados Unidos ganó cuatro Mundiales Femeninos', v:true},
+    {q:'El próximo Mundial Femenino es en Brasil 2027', v:true},
+    {q:'México fue sede del Mundial dos veces antes del 2026', v:true},
+    {q:'El Mundial Sub-20 de 2005 lo ganó Argentina con Messi', v:true},
+    {q:'En el Mundial Sub-20 de 2007 Argentina salió campeón con Agüero', v:true},
+    {q:'El balón oficial del Mundial 2022 se llamaba Al Rihla', v:true},
+
+    // === ANIMALES, MASCOTAS Y SÍMBOLOS ===
+    {q:'La mascota del Mundial 1978 fue Gauchito', v:true},
+    {q:'La mascota del Mundial 1982 fue Naranjito', v:true},
+    {q:'La mascota del Mundial 2026 es una sola figura', v:false},
+    {q:'En el Mundial 2026 hay tres mascotas: una por país sede', v:true},
+
+    // === MISCELÁNEA ===
+    {q:'La Copa del Mundo pesa más de 6 kilos', v:true},
+    {q:'El partido inaugural del Mundial siempre lo juega el anfitrión', v:false},
+    {q:'En 1930 hubo solo 13 selecciones en el Mundial', v:true},
+    {q:'Brasil ganó su 5° estrella en el Mundial de Japón y Corea', v:true},
+    {q:'El Mundial 1970 fue el primero transmitido a color', v:true},
+    {q:'En 2002 el Mundial se jugó por primera vez en Asia', v:true},
+    {q:'El gol más rápido de la historia de los mundiales se hizo en 11 segundos', v:true},
+    {q:'Hakan Şükür de Turquía marcó el gol más rápido en mundiales', v:true},
+    {q:'Mario Götze marcó el gol del título 2014 entrando como suplente', v:true},
+    {q:'Andrés Iniesta marcó el gol del título de España en el minuto 116', v:true},
+
+    // === MUNDIAL 2022 Y 2026 ===
+    {q:'El Mundial 2026 se juega en Estados Unidos, México y Canadá', v:true},
+    {q:'El Mundial 2026 es el primero con 48 selecciones', v:true},
+    {q:'El Mundial 2026 se juega en un solo país', v:false},
+    {q:'El Mundial 2026 tendrá 12 grupos de 4 equipos', v:true},
+    {q:'El Mundial 2026 es el primero con 104 partidos', v:true},
+    {q:'Lionel Scaloni fue el DT campeón del mundo en 2022', v:true},
+    {q:'Argentina le ganó la final 2022 a Francia', v:true},
+    {q:'Brasil ganó el Mundial 2022', v:false},
+    {q:'Messi marcó dos goles en la final del Mundial 2022', v:true},
+    {q:'Mbappé hizo tres goles en la final 2022 y aun así perdió', v:true},
+    {q:'Mbappé juega para la selección de Bélgica', v:false},
+    {q:'El "Dibu" Martínez atajó un penal en la tanda de la final 2022', v:true},
+    {q:'Argentina ganó la Copa América 2021 antes del Mundial', v:true},
+    {q:'Argentina ganó tres Copas del Mundo: 1978, 1986 y 2022', v:true},
+    {q:'Messi ganó el Balón de Oro al mejor jugador del Mundial 2022', v:true},
+    {q:'Julián Álvarez marcó cuatro goles en el Mundial 2022', v:true},
+    {q:'Ángel Di María convirtió en la final del Mundial 2022', v:true},
+    {q:'Marruecos llegó a semifinales en el Mundial 2022', v:true},
+    {q:'Croacia salió subcampeona en el Mundial 2022', v:false},
+    {q:'Qatar fue la sede del Mundial 2022', v:true},
+    {q:'El Mundial 2022 fue el primero jugado en noviembre y diciembre', v:true},
+    {q:'El Mundial 2030 lo organizan España, Portugal y Marruecos', v:true},
+    {q:'El Mundial 2030 tendrá partidos en Argentina, Uruguay y Paraguay', v:true},
+    {q:'Cristiano Ronaldo es el máximo goleador histórico de Portugal', v:true},
+    {q:'A la Selección Argentina campeona la apodan "La Scaloneta"', v:true},
+    {q:'Pelé ganó tres Copas del Mundo con Brasil', v:true}
+  ];
+
+  // Web Audio API para sonidos
+  let audioCtx = null;
+  function initAudio() {
+    if (!audioCtx) {
+      try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+      catch(e) {}
+    }
+  }
+  function beep(freq, duration, type='sine', vol=0.15) {
+    if (!audioCtx) return;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.value = freq;
+    gain.gain.value = vol;
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+    osc.stop(audioCtx.currentTime + duration);
+  }
+  function tickSound() { beep(800, 0.05, 'square', 0.05); }
+  function correctSound() { beep(523, 0.1, 'sine', 0.2); setTimeout(() => beep(784, 0.15, 'sine', 0.2), 100); }
+  function wrongSound() { beep(200, 0.3, 'sawtooth', 0.2); }
+  function rachaSound() { beep(523, 0.1); setTimeout(() => beep(659, 0.1), 80); setTimeout(() => beep(784, 0.2), 160); }
+  function timeoutSound() { beep(150, 0.5, 'sawtooth', 0.25); }
+
+  let estado = {
+    name: '', score: 0, current: 0, racha: 0, mejorRacha: 0,
+    correctas: 0, rapidas: 0, preguntas: [],
+    timer: null, timeLeft: 10, lastTickSecond: 10
+  };
+
+  function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  document.getElementById('start').onclick = () => {
+    const name = document.getElementById('player-name').value.trim();
+    if (!name) { alert('Ingresá tu nombre'); return; }
+    initAudio();
+    estado.name = name;
+    estado.score = 0;
+    estado.current = 0;
+    estado.racha = 0;
+    estado.mejorRacha = 0;
+    estado.correctas = 0;
+    estado.rapidas = 0;
+    estado.preguntas = shuffle(preguntas).slice(0, 20);
+    show('game');
+    renderQ();
+  };
+
+  function renderQ() {
+    const p = estado.preguntas[estado.current];
+    document.getElementById('q-text').textContent = p.q;
+    document.getElementById('score').textContent = estado.score;
+    document.getElementById('racha').textContent = estado.racha;
+    document.getElementById('hud-racha').classList.toggle('fire', estado.racha >= 3);
+    document.getElementById('prog-mini').style.width = (estado.current / 20 * 100) + '%';
+    document.getElementById('feedback').textContent = '';
+    document.getElementById('feedback').className = 'feedback';
+    ['btn-v','btn-f'].forEach(id => {
+      const btn = document.getElementById(id);
+      btn.classList.remove('correct','wrong','disabled');
+    });
+    startTimer();
+  }
+
+  function startTimer() {
+    estado.timeLeft = 10;
+    estado.lastTickSecond = 10;
+    updateTimerVisual();
+    if (estado.timer) clearInterval(estado.timer);
+    estado.timer = setInterval(() => {
+      estado.timeLeft -= 0.1;
+      updateTimerVisual();
+      const intSec = Math.ceil(estado.timeLeft);
+      if (intSec !== estado.lastTickSecond && intSec <= 3 && intSec >= 0) {
+        tickSound();
+        estado.lastTickSecond = intSec;
+      }
+      if (estado.timeLeft <= 0) {
+        clearInterval(estado.timer);
+        timeOut();
+      }
+    }, 100);
+  }
+
+  function updTimerColor() {
+    const fg = document.getElementById('timer-fg');
+    const num = document.getElementById('timer-num');
+    fg.classList.remove('warning','danger');
+    num.classList.remove('danger');
+    if (estado.timeLeft <= 3) {
+      fg.classList.add('danger');
+      num.classList.add('danger');
+    } else if (estado.timeLeft <= 6) {
+      fg.classList.add('warning');
+    }
+  }
+
+  function updateTimerVisual() {
+    const dasharray = 263.9;
+    const offset = dasharray * (1 - estado.timeLeft / 10);
+    document.getElementById('timer-fg').style.strokeDashoffset = offset;
+    document.getElementById('timer-num').textContent = Math.max(0, Math.ceil(estado.timeLeft));
+    updTimerColor();
+  }
+
+  function answer(val) {
+    if (!estado.timer) return;
+    clearInterval(estado.timer);
+    const p = estado.preguntas[estado.current];
+    const correct = val === p.v;
+    const tiempoUsado = 10 - estado.timeLeft;
+    const fueRapida = tiempoUsado < 3;
+
+    ['btn-v','btn-f'].forEach(id => document.getElementById(id).classList.add('disabled'));
+    const btnVal = val ? 'btn-v' : 'btn-f';
+    const btnCorrect = p.v ? 'btn-v' : 'btn-f';
+
+    if (correct) {
+      document.getElementById(btnVal).classList.add('correct');
+      correctSound();
+      estado.racha++;
+      if (estado.racha > estado.mejorRacha) estado.mejorRacha = estado.racha;
+      estado.correctas++;
+      if (fueRapida) estado.rapidas++;
+      // Puntaje: base 100 + bonus tiempo + multiplicador racha
+      const tiempoBonus = Math.floor(estado.timeLeft * 10);
+      const multiplicador = Math.min(5, 1 + Math.floor(estado.racha / 2) * 0.5);
+      const puntos = Math.floor((100 + tiempoBonus) * multiplicador);
+      estado.score += puntos;
+      document.getElementById('feedback').textContent = `+${puntos} ${multiplicador > 1 ? `×${multiplicador}` : ''}`;
+      document.getElementById('feedback').classList.add('correct');
+
+      // Pop racha
+      if ([3, 5, 8, 12, 15, 20].includes(estado.racha)) {
+        const labels = {3:'¡EN LLAMAS!',5:'¡IMPARABLE!',8:'¡LEYENDA!',12:'¡FENÓMENO!',15:'¡INHUMANO!',20:'¡PERFECTO!'};
+        const pop = document.getElementById('racha-pop');
+        pop.textContent = labels[estado.racha];
+        pop.classList.remove('show');
+        void pop.offsetWidth;
+        pop.classList.add('show');
+        rachaSound();
+      }
+    } else {
+      document.getElementById(btnVal).classList.add('wrong');
+      document.getElementById(btnCorrect).classList.add('correct');
+      wrongSound();
+      document.body.classList.add('shaking');
+      setTimeout(() => document.body.classList.remove('shaking'), 400);
+      estado.racha = 0;
+      document.getElementById('feedback').textContent = `Era ${p.v ? 'VERDADERO' : 'FALSO'}`;
+      document.getElementById('feedback').classList.add('wrong');
+    }
+
+    document.getElementById('score').textContent = estado.score;
+    document.getElementById('racha').textContent = estado.racha;
+    document.getElementById('hud-racha').classList.toggle('fire', estado.racha >= 3);
+
+    setTimeout(() => {
+      estado.current++;
+      if (estado.current >= 20) finish();
+      else renderQ();
+    }, 1400);
+  }
+
+  function timeOut() {
+    timeoutSound();
+    estado.racha = 0;
+    const p = estado.preguntas[estado.current];
+    const btnCorrect = p.v ? 'btn-v' : 'btn-f';
+    document.getElementById(btnCorrect).classList.add('correct');
+    ['btn-v','btn-f'].forEach(id => document.getElementById(id).classList.add('disabled'));
+    document.getElementById('feedback').textContent = '⏱ Se acabó el tiempo';
+    document.getElementById('feedback').classList.add('wrong');
+    document.body.classList.add('shaking');
+    setTimeout(() => document.body.classList.remove('shaking'), 400);
+    setTimeout(() => {
+      estado.current++;
+      if (estado.current >= 20) finish();
+      else renderQ();
+    }, 1500);
+  }
+
+  document.getElementById('btn-v').onclick = () => answer(true);
+  document.getElementById('btn-f').onclick = () => answer(false);
+
+  function finish() {
+    saveScore();
+    show('result');
+    document.getElementById('r-score').textContent = estado.score;
+    document.getElementById('r-name-show').textContent = estado.name.toUpperCase();
+    document.getElementById('r-correct').textContent = estado.correctas + '/20';
+    document.getElementById('r-streak').textContent = estado.mejorRacha;
+    document.getElementById('r-time').textContent = estado.rapidas;
+    let trophy = '⚽', verdict = 'A practicar';
+    if (estado.score >= 8000) { trophy = '🏆'; verdict = 'CAMPEÓN MUNDIAL'; }
+    else if (estado.score >= 5000) { trophy = '🥇'; verdict = 'TREMENDO'; }
+    else if (estado.score >= 3000) { trophy = '🥈'; verdict = 'BIEN JUGADO'; }
+    else if (estado.score >= 1500) { trophy = '🥉'; verdict = 'NIVEL DECENTE'; }
+    document.getElementById('r-trophy').textContent = trophy;
+    document.getElementById('r-verdict').textContent = verdict;
+  }
+
+  // Compartir resultado: capturar el panel de resultado como imagen
+  document.getElementById('r-download').onclick = () => {
+    // Cargar html2canvas si no está disponible
+    if (typeof html2canvas === 'undefined') {
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+      s.onload = doDownload;
+      document.head.appendChild(s);
+    } else {
+      doDownload();
+    }
+    function doDownload() {
+      const node = document.getElementById('result-panel');
+      const w = node.offsetWidth, h = node.offsetHeight;
+      html2canvas(node, {
+        backgroundColor: '#0a0a0a',
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        logging: false,
+        width: w, height: h,
+        windowWidth: document.documentElement.clientWidth,
+        windowHeight: document.documentElement.clientHeight,
+        onclone: (doc) => {
+          const c = doc.getElementById('result-panel');
+          if (c) { c.style.width = w + 'px'; c.style.height = h + 'px'; }
+        }
+      }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `trivia-mundial-2026-${estado.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      }).catch(err => alert('Error al descargar: ' + err.message));
+    }
+  };
+
+  function saveScore() {
+    const ranking = JSON.parse(localStorage.getItem('trivia-mundial-ranking') || '[]');
+    ranking.push({ name: estado.name, score: estado.score, streak: estado.mejorRacha, date: Date.now() });
+    ranking.sort((a, b) => b.score - a.score);
+    localStorage.setItem('trivia-mundial-ranking', JSON.stringify(ranking.slice(0, 100)));
+  }
+
+  function goRanking() {
+    show('ranking');
+    const ranking = JSON.parse(localStorage.getItem('trivia-mundial-ranking') || '[]');
+    const div = document.getElementById('ranking-list');
+    if (ranking.length === 0) {
+      div.innerHTML = '<div style="padding:2rem;text-align:center;opacity:0.6">Todavía no hay puntajes</div>';
+      return;
+    }
+    div.innerHTML = ranking.slice(0, 20).map((r, i) => {
+      const isYou = r.name === estado.name && r.score === estado.score && Date.now() - r.date < 60000;
+      const rankClass = i < 3 ? `rank-${i+1}` : '';
+      return `
+        <div class="ranking-item ${isYou ? 'you' : ''}">
+          <div class="rank-n ${rankClass}">${i+1}</div>
+          <div><strong>${r.name}</strong> <span style="opacity:0.5;font-size:0.75rem">· racha ${r.streak}</span></div>
+          <div class="rank-pts">${r.score}</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function clearRanking() {
+    if (confirm('¿Borrar todo el ranking?')) {
+      localStorage.removeItem('trivia-mundial-ranking');
+      goRanking();
+    }
+  }
+
+  function show(s) {
+    document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+    document.getElementById('screen-' + s).classList.add('active');
+  }
+
+  function restart() {
+    if (estado.timer) clearInterval(estado.timer);
+    show('intro');
+    document.getElementById('player-name').value = estado.name;
+  }
+
+  document.getElementById('ver-ranking').onclick = goRanking;
+</script>
+</body>
+</html>

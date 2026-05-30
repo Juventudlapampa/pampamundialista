@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulador de Partido · Mundial 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #050d08;
+    --verde: #0d3b26;
+    --verde-fluo: #4ade80;
+    --gold: #d4a82e;
+    --gold-2: #f4cd60;
+    --crema: #f4ecd8;
+    --rojo: #dc2626;
+    --azul: #2563eb;
+    --azul-claro: #60a5fa;
+  }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    background-image: radial-gradient(ellipse at top, rgba(13,59,38,0.6), transparent 70%);
+    min-height: 100vh;
+    color: var(--crema);
+    padding: 1rem;
+    overflow-x: hidden;
+  }
+  .container { max-width: 850px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 1.2rem; }
+  .header-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+  h1 {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-top: 0.3rem;
+    line-height: 1;
+  }
+  h1 span { color: var(--gold); }
+
+  .screen { display: none; }
+  .screen.active { display: block; animation: fadeIn 0.3s; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .panel {
+    background: rgba(0,0,0,0.5);
+    border: 1px solid rgba(212,168,46,0.3);
+    border-radius: 12px;
+    padding: 1.3rem;
+    margin-bottom: 1rem;
+  }
+  .panel-title {
+    font-family: 'Anton', sans-serif;
+    color: var(--gold);
+    font-size: 1.2rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.8rem;
+    text-transform: uppercase;
+  }
+
+  /* SETUP */
+  .equipos-pick {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .equipo-col { text-align: center; }
+  .equipo-flag {
+    font-size: 4rem;
+    line-height: 1;
+    margin-bottom: 0.4rem;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+  }
+  .equipo-nombre {
+    font-family: 'Anton', sans-serif;
+    color: var(--crema);
+    font-size: 1.2rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    min-height: 1.5em;
+  }
+  .vs {
+    font-family: 'Anton', sans-serif;
+    color: var(--gold);
+    font-size: 2.5rem;
+    text-shadow: 0 0 20px rgba(212,168,46,0.5);
+  }
+  select {
+    width: 100%;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid rgba(244,236,216,0.2);
+    color: var(--crema);
+    padding: 0.6rem;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    margin-top: 0.4rem;
+  }
+  select:focus { outline: none; border-color: var(--gold); }
+
+  .stats-display {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  .stat-bar {
+    background: rgba(0,0,0,0.4);
+    border-radius: 4px;
+    padding: 0.4rem 0.6rem;
+  }
+  .stat-bar-row {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    margin-bottom: 0.2rem;
+  }
+  .stat-bar-label {
+    color: var(--gold);
+    letter-spacing: 0.1em;
+  }
+  .stat-bar-val { color: var(--crema); font-weight: 700; }
+  .stat-bar-track {
+    height: 4px;
+    background: rgba(0,0,0,0.6);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .stat-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--verde-fluo), var(--gold));
+    transition: width 0.4s;
+  }
+
+  /* TÁCTICA */
+  .tactica-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  .tactica-btn {
+    background: rgba(0,0,0,0.4);
+    border: 2px solid rgba(244,236,216,0.2);
+    color: var(--crema);
+    padding: 0.7rem 0.4rem;
+    border-radius: 8px;
+    font-family: 'Anton', sans-serif;
+    cursor: pointer;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-align: center;
+    transition: all 0.15s;
+  }
+  .tactica-btn:hover { border-color: var(--gold); }
+  .tactica-btn.active {
+    background: linear-gradient(135deg, var(--gold), var(--gold-2));
+    color: #000;
+    border-color: var(--gold);
+  }
+  .tactica-desc {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    margin-top: 0.2rem;
+    opacity: 0.7;
+  }
+
+  .btn {
+    background: linear-gradient(135deg, var(--gold), var(--gold-2));
+    color: #000;
+    border: none;
+    padding: 1.1rem;
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 0.15em;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 100%;
+    text-transform: uppercase;
+    font-size: 1.15rem;
+    transition: transform 0.15s;
+    box-shadow: 0 6px 0 #927200;
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 0 #927200; }
+  .btn:active { transform: translateY(3px); box-shadow: 0 3px 0 #927200; }
+  .btn-secondary {
+    background: rgba(0,0,0,0.4);
+    color: var(--crema);
+    border: 2px solid var(--gold);
+    box-shadow: none;
+  }
+  .btn-secondary:hover { box-shadow: none; }
+
+  /* SIMULACIÓN */
+  .marcador {
+    background: linear-gradient(180deg, #000 0%, #1a1a1a 100%);
+    border: 2px solid var(--gold);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0.8rem;
+    align-items: center;
+  }
+  .marc-equipo {
+    text-align: center;
+  }
+  .marc-flag { font-size: 2.5rem; line-height: 1; }
+  .marc-nombre {
+    font-family: 'Anton', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    margin-top: 0.2rem;
+  }
+  .marc-score {
+    font-family: 'Anton', sans-serif;
+    font-size: 3.5rem;
+    color: var(--gold);
+    line-height: 1;
+    letter-spacing: 0.05em;
+    text-shadow: 0 0 30px rgba(212,168,46,0.5);
+  }
+  .marc-min {
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--verde-fluo);
+    font-size: 0.9rem;
+    margin-top: 0.4rem;
+    letter-spacing: 0.1em;
+  }
+
+  .sim-ground {
+    background: linear-gradient(180deg, #1a8a4a 0%, #0d4a2c 100%);
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 12%, rgba(255,255,255,0.04) 12%, rgba(255,255,255,0.04) 24%);
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 8px;
+    height: 60px;
+    margin-bottom: 1rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .sim-ball {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background: white;
+    border: 1px solid #000;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  }
+  .sim-line {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 50%;
+    width: 1px;
+    background: rgba(255,255,255,0.4);
+  }
+  .sim-arco {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 40px;
+    border: 2px solid white;
+    border-left: none;
+  }
+  .sim-arco.izq { left: 0; border-right: none; border-left: 2px solid white; }
+  .sim-arco.der { right: 0; }
+
+  .eventos-log {
+    background: rgba(0,0,0,0.6);
+    border-radius: 8px;
+    padding: 0.8rem;
+    height: 220px;
+    overflow-y: auto;
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+  .evento {
+    padding: 0.3rem 0;
+    border-bottom: 1px dashed rgba(244,236,216,0.1);
+    display: grid;
+    grid-template-columns: 45px 1fr;
+    gap: 0.5rem;
+    animation: slideIn 0.3s;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  .evento:last-child { border-bottom: none; }
+  .evento-min {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--gold);
+    font-weight: 700;
+    font-size: 0.8rem;
+  }
+  .evento-text {}
+  .evento.gol { background: rgba(74,222,128,0.15); border-left: 3px solid var(--verde-fluo); padding-left: 0.5rem; }
+  .evento.gol .evento-text { font-weight: 700; color: var(--verde-fluo); }
+  .evento.tarjeta { background: rgba(212,168,46,0.1); }
+  .evento.roja { background: rgba(220,38,38,0.15); }
+  .evento.penal { background: rgba(37,99,235,0.15); border-left: 3px solid var(--azul-claro); padding-left: 0.5rem; }
+  .evento.final { background: linear-gradient(90deg, rgba(212,168,46,0.3), transparent); border-left: 3px solid var(--gold); padding-left: 0.5rem; font-weight: 700; }
+
+  .controls-bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.5rem;
+    margin-top: 0.8rem;
+  }
+  .ctrl-btn {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid var(--gold);
+    color: var(--crema);
+    padding: 0.6rem;
+    font-family: 'Anton', sans-serif;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+  }
+  .ctrl-btn:hover { background: rgba(212,168,46,0.15); }
+  .ctrl-btn.active {
+    background: linear-gradient(135deg, var(--gold), var(--gold-2));
+    color: #000;
+  }
+
+  .et-banner {
+    text-align: center;
+    background: rgba(220,38,38,0.2);
+    border: 2px solid var(--rojo);
+    border-radius: 8px;
+    padding: 0.8rem;
+    margin-bottom: 0.8rem;
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    animation: pulse 1s infinite alternate;
+  }
+  @keyframes pulse {
+    from { box-shadow: 0 0 0 rgba(220,38,38,0.5); }
+    to { box-shadow: 0 0 20px rgba(220,38,38,0.8); }
+  }
+
+  /* RESULTADO */
+  .result-final { text-align: center; padding: 1rem 0; }
+  .result-trophy { font-size: 4rem; margin-bottom: 0.4rem; }
+  .result-score-big {
+    font-family: 'Anton', sans-serif;
+    font-size: 3rem;
+    margin: 0.5rem 0;
+    line-height: 1;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+  }
+  .result-verdict {
+    font-family: 'Anton', sans-serif;
+    font-size: 1.2rem;
+    color: var(--gold-2);
+    margin: 0.8rem 0;
+    letter-spacing: 0.05em;
+  }
+  .result-stats {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 1rem;
+    margin: 1rem 0;
+    padding: 1rem;
+    background: rgba(0,0,0,0.4);
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+  }
+  .result-stat-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.2rem 0;
+    border-bottom: 1px dashed rgba(244,236,216,0.1);
+  }
+  .result-stat-row:last-child { border-bottom: none; }
+  .result-stats-center { color: var(--gold); writing-mode: vertical-lr; font-size: 0.7rem; letter-spacing: 0.2em; }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="header-tag">Simulador de Partido · Mundial 2026</div>
+    <h1>SIMULADOR <span>DE PARTIDO</span></h1>
+  </header>
+
+  <!-- SETUP -->
+  <div class="screen active" id="screen-setup">
+    <div class="panel">
+      <div class="panel-title">⚽ Elegí los equipos</div>
+      <div class="equipos-pick">
+        <div class="equipo-col">
+          <div class="equipo-flag" id="flag-local">🇦🇷</div>
+          <div class="equipo-nombre" id="nom-local">ARGENTINA</div>
+          <select id="sel-local"></select>
+        </div>
+        <div class="vs">VS</div>
+        <div class="equipo-col">
+          <div class="equipo-flag" id="flag-visit">🇫🇷</div>
+          <div class="equipo-nombre" id="nom-visit">FRANCIA</div>
+          <select id="sel-visit"></select>
+        </div>
+      </div>
+
+      <div class="panel-title" style="font-size:1rem;margin-top:1rem">Tu táctica inicial</div>
+      <div class="tactica-row">
+        <button class="tactica-btn" data-tactica="defensivo">
+          🛡 DEFENSIVO
+          <div class="tactica-desc">+DEF -ATK</div>
+        </button>
+        <button class="tactica-btn active" data-tactica="equilibrado">
+          ⚖ EQUILIBRADO
+          <div class="tactica-desc">balance</div>
+        </button>
+        <button class="tactica-btn" data-tactica="ofensivo">
+          ⚔ OFENSIVO
+          <div class="tactica-desc">+ATK -DEF</div>
+        </button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">📊 Stats comparados</div>
+      <div id="stats-compare"></div>
+    </div>
+
+    <button class="btn" id="iniciar">▶ INICIAR PARTIDO</button>
+  </div>
+
+  <!-- SIMULACIÓN -->
+  <div class="screen" id="screen-game">
+    <div class="marcador">
+      <div class="marc-equipo">
+        <div class="marc-flag" id="m-flag-l">🇦🇷</div>
+        <div class="marc-nombre" id="m-nom-l">ARG</div>
+      </div>
+      <div>
+        <div class="marc-score">
+          <span id="m-score-l">0</span> · <span id="m-score-v">0</span>
+        </div>
+        <div class="marc-min">MIN <span id="m-min">0</span>'</div>
+      </div>
+      <div class="marc-equipo">
+        <div class="marc-flag" id="m-flag-v">🇫🇷</div>
+        <div class="marc-nombre" id="m-nom-v">FRA</div>
+      </div>
+    </div>
+
+    <div id="et-banner-container"></div>
+
+    <div class="sim-ground">
+      <div class="sim-arco izq"></div>
+      <div class="sim-arco der"></div>
+      <div class="sim-line"></div>
+      <div class="sim-ball" id="sim-ball"></div>
+    </div>
+
+    <div class="panel" style="margin-bottom:0.8rem;padding:0.8rem">
+      <div style="font-family:'Anton',sans-serif;color:var(--gold);font-size:0.95rem;letter-spacing:0.1em;margin-bottom:0.5rem">⚙ TU TÁCTICA</div>
+      <div class="controls-bar">
+        <button class="ctrl-btn" data-set-tactica="defensivo">🛡 DEF</button>
+        <button class="ctrl-btn active" data-set-tactica="equilibrado">⚖ EQUI</button>
+        <button class="ctrl-btn" data-set-tactica="ofensivo">⚔ OFE</button>
+      </div>
+      <div style="font-family:'Anton',sans-serif;color:var(--gold);font-size:0.85rem;letter-spacing:0.1em;margin:0.8rem 0 0.3rem">🔥 INSTRUCCIONES OSADAS (1 sola vez)</div>
+      <div id="ordenes-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem"></div>
+      <div id="orden-activa" style="margin-top:0.5rem;font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--verde-fluo);text-align:center;min-height:1em"></div>
+    </div>
+
+    <div class="panel" style="padding:0.8rem">
+      <div style="font-family:'Anton',sans-serif;color:var(--gold);font-size:0.95rem;letter-spacing:0.1em;margin-bottom:0.5rem">📋 EVENTOS DEL PARTIDO</div>
+      <div class="eventos-log" id="eventos-log"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-top:0.6rem">
+        <button class="btn btn-secondary" id="pause" style="padding:0.6rem;font-size:0.85rem">⏸ PAUSA</button>
+        <button class="btn btn-secondary" id="speed" style="padding:0.6rem;font-size:0.85rem">⏩ 1x</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTADO -->
+  <div class="screen" id="screen-result">
+    <div class="panel">
+      <div class="result-final">
+        <div class="result-trophy" id="r-trophy">🏆</div>
+        <div class="result-score-big">
+          <span id="r-l">0</span> · <span id="r-v">0</span>
+        </div>
+        <div class="result-verdict" id="r-verdict"></div>
+        <div class="result-stats">
+          <div id="r-stats-l"></div>
+          <div class="result-stats-center">STATS</div>
+          <div id="r-stats-v"></div>
+        </div>
+        <button class="btn" onclick="restart()">⚽ Otra partida</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ========================================================================
+  // BASE DE EQUIPOS CON STATS
+  // ========================================================================
+  // ATK = ataque, MED = mediocampo, DEF = defensa, POR = arquero, MOR = moral
+  // valores 50-99 estilo FIFA
+  const EQUIPOS = [
+    { id:'ARG', name:'Argentina', flag:'🇦🇷', atk:92, med:91, def:87, por:90, mor:97 },
+    { id:'BRA', name:'Brasil', flag:'🇧🇷', atk:93, med:88, def:85, por:86, mor:88 },
+    { id:'FRA', name:'Francia', flag:'🇫🇷', atk:94, med:88, def:89, por:88, mor:90 },
+    { id:'ESP', name:'España', flag:'🇪🇸', atk:88, med:93, def:87, por:86, mor:85 },
+    { id:'ING', name:'Inglaterra', flag:'🇬🇧', atk:89, med:87, def:88, por:85, mor:80 },
+    { id:'ALE', name:'Alemania', flag:'🇩🇪', atk:86, med:88, def:88, por:87, mor:78 },
+    { id:'POR', name:'Portugal', flag:'🇵🇹', atk:90, med:87, def:84, por:84, mor:82 },
+    { id:'NED', name:'Países Bajos', flag:'🇳🇱', atk:88, med:86, def:87, por:84, mor:80 },
+    { id:'BEL', name:'Bélgica', flag:'🇧🇪', atk:85, med:85, def:83, por:88, mor:75 },
+    { id:'URU', name:'Uruguay', flag:'🇺🇾', atk:85, med:83, def:88, por:85, mor:88 },
+    { id:'MEX', name:'México', flag:'🇲🇽', atk:81, med:82, def:81, por:84, mor:82 },
+    { id:'ITA', name:'Italia', flag:'🇮🇹', atk:84, med:86, def:90, por:90, mor:80 },
+    { id:'MAR', name:'Marruecos', flag:'🇲🇦', atk:83, med:84, def:88, por:84, mor:90 },
+    { id:'JPN', name:'Japón', flag:'🇯🇵', atk:82, med:85, def:84, por:84, mor:85 },
+    { id:'COL', name:'Colombia', flag:'🇨🇴', atk:86, med:84, def:81, por:82, mor:82 },
+    { id:'CRO', name:'Croacia', flag:'🇭🇷', atk:83, med:90, def:85, por:84, mor:85 },
+    { id:'SEN', name:'Senegal', flag:'🇸🇳', atk:84, med:82, def:84, por:83, mor:85 },
+    { id:'USA', name:'EE.UU.', flag:'🇺🇸', atk:79, med:81, def:82, por:83, mor:78 },
+    { id:'CAN', name:'Canadá', flag:'🇨🇦', atk:78, med:80, def:80, por:80, mor:75 },
+    { id:'ECU', name:'Ecuador', flag:'🇪🇨', atk:80, med:82, def:84, por:80, mor:78 },
+    { id:'CHI', name:'Chile', flag:'🇨🇱', atk:82, med:83, def:82, por:83, mor:80 },
+    { id:'NOR', name:'Noruega', flag:'🇳🇴', atk:88, med:81, def:80, por:78, mor:75 },
+    { id:'SUI', name:'Suiza', flag:'🇨🇭', atk:82, med:85, def:85, por:84, mor:80 },
+    { id:'POL', name:'Polonia', flag:'🇵🇱', atk:85, med:81, def:82, por:84, mor:75 },
+    { id:'AUS', name:'Australia', flag:'🇦🇺', atk:76, med:78, def:80, por:80, mor:78 }
+  ];
+
+  // ========================================================================
+  // 15 JUGADORES REALES POR EQUIPO (los más mencionables)
+  // ========================================================================
+  const JUGADORES = {
+    ARG: ['Messi', 'Lautaro Martínez', 'Julián Álvarez', 'Mac Allister', 'Enzo Fernández', 'De Paul', 'Di María', 'Romero', 'Otamendi', 'Lisandro Martínez', 'Molina', 'Tagliafico', 'Acuña', 'Dybala', 'Emi Martínez'],
+    BRA: ['Vinícius Jr', 'Rodrygo', 'Endrick', 'Raphinha', 'Bruno Guimarães', 'Casemiro', 'Neymar', 'Marquinhos', 'Militão', 'Danilo', 'Renan Lodi', 'Alisson', 'Lucas Paquetá', 'Antony', 'Richarlison'],
+    FRA: ['Mbappé', 'Dembélé', 'Griezmann', 'Tchouaméni', 'Camavinga', 'Théo Hernández', 'Saliba', 'Koundé', 'Maignan', 'Konaté', 'Thuram', 'Coman', 'Olise', 'Doué', 'Rabiot'],
+    ESP: ['Lamine Yamal', 'Nico Williams', 'Pedri', 'Rodri', 'Olmo', 'Cubarsí', 'Carvajal', 'Le Normand', 'Laporte', 'Unai Simón', 'Mikel Merino', 'Fabián Ruiz', 'Oyarzabal', 'Morata', 'Joselu'],
+    ING: ['Kane', 'Saka', 'Bellingham', 'Foden', 'Trent', 'Rice', 'Stones', 'Pickford', 'Walker', 'Maguire', 'Palmer', 'Eze', 'Watkins', 'Toney', 'Gordon'],
+    ALE: ['Wirtz', 'Musiala', 'Havertz', 'Kroos', 'Goretzka', 'Kimmich', 'Rüdiger', 'Tah', 'Neuer', 'Ter Stegen', 'Sané', 'Gnabry', 'Füllkrug', 'Adeyemi', 'Andrich'],
+    POR: ['CR7', 'Leão', 'Bruno Fernandes', 'Bernardo Silva', 'João Félix', 'Cancelo', 'Pepe', 'Diogo Costa', 'João Neves', 'Vitinha', 'Diogo Jota', 'Pote', 'Conceição', 'Nuno Mendes', 'Otávio'],
+    NED: ['Memphis', 'Gakpo', 'Reijnders', 'De Jong', 'Van Dijk', 'De Ligt', 'Dumfries', 'Verbruggen', 'Wijnaldum', 'Xavi Simons', 'Bergwijn', 'Brobbey', 'Geertruida', 'Aké', 'Veerman'],
+    URU: ['Suárez', 'Darwin Núñez', 'Pellistri', 'Valverde', 'Bentancur', 'De Arrascaeta', 'Olivera', 'Giménez', 'Coates', 'Rochet', 'Ugarte', 'Vecino', 'Maxi Gómez', 'Ronald Araújo', 'Caceres'],
+    BEL: ['De Bruyne', 'Lukaku', 'Doku', 'Trossard', 'Carrasco', 'Vertonghen', 'Witsel', 'Mertens', 'Courtois', 'Tielemans', 'Lukebakio', 'Castagne', 'Vermeeren', 'Onana', 'Bakayoko'],
+    CRO: ['Modrić', 'Kovačić', 'Brozović', 'Kramarić', 'Perišić', 'Petković', 'Sosa', 'Gvardiol', 'Livaković', 'Lovren', 'Pasalić', 'Vlasic', 'Erlic', 'Majer', 'Sucic'],
+    MEX: ['Lozano', 'Edson Álvarez', 'Henry Martín', 'Vega', 'Quiñones', 'Antuna', 'Araujo', 'Moreno', 'Ochoa', 'Pizarro', 'Gallardo', 'Romo', 'Cordova', 'Vázquez', 'Funes Mori'],
+    MAR: ['Hakimi', 'Ziyech', 'En-Nesyri', 'Saïss', 'Mazraoui', 'Amrabat', 'Aguerd', 'Bounou', 'Boufal', 'Cheddira', 'Ounahi', 'Sabiri', 'Ezzalzouli', 'Adli', 'Salmaoui'],
+    JPN: ['Mitoma', 'Kubo', 'Doan', 'Endo', 'Itakura', 'Tanaka', 'Tomiyasu', 'Maeda', 'Suzuki', 'Sakai', 'Kamada', 'Asano', 'Minamino', 'Furuhashi', 'Ueda'],
+    COL: ['James', 'Luis Díaz', 'Cuadrado', 'Falcao', 'Borja', 'Lerma', 'Yerry Mina', 'Sánchez', 'Vargas', 'Mojica', 'Muñoz', 'Uribe', 'Arias', 'Cucho', 'Carrascal'],
+    SEN: ['Mané', 'Sarr', 'Koulibaly', 'Mendy', 'Diatta', 'Diédhiou', 'Gueye', 'Kouyaté', 'Édouard Mendy', 'Cisse', 'Boulaye Dia', 'Ciss', 'Bamba Dieng', 'Loum', 'Jakobs']
+  };
+  function pickJugador(equipoId) {
+    const id = equipoId || 'ARG';
+    const lista = JUGADORES[id] || ['Sosa', 'García', 'Smith'];
+    return lista[Math.floor(Math.random() * lista.length)];
+  }
+
+  // ========================================================================
+  // ÓRDENES OSADAS (modifican stats temporalmente)
+  // ========================================================================
+  const ORDENES_LOCAS = [
+    { id:'todos-arriba', n:'⚔ TODOS AL ATAQUE', desc:'+50% ATK, -50% DEF · 5 min', mod:{atk:1.5, def:0.5}, dur:5 },
+    { id:'encierro', n:'🛡 ENCIERRO TOTAL', desc:'+60% DEF, -30% ATK · 8 min', mod:{atk:0.7, def:1.6}, dur:8 },
+    { id:'patear-afuera', n:'🚀 PATEAR DE AFUERA', desc:'+30% TIROS, riesgo balón parada · 5 min', mod:{atk:1.3, def:0.9, tirosBoost: 0.3}, dur:5 },
+    { id:'tarjeta-amarilla', n:'😤 ROMPER MEDIA', desc:'+40% DEF, riesgo tarjeta · 4 min', mod:{def:1.4, riskCard: 0.5}, dur:4 },
+    { id:'pressing', n:'🔥 PRESSING ALTO', desc:'+30% MED, cansa al equipo · 6 min', mod:{med:1.3, atk:1.1, def:0.85}, dur:6 },
+    { id:'descansar', n:'💤 BAJAR EL RITMO', desc:'-20% todo, recupera moral · 5 min', mod:{atk:0.8, def:0.8, med:0.8, morBoost: 5}, dur:5 },
+    { id:'panenka', n:'🎩 PEDIR PANENKA', desc:'Próximo penal: Panenka o atajada épica', mod:{}, dur:1, special:'panenka' },
+    { id:'arquero-arriba', n:'🥅 ARQUERO AL ATAQUE', desc:'Locura total: ATK+, DEF--, POR-- · 3 min', mod:{atk:1.6, def:0.4, por:0.5}, dur:3 }
+  ];
+
+  // Modificadores por táctica
+  const TACTICAS = {
+    defensivo:   { atk: 0.85, med: 1.0,  def: 1.18 },
+    equilibrado: { atk: 1.0,  med: 1.0,  def: 1.0 },
+    ofensivo:    { atk: 1.20, med: 1.0,  def: 0.85 }
+  };
+  // El rival (IA) elige táctica según contexto del partido
+
+  // ========================================================================
+  // ESTADO
+  // ========================================================================
+  let estado = {
+    local: null, visit: null,
+    score_l: 0, score_v: 0,
+    min: 0,
+    tactica_local: 'equilibrado',
+    tactica_visit: 'equilibrado',
+    eventos: [],
+    running: false,
+    paused: false,
+    speed: 1,
+    interval: null,
+    cards_l: 0, cards_v: 0,
+    rojas_l: 0, rojas_v: 0,
+    tiros_l: 0, tiros_v: 0,
+    pos_l: 50,
+    // Órdenes osadas
+    ordenesUsadas: [],
+    ordenActiva: null,
+    ordenExpire: 0,
+    panenkaQueue: false
+  };
+
+  // ========================================================================
+  // SETUP UI
+  // ========================================================================
+  function initSelects() {
+    const sl = document.getElementById('sel-local');
+    const sv = document.getElementById('sel-visit');
+    EQUIPOS.forEach(e => {
+      sl.innerHTML += `<option value="${e.id}">${e.name}</option>`;
+      sv.innerHTML += `<option value="${e.id}">${e.name}</option>`;
+    });
+    sl.value = 'ARG';
+    sv.value = 'FRA';
+    sl.addEventListener('change', updateSetup);
+    sv.addEventListener('change', updateSetup);
+    updateSetup();
+  }
+  function updateSetup() {
+    estado.local = EQUIPOS.find(e => e.id === document.getElementById('sel-local').value);
+    estado.visit = EQUIPOS.find(e => e.id === document.getElementById('sel-visit').value);
+    document.getElementById('flag-local').textContent = estado.local.flag;
+    document.getElementById('nom-local').textContent = estado.local.name.toUpperCase();
+    document.getElementById('flag-visit').textContent = estado.visit.flag;
+    document.getElementById('nom-visit').textContent = estado.visit.name.toUpperCase();
+    renderStatsCompare();
+  }
+  function renderStatsCompare() {
+    const stats = [
+      ['ATAQUE', 'atk'], ['MEDIO', 'med'], ['DEFENSA', 'def'], ['ARQUERO', 'por'], ['MORAL', 'mor']
+    ];
+    const div = document.getElementById('stats-compare');
+    div.innerHTML = stats.map(([label, key]) => {
+      const l = estado.local[key];
+      const v = estado.visit[key];
+      return `
+        <div style="margin-bottom:0.5rem">
+          <div style="display:grid;grid-template-columns:50px 1fr 50px;gap:0.5rem;align-items:center;font-family:'JetBrains Mono',monospace;font-size:0.75rem">
+            <span style="text-align:right;color:${l > v ? 'var(--verde-fluo)' : l < v ? 'var(--crema)' : 'var(--gold-2)'};font-weight:700">${l}</span>
+            <div style="display:grid;grid-template-columns:1fr 50px 1fr;align-items:center">
+              <div style="height:6px;background:rgba(0,0,0,0.4);border-radius:3px;overflow:hidden">
+                <div style="height:100%;background:linear-gradient(90deg,transparent,var(--verde-fluo));width:${l}%;margin-left:${100-l}%"></div>
+              </div>
+              <span style="text-align:center;color:var(--gold);font-size:0.65rem;letter-spacing:0.1em">${label}</span>
+              <div style="height:6px;background:rgba(0,0,0,0.4);border-radius:3px;overflow:hidden">
+                <div style="height:100%;background:linear-gradient(90deg,var(--rojo),transparent);width:${v}%"></div>
+              </div>
+            </div>
+            <span style="color:${v > l ? 'var(--verde-fluo)' : v < l ? 'var(--crema)' : 'var(--gold-2)'};font-weight:700">${v}</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+  initSelects();
+
+  // Tactica setup
+  document.querySelectorAll('.tactica-btn').forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll('.tactica-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      estado.tactica_local = btn.dataset.tactica;
+    };
+  });
+  // Tactica durante partido
+  document.querySelectorAll('[data-set-tactica]').forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll('[data-set-tactica]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      estado.tactica_local = btn.dataset.setTactica;
+      log(estado.min, `📋 Cambio de táctica: ${btn.dataset.setTactica.toUpperCase()}`);
+    };
+  });
+
+  document.getElementById('iniciar').onclick = () => {
+    if (estado.local.id === estado.visit.id) {
+      alert('Elegí selecciones distintas');
+      return;
+    }
+    show('game');
+    initPartido();
+  };
+
+  function show(s) {
+    document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+    document.getElementById('screen-' + s).classList.add('active');
+  }
+
+  // ========================================================================
+  // PARTIDO
+  // ========================================================================
+  function initPartido() {
+    estado.score_l = 0; estado.score_v = 0;
+    estado.min = 0;
+    estado.eventos = [];
+    estado.cards_l = 0; estado.cards_v = 0;
+    estado.rojas_l = 0; estado.rojas_v = 0;
+    estado.tiros_l = 0; estado.tiros_v = 0;
+    estado.pos_l = 50;
+    estado.paused = false;
+    estado.speed = 1;
+    estado.tactica_visit = 'equilibrado';
+    estado.ordenesUsadas = [];
+    estado.ordenActiva = null;
+    estado.ordenExpire = 0;
+    estado.panenkaQueue = false;
+    renderOrdenes();
+
+    document.getElementById('m-flag-l').textContent = estado.local.flag;
+    document.getElementById('m-nom-l').textContent = estado.local.name.substring(0, 3).toUpperCase();
+    document.getElementById('m-flag-v').textContent = estado.visit.flag;
+    document.getElementById('m-nom-v').textContent = estado.visit.name.substring(0, 3).toUpperCase();
+    document.getElementById('m-score-l').textContent = 0;
+    document.getElementById('m-score-v').textContent = 0;
+    document.getElementById('m-min').textContent = 0;
+    document.getElementById('eventos-log').innerHTML = '';
+    document.getElementById('et-banner-container').innerHTML = '';
+
+    log(0, `🏁 Empieza el partido. ${estado.local.name} vs ${estado.visit.name}.`);
+    runMatch();
+  }
+
+  function getEffectiveStats(team, tactica, isLocal) {
+    const mod = TACTICAS[tactica];
+    let stats = {
+      atk: team.atk * mod.atk,
+      med: team.med * mod.med,
+      def: team.def * mod.def,
+      por: team.por,
+      mor: team.mor
+    };
+    // Aplicar orden osada si es el local y está activa
+    if (isLocal && estado.ordenActiva && estado.ordenExpire > estado.min) {
+      const o = estado.ordenActiva.mod;
+      if (o.atk) stats.atk *= o.atk;
+      if (o.def) stats.def *= o.def;
+      if (o.med) stats.med *= o.med;
+      if (o.por) stats.por *= o.por;
+      if (o.morBoost) stats.mor = Math.min(99, stats.mor + o.morBoost);
+    }
+    return stats;
+  }
+
+  // Render del panel de órdenes osadas
+  function renderOrdenes() {
+    const grid = document.getElementById('ordenes-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    ORDENES_LOCAS.forEach(o => {
+      const b = document.createElement('button');
+      b.className = 'ctrl-btn';
+      const usada = estado.ordenesUsadas.includes(o.id);
+      if (usada) b.style.opacity = '0.3';
+      b.style.fontSize = '0.7rem';
+      b.style.padding = '0.4rem 0.3rem';
+      b.innerHTML = o.n;
+      b.title = o.desc;
+      b.disabled = usada;
+      b.onclick = () => activarOrden(o);
+      grid.appendChild(b);
+    });
+  }
+  function activarOrden(o) {
+    if (estado.ordenesUsadas.includes(o.id)) return;
+    estado.ordenesUsadas.push(o.id);
+    estado.ordenActiva = o;
+    estado.ordenExpire = estado.min + o.dur;
+    if (o.special === 'panenka') estado.panenkaQueue = true;
+    log(estado.min, `🔥 ORDEN ESPECIAL: ${o.n} — ${o.desc}`, 'penal');
+    document.getElementById('orden-activa').textContent = `▶ ${o.n} activa hasta min ${estado.min + o.dur}`;
+    renderOrdenes();
+    setTimeout(() => {
+      if (estado.min >= estado.ordenExpire) {
+        document.getElementById('orden-activa').textContent = '';
+        estado.ordenActiva = null;
+      }
+    }, o.dur * 800);
+  }
+
+  function runMatch() {
+    estado.running = true;
+    estado.interval = setInterval(() => {
+      if (estado.paused) return;
+      tickMinute();
+    }, 800 / estado.speed);
+  }
+
+  function tickMinute() {
+    estado.min++;
+    document.getElementById('m-min').textContent = estado.min;
+
+    // IA del rival adapta táctica
+    updateRivalTactica();
+
+    // Calcular probabilidad de evento este minuto
+    const sL = getEffectiveStats(estado.local, estado.tactica_local, true);
+    const sV = getEffectiveStats(estado.visit, estado.tactica_visit, false);
+
+    // Posesión gradual hacia el equipo con más MED
+    const targetPos = (sL.med / (sL.med + sV.med)) * 100;
+    estado.pos_l += (targetPos - estado.pos_l) * 0.1;
+
+    // Animar pelota según posesión
+    const ball = document.getElementById('sim-ball');
+    const x = estado.pos_l > 60 ? '15%' : estado.pos_l < 40 ? '85%' : (15 + (1 - (estado.pos_l - 40) / 20) * 70) + '%';
+    ball.style.left = (10 + (1 - estado.pos_l / 100) * 80) + '%';
+
+    // Probabilidad de evento en este minuto (~5-8% para gol, etc)
+    rollEvents(sL, sV);
+
+    // Entretiempo
+    if (estado.min === 45) {
+      document.getElementById('et-banner-container').innerHTML = '<div class="et-banner">⏸ ENTRETIEMPO · Cambiá tu táctica si querés</div>';
+      estado.paused = true;
+      log(45, '⏱ ENTRETIEMPO. Resultado parcial.');
+      setTimeout(() => {
+        document.getElementById('et-banner-container').innerHTML = '';
+        estado.paused = false;
+        log(45, '▶ Empieza el segundo tiempo.');
+      }, 3500);
+      return;
+    }
+
+    if (estado.min >= 90) {
+      // posibilidad de descuento
+      if (estado.min >= 90 + 4) {
+        endMatch();
+      } else if (estado.min === 90) {
+        log(90, '⏱ Tiempo cumplido. Hay descuento.');
+      }
+    }
+  }
+
+  function updateRivalTactica() {
+    // Si va perdiendo, ofensivo. Si gana, defensivo. Si empata, equilibrado.
+    const diff = estado.score_v - estado.score_l;
+    let nueva;
+    if (diff < 0) nueva = 'ofensivo';
+    else if (diff > 0) nueva = 'defensivo';
+    else nueva = 'equilibrado';
+    // Cambios sólo al minuto 45 o cuando hay un gol (no cada tick)
+    estado.tactica_visit = nueva;
+  }
+
+  // ========================================================================
+  // EVENTOS
+  // ========================================================================
+  function rollEvents(sL, sV) {
+    const r = Math.random();
+    // Probabilidad de "jugada" en este minuto: 14%
+    if (r > 0.14) return;
+    // Quien tiene la jugada
+    const localHasIt = Math.random() < (estado.pos_l / 100);
+    const atacante = localHasIt ? sL : sV;
+    const defensor = localHasIt ? sV : sL;
+    const team = localHasIt ? estado.local : estado.visit;
+    const otro = localHasIt ? estado.visit : estado.local;
+
+    // Tipo de jugada
+    const tipo = Math.random();
+    if (tipo < 0.65) {
+      // Tiro
+      tryShot(atacante, defensor, team, otro, localHasIt);
+    } else if (tipo < 0.78) {
+      // Tarjeta
+      tryCard(localHasIt ? estado.visit : estado.local, !localHasIt);
+    } else if (tipo < 0.88) {
+      // Tiro libre
+      tryFreekick(atacante, defensor, team, otro, localHasIt);
+    } else if (tipo < 0.95) {
+      // Penal (raro)
+      tryPenal(atacante, defensor, team, otro, localHasIt);
+    } else {
+      // jugada peligrosa sin gol
+      log(estado.min, `🔥 ${team.flag} ${pickJugador(team.id)} la tuvo, pero la mandó cerca del palo.`);
+    }
+  }
+
+  function tryShot(atk, def, team, otro, isLocal) {
+    isLocal ? estado.tiros_l++ : estado.tiros_v++;
+    // Probabilidad de gol = atk / (atk + def + por)
+    const golProb = (atk.atk * (atk.mor / 100)) / (atk.atk + def.def + def.por * 0.7);
+    const r = Math.random();
+    if (r < golProb * 0.55) {
+      gol(team, otro, isLocal, pickJugador(team.id));
+    } else if (r < golProb * 0.55 + 0.15) {
+      log(estado.min, `🥅 ${team.flag} Atajada del arquero de ${otro.name}.`);
+    } else {
+      log(estado.min, `⚽ ${team.flag} ${pickJugador(team.id)} remató pero la sacaron a la defensa.`);
+    }
+  }
+
+  function tryFreekick(atk, def, team, otro, isLocal) {
+    log(estado.min, `🎯 ${team.flag} Tiro libre para ${team.name}...`);
+    const prob = (atk.atk * 0.7 + atk.med * 0.3) / (atk.atk + def.por * 1.5);
+    if (Math.random() < prob * 0.45) {
+      gol(team, otro, isLocal, pickJugador(team.id), '⚽ tiro libre');
+    } else {
+      log(estado.min, `   ${Math.random() < 0.5 ? 'Tapó el arquero.' : 'Se fue por arriba del travesaño.'}`);
+    }
+  }
+
+  function tryPenal(atk, def, team, otro, isLocal) {
+    log(estado.min, `🚨 ${team.flag} ¡PENAL para ${team.name}!`, 'penal');
+    // Si activaste "panenka", próximo penal: o gol épico o atajada épica
+    if (isLocal && estado.panenkaQueue) {
+      estado.panenkaQueue = false;
+      if (Math.random() < 0.55) {
+        gol(team, otro, isLocal, pickJugador(team.id), '🎩 con PANENKA');
+        return;
+      } else {
+        log(estado.min, `   🧤 ¡SE QUEDÓ EL ARQUERO! Quiso la Panenka y se la atajaron.`);
+        return;
+      }
+    }
+    const prob = 0.75 - (def.por - 80) / 200;
+    if (Math.random() < prob) {
+      gol(team, otro, isLocal, pickJugador(team.id), '⚽ de penal');
+    } else {
+      log(estado.min, `   🧤 ¡ATAJADA INCREÍBLE del arquero de ${otro.name}!`);
+    }
+  }
+
+  function tryCard(teamCard, isLocalCard) {
+    // Si está activa "tarjeta-amarilla" orden, más chance de roja
+    const rojaProb = (isLocalCard && estado.ordenActiva && estado.ordenActiva.mod.riskCard) ? 0.25 : 0.1;
+    const isRoja = Math.random() < rojaProb;
+    if (isRoja) {
+      if (isLocalCard) { estado.cards_l++; estado.rojas_l++; }
+      else { estado.cards_v++; estado.rojas_v++; }
+      log(estado.min, `🟥 Roja directa para ${teamCard.flag} ${teamCard.name}. ${pickJugador(teamCard.id)} se va expulsado.`, 'roja');
+    } else {
+      if (isLocalCard) estado.cards_l++; else estado.cards_v++;
+      log(estado.min, `🟨 Amarilla para ${teamCard.flag} ${teamCard.name}, ${pickJugador(teamCard.id)}.`, 'tarjeta');
+    }
+  }
+
+  function gol(team, otro, isLocal, scorer, tipo='') {
+    if (isLocal) estado.score_l++; else estado.score_v++;
+    document.getElementById('m-score-l').textContent = estado.score_l;
+    document.getElementById('m-score-v').textContent = estado.score_v;
+    log(estado.min, `⚽ ¡GOOOOL DE ${team.flag} ${team.name.toUpperCase()}! ${scorer} ${tipo}. ${estado.score_l}-${estado.score_v}.`, 'gol');
+    // El equipo que recibió gol cambia táctica
+    if (isLocal) {
+      // Es la IA la que recibió
+      estado.tactica_visit = 'ofensivo';
+    }
+  }
+
+  function log(min, text, klass='') {
+    const div = document.getElementById('eventos-log');
+    const ev = document.createElement('div');
+    ev.className = 'evento ' + klass;
+    ev.innerHTML = `<div class="evento-min">${min}'</div><div class="evento-text">${text}</div>`;
+    div.appendChild(ev);
+    div.scrollTop = div.scrollHeight;
+  }
+
+  function endMatch() {
+    clearInterval(estado.interval);
+    estado.running = false;
+    log(estado.min, `🏁 Final del partido. ${estado.local.name} ${estado.score_l} · ${estado.score_v} ${estado.visit.name}.`, 'final');
+    setTimeout(showResult, 2000);
+  }
+
+  function showResult() {
+    show('result');
+    document.getElementById('r-l').textContent = estado.score_l;
+    document.getElementById('r-v').textContent = estado.score_v;
+    let trophy, verdict;
+    if (estado.score_l > estado.score_v) {
+      trophy = '🏆';
+      verdict = `¡VICTORIA DE ${estado.local.name.toUpperCase()}!`;
+    } else if (estado.score_l < estado.score_v) {
+      trophy = '😭';
+      verdict = `Triunfo de ${estado.visit.name}. A casa.`;
+    } else {
+      trophy = '🤝';
+      verdict = `EMPATE ${estado.score_l}-${estado.score_v}.`;
+    }
+    document.getElementById('r-trophy').textContent = trophy;
+    document.getElementById('r-verdict').textContent = verdict;
+    document.getElementById('r-stats-l').innerHTML = `
+      <div class="result-stat-row"><span>Tiros</span><strong>${estado.tiros_l}</strong></div>
+      <div class="result-stat-row"><span>Goles</span><strong>${estado.score_l}</strong></div>
+      <div class="result-stat-row"><span>Amarillas</span><strong>${estado.cards_l}</strong></div>
+      <div class="result-stat-row"><span>Rojas</span><strong>${estado.rojas_l}</strong></div>
+      <div class="result-stat-row"><span>Posesión</span><strong>${Math.round(estado.pos_l)}%</strong></div>
+    `;
+    document.getElementById('r-stats-v').innerHTML = `
+      <div class="result-stat-row"><span>Tiros</span><strong>${estado.tiros_v}</strong></div>
+      <div class="result-stat-row"><span>Goles</span><strong>${estado.score_v}</strong></div>
+      <div class="result-stat-row"><span>Amarillas</span><strong>${estado.cards_v}</strong></div>
+      <div class="result-stat-row"><span>Rojas</span><strong>${estado.rojas_v}</strong></div>
+      <div class="result-stat-row"><span>Posesión</span><strong>${100 - Math.round(estado.pos_l)}%</strong></div>
+    `;
+  }
+
+  // ========================================================================
+  // CONTROLES
+  // ========================================================================
+  document.getElementById('pause').onclick = () => {
+    estado.paused = !estado.paused;
+    document.getElementById('pause').textContent = estado.paused ? '▶ REANUDAR' : '⏸ PAUSA';
+  };
+  document.getElementById('speed').onclick = () => {
+    estado.speed = estado.speed === 1 ? 2 : estado.speed === 2 ? 4 : 1;
+    document.getElementById('speed').textContent = '⏩ ' + estado.speed + 'x';
+    if (estado.interval) {
+      clearInterval(estado.interval);
+      runMatch();
+    }
+  };
+
+  function restart() {
+    if (estado.interval) clearInterval(estado.interval);
+    show('setup');
+  }
+  window.restart = restart;
+</script>
+</body>
+</html>

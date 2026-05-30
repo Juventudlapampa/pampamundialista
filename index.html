@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pampa Juega · Mundial 2026 · Juventudes La Pampa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #050d08; --verde: #0d3b26; --verde-fluo: #4ade80;
+    --gold: #d4a82e; --gold-2: #f4cd60; --crema: #f4ecd8;
+    --rojo: #dc2626; --azul: #38bdf8; --purple: #a78bfa;
+  }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    background-image: radial-gradient(circle at 10% 10%, rgba(212,168,46,0.15), transparent 50%), radial-gradient(circle at 90% 90%, rgba(74,222,128,0.1), transparent 50%);
+    background-attachment: fixed; min-height: 100vh; color: var(--crema); padding: 1.5rem 1rem;
+  }
+  .container { max-width: 1000px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 1.5rem; }
+  .header-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.25em; color: var(--gold); text-transform: uppercase; margin-bottom: 0.4rem; }
+  h1 { font-family: 'Anton', sans-serif; font-size: clamp(2.6rem, 11vw, 5rem); letter-spacing: 0.04em; text-transform: uppercase; line-height: 0.92; }
+  h1 span { color: var(--gold); text-shadow: 0 0 30px rgba(212,168,46,0.4); }
+  .subtitle { font-size: 1rem; opacity: 0.9; max-width: 640px; margin: 0.8rem auto 0; line-height: 1.5; }
+  .stat-strip { display: flex; justify-content: center; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap; }
+  .stat-pill { background: rgba(212,168,46,0.15); border: 1px solid rgba(212,168,46,0.3); padding: 0.35rem 0.8rem; border-radius: 20px; font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em; }
+
+  /* PASAPORTE */
+  .pass { background: rgba(0,0,0,0.45); border: 1px solid rgba(212,168,46,0.3); border-radius: 14px; padding: 0.9rem 1.1rem; margin: 1.2rem 0; display: flex; align-items: center; gap: 0.9rem; }
+  .pass-ic { font-size: 1.8rem; }
+  .pass-body { flex: 1; }
+  .pass-txt { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; letter-spacing: 0.05em; }
+  .pass-txt b { color: var(--gold-2); }
+  .pass-bar { height: 8px; background: rgba(0,0,0,0.5); border-radius: 4px; overflow: hidden; margin-top: 0.4rem; }
+  .pass-fill { height: 100%; width: 0; background: linear-gradient(90deg, var(--verde-fluo), var(--gold)); transition: width 0.6s; }
+
+  /* PUERTAS */
+  .puerta { border-radius: 16px; margin-bottom: 0.9rem; overflow: hidden; border: 2px solid var(--ac, var(--gold)); background: rgba(0,0,0,0.35); }
+  .puerta-head { width: 100%; background: none; border: none; color: var(--crema); cursor: pointer; display: flex; align-items: center; gap: 0.9rem; padding: 1.1rem 1rem; text-align: left; font-family: inherit; }
+  .puerta-ic { font-size: 2.4rem; line-height: 1; flex: none; }
+  .puerta-info { flex: 1; min-width: 0; }
+  .puerta-name { font-family: 'Anton', sans-serif; font-size: 1.45rem; letter-spacing: 0.04em; text-transform: uppercase; line-height: 1; color: var(--ac, var(--gold)); }
+  .puerta-desc { font-size: 0.82rem; opacity: 0.82; margin-top: 0.2rem; line-height: 1.3; }
+  .puerta-chips { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; opacity: 0.65; margin-top: 0.35rem; letter-spacing: 0.03em; }
+  .puerta-badge { flex: none; background: var(--ac, var(--gold)); color: #06140c; font-family: 'Anton', sans-serif; font-size: 0.9rem; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .puerta-arrow { flex: none; font-size: 0.8rem; transition: transform 0.25s; opacity: 0.7; }
+  .puerta.open .puerta-arrow { transform: rotate(180deg); }
+  .puerta-body { display: none; padding: 0 1rem 1rem; }
+  .puerta.open .puerta-body { display: block; animation: fade 0.3s; }
+  @keyframes fade { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+
+  .grid-tools { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); gap: 0.7rem; }
+  .tool-card { background: rgba(0,0,0,0.4); border: 1px solid rgba(212,168,46,0.25); border-radius: 12px; padding: 1rem; text-decoration: none; color: var(--crema); transition: all 0.18s; display: flex; flex-direction: column; gap: 0.35rem; position: relative; }
+  .tool-card:hover { transform: translateY(-3px); border-color: var(--ac, var(--gold)); }
+  .tool-card .seal { position: absolute; top: 8px; right: 8px; font-size: 1rem; opacity: 0; transition: opacity 0.2s; }
+  .tool-card.done .seal { opacity: 1; }
+  .tool-icon { font-size: 1.6rem; }
+  .tool-name { font-family: 'Anton', sans-serif; font-size: 1.05rem; letter-spacing: 0.03em; text-transform: uppercase; line-height: 1.05; }
+  .tool-desc { font-size: 0.76rem; opacity: 0.78; line-height: 1.35; }
+  .tag-new { display: inline-block; background: var(--rojo); color: #fff; font-family: 'Anton', sans-serif; font-size: 0.55rem; padding: 1px 6px; border-radius: 4px; letter-spacing: 0.12em; margin-left: 0.3rem; vertical-align: middle; }
+  .tag-esi { display: inline-block; background: var(--purple); color: #1a1030; font-family: 'Anton', sans-serif; font-size: 0.55rem; padding: 1px 6px; border-radius: 4px; letter-spacing: 0.12em; margin-left: 0.3rem; vertical-align: middle; }
+
+  /* SECCIONES */
+  .block { background: rgba(0,0,0,0.4); border: 1px solid rgba(212,168,46,0.25); border-radius: 16px; padding: 1.3rem; margin-top: 1.6rem; }
+  .block-title { font-family: 'Anton', sans-serif; font-size: 1.4rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
+  .block p { font-size: 0.9rem; line-height: 1.55; opacity: 0.92; margin-bottom: 0.6rem; }
+  .block p b { color: var(--gold-2); }
+
+  .part-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.8rem 0; }
+  .part-chip { background: rgba(0,0,0,0.4); border: 2px solid rgba(212,168,46,0.3); border-radius: 10px; padding: 0.55rem 0.9rem; cursor: pointer; font-family: inherit; color: var(--crema); font-size: 0.85rem; }
+  .part-chip.on { border-color: var(--verde-fluo); background: rgba(74,222,128,0.15); color: var(--verde-fluo); }
+  .part-out { font-size: 0.88rem; line-height: 1.5; background: rgba(74,222,128,0.08); border-left: 3px solid var(--verde-fluo); padding: 0.7rem 0.9rem; border-radius: 8px; min-height: 1rem; }
+  .bases { font-size: 0.82rem; line-height: 1.6; opacity: 0.88; margin-top: 0.8rem; }
+  .bases li { margin-left: 1.1rem; margin-bottom: 0.2rem; }
+
+  /* TARJETA JOVEN */
+  .tj { background: linear-gradient(135deg, rgba(212,168,46,0.18), rgba(13,59,38,0.5)); border: 2px solid var(--gold); border-radius: 16px; padding: 1.4rem; margin-top: 1.6rem; }
+  .tj-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 0.2em; color: var(--gold); text-transform: uppercase; }
+  .tj h2 { font-family: 'Anton', sans-serif; font-size: 1.6rem; letter-spacing: 0.04em; text-transform: uppercase; margin: 0.2rem 0 0.5rem; line-height: 1; }
+  .tj h2 span { color: var(--gold); }
+  .tj p { font-size: 0.9rem; line-height: 1.55; margin-bottom: 0.8rem; }
+  .tj-paths { display: grid; gap: 0.6rem; }
+  .tj-path { display: flex; align-items: center; gap: 0.7rem; background: rgba(0,0,0,0.35); border: 1px solid rgba(212,168,46,0.3); border-radius: 12px; padding: 0.8rem 1rem; text-decoration: none; color: var(--crema); transition: all 0.15s; }
+  .tj-path:hover { border-color: var(--gold); transform: translateX(3px); }
+  .tj-path .e { font-size: 1.5rem; flex: none; }
+  .tj-path .t { flex: 1; }
+  .tj-path .t b { color: var(--gold-2); display: block; font-size: 0.95rem; }
+  .tj-path .t small { opacity: 0.8; font-size: 0.8rem; }
+  .tj-path .go { font-family: 'Anton', sans-serif; color: var(--gold); font-size: 0.85rem; flex: none; }
+  .tj-note { font-size: 0.8rem; opacity: 0.85; margin-top: 0.9rem; font-style: italic; line-height: 1.5; }
+
+  footer { text-align: center; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(212,168,46,0.2); font-size: 0.8rem; opacity: 0.6; line-height: 1.6; }
+  footer a { color: var(--gold); }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="header-tag">Subsecretaría de Juventudes · La Pampa</div>
+    <h1>PAMPA <span>JUEGA</span></h1>
+    <p class="subtitle">Jugá, armá tu carta y viví el <b>Mundial 2026</b> a lo pampeano. Entrá, divertite y sumate al concurso. Gratis, sin registro para jugar.</p>
+    <div class="stat-strip">
+      <div class="stat-pill">🎮 19 cosas para hacer</div>
+      <div class="stat-pill">📲 Para compartir</div>
+      <div class="stat-pill">🎟️ Premios con Tarjeta Joven</div>
+      <div class="stat-pill">14 a 30 años</div>
+    </div>
+  </header>
+
+  <!-- PASAPORTE -->
+  <div class="pass">
+    <div class="pass-ic">🎟️</div>
+    <div class="pass-body">
+      <div class="pass-txt">Tu pasaporte mundialista: <b id="pass-n">0</b> de 19 sellos · <span id="pass-msg">¡arrancá a jugar y llenalo!</span></div>
+      <div class="pass-bar"><div class="pass-fill" id="pass-fill"></div></div>
+    </div>
+  </div>
+
+  <!-- PUERTA 1: CREÁ TU CRACK -->
+  <section class="puerta" style="--ac:var(--azul)">
+    <button class="puerta-head" onclick="togglePuerta(this)">
+      <div class="puerta-ic">🎽</div>
+      <div class="puerta-info">
+        <div class="puerta-name">Creá tu Crack</div>
+        <div class="puerta-desc">Armá algo tuyo y compartilo en tus historias.</div>
+        <div class="puerta-chips">Avatar fachero · Figurita con tu foto · Carnet de hincha · Armá tu 11</div>
+      </div>
+      <div class="puerta-badge">4</div><div class="puerta-arrow">▼</div>
+    </button>
+    <div class="puerta-body">
+      <div class="grid-tools">
+        <a class="tool-card" data-id="crack" href="juegos/27-crear-crack.html"><span class="seal">🟢</span><div class="tool-icon">🎽</div><div class="tool-name">Creá tu Crack<span class="tag-new">TOP</span></div><div class="tool-desc">Diseñá tu jugador (piel, pelo, camiseta, mote) + 2 minijuegos. Bajá tu carta o sticker.</div></a>
+        <a class="tool-card" data-id="figu" href="generadores/01-figurita.html"><span class="seal">🟢</span><div class="tool-icon">🃏</div><div class="tool-name">Tu Figurita Real</div><div class="tool-desc">Figurita estilo Panini con TU foto, país y stats. Descargable.</div></a>
+        <a class="tool-card" data-id="carnet" href="generadores/03-carnet.html"><span class="seal">🟢</span><div class="tool-icon">🪪</div><div class="tool-name">Carnet de Hincha</div><div class="tool-desc">Tu credencial oficial de hincha con foto, país e ID único.</div></a>
+        <a class="tool-card" data-id="once" href="generadores/02-armar-11.html"><span class="seal">🟢</span><div class="tool-icon">⚽</div><div class="tool-name">Armá tu 11</div><div class="tool-desc">El 11 de Argentina (lista de 26) o el ideal del mundo. Compartible.</div></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PUERTA 2: DESAFÍO FUT -->
+  <section class="puerta" style="--ac:var(--gold)">
+    <button class="puerta-head" onclick="togglePuerta(this)">
+      <div class="puerta-ic">🥅</div>
+      <div class="puerta-info">
+        <div class="puerta-name">Desafío FUT</div>
+        <div class="puerta-desc">Patear, gambetear y ganar. Poné a prueba tu puntería.</div>
+        <div class="puerta-chips">Penales · Tiros libres · El picado · Tu carrera</div>
+      </div>
+      <div class="puerta-badge">4</div><div class="puerta-arrow">▼</div>
+    </button>
+    <div class="puerta-body">
+      <div class="grid-tools">
+        <a class="tool-card" data-id="penales" href="juegos/18-torneo-penales.html"><span class="seal">🟢</span><div class="tool-icon">🏆</div><div class="tool-name">Torneo de Penales</div><div class="tool-desc">8 selecciones, bracket eliminatorio. Llegá a campeón.</div></a>
+        <a class="tool-card" data-id="tiros" href="juegos/15-tiros-libres.html"><span class="seal">🟢</span><div class="tool-icon">🎯</div><div class="tool-name">Tiros Libres</div><div class="tool-desc">Zona + potencia + curva. Elegí pateador, el arquero IA aprende.</div></a>
+        <a class="tool-card" data-id="picado" href="juegos/25-picado.html"><span class="seal">🟢</span><div class="tool-icon">🕹️</div><div class="tool-name">El Picado<span class="tag-new">NUEVO</span></div><div class="tool-desc">Manejás un jugador (o todo el equipo). Gambeteá y metela. 60s.</div></a>
+        <a class="tool-card" data-id="carrera" href="juegos/20-carrera-futbolista.html"><span class="seal">🟢</span><div class="tool-icon">🎲</div><div class="tool-name">Tu Carrera</div><div class="tool-desc">Empezás a los 8 en La Pampa. Tirá el dado de la vida. 12 finales.</div></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PUERTA 3: PONETE A PRUEBA -->
+  <section class="puerta" style="--ac:var(--verde-fluo)">
+    <button class="puerta-head" onclick="togglePuerta(this)">
+      <div class="puerta-ic">🧠</div>
+      <div class="puerta-info">
+        <div class="puerta-name">Ponete a Prueba</div>
+        <div class="puerta-desc">Cabeza, memoria e ingenio mundialista.</div>
+        <div class="puerta-chips">Trivia · ¿Qué selección sos? · Sala de escape · Memo</div>
+      </div>
+      <div class="puerta-badge">4</div><div class="puerta-arrow">▼</div>
+    </button>
+    <div class="puerta-body">
+      <div class="grid-tools">
+        <a class="tool-card" data-id="trivia" href="juegos/08-trivia.html"><span class="seal">🟢</span><div class="tool-icon">⚡</div><div class="tool-name">Trivia Relámpago</div><div class="tool-desc">150+ preguntas V/F, 10s c/u, multiplicador por racha.</div></a>
+        <a class="tool-card" data-id="quesel" href="juegos/14-que-seleccion-sos.html"><span class="seal">🟢</span><div class="tool-icon">🔮</div><div class="tool-name">¿Qué Selección Sos?</div><div class="tool-desc">12 preguntas de personalidad → tu selección + ficha. Descargable.</div></a>
+        <a class="tool-card" data-id="escape" href="juegos/21-sala-escape.html"><span class="seal">🟢</span><div class="tool-icon">🔒</div><div class="tool-name">Sala de Escape</div><div class="tool-desc">5 acertijos encadenados, 10 minutos. Ranking por tiempo.</div></a>
+        <a class="tool-card" data-id="memo" href="juegos/23-memorice.html"><span class="seal">🟢</span><div class="tool-icon">🃏</div><div class="tool-name">Memo Mundial</div><div class="tool-desc">Memorice de banderas, 3 niveles. Entrená la memoria.</div></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PUERTA 4: TU PRONÓSTICO -->
+  <section class="puerta" style="--ac:var(--purple)">
+    <button class="puerta-head" onclick="togglePuerta(this)">
+      <div class="puerta-ic">🔮</div>
+      <div class="puerta-info">
+        <div class="puerta-name">Tu Pronóstico</div>
+        <div class="puerta-desc">Adiviná el Mundial y seguí los resultados.</div>
+        <div class="puerta-chips">Predictor del campeón · Fixture completo · Cartón mundialista</div>
+      </div>
+      <div class="puerta-badge">3</div><div class="puerta-arrow">▼</div>
+    </button>
+    <div class="puerta-body">
+      <div class="grid-tools">
+        <a class="tool-card" data-id="predictor" href="herramientas/24-predictor.html"><span class="seal">🟢</span><div class="tool-icon">🔮</div><div class="tool-name">Predictor del Mundial</div><div class="tool-desc">Cargá quién pasa de cada grupo y el cuadro hasta el campeón. 3 descargas.</div></a>
+        <a class="tool-card" data-id="fixture" href="herramientas/09-fixture.html"><span class="seal">🟢</span><div class="tool-icon">📋</div><div class="tool-name">Fixture Completo</div><div class="tool-desc">48 selecciones, grupos + eliminatorias. Descargá el campeón.</div></a>
+        <a class="tool-card" data-id="carton" href="juegos/07-bingo.html"><span class="seal">🟢</span><div class="tool-icon">🎯</div><div class="tool-name">Cartón Mundialista<span class="tag-new">NUEVO</span></div><div class="tool-desc">Marcá las cosas locas que van a pasar en TODO el Mundial. Se llena en semanas.</div></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PARA TU GRUPO -->
+  <section class="puerta" style="--ac:var(--rojo)">
+    <button class="puerta-head" onclick="togglePuerta(this)">
+      <div class="puerta-ic">👥</div>
+      <div class="puerta-info">
+        <div class="puerta-name">Para tu Grupo</div>
+        <div class="puerta-desc">Actividades para hacer en el aula, el club, la biblioteca o la ONG.</div>
+        <div class="puerta-chips">Equipo del aula · Figurita del curso · Simulador · Juego limpio (ESI)</div>
+      </div>
+      <div class="puerta-badge">4</div><div class="puerta-arrow">▼</div>
+    </button>
+    <div class="puerta-body">
+      <div class="grid-tools">
+        <a class="tool-card" data-id="aula" href="generadores/19-fut5-aula.html"><span class="seal">🟢</span><div class="tool-icon">🏫</div><div class="tool-name">Equipo del Aula</div><div class="tool-desc">El fútbol 5 de tu curso: 5 alumnos + 1 profe DT. Descargable.</div></a>
+        <a class="tool-card" data-id="promo" href="generadores/13-figurita-promo.html"><span class="seal">🟢</span><div class="tool-icon">🎓</div><div class="tool-name">Figurita del Curso</div><div class="tool-desc">La figurita de un compañero/a con cualidades del grupo.</div></a>
+        <a class="tool-card" data-id="simu" href="juegos/16-simulador-partido.html"><span class="seal">🟢</span><div class="tool-icon">📊</div><div class="tool-name">Simulador de Partido</div><div class="tool-desc">Stats reales, 15 jugadores por equipo y órdenes osadas.</div></a>
+        <a class="tool-card esi" data-id="esi" href="juegos/26-juego-limpio.html"><span class="seal">🟢</span><div class="tool-icon">💚</div><div class="tool-name">Juego Limpio<span class="tag-esi">ESI</span></div><div class="tool-desc">8 situaciones de respeto, igualdad y frenar la violencia. Tarjeta descargable.</div></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONCURSO -->
+  <div class="block" id="concurso">
+    <div class="block-title">🏅 Sumate al concurso</div>
+    <p>Jugá, hacé tus cartas y <b>sumá sellos en tu pasaporte</b>. No se gana por azar ni por plata: se gana <b>participando</b>. Podés competir <b>solo o en grupo</b>, y cada categoría compite contra su misma categoría (las aulas con aulas, los clubes con clubes), así es justo.</p>
+    <p style="margin-bottom:0.3rem"><b>¿Cómo participás?</b> Elegí qué sos:</p>
+    <div class="part-chips" id="part-chips">
+      <button class="part-chip" data-c="Individual">🙋 Individual</button>
+      <button class="part-chip" data-c="Aula">🏫 Aula</button>
+      <button class="part-chip" data-c="Club">⚽ Club</button>
+      <button class="part-chip" data-c="Biblioteca">📚 Biblioteca</button>
+      <button class="part-chip" data-c="ONG">🤝 ONG</button>
+      <button class="part-chip" data-c="Otro grupo">✨ Otro grupo</button>
+    </div>
+    <div class="part-out" id="part-out">Tocá una opción y te decimos contra quiénes competís.</div>
+    <ul class="bases">
+      <li>Jugá las herramientas y juntá sellos (mirá tu pasaporte arriba 👆).</li>
+      <li>Compartí tus cartas/resultados etiquetando a <b>@juventud_lapampa</b>.</li>
+      <li>Para llevarte premios necesitás <b>Tarjeta Joven</b> (mirá abajo 👇).</li>
+      <li>Cada categoría tiene su propio premio. Bases completas en las redes de la Subse.</li>
+    </ul>
+  </div>
+
+  <!-- TARJETA JOVEN -->
+  <div class="tj">
+    <div class="tj-tag">El requisito para los premios</div>
+    <h2>¿Tenés la <span>Tarjeta Joven</span>?</h2>
+    <p>Jugar es <b>libre y sin registro</b>. Pero para <b>llevarte los premios</b> del concurso necesitás tu Tarjeta Joven (de 14 a 30 años). Elegí tu caso:</p>
+    <div class="tj-paths">
+      <a class="tj-path" href="https://juventudes.lapampa.gob.ar/tj.html" target="_blank" rel="noopener">
+        <div class="e">✅</div><div class="t"><b>Ya la tengo</b><small>Guardá tu N° de beneficiario: te lo vamos a pedir para los premios 😉</small></div><div class="go">OK →</div>
+      </a>
+      <a class="tj-path" href="https://juventudes.lapampa.gob.ar/tj.html" target="_blank" rel="noopener">
+        <div class="e">🆕</div><div class="t"><b>No la tengo</b><small>Sacala gratis acá, es online y rapidísimo.</small></div><div class="go">Sacar →</div>
+      </a>
+      <a class="tj-path" href="https://juventudes.lapampa.gob.ar/tj.html" target="_blank" rel="noopener">
+        <div class="e">🔎</div><div class="t"><b>No sé si la tengo / actualizar datos</b><small>Chequealo y actualizá tus datos en el mismo lugar.</small></div><div class="go">Chequear →</div>
+      </a>
+    </div>
+    <div class="tj-note">Esto es de la Subsecretaría de Juventudes de La Pampa. La Tarjeta Joven es la llave de los premios — no un muro para jugar. 💚</div>
+  </div>
+
+  <footer>
+    <b>PAMPA JUEGA</b> · Una propuesta de la Subsecretaría de Juventudes de La Pampa para el Mundial 2026<br>
+    Seguinos en <a href="https://instagram.com/juventud_lapampa" target="_blank" rel="noopener">@juventud_lapampa</a> · Funciona en cualquier celular y PC · 100% gratis · Sin apuestas · Con mirada ESI<br>
+    <span style="opacity:0.8">Esta propuesta no tiene relación oficial con la FIFA ni con el torneo. Es contenido cultural y de participación juvenil de la provincia de La Pampa.</span>
+  </footer>
+</div>
+
+<script>
+  // Acordeón de puertas
+  function togglePuerta(btn){ btn.parentElement.classList.toggle('open'); }
+
+  // Pasaporte de sellos: marca las herramientas que abriste desde la home
+  const SEAL_KEY = 'pampa-juega-sellos';
+  let sellos = [];
+  try { sellos = JSON.parse(localStorage.getItem(SEAL_KEY) || '[]'); } catch(e) { sellos = []; }
+  const cards = Array.from(document.querySelectorAll('.tool-card[data-id]'));
+  const TOTAL = cards.length;
+  function renderSellos(){
+    let n = 0;
+    cards.forEach(c => { if (sellos.includes(c.dataset.id)) { c.classList.add('done'); n++; } });
+    document.getElementById('pass-n').textContent = n;
+    document.getElementById('pass-fill').style.width = Math.round(n/TOTAL*100) + '%';
+    const msg = document.getElementById('pass-msg');
+    if (n === 0) msg.textContent = '¡arrancá a jugar y llenalo!';
+    else if (n < 7) msg.textContent = '¡bien ahí, seguí sumando!';
+    else if (n < TOTAL) msg.textContent = '¡sos un crack, te falta poco!';
+    else msg.textContent = '🏆 ¡completaste el pasaporte! Sos leyenda pampeana.';
+  }
+  cards.forEach(c => c.addEventListener('click', () => {
+    if (!sellos.includes(c.dataset.id)) { sellos.push(c.dataset.id); try { localStorage.setItem(SEAL_KEY, JSON.stringify(sellos)); } catch(e){} }
+  }));
+  renderSellos();
+
+  // Concurso: categoría
+  const OUT = {
+    'Individual': '🙋 Competís en la categoría INDIVIDUAL, contra otros jugadores solos. ¡Vos contra todos!',
+    'Aula': '🏫 Tu AULA compite contra otras aulas. Junten sellos entre todos y suben juntos.',
+    'Club': '⚽ Tu CLUB compite contra otros clubes de La Pampa. A representar la camiseta.',
+    'Biblioteca': '📚 Tu BIBLIOTECA compite contra otras bibliotecas. El saber también juega.',
+    'ONG': '🤝 Tu ONG/grupo compite contra otras organizaciones. Sumar jugando.',
+    'Otro grupo': '✨ Tu grupo compite en la categoría grupos. ¡Armen equipo y a llenar el pasaporte!'
+  };
+  document.querySelectorAll('.part-chip').forEach(ch => ch.onclick = () => {
+    document.querySelectorAll('.part-chip').forEach(x => x.classList.remove('on'));
+    ch.classList.add('on');
+    document.getElementById('part-out').textContent = OUT[ch.dataset.c];
+  });
+</script>
+</body>
+</html>

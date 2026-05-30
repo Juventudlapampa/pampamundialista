@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memorice de Banderas · Mundial 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #050d08;
+    --gold: #d4a82e;
+    --gold-2: #f4cd60;
+    --crema: #f4ecd8;
+    --verde: #4ade80;
+    --rojo: #dc2626;
+    --azul: #2563eb;
+  }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    background-image: radial-gradient(ellipse at top, rgba(13,59,38,0.7), transparent 70%);
+    color: var(--crema);
+    padding: 1rem;
+    min-height: 100vh;
+    user-select: none;
+  }
+  .container { max-width: 700px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 1rem; }
+  .header-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.3em; color: var(--gold); text-transform: uppercase; }
+  h1 { font-family: 'Anton', sans-serif; font-size: clamp(2rem, 6vw, 3.5rem); letter-spacing: 0.05em; text-transform: uppercase; line-height: 0.95; margin-top: 0.3rem; }
+  h1 span { color: var(--verde); }
+  .screen { display: none; }
+  .screen.active { display: block; animation: fadeIn 0.3s; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .panel { background: rgba(0,0,0,0.6); border: 2px solid rgba(212,168,46,0.3); border-radius: 16px; padding: 1.4rem; }
+  .input-name { width: 100%; background: rgba(0,0,0,0.5); border: 2px solid rgba(244,236,216,0.3); color: var(--crema); padding: 0.9rem; border-radius: 8px; font-family: inherit; font-size: 1.1rem; margin-bottom: 0.7rem; }
+  .btn { background: linear-gradient(135deg, var(--gold), var(--gold-2)); color: #000; border: none; padding: 1.1rem; font-family: 'Anton', sans-serif; letter-spacing: 0.15em; border-radius: 10px; cursor: pointer; width: 100%; text-transform: uppercase; font-size: 1.15rem; box-shadow: 0 6px 0 #927200; }
+  .btn-secondary { background: rgba(0,0,0,0.4); border: 2px solid var(--gold); color: var(--crema); box-shadow: none; }
+
+  .dificultades { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem; margin-bottom: 1rem; }
+  .diff-btn {
+    background: rgba(0,0,0,0.5);
+    border: 2px solid rgba(212,168,46,0.4);
+    color: var(--crema);
+    padding: 0.7rem 0.5rem;
+    border-radius: 8px;
+    font-family: 'Anton', sans-serif;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+  }
+  .diff-btn.active { background: linear-gradient(135deg, var(--gold), var(--gold-2)); color: #000; border-color: var(--gold); }
+
+  .hud {
+    background: rgba(0,0,0,0.7);
+    border: 2px solid var(--gold);
+    border-radius: 10px;
+    padding: 0.7rem 1rem;
+    margin-bottom: 0.8rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  .hud-block { text-align: center; }
+  .hud-num { font-family: 'Anton', sans-serif; font-size: 1.4rem; color: var(--gold); line-height: 1; }
+  .hud-num.green { color: var(--verde); }
+  .hud-lab { font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; letter-spacing: 0.15em; opacity: 0.7; text-transform: uppercase; }
+
+  .grid-cards {
+    display: grid;
+    gap: 0.5rem;
+  }
+  .grid-cards.cols-4 { grid-template-columns: repeat(4, 1fr); }
+  .grid-cards.cols-5 { grid-template-columns: repeat(5, 1fr); }
+  .grid-cards.cols-6 { grid-template-columns: repeat(6, 1fr); }
+  @media (max-width: 500px) {
+    .grid-cards.cols-5, .grid-cards.cols-6 { grid-template-columns: repeat(4, 1fr); }
+  }
+  .card {
+    aspect-ratio: 5/7;
+    cursor: pointer;
+    perspective: 1000px;
+  }
+  .card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.5s;
+    transform-style: preserve-3d;
+  }
+  .card.flipped .card-inner { transform: rotateY(180deg); }
+  .card.matched .card-inner { transform: rotateY(180deg); opacity: 0.5; }
+  .card-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .card-back {
+    background: linear-gradient(135deg, var(--gold), var(--gold-2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+    font-family: 'Anton', sans-serif;
+    font-size: 1.5rem;
+    border: 2px solid var(--gold);
+  }
+  .card-front {
+    transform: rotateY(180deg);
+    border: 2px solid white;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 4px;
+  }
+  .card-flag {
+    width: 100%;
+    aspect-ratio: 3/2;
+    border: 1px solid #000;
+    border-radius: 2px;
+    margin-bottom: 4px;
+  }
+  .card-flag.v { background: linear-gradient(to right, var(--fc1) 33%, var(--fc2) 33% 66%, var(--fc3) 66%); }
+  .card-flag.h { background: linear-gradient(to bottom, var(--fc1) 33%, var(--fc2) 33% 66%, var(--fc3) 66%); }
+  .card-name {
+    font-family: 'Anton', sans-serif;
+    color: #000;
+    font-size: 0.55rem;
+    letter-spacing: 0.05em;
+    text-align: center;
+    line-height: 1;
+  }
+
+  /* Result */
+  .result-card { background: linear-gradient(135deg, var(--verde), #16a34a); color: #000; border-radius: 12px; padding: 1.8rem; text-align: center; }
+  .result-trophy { font-size: 4.5rem; line-height: 1; }
+  .result-time { font-family: 'Anton', sans-serif; font-size: 3rem; color: #000; margin: 0.5rem 0; }
+  .result-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin: 1rem 0; }
+  .result-stat { background: rgba(0,0,0,0.2); border-radius: 6px; padding: 0.5rem; font-family: 'JetBrains Mono', monospace; }
+  .result-stat strong { font-family: 'Anton', sans-serif; font-size: 1.3rem; color: #000; display: block; }
+  .result-wm { font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; letter-spacing: 0.2em; opacity: 0.7; margin-top: 0.8rem; }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="header-tag">🃏 Memorice · Banderas Mundial 2026</div>
+    <h1>MEMO <span>MUNDIAL</span></h1>
+  </header>
+
+  <!-- INTRO -->
+  <div class="screen active" id="screen-intro">
+    <div class="panel">
+      <div style="font-family:'Anton',sans-serif;color:var(--gold);font-size:1.2rem;letter-spacing:0.1em;margin-bottom:0.7rem;text-transform:uppercase">🃏 Memorice de banderas</div>
+      <p style="line-height:1.5;font-size:0.9rem;margin-bottom:1rem">
+        Encontrá los <strong>pares de banderas</strong> de las selecciones del Mundial. Tu tiempo y movimientos quedan en el ranking. Probá los 3 niveles.
+      </p>
+      <input type="text" class="input-name" id="player-name" placeholder="Tu nombre" maxlength="18">
+      <div class="dificultades">
+        <button class="diff-btn active" data-d="easy">🟢 FÁCIL (12)</button>
+        <button class="diff-btn" data-d="medium">🟡 MEDIO (20)</button>
+        <button class="diff-btn" data-d="hard">🔴 DIFÍCIL (30)</button>
+      </div>
+      <button class="btn" id="start">▶ EMPEZAR</button>
+    </div>
+  </div>
+
+  <!-- GAME -->
+  <div class="screen" id="screen-game">
+    <div class="hud">
+      <div class="hud-block"><div class="hud-num green" id="hud-pairs">0</div><div class="hud-lab">Pares</div></div>
+      <div class="hud-block"><div class="hud-num" id="hud-moves">0</div><div class="hud-lab">Movs</div></div>
+      <div class="hud-block"><div class="hud-num" id="hud-time">0:00</div><div class="hud-lab">Tiempo</div></div>
+    </div>
+    <div class="grid-cards" id="grid"></div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="screen" id="screen-result">
+    <div class="result-card" id="result-card">
+      <div class="result-trophy">🏆</div>
+      <div style="font-family:'Anton',sans-serif;font-size:1.3rem;letter-spacing:0.1em" id="r-name">JUGADOR</div>
+      <div class="result-time" id="r-time">0:00</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;letter-spacing:0.2em">TIEMPO TOTAL</div>
+      <div class="result-stats">
+        <div class="result-stat"><strong id="r-moves">0</strong>Movimientos</div>
+        <div class="result-stat"><strong id="r-pairs">0</strong>Pares</div>
+      </div>
+      <div style="font-family:'Anton',sans-serif;font-size:1.1rem" id="r-verdict"></div>
+      <div class="result-wm">MEMO MUNDIAL · MUNDIAL 2026 · @JUVENTUD_LAPAMPA</div>
+    </div>
+    <button class="btn" style="margin-top:0.6rem" id="r-download">📸 COMPARTIR</button>
+    <button class="btn btn-secondary" style="margin-top:0.5rem" onclick="restart()">🔁 Otra partida</button>
+  </div>
+</div>
+
+<script>
+const FLAGS = [
+  { id:'ARG', n:'Argentina', c1:'#75AADB', c2:'#FFFFFF', c3:'#75AADB', dir:'h' },
+  { id:'BRA', n:'Brasil', c1:'#009C3B', c2:'#FFDF00', c3:'#002776', dir:'h' },
+  { id:'FRA', n:'Francia', c1:'#0055A4', c2:'#FFFFFF', c3:'#EF4135', dir:'v' },
+  { id:'ESP', n:'España', c1:'#AA151B', c2:'#F1BF00', c3:'#AA151B', dir:'h' },
+  { id:'ALE', n:'Alemania', c1:'#000000', c2:'#DD0000', c3:'#FFCE00', dir:'h' },
+  { id:'ING', n:'Inglaterra', c1:'#FFFFFF', c2:'#CE1124', c3:'#FFFFFF', dir:'h' },
+  { id:'POR', n:'Portugal', c1:'#006600', c2:'#006600', c3:'#FF0000', dir:'v' },
+  { id:'ITA', n:'Italia', c1:'#009246', c2:'#FFFFFF', c3:'#CE2B37', dir:'v' },
+  { id:'NED', n:'Países Bajos', c1:'#AE1C28', c2:'#FFFFFF', c3:'#21468B', dir:'h' },
+  { id:'BEL', n:'Bélgica', c1:'#000000', c2:'#FAE042', c3:'#ED2939', dir:'v' },
+  { id:'URU', n:'Uruguay', c1:'#FFFFFF', c2:'#0038A8', c3:'#FFFFFF', dir:'h' },
+  { id:'MEX', n:'México', c1:'#006847', c2:'#FFFFFF', c3:'#CE1126', dir:'v' },
+  { id:'JPN', n:'Japón', c1:'#FFFFFF', c2:'#BC002D', c3:'#FFFFFF', dir:'h' },
+  { id:'KOR', n:'Corea del Sur', c1:'#FFFFFF', c2:'#003478', c3:'#C60C30', dir:'h' },
+  { id:'MAR', n:'Marruecos', c1:'#C1272D', c2:'#C1272D', c3:'#006233', dir:'h' }
+];
+
+const DIFFS = {
+  easy: { pairs: 6, cols: 4 },
+  medium: { pairs: 10, cols: 5 },
+  hard: { pairs: 15, cols: 6 }
+};
+
+let state = { name:'', pairs:0, moves:0, matched:0, total:0, flipped:[], cards:[], timeStart:0, timeInterval:null, diff:'easy' };
+
+document.querySelectorAll('.diff-btn').forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll('.diff-btn').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    state.diff = b.dataset.d;
+  };
+});
+
+document.getElementById('start').onclick = () => {
+  const name = document.getElementById('player-name').value.trim();
+  if (!name) { alert('Ingresá tu nombre'); return; }
+  state.name = name;
+  state.pairs = 0; state.moves = 0; state.matched = 0; state.flipped = [];
+  const cfg = DIFFS[state.diff];
+  state.total = cfg.pairs;
+  // Elegir N banderas random y duplicar
+  const shuffle = a => { const x = [...a]; for (let i = x.length-1; i>0; i--) { const j = Math.floor(Math.random()*(i+1)); [x[i],x[j]]=[x[j],x[i]]; } return x; };
+  const chosen = shuffle(FLAGS).slice(0, cfg.pairs);
+  state.cards = shuffle([...chosen, ...chosen]);
+  // Render
+  const grid = document.getElementById('grid');
+  grid.className = 'grid-cards cols-' + cfg.cols;
+  grid.innerHTML = '';
+  state.cards.forEach((f, i) => {
+    const c = document.createElement('div');
+    c.className = 'card';
+    c.dataset.id = f.id;
+    c.dataset.idx = i;
+    c.innerHTML = `
+      <div class="card-inner">
+        <div class="card-face card-back">⚽</div>
+        <div class="card-face card-front">
+          <div class="card-flag ${f.dir}" style="--fc1:${f.c1};--fc2:${f.c2};--fc3:${f.c3}"></div>
+          <div class="card-name">${f.n.toUpperCase()}</div>
+        </div>
+      </div>
+    `;
+    c.onclick = () => flipCard(c);
+    grid.appendChild(c);
+  });
+  state.timeStart = Date.now();
+  state.timeInterval = setInterval(updateTime, 1000);
+  updateHUD();
+  show('game');
+};
+
+function flipCard(c) {
+  if (c.classList.contains('flipped') || c.classList.contains('matched')) return;
+  if (state.flipped.length >= 2) return;
+  c.classList.add('flipped');
+  state.flipped.push(c);
+  if (state.flipped.length === 2) {
+    state.moves++;
+    updateHUD();
+    const [a, b] = state.flipped;
+    if (a.dataset.id === b.dataset.id) {
+      // Match!
+      setTimeout(() => {
+        a.classList.add('matched');
+        b.classList.add('matched');
+        state.matched++;
+        state.flipped = [];
+        updateHUD();
+        if (state.matched >= state.total) finish();
+      }, 500);
+    } else {
+      setTimeout(() => {
+        a.classList.remove('flipped');
+        b.classList.remove('flipped');
+        state.flipped = [];
+      }, 900);
+    }
+  }
+}
+
+function updateHUD() {
+  document.getElementById('hud-pairs').textContent = `${state.matched}/${state.total}`;
+  document.getElementById('hud-moves').textContent = state.moves;
+}
+function updateTime() {
+  const elapsed = Math.floor((Date.now() - state.timeStart) / 1000);
+  const m = Math.floor(elapsed / 60), s = elapsed % 60;
+  document.getElementById('hud-time').textContent = `${m}:${String(s).padStart(2,'0')}`;
+}
+
+function finish() {
+  clearInterval(state.timeInterval);
+  const elapsed = Math.floor((Date.now() - state.timeStart) / 1000);
+  const m = Math.floor(elapsed / 60), s = elapsed % 60;
+  document.getElementById('r-name').textContent = state.name.toUpperCase();
+  document.getElementById('r-time').textContent = `${m}:${String(s).padStart(2,'0')}`;
+  document.getElementById('r-moves').textContent = state.moves;
+  document.getElementById('r-pairs').textContent = `${state.matched}/${state.total}`;
+  let v;
+  if (state.moves <= state.total + 4) v = '¡MEMORIA DE ELEFANTE!';
+  else if (state.moves <= state.total + 10) v = 'Excelente memoria';
+  else if (state.moves <= state.total + 20) v = 'Buena memoria';
+  else v = 'Practicar más';
+  document.getElementById('r-verdict').textContent = v;
+  show('result');
+}
+
+document.getElementById('r-download').onclick = () => {
+  const n = document.querySelector('.result-card');
+  const w = n.offsetWidth, h = n.offsetHeight;
+  html2canvas(n, { scale: 2, useCORS: true, allowTaint: true, logging: false, width: w, height: h }).then(c => {
+    const link = document.createElement('a');
+    link.download = `memo-mundial-${state.name.toLowerCase().replace(/[^a-z0-9]+/g,'-')}.png`;
+    link.href = c.toDataURL('image/png');
+    link.click();
+  });
+};
+
+function show(s) {
+  document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+  document.getElementById('screen-' + s).classList.add('active');
+}
+function restart() {
+  if (state.timeInterval) clearInterval(state.timeInterval);
+  show('intro');
+}
+window.restart = restart;
+</script>
+</body>
+</html>

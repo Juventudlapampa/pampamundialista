@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿Qué Selección Sos Vos? · Mundial 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0a0612;
+    --bg-2: #1a0a2e;
+    --purple: #4a1a6b;
+    --purple-2: #7c3aed;
+    --gold: #d4a82e;
+    --gold-2: #f4cd60;
+    --crema: #f4ecd8;
+    --red: #c41e3a;
+    --green: #16a34a;
+    --blue: #2563eb;
+  }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(74,26,107,0.4), transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(212,168,46,0.15), transparent 50%);
+    min-height: 100vh;
+    color: var(--crema);
+    padding: 1.5rem 1rem;
+  }
+  .container { max-width: 700px; margin: 0 auto; }
+
+  header { text-align: center; margin-bottom: 1.5rem; }
+  .header-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+  h1 {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.8rem, 4.5vw, 3rem);
+    letter-spacing: 0.03em;
+    margin-top: 0.4rem;
+    line-height: 1;
+    color: var(--crema);
+    text-shadow: 0 0 30px rgba(212,168,46,0.5);
+  }
+  h1 span { color: var(--gold); font-style: italic; }
+  .subtitle {
+    font-size: 0.95rem;
+    opacity: 0.8;
+    max-width: 600px;
+    margin: 0.6rem auto 0;
+    line-height: 1.5;
+  }
+
+  .screen { display: none; }
+  .screen.active { display: block; animation: fadeIn 0.4s; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .panel {
+    background: rgba(0,0,0,0.5);
+    border: 1px solid rgba(212,168,46,0.3);
+    border-radius: 16px;
+    padding: 2rem 1.5rem;
+    backdrop-filter: blur(10px);
+  }
+
+  /* INTRO */
+  .intro-icon {
+    font-size: 4rem;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .btn {
+    background: linear-gradient(135deg, var(--purple-2), var(--purple));
+    color: var(--crema);
+    border: 1px solid var(--gold);
+    padding: 1.1rem;
+    font-family: 'Cinzel', serif;
+    letter-spacing: 0.2em;
+    font-weight: 700;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 100%;
+    text-transform: uppercase;
+    font-size: 1rem;
+  }
+  .btn:hover { background: linear-gradient(135deg, var(--purple), var(--purple-2)); }
+  .btn-gold {
+    background: linear-gradient(135deg, var(--gold), var(--gold-2));
+    color: #1a0a2e;
+    border: none;
+  }
+  .btn-secondary {
+    background: rgba(0,0,0,0.4);
+    color: var(--crema);
+    border: 1px solid var(--gold);
+  }
+
+  /* QUIZ */
+  .quiz-progress {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    margin-bottom: 0.6rem;
+    text-transform: uppercase;
+  }
+  .progress-bar {
+    height: 5px;
+    background: rgba(0,0,0,0.5);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--purple-2), var(--gold));
+    transition: width 0.4s;
+  }
+  .question-text {
+    font-family: 'Cinzel', serif;
+    font-size: 1.4rem;
+    line-height: 1.4;
+    margin: 1.5rem 0;
+    text-align: center;
+    color: var(--crema);
+    font-weight: 600;
+  }
+  .options {
+    display: grid;
+    gap: 0.7rem;
+  }
+  .option-btn {
+    background: rgba(13,5,30,0.6);
+    border: 2px solid rgba(244,236,216,0.15);
+    padding: 1rem 1.2rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.95rem;
+    text-align: left;
+    color: var(--crema);
+    font-family: inherit;
+    width: 100%;
+    line-height: 1.4;
+  }
+  .option-btn:hover {
+    border-color: var(--gold);
+    background: rgba(212,168,46,0.1);
+    transform: translateX(4px);
+  }
+  .option-btn.selected {
+    border-color: var(--gold);
+    background: linear-gradient(135deg, rgba(212,168,46,0.2), rgba(74,26,107,0.3));
+  }
+
+  /* RESULT (RPG card) */
+  .reveal-anim {
+    text-align: center;
+    padding: 3rem 1rem;
+  }
+  .reveal-tag {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--gold);
+    letter-spacing: 0.3em;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    animation: pulseFade 1.5s infinite;
+  }
+  @keyframes pulseFade {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+  .reveal-msg {
+    font-family: 'Cinzel', serif;
+    font-size: 1.5rem;
+    margin: 1rem 0;
+  }
+
+  .rpg-card {
+    background:
+      radial-gradient(circle at 50% 0%, rgba(212,168,46,0.3), transparent 60%),
+      linear-gradient(180deg, #1a0a2e 0%, #0a0612 100%);
+    border: 2px solid var(--gold);
+    border-radius: 16px;
+    padding: 2rem 1.5rem;
+    position: relative;
+    box-shadow: 0 30px 80px rgba(124,58,237,0.4);
+    overflow: hidden;
+    animation: revealCard 0.8s ease;
+  }
+  @keyframes revealCard {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  .rpg-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(45deg, transparent 0, transparent 20px, rgba(212,168,46,0.05) 20px, rgba(212,168,46,0.05) 21px);
+    pointer-events: none;
+  }
+  .rpg-corner {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    border: 2px solid var(--gold);
+  }
+  .rpg-corner.tl { top: 8px; left: 8px; border-right: none; border-bottom: none; }
+  .rpg-corner.tr { top: 8px; right: 8px; border-left: none; border-bottom: none; }
+  .rpg-corner.bl { bottom: 8px; left: 8px; border-right: none; border-top: none; }
+  .rpg-corner.br { bottom: 8px; right: 8px; border-left: none; border-top: none; }
+
+  .rpg-pre {
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .rpg-flag {
+    text-align: center;
+    font-size: 5rem;
+    margin: 0.4rem 0;
+    filter: drop-shadow(0 4px 20px rgba(212,168,46,0.6));
+    animation: floatFlag 3s ease-in-out infinite;
+  }
+  @keyframes floatFlag {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  .rpg-name {
+    font-family: 'Cinzel', serif;
+    font-size: 2rem;
+    text-align: center;
+    color: var(--crema);
+    letter-spacing: 0.05em;
+    line-height: 1;
+    text-transform: uppercase;
+    font-weight: 800;
+  }
+  .rpg-class {
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--purple-2);
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+    margin-top: 0.4rem;
+    text-transform: uppercase;
+  }
+  .rpg-section {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(212,168,46,0.2);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 1rem;
+    z-index: 2;
+    position: relative;
+  }
+  .rpg-section-label {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .rpg-section-text {
+    color: var(--crema);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  .rpg-quote {
+    font-style: italic;
+    color: var(--gold-2);
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  .rpg-quote::before { content: '"'; font-size: 1.5rem; color: var(--gold); }
+  .rpg-quote::after { content: '"'; font-size: 1.5rem; color: var(--gold); }
+  .juv-watermark {
+    position: absolute;
+    bottom: 6px;
+    right: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    color: rgba(74, 222, 128, 0.95);
+    letter-spacing: 0.06em;
+    z-index: 5;
+    pointer-events: none;
+    font-weight: 700;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  }
+
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+    margin-top: 1rem;
+  }
+  .actions .btn { font-size: 0.85rem; letter-spacing: 0.1em; padding: 0.9rem; }
+
+  .top-matches {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(244,236,216,0.1);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-top: 1rem;
+  }
+  .matches-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+  }
+  .match-row {
+    display: grid;
+    grid-template-columns: auto 1fr 60px;
+    gap: 0.6rem;
+    align-items: center;
+    padding: 0.4rem 0;
+    border-bottom: 1px dashed rgba(244,236,216,0.1);
+    font-size: 0.85rem;
+  }
+  .match-row:last-child { border-bottom: none; }
+  .match-flag { font-size: 1.2rem; }
+  .flag { display:inline-block; width:22px; height:15px; border-radius:2px; vertical-align:middle; border:1px solid rgba(0,0,0,0.35); }
+  .flag.h { background:linear-gradient(to bottom, var(--f1) 0 33%, var(--f2) 33% 66%, var(--f3) 66% 100%); }
+  .flag.v { background:linear-gradient(to right, var(--f1) 0 33%, var(--f2) 33% 66%, var(--f3) 66% 100%); }
+  .rpg-flag .flag { width:72px; height:48px; border-radius:6px; }
+  .match-flag .flag { width:24px; height:16px; }
+  .match-pct {
+    font-family: 'JetBrains Mono', monospace;
+    text-align: right;
+    color: var(--gold-2);
+    font-size: 0.85rem;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="header-tag">Test de personalidad · Mundial 2026</div>
+    <h1>¿Qué <span>selección</span> sos vos?</h1>
+  </header>
+
+  <!-- INTRO -->
+  <div class="screen active" id="screen-intro">
+    <div class="panel">
+      <div class="intro-icon">⚽</div>
+      <p style="line-height:1.6;text-align:center;margin-bottom:1.5rem">12 preguntas para descubrir cuál de las selecciones del Mundial 2026 representa tu personalidad. Al final, recibís tu ficha completa con clase, habilidad especial y leyenda.</p>
+      <button class="btn" id="start">⚔ Empezar el ritual</button>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="screen" id="screen-quiz">
+    <div class="panel">
+      <div class="quiz-progress">
+        <span>Pregunta <span id="q-num">1</span> de 8</span>
+        <span id="q-pct">12%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="q-progress"></div></div>
+      <div class="question-text" id="q-text"></div>
+      <div class="options" id="q-options"></div>
+    </div>
+  </div>
+
+  <!-- ANALYZING -->
+  <div class="screen" id="screen-analyzing">
+    <div class="panel">
+      <div class="reveal-anim">
+        <div class="reveal-tag" id="anim-tag">ANALIZANDO RESPUESTAS</div>
+        <div class="reveal-msg" id="anim-msg">⚔</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="screen" id="screen-result">
+    <div id="result-card-container"></div>
+    <div class="actions">
+      <button class="btn btn-secondary" id="download">⬇ Descargar</button>
+      <button class="btn" id="share" style="background:linear-gradient(135deg,#22c55e,#16a34a);color:#04210f">🔗 Desafiar a un amigo</button>
+      <button class="btn btn-gold" onclick="restart()">🔁 Volver a hacer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // 25 selecciones con su perfil completo
+  const selecciones = {
+    'Argentina': {
+      flag:'🇦🇷', clase:'EL/LA HEREDERO/A DEL CETRO',
+      ejes: { creatividad:9, disciplina:7, garra:10, lider:9, analitico:7, epico:10, pragmatico:6, festejero:9, intuitivo:9, frio:6 },
+      habilidad:'Cuando todos pierden la fe, vos sacás algo de la galera. Tu mejor versión aparece en los momentos imposibles.',
+      debilidad:'Cuando todo va bien, te confiás. Necesitás presión para rendir.',
+      leyenda:'Cargás una mochila pesada de expectativas pero la convertís en motor. Tres veces tocaste el cielo: cada uno cuenta una historia tuya.',
+      quote:'No me digas que no se puede.'
+    },
+    'Brasil': {
+      flag:'🇧🇷', clase:'EL/LA ARTISTA',
+      ejes: { creatividad:10, disciplina:5, garra:6, lider:7, analitico:5, epico:8, pragmatico:4, festejero:10, intuitivo:9, frio:4 },
+      habilidad:'Convertís cualquier situación en arte. Lo que para otros es trámite, para vos es show.',
+      debilidad:'Te aburrís de lo predecible. Cuando todo es estable, buscás caos.',
+      leyenda:'Penta, samba, jogo bonito. Todo lo que tocás baila. La vida no se sufre, se baila.',
+      quote:'Hay que disfrutar, hermano.'
+    },
+    'Francia': {
+      flag:'🇫🇷', clase:'EL/LA POLIVALENTE',
+      ejes: { creatividad:7, disciplina:8, garra:7, lider:7, analitico:8, epico:7, pragmatico:9, festejero:6, intuitivo:7, frio:8 },
+      habilidad:'Hacés varias cosas bien al mismo tiempo. Te adaptás a cualquier rol que necesite el grupo.',
+      debilidad:'Cuando hay drama interno, todo se desestabiliza.',
+      leyenda:'Sabés esperar el momento. Tenés repertorio para todo. Los demás corren, vos pensás.',
+      quote:'Tranquilo, lo tengo bajo control.'
+    },
+    'España': {
+      flag:'🇪🇸', clase:'EL/LA TEJEDOR/A',
+      ejes: { creatividad:8, disciplina:9, garra:5, lider:7, analitico:9, epico:6, pragmatico:8, festejero:8, intuitivo:7, frio:7 },
+      habilidad:'Hipnotizás con paciencia. Mientras los otros se desesperan, vos seguís pasándola.',
+      debilidad:'Cuando te apuran, te trabás. Necesitás controlar el ritmo.',
+      leyenda:'No imponés por la fuerza, imponés por la insistencia. La belleza está en el orden.',
+      quote:'Todo a su tiempo.'
+    },
+    'Inglaterra': {
+      flag:'🇬🇧', clase:'EL/LA PERFECCIONISTA',
+      ejes: { creatividad:6, disciplina:8, garra:7, lider:7, analitico:8, epico:8, pragmatico:7, festejero:6, intuitivo:5, frio:7 },
+      habilidad:'Te tomás todo en serio. Cumplís lo que prometés y exigís lo mismo.',
+      debilidad:'En momentos cruciales, los nervios te traicionan.',
+      leyenda:'Tenés todo para ser leyenda pero algo siempre pasa al final. Cada cuatro años, el mismo sueño.',
+      quote:'Esta vez sí, te lo juro.'
+    },
+    'Portugal': {
+      flag:'🇵🇹', clase:'EL/LA INDIVIDUALISTA',
+      ejes: { creatividad:7, disciplina:7, garra:8, lider:9, analitico:6, epico:9, pragmatico:5, festejero:7, intuitivo:7, frio:6 },
+      habilidad:'Cargás al grupo en tu espalda. Cuando estás bien, todos se prenden de tu energía.',
+      debilidad:'Si vos no estás, el grupo no funciona.',
+      leyenda:'Tenés saudade en la sangre. Brillás solo, pero la corona te esquiva. La épica es tu segunda piel.',
+      quote:'Yo lo voy a hacer.'
+    },
+    'Alemania': {
+      flag:'🇩🇪', clase:'LA MÁQUINA',
+      ejes: { creatividad:6, disciplina:10, garra:8, lider:7, analitico:10, epico:6, pragmatico:10, festejero:4, intuitivo:5, frio:9 },
+      habilidad:'Eficiencia pura. No desperdiciás nada. Plan A, plan B, plan C: todos ejecutados.',
+      debilidad:'Cuando el plan falla, te cuesta improvisar.',
+      leyenda:'No buscás aplausos. Buscás resultados. La belleza, para vos, está en lo que funciona.',
+      quote:'Hay un sistema para esto.'
+    },
+    'Italia': {
+      flag:'🇮🇹', clase:'EL/LA ESTRATEGA',
+      ejes: { creatividad:7, disciplina:8, garra:8, lider:7, analitico:9, epico:8, pragmatico:9, festejero:7, intuitivo:7, frio:8 },
+      habilidad:'Leés el partido antes de que pase. Defendés con elegancia, atacás con precisión.',
+      debilidad:'A veces sobreanalizás y perdés el momento.',
+      leyenda:'Cuatro estrellas. Cuando jugás bien, sos arte puro. Cuando jugás mal, ni siquiera vas al Mundial.',
+      quote:'Esto es así, escuchame.'
+    },
+    'Países Bajos': {
+      flag:'🇳🇱', clase:'EL/LA INNOVADOR/A',
+      ejes: { creatividad:9, disciplina:7, garra:7, lider:7, analitico:9, epico:7, pragmatico:7, festejero:7, intuitivo:8, frio:7 },
+      habilidad:'Inventás lo que nadie pensó. Sos referencia aunque no ganes el oro.',
+      debilidad:'Te quedás sin la corona aunque la merezcas. La gloria te esquiva.',
+      leyenda:'Inventaste el fútbol total y sin embargo te falta la copa. Tu legado son las ideas, no los trofeos.',
+      quote:'Hay otra forma de hacerlo.'
+    },
+    'Bélgica': {
+      flag:'🇧🇪', clase:'EL/LA TALENTOSO/A',
+      ejes: { creatividad:8, disciplina:7, garra:6, lider:6, analitico:7, epico:6, pragmatico:7, festejero:7, intuitivo:7, frio:6 },
+      habilidad:'Tenés talento natural para casi todo. Las cosas te salen sin esforzarte demasiado.',
+      debilidad:'Cuando las cosas se ponen difíciles, no encontrás el plan B.',
+      leyenda:'Tu generación tiene todo el talento. Pero el talento solo no alcanza. Te falta hambre.',
+      quote:'Uy, casi.'
+    },
+    'Uruguay': {
+      flag:'🇺🇾', clase:'EL/LA GUERRERO/A ANCESTRAL',
+      ejes: { creatividad:6, disciplina:9, garra:10, lider:9, analitico:7, epico:9, pragmatico:8, festejero:7, intuitivo:7, frio:7 },
+      habilidad:'No te asusta nada. Cuando vas perdiendo, sacás fuerza de donde no hay.',
+      debilidad:'Tu temperamento a veces te lleva al límite y te termina costando.',
+      leyenda:'Tres millones de personas con corazón de diez. La garra antes que la técnica.',
+      quote:'Acá no afloja nadie.'
+    },
+    'México': {
+      flag:'🇲🇽', clase:'EL/LA APASIONADO/A',
+      ejes: { creatividad:7, disciplina:6, garra:8, lider:6, analitico:6, epico:7, pragmatico:5, festejero:10, intuitivo:7, frio:4 },
+      habilidad:'Tenés un corazón enorme. Te entregás emocionalmente a todo lo que hacés.',
+      debilidad:'Te cuesta dar el último paso. Llegás cerca y algo te frena.',
+      leyenda:'El quinto partido es tu obsesión. Cada cuatro años creés que es el año.',
+      quote:'Esta vez sí pasamos.'
+    },
+    'Croacia': {
+      flag:'🇭🇷', clase:'EL/LA SABIO/A',
+      ejes: { creatividad:8, disciplina:8, garra:9, lider:9, analitico:9, epico:8, pragmatico:7, festejero:6, intuitivo:8, frio:7 },
+      habilidad:'Hacés rendir lo poco que tenés. Tu mente vale más que tus recursos.',
+      debilidad:'Te exigís tanto que te apagás antes de tiempo.',
+      leyenda:'Cuatro millones de personas. Subcampeón. Generación dorada que se va sin la copa.',
+      quote:'Con cabeza, siempre con cabeza.'
+    },
+    'Marruecos': {
+      flag:'🇲🇦', clase:'EL/LA REVELACIÓN',
+      ejes: { creatividad:7, disciplina:9, garra:9, lider:7, analitico:8, epico:9, pragmatico:8, festejero:7, intuitivo:7, frio:7 },
+      habilidad:'Sorprendés a todos cuando nadie te tiene fe. Tu poder está en ser subestimado.',
+      debilidad:'Cuando te empiezan a tomar en serio, te cuesta mantener la mística.',
+      leyenda:'Primero de África en semis. Eliminaste a España y Portugal. Cambiaste la historia.',
+      quote:'Vos miranos.'
+    },
+    'Senegal': {
+      flag:'🇸🇳', clase:'EL/LA EXPLOSIVO/A',
+      ejes: { creatividad:8, disciplina:7, garra:9, lider:8, analitico:6, epico:8, pragmatico:6, festejero:9, intuitivo:8, frio:6 },
+      habilidad:'Tenés energía de sobra. Cuando arrancás, no podés frenar.',
+      debilidad:'Esa misma energía te lleva a errores impulsivos.',
+      leyenda:'León del Atlántico. Campeón africano. Hospitalidad y guerra al mismo tiempo.',
+      quote:'Vamos vamos vamos.'
+    },
+    'Japón': {
+      flag:'🇯🇵', clase:'EL/LA SAMURAI',
+      ejes: { creatividad:7, disciplina:10, garra:8, lider:6, analitico:9, epico:7, pragmatico:8, festejero:5, intuitivo:7, frio:8 },
+      habilidad:'Disciplina absoluta. Ejecutás el plan al milímetro contra cualquiera.',
+      debilidad:'Cuando el plan se rompe, te cuesta improvisar fuera del esquema.',
+      leyenda:'Le ganaste a Alemania y España en la misma copa. Bushido aplicado al fútbol.',
+      quote:'Punto por punto.'
+    },
+    'Corea del Sur': {
+      flag:'🇰🇷', clase:'EL/LA CORREDOR/A',
+      ejes: { creatividad:6, disciplina:9, garra:9, lider:6, analitico:7, epico:6, pragmatico:7, festejero:6, intuitivo:6, frio:7 },
+      habilidad:'Corrés más que nadie. Lo que no tenés en talento, lo compensás con kilómetros.',
+      debilidad:'Te falta el genio individual que decide partidos cerrados.',
+      leyenda:'2002, semifinal en casa. Tigre asiático que no se cansa.',
+      quote:'Yo no aflojo.'
+    },
+    'Australia': {
+      flag:'🇦🇺', clase:'EL/LA RESILIENTE',
+      ejes: { creatividad:5, disciplina:8, garra:9, lider:6, analitico:6, epico:6, pragmatico:7, festejero:8, intuitivo:6, frio:7 },
+      habilidad:'Aguantás de pie cualquier cosa. Te golpean y te levantás riéndote.',
+      debilidad:'Te falta la sutileza. Vas siempre de frente.',
+      leyenda:'Socceroos. Carácter de rugby aplicado al fútbol. Sorpresa eterna.',
+      quote:'No big deal, mate.'
+    },
+    'Suiza': {
+      flag:'🇨🇭', clase:'EL/LA RELOJERO/A',
+      ejes: { creatividad:6, disciplina:9, garra:7, lider:6, analitico:9, epico:5, pragmatico:9, festejero:5, intuitivo:6, frio:8 },
+      habilidad:'Precisión absoluta. Cumplís lo prometido sin escándalo.',
+      debilidad:'Te falta la chispa que diferencia al bueno del extraordinario.',
+      leyenda:'Constancia helvética. Llegás, hacés tu torneo digno y volvés.',
+      quote:'Como dijimos, así.'
+    },
+    'Polonia': {
+      flag:'🇵🇱', clase:'EL/LA SOLITARIO/A',
+      ejes: { creatividad:6, disciplina:7, garra:8, lider:9, analitico:6, epico:7, pragmatico:7, festejero:6, intuitivo:7, frio:7 },
+      habilidad:'Sos el referente. Cuando estás encendido, el grupo te sigue.',
+      debilidad:'Sin vos, el grupo no funciona. Demasiada dependencia.',
+      leyenda:'El cazador del área. La banda se apoya en tu firma. La historia te recuerda.',
+      quote:'Pasámela.'
+    },
+    'Dinamarca': {
+      flag:'🇩🇰', clase:'EL/LA ESTABLE',
+      ejes: { creatividad:6, disciplina:8, garra:7, lider:7, analitico:8, epico:6, pragmatico:8, festejero:6, intuitivo:7, frio:8 },
+      habilidad:'Sin estridencias, hacés todo bien. La gente confía en vos.',
+      debilidad:'Te falta el momento épico. Sos correcto pero no inolvidable.',
+      leyenda:'Cuento de hadas en 1992. Selección noble. Hygge en el mediocampo.',
+      quote:'Todo en orden.'
+    },
+    'Colombia': {
+      flag:'🇨🇴', clase:'EL/LA BAILARÍN/A',
+      ejes: { creatividad:9, disciplina:6, garra:7, lider:6, analitico:6, epico:7, pragmatico:5, festejero:10, intuitivo:9, frio:5 },
+      habilidad:'Convertís cada gol, cada victoria, cada momento en fiesta. Bailás sin pedir permiso.',
+      debilidad:'A veces el corazón gana sobre la cabeza. Y en momentos clave, eso pesa.',
+      leyenda:'Brujo del Caribe. Cada vez que aparecés, traés magia.',
+      quote:'Vamos a celebrar.'
+    },
+    'Ecuador': {
+      flag:'🇪🇨', clase:'EL/LA RESISTENTE',
+      ejes: { creatividad:6, disciplina:7, garra:9, lider:6, analitico:6, epico:6, pragmatico:7, festejero:7, intuitivo:6, frio:7 },
+      habilidad:'Aguante físico de otra dimensión. Donde otros se cansan, vos recién empezás.',
+      debilidad:'Lejos de tu zona de confort, te diluís.',
+      leyenda:'Altura de Quito. La Tri Andina. Generación que crece sin grandes nombres pero con corazón.',
+      quote:'A correr, hermano.'
+    },
+    'Estados Unidos': {
+      flag:'🇺🇸', clase:'EL/LA EMPRENDEDOR/A',
+      ejes: { creatividad:7, disciplina:8, garra:7, lider:8, analitico:8, epico:6, pragmatico:9, festejero:7, intuitivo:6, frio:8 },
+      habilidad:'Invertís en vos mismo. Mejorás cada día con disciplina americana.',
+      debilidad:'A veces priorizás lo cuantitativo sobre lo cualitativo.',
+      leyenda:'El gigante que despierta. Talento joven, recursos infinitos. Algo está cambiando.',
+      quote:"Let's go.",
+    }
+  };
+
+  // Banderas dibujadas con CSS (no emoji) para que se vean igual en todos lados
+  const FLAGCOLORS = {
+    'Argentina':['#75AADB','#FFFFFF','#75AADB','h'],'Brasil':['#009C3B','#FFDF00','#002776','h'],'Francia':['#0055A4','#FFFFFF','#EF4135','v'],'España':['#AA151B','#F1BF00','#AA151B','h'],
+    'Inglaterra':['#FFFFFF','#CE1124','#FFFFFF','h'],'Portugal':['#006600','#006600','#FF0000','v'],'Alemania':['#000000','#DD0000','#FFCE00','h'],'Italia':['#009246','#FFFFFF','#CE2B37','v'],
+    'Países Bajos':['#AE1C28','#FFFFFF','#21468B','h'],'Bélgica':['#000000','#FAE042','#ED2939','v'],'Uruguay':['#FFFFFF','#0038A8','#FFFFFF','h'],'México':['#006847','#FFFFFF','#CE1126','v'],
+    'Croacia':['#FF0000','#FFFFFF','#171796','h'],'Marruecos':['#C1272D','#C1272D','#006233','h'],'Senegal':['#00853F','#FDEF42','#E31B23','v'],'Japón':['#FFFFFF','#BC002D','#FFFFFF','h'],
+    'Corea del Sur':['#FFFFFF','#003478','#C60C30','h'],'Australia':['#012169','#012169','#E4002B','h'],'Suiza':['#FF0000','#FFFFFF','#FF0000','h'],'Polonia':['#FFFFFF','#DC143C','#DC143C','h'],
+    'Dinamarca':['#C8102E','#FFFFFF','#C8102E','h'],'Colombia':['#FCD116','#003893','#CE1126','h'],'Ecuador':['#FFDD00','#0072CE','#EF3340','h'],'Estados Unidos':['#B22234','#FFFFFF','#3C3B6E','h']
+  };
+  function flagSpan(name) {
+    const c = FLAGCOLORS[name];
+    if (!c) return '';
+    return `<span class="flag ${c[3]}" style="--f1:${c[0]};--f2:${c[1]};--f3:${c[2]}"></span>`;
+  }
+  Object.entries(selecciones).forEach(([name, s]) => { s.flag = flagSpan(name); });
+
+  const preguntas = [
+    {
+      q: '¿Cómo encarás un examen final que da miedo?',
+      a: [
+        { t:'Estudio sistemáticamente todos los días desde un mes antes', e:{disciplina:3, analitico:2, frio:2} },
+        { t:'Improvisó la noche anterior, confío en mi creatividad', e:{creatividad:3, intuitivo:2, festejero:1} },
+        { t:'Lo paso por arriba con garra y carácter', e:{garra:3, epico:2, lider:1} },
+        { t:'Diseño un plan A, B y C según las preguntas que puedan caer', e:{analitico:3, pragmatico:2, disciplina:1} }
+      ]
+    },
+    {
+      q: '¿Cuál es tu rol en una salida con amigos?',
+      a: [
+        { t:'El que arma el plan, manda los mensajes y lleva la batuta', e:{lider:3, disciplina:2, pragmatico:1} },
+        { t:'El que hace que la noche sea memorable, alma de la fiesta', e:{festejero:3, creatividad:2, intuitivo:1} },
+        { t:'El que se prende a todo y aporta energía', e:{garra:2, festejero:2, epico:1} },
+        { t:'El que observa, escucha y aporta cuando hace falta', e:{analitico:3, frio:2, intuitivo:1} }
+      ]
+    },
+    {
+      q: 'Te traicionan en el laburo. ¿Qué hacés?',
+      a: [
+        { t:'Reacción inmediata, todo el mundo se entera', e:{garra:3, epico:2, festejero:1} },
+        { t:'Espero el momento perfecto para responder estratégicamente', e:{analitico:3, frio:3, pragmatico:2} },
+        { t:'Hablo con la persona, intento entender qué pasó', e:{lider:2, intuitivo:2, disciplina:1} },
+        { t:'No le doy importancia, sigo con lo mío', e:{frio:3, pragmatico:2, disciplina:1} }
+      ]
+    },
+    {
+      q: '¿Qué te define más?',
+      a: [
+        { t:'Soy creativo, no me gusta lo predecible', e:{creatividad:3, intuitivo:2, festejero:1} },
+        { t:'Soy disciplinado, hago lo que hay que hacer', e:{disciplina:3, pragmatico:2, frio:2} },
+        { t:'Soy de garra, no aflojo nunca', e:{garra:3, epico:2, lider:1} },
+        { t:'Soy estratega, pienso varios pasos adelante', e:{analitico:3, lider:2, frio:2} }
+      ]
+    },
+    {
+      q: 'Estás 0-2 abajo. ¿Cuál es tu actitud?',
+      a: [
+        { t:'Confío en una remontada épica, esto se da vuelta', e:{epico:3, garra:2, lider:2} },
+        { t:'Reorganizó todo, cambio el plan completamente', e:{analitico:3, lider:2, pragmatico:2} },
+        { t:'Me la juego, voy con todo aunque me arriesgue más', e:{garra:3, intuitivo:2, festejero:1} },
+        { t:'Acepto el resultado y minimizo daños para no quedar peor', e:{pragmatico:3, frio:3, disciplina:1} }
+      ]
+    },
+    {
+      q: '¿Cómo celebrás un logro?',
+      a: [
+        { t:'Asado, fiesta, lo grita media ciudad', e:{festejero:3, garra:2, lider:1} },
+        { t:'Cena íntima con quienes me importan', e:{intuitivo:3, frio:1, lider:1} },
+        { t:'Lo posteo y subo videos para que todos vean', e:{festejero:2, epico:2, creatividad:2} },
+        { t:'Sigo con la próxima meta, ya está', e:{disciplina:3, pragmatico:2, frio:2} }
+      ]
+    },
+    {
+      q: '¿Qué te frustra más cuando algo sale mal?',
+      a: [
+        { t:'Que el grupo no haya estado a la altura', e:{lider:3, disciplina:2, garra:1} },
+        { t:'No haber tenido tiempo de prepararme bien', e:{disciplina:3, analitico:2, pragmatico:1} },
+        { t:'Que la suerte no me haya acompañado', e:{epico:2, intuitivo:2, festejero:1} },
+        { t:'No haberle puesto suficiente intensidad', e:{garra:3, epico:2, lider:1} }
+      ]
+    },
+    {
+      q: '¿Qué versión de vos te define mejor?',
+      a: [
+        { t:'El/La que aparece en el momento más imposible', e:{epico:3, intuitivo:2, garra:2} },
+        { t:'El/La que sostiene al grupo todos los días', e:{disciplina:3, lider:2, pragmatico:2} },
+        { t:'El/La que hace todo con estilo, aunque a veces falle', e:{creatividad:3, festejero:2, intuitivo:1} },
+        { t:'El/La que ejecuta sin ruido, eficiente y silencioso', e:{frio:3, pragmatico:3, analitico:1} }
+      ]
+    },
+    {
+      q: '¿Qué hacés un domingo libre?',
+      a: [
+        { t:'Junto a todos y armo un asado multitudinario', e:{festejero:3, lider:2, garra:1} },
+        { t:'Entreno o avanzo un proyecto personal', e:{disciplina:3, pragmatico:2, frio:1} },
+        { t:'Improviso, veo qué surge sobre la marcha', e:{intuitivo:3, creatividad:2, festejero:1} },
+        { t:'Analizo la semana y planifico la que viene', e:{analitico:3, frio:2, disciplina:1} }
+      ]
+    },
+    {
+      q: 'Tu equipo gana 1-0 y faltan 10 minutos. ¿Qué pedís?',
+      a: [
+        { t:'Ir a buscar el segundo, no especular', e:{garra:3, epico:2, lider:1} },
+        { t:'Aguantar con orden y cerrar el partido', e:{pragmatico:3, frio:2, disciplina:2} },
+        { t:'Tener la pelota y manejar los tiempos', e:{analitico:2, disciplina:2, creatividad:2} },
+        { t:'Una jugada de fantasía para liquidarlo', e:{creatividad:3, intuitivo:2, festejero:1} }
+      ]
+    },
+    {
+      q: '¿Cómo te ven tus amigos?',
+      a: [
+        { t:'El/la que nunca baja los brazos', e:{garra:3, epico:2, lider:1} },
+        { t:'El/la cerebro del grupo', e:{analitico:3, frio:2, pragmatico:1} },
+        { t:'El/la alma de la fiesta', e:{festejero:3, creatividad:2, intuitivo:1} },
+        { t:'El/la referente al que todos consultan', e:{lider:3, disciplina:2, frio:1} }
+      ]
+    },
+    {
+      q: 'Si fueras una jugada de fútbol, serías…',
+      a: [
+        { t:'Un gol de chilena imposible', e:{epico:3, creatividad:2, intuitivo:1} },
+        { t:'Una pared rápida y precisa', e:{pragmatico:2, analitico:2, disciplina:2} },
+        { t:'Un caño en la cara del rival', e:{creatividad:3, festejero:2, garra:1} },
+        { t:'Un quite firme y salida limpia', e:{frio:3, disciplina:2, garra:2} }
+      ]
+    }
+  ];
+
+  let estado = { current: 0, scores: {}, respuestas: [] };
+
+  function initScores() {
+    estado.scores = {};
+    Object.keys(selecciones).forEach(s => estado.scores[s] = 0);
+  }
+
+  document.getElementById('start').onclick = () => {
+    estado.current = 0;
+    estado.respuestas = [];
+    initScores();
+    show('quiz');
+    renderPregunta();
+  };
+
+  function renderPregunta() {
+    const p = preguntas[estado.current];
+    document.getElementById('q-num').textContent = estado.current + 1;
+    document.getElementById('q-pct').textContent = Math.round((estado.current / preguntas.length) * 100) + '%';
+    document.getElementById('q-progress').style.width = ((estado.current / preguntas.length) * 100) + '%';
+    document.getElementById('q-text').textContent = p.q;
+    const div = document.getElementById('q-options');
+    div.innerHTML = '';
+    p.a.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.textContent = opt.t;
+      btn.onclick = () => answer(opt);
+      div.appendChild(btn);
+    });
+  }
+
+  function answer(opt) {
+    // Acumular pesos a las selecciones que matchean los ejes.
+    // Aplicamos potencia 1.7 para AMPLIFICAR las diferencias entre selecciones.
+    Object.keys(selecciones).forEach(s => {
+      const ejesSeleccion = selecciones[s].ejes;
+      let match = 0;
+      Object.entries(opt.e).forEach(([eje, peso]) => {
+        const valEje = ejesSeleccion[eje] || 0;
+        match += peso * (valEje / 10);
+      });
+      // Si la opción "machea fuerte" con esta seleccion, le da bonus exponencial
+      estado.scores[s] += Math.pow(Math.max(0, match), 2.2);
+    });
+    estado.respuestas.push(opt);
+    estado.current++;
+    if (estado.current >= preguntas.length) {
+      analyze();
+    } else {
+      renderPregunta();
+    }
+  }
+
+  function analyze() {
+    show('analyzing');
+    const tags = ['ANALIZANDO RESPUESTAS', 'CONSULTANDO EL CÓDICE', 'CALCULANDO ESTILO', 'INVOCANDO TU SELECCIÓN'];
+    const emojis = ['⚔', '⚽', '🏆', '★'];
+    let i = 0;
+    const interval = setInterval(() => {
+      document.getElementById('anim-tag').textContent = tags[i % tags.length];
+      document.getElementById('anim-msg').textContent = emojis[i % emojis.length];
+      i++;
+    }, 600);
+    setTimeout(() => {
+      clearInterval(interval);
+      showResult();
+    }, 2400);
+  }
+
+  function showResult() {
+    // Top 3
+    const ranking = Object.entries(estado.scores)
+      .sort((a, b) => b[1] - a[1]);
+    // Calcular % SOBRE EL TOP 3 (no sobre todas las selecciones)
+    // así sumando los 3 da ~100% y el ganador se ve claro
+    const top3Raw = ranking.slice(0, 3);
+    const winner = ranking[0][0];
+    const data = selecciones[winner];
+
+    // Amplificamos la diferencia para que el ganador se destaque (~50-62%)
+    // en vez de quedar empatado con el 2° y 3°.
+    const maxV = top3Raw[0][1] || 1;
+    const K = 5;
+    const top3W = top3Raw.map(([n, v]) => [n, Math.pow(v / maxV, K)]);
+    const wSum = top3W.reduce((s, [, v]) => s + v, 0) || 1;
+
+    const top3 = top3W.map(([n, v]) => ({
+      n, flag: selecciones[n].flag, pct: Math.round((v / wSum) * 100)
+    }));
+
+    const html = `
+      <div class="rpg-card" id="result-card">
+        <div class="rpg-corner tl"></div>
+        <div class="rpg-corner tr"></div>
+        <div class="rpg-corner bl"></div>
+        <div class="rpg-corner br"></div>
+        <div class="rpg-pre">★ Tu selección es ★</div>
+        <div class="rpg-flag">${data.flag}</div>
+        <div class="rpg-name">${winner}</div>
+        <div class="rpg-class">${data.clase}</div>
+        <div class="rpg-section">
+          <div class="rpg-section-label">⚔ Tu superpoder</div>
+          <div class="rpg-section-text">${data.habilidad}</div>
+        </div>
+        <div class="rpg-section">
+          <div class="rpg-section-label">⚠ Tu kryptonita</div>
+          <div class="rpg-section-text">${data.debilidad}</div>
+        </div>
+        <div class="rpg-section">
+          <div class="rpg-section-label">📜 Tu leyenda</div>
+          <div class="rpg-section-text">${data.leyenda}</div>
+        </div>
+        <div class="rpg-quote">${data.quote}</div>
+        <div class="juv-watermark">@juventud_lapampa</div>
+      </div>
+      <div class="top-matches">
+        <div class="matches-title">Tu top 3 de afinidad</div>
+        ${top3.map(t => `
+          <div class="match-row">
+            <span class="match-flag">${t.flag}</span>
+            <span><strong>${t.n}</strong></span>
+            <span class="match-pct">${t.pct}%</span>
+          </div>
+        `).join('')}
+      </div>
+    `;
+    document.getElementById('result-card-container').innerHTML = html;
+    show('result');
+  }
+
+  document.getElementById('download').onclick = () => {
+    const card = document.getElementById('result-card');
+    if (!card) return;
+    const w = card.offsetWidth, h = card.offsetHeight;
+    const origCss = card.getAttribute('style') || '';
+    card.style.cssText = origCss +
+      `;width:${w}px!important;height:${h}px!important;max-width:${w}px!important;max-height:${h}px!important;overflow:hidden!important;box-sizing:border-box!important;`;
+
+    html2canvas(card, {
+      backgroundColor: '#0a0612',
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      logging: false,
+      width: w,
+      height: h,
+      windowWidth: document.documentElement.clientWidth,
+      windowHeight: document.documentElement.clientHeight,
+      onclone: (doc) => {
+        const c = doc.getElementById('result-card');
+        if (c) {
+          c.style.width = w + 'px';
+          c.style.height = h + 'px';
+          c.style.maxWidth = w + 'px';
+          c.style.maxHeight = h + 'px';
+          c.style.overflow = 'hidden';
+          c.style.boxSizing = 'border-box';
+        }
+      }
+    }).then(canvas => {
+      card.setAttribute('style', origCss);
+      const link = document.createElement('a');
+      link.download = 'que-seleccion-soy.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }).catch(err => {
+      card.setAttribute('style', origCss);
+      alert('Error: ' + err.message);
+    });
+  };
+
+  document.getElementById('share').onclick = () => {
+    const sel = document.querySelector('.rpg-name')?.textContent || 'una selección';
+    shareReto(`🔮 Hice el test "¿Qué Selección Sos?" del Mundial 2026 y me tocó: ${sel}. ¿Qué selección sos vos? 📲 @juventud_lapampa`);
+  };
+  function shareReto(text){ if(navigator.share){navigator.share({title:'¿Qué Selección Sos? · Mundial 2026',text}).catch(()=>{});} else if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>alert('¡Reto copiado! Mandáselo a un amigo 📲'),()=>prompt('Copiá tu reto:',text));} else {prompt('Copiá tu reto:',text);} }
+
+  function show(s) {
+    document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+    document.getElementById('screen-' + s).classList.add('active');
+  }
+
+  function restart() {
+    show('intro');
+  }
+</script>
+</body>
+</html>

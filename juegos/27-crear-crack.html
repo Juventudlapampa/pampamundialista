@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Creá tu Crack · Mundial 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  :root { --bg:#070d14; --verde-fluo:#4ade80; --gold:#d4a82e; --gold-2:#f4cd60; --crema:#f4ecd8; --azul:#38bdf8; --rojo:#f87171; --purple:#a78bfa; }
+  body { font-family:'DM Sans',sans-serif; background:var(--bg); background-image:radial-gradient(circle at 50% -10%, rgba(56,189,248,0.18), transparent 55%); min-height:100vh; color:var(--crema); padding:1rem; touch-action:manipulation; }
+  .container { max-width:520px; margin:0 auto; }
+  header { text-align:center; margin-bottom:0.6rem; }
+  .header-tag { font-family:'JetBrains Mono',monospace; font-size:0.7rem; letter-spacing:0.3em; color:var(--azul); text-transform:uppercase; }
+  h1 { font-family:'Anton',sans-serif; font-size:clamp(1.9rem,6vw,3rem); letter-spacing:0.04em; text-transform:uppercase; line-height:0.95; margin-top:0.25rem; }
+  h1 span { color:var(--azul); }
+
+  .screen { display:none; }
+  .screen.active { display:block; animation:slidein 0.35s cubic-bezier(.2,.8,.2,1); }
+  @keyframes slidein { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+
+  .stage { background:linear-gradient(160deg,#0d2438,#070d14); border:2px solid rgba(56,189,248,0.3); border-radius:18px; padding:0.6rem; position:relative; }
+  .avatar-wrap { width:160px; margin:0 auto; transition:transform 0.2s; }
+  .avatar-wrap.pop { animation:pop 0.3s; }
+  @keyframes pop { 0%{transform:scale(1)} 40%{transform:scale(1.07)} 100%{transform:scale(1)} }
+  .stage .swipe-hint { text-align:center; font-family:'JetBrains Mono',monospace; font-size:0.58rem; letter-spacing:0.15em; opacity:0.5; margin-top:0.2rem; }
+  .kit-name { text-align:center; font-family:'Anton',sans-serif; letter-spacing:0.06em; color:var(--gold-2); font-size:1.05rem; margin-top:0.2rem; text-transform:uppercase; }
+
+  .sect { margin-top:0.9rem; }
+  .sect-title { font-family:'JetBrains Mono',monospace; font-size:0.68rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--azul); margin-bottom:0.4rem; display:flex; align-items:center; gap:0.4rem; }
+  .chips { display:flex; gap:0.4rem; overflow-x:auto; padding-bottom:0.3rem; }
+  .chips.wrap { flex-wrap:wrap; overflow:visible; }
+  .chip { flex:none; background:rgba(0,0,0,0.4); border:2px solid rgba(212,168,46,0.2); border-radius:10px; padding:0.35rem 0.5rem; cursor:pointer; color:var(--crema); font-family:inherit; font-size:0.72rem; display:flex; flex-direction:column; align-items:center; gap:0.15rem; min-width:50px; transition:all 0.12s; }
+  .chip:active { transform:scale(0.93); }
+  .chip.on { border-color:var(--gold); background:rgba(212,168,46,0.18); }
+  .chip .sw { width:30px; height:30px; border-radius:7px; border:1px solid rgba(0,0,0,0.4); }
+  .chip svg { width:36px; height:40px; }
+  .chip .ic { font-size:1.3rem; line-height:1; }
+  .chip .lb { font-size:0.6rem; opacity:0.85; white-space:nowrap; }
+
+  .fields { display:flex; gap:0.45rem; margin-top:0.5rem; align-items:stretch; }
+  .fields input { flex:1; background:rgba(0,0,0,0.5); border:1px solid rgba(244,236,216,0.25); color:var(--crema); padding:0.6rem; border-radius:8px; font-family:inherit; font-size:0.95rem; }
+  .fields input.num { max-width:64px; text-align:center; font-family:'Anton',sans-serif; }
+  input:focus { outline:none; border-color:var(--azul); }
+  .dice { background:rgba(56,189,248,0.15); border:1px solid var(--azul); color:var(--azul); border-radius:8px; padding:0 0.7rem; font-size:1.1rem; cursor:pointer; flex:none; }
+  .dice:active { transform:scale(0.9); }
+
+  .toggle-row { display:flex; gap:0.45rem; flex-wrap:wrap; margin-top:0.5rem; }
+  .tg { flex:1; min-width:120px; background:rgba(0,0,0,0.4); border:2px solid rgba(212,168,46,0.2); border-radius:10px; padding:0.55rem; cursor:pointer; text-align:center; font-size:0.8rem; transition:all 0.12s; }
+  .tg.on { border-color:var(--gold); background:rgba(212,168,46,0.18); color:var(--gold-2); }
+  .tg.meme.on { border-color:var(--purple); background:rgba(167,139,250,0.18); color:var(--purple); }
+
+  .btn { background:linear-gradient(135deg,var(--azul),#0ea5e9); color:#04212e; border:none; padding:1rem; font-family:'Anton',sans-serif; letter-spacing:0.1em; border-radius:12px; cursor:pointer; width:100%; text-transform:uppercase; font-size:1.05rem; margin-top:0.6rem; transition:transform 0.1s; }
+  .btn:active { transform:scale(0.97); }
+  .btn-gold { background:linear-gradient(135deg,var(--gold),var(--gold-2)); color:#000; }
+  .btn-share { background:linear-gradient(135deg,#22c55e,#16a34a); color:#04210f; }
+  .btn-sec { background:rgba(0,0,0,0.4); color:var(--crema); border:1px solid var(--azul); }
+
+  /* juego */
+  .game-hud { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; font-family:'JetBrains Mono',monospace; }
+  .hud-box { background:rgba(0,0,0,0.5); border:1px solid var(--azul); border-radius:10px; padding:0.4rem 0.9rem; text-align:center; }
+  .hud-num { font-family:'Anton',sans-serif; color:var(--azul); font-size:1.6rem; line-height:1; }
+  .hud-lbl { font-size:0.5rem; letter-spacing:0.2em; opacity:0.7; text-transform:uppercase; }
+  canvas { width:100%; height:auto; display:block; border-radius:14px; border:2px solid rgba(56,189,248,0.3); touch-action:none; }
+  .game-hint { text-align:center; font-size:0.75rem; opacity:0.65; margin-top:0.5rem; font-family:'JetBrains Mono',monospace; }
+
+  /* carta */
+  .card { border:3px solid var(--gold); border-radius:18px; padding:1.2rem; text-align:center; position:relative; overflow:hidden; }
+  .card-bg { position:absolute; inset:0; z-index:0; }
+  .card-inner { position:relative; z-index:1; }
+  .card-pre { font-family:'JetBrains Mono',monospace; letter-spacing:0.2em; font-size:0.62rem; color:var(--gold-2); text-transform:uppercase; text-shadow:0 1px 3px rgba(0,0,0,0.8); }
+  .card .avatar-wrap { width:150px; margin:0.3rem auto; }
+  .card-name { font-family:'Anton',sans-serif; font-size:2rem; line-height:1; text-transform:uppercase; color:#fff; text-shadow:0 2px 6px rgba(0,0,0,0.9); }
+  .card-frase { font-size:0.8rem; font-style:italic; opacity:0.95; margin-top:0.15rem; text-shadow:0 1px 4px rgba(0,0,0,0.9); }
+  .card-team { font-family:'JetBrains Mono',monospace; font-size:0.72rem; letter-spacing:0.1em; margin-top:0.35rem; text-shadow:0 1px 3px rgba(0,0,0,0.9); }
+  .card-score { margin-top:0.5rem; }
+  .card-score .n { font-family:'Anton',sans-serif; font-size:2.3rem; color:var(--gold-2); line-height:1; text-shadow:0 2px 6px rgba(0,0,0,0.9); }
+  .card-score .l { font-family:'JetBrains Mono',monospace; font-size:0.55rem; letter-spacing:0.2em; opacity:0.85; }
+  .card-wm { font-family:'JetBrains Mono',monospace; font-size:0.55rem; letter-spacing:0.18em; color:var(--gold-2); margin-top:0.6rem; text-shadow:0 1px 3px rgba(0,0,0,0.9); }
+  /* animación carta */
+  .card.live .avatar-wrap svg { animation:breathe 3.2s ease-in-out infinite; transform-origin:center bottom; }
+  @keyframes breathe { 0%,100%{transform:scale(1)} 50%{transform:scale(1.02)} }
+  .card.live .eo { animation:eo 4s infinite; } .card.live .ec { animation:ec 4s infinite; }
+  @keyframes eo { 0%,95%,100%{opacity:1} 96%,99%{opacity:0} }
+  @keyframes ec { 0%,95%,100%{opacity:0} 96%,99%{opacity:1} }
+  .confetti { position:fixed; top:-10px; width:9px; height:14px; z-index:200; pointer-events:none; }
+  @media (max-width: 360px) { body { padding:0.5rem; } .chip { min-width:46px; } }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="header-tag">Creá tu Crack · Mundial 2026</div>
+    <h1>CREÁ TU <span>CRACK</span></h1>
+  </header>
+
+  <!-- EDITOR -->
+  <div class="screen active" id="screen-editor">
+    <div class="stage" id="stage">
+      <div class="avatar-wrap" id="avatar-prev"></div>
+      <div class="swipe-hint">👈 deslizá para cambiar de camiseta 👉</div>
+    </div>
+    <div class="kit-name" id="kit-name">—</div>
+
+    <div class="fields">
+      <input type="text" id="f-mote" placeholder="Tu mote (El Zurdo, La Joya...)" maxlength="16">
+      <button class="dice" id="rnd-mote" title="Mote al azar">🎲</button>
+      <input type="number" id="f-number" class="num" placeholder="10" min="1" max="99" value="10">
+    </div>
+    <div class="fields">
+      <input type="text" id="f-frase" placeholder="Frase de tu carta (o tirá el dado)" maxlength="48">
+      <button class="dice" id="rnd-frase" title="Frase al azar">🎲</button>
+    </div>
+
+    <div class="sect"><div class="sect-title">👕 Camiseta</div><div class="chips" id="c-kit"></div></div>
+    <div class="sect"><div class="sect-title">🎨 Tono de piel</div><div class="chips wrap" id="c-skin"></div></div>
+    <div class="sect"><div class="sect-title">💇 Corte de pelo</div><div class="chips" id="c-hair"></div></div>
+    <div class="sect"><div class="sect-title">🖌️ Color de pelo</div><div class="chips wrap" id="c-haircolor"></div></div>
+    <div class="sect"><div class="sect-title">🧔 Barba</div><div class="chips" id="c-beard"></div></div>
+    <div class="sect"><div class="sect-title">🧢 Accesorios <span style="opacity:0.6;text-transform:none;letter-spacing:0">(combinables)</span></div><div class="chips wrap" id="c-acc"></div></div>
+    <div class="sect"><div class="sect-title">🤳 Pose de la carta</div><div class="chips" id="c-pose"></div></div>
+    <div class="sect"><div class="sect-title">🌆 Fondo de la carta</div><div class="chips" id="c-bg"></div></div>
+    <div class="sect"><div class="sect-title">🏴 Tatuaje</div><div class="chips wrap" id="c-tattoo"></div></div>
+
+    <div class="toggle-row">
+      <div class="tg" id="tg-captain">🪢 Cinta de capitán: <b id="cap-state">OFF</b></div>
+      <div class="tg meme" id="tg-meme">🤪 Modo meme: <b id="meme-state">OFF</b></div>
+    </div>
+    <div class="sect" id="sect-meme" style="display:none"><div class="sect-title" style="color:var(--purple)">🤡 Locuras (modo meme)</div><div class="chips wrap" id="c-meme"></div></div>
+
+    <button class="btn" id="play-dominio">⚽ Jugar: Dominio (jueguito)</button>
+    <button class="btn" id="play-penales" style="background:linear-gradient(135deg,#f59e0b,#d4a82e);color:#04212e">🥅 Jugar: Penales con tu Crack</button>
+    <button class="btn btn-gold" id="dl-editor">📸 Descargar mi carta</button>
+    <button class="btn btn-share" id="dl-sticker">🟢 Descargar sticker (sin fondo)</button>
+  </div>
+
+  <!-- JUEGO -->
+  <div class="screen" id="screen-game">
+    <div class="game-hud">
+      <div class="hud-box"><div class="hud-num" id="g-score">0</div><div class="hud-lbl" id="hud-lbl-1">Toques</div></div>
+      <div class="hud-box" style="border-color:var(--gold)"><div class="hud-num" id="g-best" style="color:var(--gold)">0</div><div class="hud-lbl" id="hud-lbl-2">Récord</div></div>
+    </div>
+    <canvas id="cv" width="360" height="460"></canvas>
+    <div class="game-hint" id="game-hint">Tocá la pelota para mantenerla en el aire. ¡No la dejes caer!</div>
+    <button class="btn btn-sec" id="back-editor">← Volver al editor</button>
+  </div>
+
+  <!-- RESULTADO -->
+  <div class="screen" id="screen-result">
+    <div class="card live" id="result-card">
+      <div class="card-bg" id="card-bg"></div>
+      <div class="card-inner">
+        <div class="card-pre" id="r-pre">★ Mi Crack ★</div>
+        <div class="avatar-wrap" id="avatar-card"></div>
+        <div class="card-name" id="r-name">CRACK</div>
+        <div class="card-frase" id="r-frase"></div>
+        <div class="card-team" id="r-team">—</div>
+        <div class="card-score"><div class="n" id="r-score">0</div><div class="l" id="r-score-lbl">TOQUES SEGUIDOS · DOMINIO</div></div>
+        <div class="card-wm">CREÁ TU CRACK · MUNDIAL 2026 · @JUVENTUD_LAPAMPA</div>
+      </div>
+    </div>
+    <button class="btn btn-gold" id="dl-result">📸 Descargar mi carta</button>
+    <button class="btn btn-share" id="dl-sticker2">🟢 Descargar sticker (sin fondo)</button>
+    <button class="btn" id="share-result">🔗 Desafiar a un amigo</button>
+    <button class="btn" id="replay">🔁 Jugar de nuevo</button>
+    <button class="btn btn-sec" id="to-editor">✏️ Editar mi crack</button>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const vibrate = ms => { try { if (navigator.vibrate) navigator.vibrate(ms); } catch(e){} };
+const rnd = arr => arr[Math.floor(Math.random()*arr.length)];
+
+/* ===================== DATA ===================== */
+const SKINS = ['#fce0bd','#f0c79a','#d8a679','#b07a4f','#8a5734','#5c3a1f'];
+const HAIRS = ['Rapado','Pelado','Taper','Mullet','Rulos','Colita','Trenzas','Despeinado','Mohawk','Jopo'];
+const HAIR_COLORS = ['#1a1a1a','#4a2c1a','#d4a82e','#a83e0f','#f4ecd8'];
+const HAIR_COLOR_NAMES = ['Negro','Castaño','Rubio','Colorado','Decolorado'];
+const BEARDS = ['Lampiño','Candado','Perilla','3 días','Completa'];
+const ACCS = [
+  {id:'gorra_atras', ic:'🧢', lb:'Gorra ↩'},
+  {id:'trucker', ic:'🧢', lb:'Trucker'},
+  {id:'vincha', ic:'🎽', lb:'Vincha'},
+  {id:'capucha', ic:'🧥', lb:'Capucha'},
+  {id:'aviador', ic:'🕶️', lb:'Aviador'},
+  {id:'redondas', ic:'👓', lb:'Redondas'},
+  {id:'y2k', ic:'🕶️', lb:'Y2K'},
+  {id:'bandana', ic:'🧣', lb:'Bandana'},
+  {id:'cadenita', ic:'⛓️', lb:'Cadenita'},
+  {id:'arito', ic:'💎', lb:'Arito'}
+];
+const MEMES = [
+  {id:'afro', ic:'🦱', lb:'Afro'},
+  {id:'corazon', ic:'😍', lb:'Lentes ❤'},
+  {id:'gaucho', ic:'🤠', lb:'Sombrero'},
+  {id:'bigote', ic:'🥸', lb:'Bigotazo'},
+  {id:'pollo', ic:'🐔', lb:'Pollo'},
+  {id:'diente', ic:'🦷', lb:'Diente oro'},
+  {id:'aureola', ic:'😇', lb:'Aureola'},
+  {id:'cuernos', ic:'😈', lb:'Cuernos'}
+];
+const POSES = [
+  {ic:'🧍', lb:'Frente'}, {ic:'🙌', lb:'Brazos ↑'}, {ic:'👂', lb:'A la oreja'}, {ic:'☝️', lb:'Al cielo'},
+  {ic:'🤝', lb:'Cruzado'}, {ic:'😘', lb:'Beso escudo'}, {ic:'🤫', lb:'Shhh'}, {ic:'🛝', lb:'De rodillas'}
+];
+const BGS = [
+  {lb:'Cancha', css:'linear-gradient(160deg,#0d6e35,#073d1d)'},
+  {lb:'Tribuna', css:'linear-gradient(160deg,#1b4d8a,#0a1f44)'},
+  {lb:'Potrero', css:'linear-gradient(160deg,#ff8a3d,#7c2d6b)'},
+  {lb:'Estadio', css:'radial-gradient(circle at 30% 20%,#222,#000)'},
+  {lb:'Grafiti', css:'linear-gradient(160deg,#555,#2b2b2b)'},
+  {lb:'Vestuario', css:'linear-gradient(160deg,#6b4a2b,#2e1f12)'}
+];
+const KITS = [
+  {n:'Argentina', main:'#6CACE4', accent:'#FFFFFF', shorts:'#0A1F44'},
+  {n:'La Pampa',  main:'#1FA35A', accent:'#FFFFFF', shorts:'#0A1F44'},
+  {n:'Brasil',    main:'#FCD116', accent:'#009739', shorts:'#0A1F44'},
+  {n:'Francia',   main:'#1E3A8A', accent:'#FFFFFF', shorts:'#FFFFFF'},
+  {n:'España',    main:'#C60B1E', accent:'#FFD100', shorts:'#0A1F44'},
+  {n:'Inglaterra',main:'#FFFFFF', accent:'#CE1124', shorts:'#0A1F44'},
+  {n:'Portugal',  main:'#C8102E', accent:'#006600', shorts:'#0A1F44'},
+  {n:'Alemania',  main:'#F2F2F2', accent:'#111111', shorts:'#111111'},
+  {n:'Italia',    main:'#1E3A8A', accent:'#FFFFFF', shorts:'#FFFFFF'},
+  {n:'Países Bajos',main:'#FF6600', accent:'#FFFFFF', shorts:'#FF6600'},
+  {n:'Uruguay',   main:'#5BC2E7', accent:'#FFFFFF', shorts:'#0A1F44'},
+  {n:'México',    main:'#006847', accent:'#FFFFFF', shorts:'#006847'},
+  {n:'Croacia',   main:'#FF0000', accent:'#FFFFFF', shorts:'#0A1F44'},
+  {n:'Colombia',  main:'#FCD116', accent:'#003893', shorts:'#003893'},
+  {n:'Marruecos', main:'#C1272D', accent:'#006233', shorts:'#FFFFFF'},
+  {n:'Japón',     main:'#10204B', accent:'#FFFFFF', shorts:'#10204B'},
+  {n:'Bélgica',   main:'#E30613', accent:'#111111', shorts:'#111111'},
+  {n:'Senegal',   main:'#00853F', accent:'#FFFFFF', shorts:'#00853F'},
+  {n:'Corea',     main:'#E30613', accent:'#10204B', shorts:'#10204B'},
+  {n:'Noruega',   main:'#C8102E', accent:'#FFFFFF', shorts:'#00205B'},
+  {n:'Canadá',    main:'#FF0000', accent:'#FFFFFF', shorts:'#FF0000'},
+  {n:'Ecuador',   main:'#FFD100', accent:'#0A1F44', shorts:'#0A1F44'},
+  {n:'Australia', main:'#FFD100', accent:'#006847', shorts:'#006847'},
+  {n:'Suiza',     main:'#FF0000', accent:'#FFFFFF', shorts:'#FF0000'}
+];
+const MOTES = ['El Fantasma','La Joya','El Zurdo','El Toro','El Pampa','La Pulguita','El Mago','El Cabezón','El Loco','El Pibe','La Bestia','El Pirulo','El Tanque','El Brujo','El Demonio','El Killer','El Chueco','El Negro','El Rusito','El Polaco','El Crack','La Pantera','El Rayo','El Maestro','El Tigre'];
+const FRASES = ['Su zurda incomoda a cualquier defensa','Nadie le saca la pelota en el área','Lo enganchó y se fue solo','El terror de los centrales','Aguanta como nadie en el medio','Le pega cruzado al palo más lejano','Cuando tira un caño no perdona','Sale del fondo gambeteando','El que mete los goles que valen','Capitán por derecho propio','Le pone huevo donde otros aflojan','El que aparece cuando hace falta','Su pierna izquierda es marca registrada','Cabeza fría, pies calientes','El que rompe la línea con un pase'];
+
+let av = { skin:1, hair:0, hairColor:0, beard:0, kit:0, acc:[], meme:[], memeMode:false, pose:0, bg:0, captain:false, tattoo:0, number:10, mote:'', frase:'' };
+let best = 0;
+const has = id => av.acc.includes(id);
+const hasMeme = id => av.memeMode && av.meme.includes(id);
+
+/* ===================== PERSISTENCIA ===================== */
+function loadSaved(){ try { const s = JSON.parse(localStorage.getItem('crear-crack-v2')||'{}'); if(s.av) av = Object.assign(av, s.av); if(typeof s.best==='number') best = s.best; if(typeof s.bestPen==='number') bestPen = s.bestPen; } catch(e){} }
+function saveAll(){ try { localStorage.setItem('crear-crack-v2', JSON.stringify({av,best,bestPen})); } catch(e){} }
+
+/* ===================== AVATAR SVG ===================== */
+function isLight(hex){ const c=hex.replace('#',''); return (0.299*parseInt(c.substr(0,2),16)+0.587*parseInt(c.substr(2,2),16)+0.114*parseInt(c.substr(4,2),16))>150; }
+function darken(hex,f){ const c=hex.replace('#',''); const r=Math.round(parseInt(c.substr(0,2),16)*f),g=Math.round(parseInt(c.substr(2,2),16)*f),b=Math.round(parseInt(c.substr(4,2),16)*f); return '#'+[r,g,b].map(x=>x.toString(16).padStart(2,'0')).join(''); }
+
+function hairSVG(style, hc){
+  switch(HAIRS[style]){
+    case 'Rapado': return `<path d="M64,86 Q60,56 100,56 Q140,56 136,86 Q130,72 100,70 Q70,72 64,86 Z" fill="${hc}" opacity="0.55"/>`;
+    case 'Pelado': return '';
+    case 'Taper': return `<path d="M68,74 Q70,48 100,48 Q130,48 132,74 Q120,60 100,60 Q80,60 68,74 Z" fill="${hc}"/>`;
+    case 'Mullet': return `<path d="M62,84 Q56,48 100,48 Q144,48 138,84 Q132,62 100,60 Q68,62 62,84 Z" fill="${hc}"/>`;
+    case 'Rulos': return `<g fill="${hc}"><circle cx="70" cy="66" r="15"/><circle cx="86" cy="52" r="16"/><circle cx="104" cy="50" r="16"/><circle cx="122" cy="54" r="15"/><circle cx="135" cy="70" r="14"/></g>`;
+    case 'Colita': return `<path d="M62,84 Q58,48 100,48 Q142,48 138,84 Q132,62 100,60 Q68,62 62,84 Z" fill="${hc}"/>`;
+    case 'Trenzas': return `<g stroke="${hc}" stroke-width="5" fill="none" stroke-linecap="round"><path d="M74,58 Q70,76 73,90"/><path d="M84,52 Q82,74 84,90"/><path d="M96,50 Q96,74 97,90"/><path d="M108,50 Q108,74 107,90"/><path d="M120,52 Q122,74 119,90"/><path d="M130,58 Q132,76 128,90"/></g>`;
+    case 'Despeinado': return `<path d="M62,84 Q56,52 76,54 Q84,40 96,52 Q104,40 116,52 Q140,50 138,84 Q120,60 100,58 Q80,60 62,84 Z" fill="${hc}"/>`;
+    case 'Mohawk': return `<path d="M91,46 Q100,30 109,46 L109,72 Q100,64 91,72 Z" fill="${hc}"/>`;
+    case 'Jopo': return `<path d="M62,84 Q60,52 100,52 Q142,52 138,82 Q132,60 96,58 Q116,46 70,50 Q60,58 62,84 Z" fill="${hc}"/>`;
+  }
+  return '';
+}
+function backHairSVG(style, hc){
+  switch(HAIRS[style]){
+    case 'Mullet': return `<path d="M64,92 Q60,150 84,150 L88,150 Q72,118 72,96 Z M136,92 Q140,150 116,150 L112,150 Q128,118 128,96 Z" fill="${hc}"/>`;
+    case 'Colita': return `<path d="M134,70 Q166,96 156,138 Q150,112 132,98 Z" fill="${hc}"/>`;
+    case 'Trenzas': return `<path d="M70,118 Q72,150 84,156 L92,150 Q80,128 80,114 Z M130,118 Q128,150 116,156 L108,150 Q120,128 120,114 Z" fill="${hc}"/>`;
+    default: return '';
+  }
+}
+function beardSVG(style, bc){
+  switch(BEARDS[style]){
+    case 'Lampiño': return '';
+    case 'Candado': return `<path d="M68,96 Q70,128 100,134 Q130,128 132,96 Q128,116 100,118 Q72,116 68,96 Z" fill="none" stroke="${bc}" stroke-width="6"/><path d="M90,118 Q100,128 110,118 L108,108 Q100,114 92,108 Z" fill="${bc}"/>`;
+    case 'Perilla': return `<path d="M90,116 Q100,132 110,116 Q100,124 90,116 Z" fill="${bc}"/><rect x="84" y="106" width="32" height="5" rx="2" fill="${bc}"/>`;
+    case '3 días': return `<path d="M68,98 Q70,128 100,134 Q130,128 132,98 Q126,120 100,124 Q74,120 68,98 Z" fill="${bc}" opacity="0.35"/>`;
+    case 'Completa': return `<path d="M66,92 Q68,132 100,138 Q132,132 134,92 Q126,120 100,124 Q74,120 66,92 Z" fill="${bc}"/>`;
+  }
+  return '';
+}
+function armsSVG(pose, main, skin){
+  const A=(d)=>`<path d="${d}" fill="${main}"/>`, H=(x,y,r=7.5)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${skin}"/>`;
+  const downL=A('M58,140 L44,182 L57,186 L71,150 Z')+H(50.5,186);
+  const downR=A('M142,140 L156,182 L143,186 L129,150 Z')+H(149.5,186);
+  switch(pose){
+    case 1: return A('M60,140 L40,106 L52,102 L70,138 Z')+A('M140,140 L160,106 L148,102 L130,138 Z')+H(45,102)+H(155,102);
+    case 2: return downL+A('M140,142 L150,112 L138,104 L128,148 Z')+H(135,100,8);
+    case 3: return downL+`<rect x="134" y="96" width="14" height="48" rx="6" fill="${main}"/>`+H(141,92)+`<rect x="139" y="76" width="4" height="14" rx="2" fill="${skin}"/>`;
+    case 4: return A('M60,142 L120,168 L116,176 L56,150 Z')+A('M140,142 L80,168 L84,176 L144,150 Z')+H(118,172)+H(82,172);
+    case 5: return downL+A('M140,142 L106,158 L110,166 L144,150 Z')+H(104,160);
+    case 6: return downL+A('M140,142 L116,116 L126,108 L146,148 Z')+H(112,110)+`<rect x="106" y="106" width="4" height="10" rx="2" fill="${skin}"/>`;
+    case 7: return A('M58,142 L34,158 L44,166 L70,150 Z')+A('M142,142 L166,158 L156,166 L130,150 Z')+H(40,162)+H(160,162);
+    default: return downL+downR;
+  }
+}
+function legsSVG(pose, skin){
+  if(pose===7){ // de rodillas / slide
+    return `<path d="M82,210 L60,238 L74,244 L96,216 Z" fill="${skin}"/><path d="M104,212 L116,244 L130,240 L116,210 Z" fill="${skin}"/>`+
+           `<rect x="56" y="236" width="24" height="9" rx="3" fill="#101820"/><rect x="118" y="234" width="24" height="9" rx="3" fill="#101820"/>`;
+  }
+  return `<rect x="80" y="216" width="15" height="28" rx="4" fill="${skin}"/><rect x="105" y="216" width="15" height="28" rx="4" fill="${skin}"/>`+
+         `<rect x="74" y="240" width="24" height="9" rx="3" fill="#101820"/><rect x="102" y="240" width="24" height="9" rx="3" fill="#101820"/>`;
+}
+function accHeadSVG(skin, hc){
+  let s='';
+  if(hasMeme('aureola')) s+=`<ellipse cx="100" cy="36" rx="30" ry="8" fill="none" stroke="#ffe14d" stroke-width="4"/>`;
+  if(hasMeme('cuernos')) s+=`<path d="M70,58 Q60,38 74,40 Q72,52 80,58 Z" fill="#b91c1c"/><path d="M130,58 Q140,38 126,40 Q128,52 120,58 Z" fill="#b91c1c"/>`;
+  if(hasMeme('gaucho')) s+=`<ellipse cx="100" cy="58" rx="56" ry="11" fill="#3a2a17"/><path d="M76,58 Q78,30 100,30 Q122,30 124,58 Z" fill="#4a3520"/>`;
+  if(has('capucha')) s=`<path d="M52,96 Q48,40 100,38 Q152,40 148,96 Q150,70 100,66 Q50,70 52,96 Z" fill="#2b3640"/>`+s;
+  if(has('gorra_atras')) s+=`<path d="M66,66 Q70,44 100,44 Q130,44 134,66 Q120,58 100,58 Q80,58 66,66 Z" fill="#1f2937"/><rect x="58" y="62" width="20" height="9" rx="3" fill="#1f2937"/>`;
+  if(has('trucker')) s+=`<path d="M66,64 Q70,42 100,42 Q130,42 134,64 Q120,56 100,56 Q80,56 66,64 Z" fill="#dc2626"/><path d="M118,64 Q150,66 150,76 L120,72 Z" fill="#111"/>`;
+  if(has('vincha')) s+=`<rect x="61" y="66" width="78" height="9" rx="3" fill="#e11d48"/>`;
+  if(has('bandana')) s+=`<rect x="80" y="126" width="40" height="12" rx="3" fill="#dc2626"/><rect x="80" y="126" width="40" height="12" rx="3" fill="none" stroke="#fff" stroke-width="1" stroke-dasharray="3 3"/>`;
+  if(has('cadenita')) s+=`<path d="M84,130 Q100,150 116,130" fill="none" stroke="#facc15" stroke-width="3"/><circle cx="100" cy="144" r="3" fill="#facc15"/>`;
+  if(has('arito')) s+=`<circle cx="138" cy="100" r="3.5" fill="none" stroke="#facc15" stroke-width="2"/>`;
+  return s;
+}
+function glassesSVG(){
+  if(hasMeme('corazon')) return `<path d="M78,92 q-6,-8 -12,0 q-6,8 12,12 q18,-4 12,-12 q-6,-8 -12,0 Z" fill="#ff3b6b"/><path d="M122,92 q-6,-8 -12,0 q-6,8 12,12 q18,-4 12,-12 q-6,-8 -12,0 Z" fill="#ff3b6b"/>`;
+  if(has('aviador')) return `<path d="M76,92 Q86,108 96,92 Q86,98 76,92 Z" fill="#1f2937"/><path d="M124,92 Q114,108 104,92 Q114,98 124,92 Z" fill="#1f2937"/><line x1="96" y1="92" x2="104" y2="92" stroke="#1f2937" stroke-width="2"/>`;
+  if(has('redondas')) return `<circle cx="86" cy="94" r="9" fill="rgba(20,20,20,0.8)" stroke="#111" stroke-width="2"/><circle cx="114" cy="94" r="9" fill="rgba(20,20,20,0.8)" stroke="#111" stroke-width="2"/><line x1="95" y1="94" x2="105" y2="94" stroke="#111" stroke-width="2"/>`;
+  if(has('y2k')) return `<rect x="76" y="88" width="20" height="9" rx="2" fill="#3b0764" opacity="0.85"/><rect x="104" y="88" width="20" height="9" rx="2" fill="#3b0764" opacity="0.85"/><line x1="96" y1="92" x2="104" y2="92" stroke="#111" stroke-width="2"/>`;
+  return '';
+}
+function faceSVG(pose){
+  const eyes = `<g class="eo"><circle cx="86" cy="94" r="4.5" fill="#23150c"/><circle cx="114" cy="94" r="4.5" fill="#23150c"/></g>`+
+               `<g class="ec" style="opacity:0"><path d="M81,94 q5,4 10,0" stroke="#23150c" stroke-width="2.5" fill="none"/><path d="M109,94 q5,4 10,0" stroke="#23150c" stroke-width="2.5" fill="none"/></g>`;
+  const gold = hasMeme('diente') ? `<rect x="97" y="110" width="6" height="6" fill="#facc15"/>` : '';
+  const mouth = pose===6
+    ? `<path d="M90,110 Q100,116 110,110" stroke="#23150c" stroke-width="3" fill="none" stroke-linecap="round"/>` // shhh: boca chica
+    : `<path d="M85,108 Q100,121 115,108" stroke="#23150c" stroke-width="3.5" fill="none" stroke-linecap="round"/>`;
+  const bigote = hasMeme('bigote') ? `<path d="M82,104 Q100,98 118,104 Q100,112 82,104 Z" fill="#3a2a18"/>` : '';
+  return eyes + gold + mouth + bigote;
+}
+
+function buildAvatarSVG(a, opt={}){
+  const pose = opt.pose !== undefined ? opt.pose : a.pose;
+  const skin = SKINS[a.skin], hc = HAIR_COLORS[a.hairColor], kit = KITS[a.kit];
+  const main = kit.main, accent = kit.accent, shorts = kit.shorts;
+  const numColor = isLight(main) ? '#15233a' : '#ffffff';
+  const bc = darken(hc, 0.9);
+  const memeAfro = hasMeme('afro');
+  const hairFront = memeAfro ? `<circle cx="100" cy="64" r="46" fill="${hc}"/>` : hairSVG(a.hair, hc);
+  const hairBack = memeAfro ? '' : backHairSVG(a.hair, hc);
+  // capitán y tatuaje en antebrazo izquierdo (pose frente)
+  const capt = a.captain ? `<rect x="40" y="160" width="22" height="9" rx="2" fill="${accent==='#FFFFFF'||accent==='#F2F2F2'?'#E30613':accent}" transform="rotate(18 51 164)"/>` : '';
+  let tat='';
+  if(a.tattoo===1) tat=`<g transform="rotate(18 51 170)"><rect x="42" y="170" width="18" height="11" rx="1" fill="#6CACE4"/><rect x="42" y="173.5" width="18" height="4" fill="#fff"/></g>`;
+  else if(a.tattoo===2) tat=`<text x="51" y="178" font-family="Anton" font-size="13" fill="#1f2937" text-anchor="middle" transform="rotate(18 51 174)">${a.number||10}</text>`;
+  else if(a.tattoo===3) tat=`<path d="M44,178 q6,-12 12,0 q-6,8 -12,0" fill="none" stroke="#1f2937" stroke-width="2.5" transform="rotate(18 51 174)"/>`;
+  const pollo = hasMeme('pollo') ? `<g transform="translate(150,180)"><circle r="9" fill="#fff"/><circle cx="6" cy="-6" r="5" fill="#fff"/><path d="M9,-9 l5,-2 -3,4 Z" fill="#f59e0b"/><circle cx="7" cy="-7" r="1.3" fill="#000"/></g>` : '';
+  const num = `<text x="100" y="182" font-family="Anton, sans-serif" font-size="38" fill="${numColor}" text-anchor="middle">${a.number||''}</text>`;
+
+  return `<svg viewBox="0 0 200 252" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">
+    ${hairBack}
+    ${legsSVG(pose, skin)}
+    <path d="M66,190 L134,190 L132,220 L104,220 L100,198 L96,220 L68,220 Z" fill="${shorts}"/>
+    <path d="M63,138 Q72,125 86,128 Q100,139 114,128 Q128,125 137,138 L139,198 L61,198 Z" fill="${main}"/>
+    <path d="M86,128 Q100,142 114,128 L109,123 Q100,133 91,123 Z" fill="${accent}"/>
+    ${num}
+    ${armsSVG(pose, main, skin)}
+    ${capt}${tat}${pollo}
+    <rect x="92" y="116" width="16" height="16" fill="${skin}"/>
+    <circle cx="62" cy="94" r="7" fill="${skin}"/><circle cx="138" cy="94" r="7" fill="${skin}"/>
+    <circle cx="100" cy="92" r="38" fill="${skin}"/>
+    ${beardSVG(a.beard, bc)}
+    ${hairFront}
+    ${faceSVG(pose)}
+    ${glassesSVG()}
+    ${accHeadSVG(skin, hc)}
+  </svg>`;
+}
+// mini cabeza para chips de pelo/barba
+function miniHead(opt){
+  const a = Object.assign({}, av, opt);
+  const skin = SKINS[a.skin], hc = HAIR_COLORS[a.hairColor], bc = darken(hc,0.9);
+  return `<svg viewBox="40 40 120 110"><circle cx="100" cy="92" r="38" fill="${skin}"/>${beardSVG(a.beard,bc)}${a.beard!==undefined&&opt.beard!==undefined?'':hairSVG(a.hair,hc)}${opt.hair!==undefined?hairSVG(a.hair,hc):''}<circle cx="86" cy="94" r="4" fill="#23150c"/><circle cx="114" cy="94" r="4" fill="#23150c"/></svg>`;
+}
+
+/* ===================== EDITOR ===================== */
+function renderPreview(){ $('avatar-prev').innerHTML = buildAvatarSVG(av); $('kit-name').textContent = KITS[av.kit].n; }
+function pop(){ const w=$('avatar-prev'); w.classList.remove('pop'); void w.offsetWidth; w.classList.add('pop'); vibrate(10); }
+
+function chipGrid(cid, items, isOn, onClick, thumb){
+  const c=$(cid); c.innerHTML='';
+  items.forEach((it,i)=>{
+    const b=document.createElement('button'); b.className='chip'+(isOn(i)?' on':'');
+    b.innerHTML=thumb(it,i); b.onclick=()=>{ onClick(i); };
+    c.appendChild(b);
+  });
+}
+function refreshChips(){
+  chipGrid('c-kit', KITS, i=>av.kit===i, i=>{av.kit=i;commit();}, (it)=>`<span class="sw" style="background:linear-gradient(135deg,${it.main} 60%,${it.accent} 60%)"></span><span class="lb">${it.n}</span>`);
+  chipGrid('c-skin', SKINS, i=>av.skin===i, i=>{av.skin=i;commit();}, (it)=>`<span class="sw" style="background:${it}"></span>`);
+  chipGrid('c-hair', HAIRS, i=>av.hair===i, i=>{av.hair=i;commit();}, (it,i)=>`${miniHead({hair:i})}<span class="lb">${it}</span>`);
+  chipGrid('c-haircolor', HAIR_COLORS, i=>av.hairColor===i, i=>{av.hairColor=i;commit();}, (it,i)=>`<span class="sw" style="background:${it}"></span><span class="lb">${HAIR_COLOR_NAMES[i]}</span>`);
+  chipGrid('c-beard', BEARDS, i=>av.beard===i, i=>{av.beard=i;commit();}, (it,i)=>`${miniHead({beard:i})}<span class="lb">${it}</span>`);
+  chipGrid('c-acc', ACCS, it=>has(it.id), i=>{toggleAcc(ACCS[i].id);}, (it)=>`<span class="ic">${it.ic}</span><span class="lb">${it.lb}</span>`);
+  chipGrid('c-pose', POSES, i=>av.pose===i, i=>{av.pose=i;commit();}, (it)=>`<span class="ic">${it.ic}</span><span class="lb">${it.lb}</span>`);
+  chipGrid('c-bg', BGS, i=>av.bg===i, i=>{av.bg=i;commit();}, (it)=>`<span class="sw" style="background:${it.css}"></span><span class="lb">${it.lb}</span>`);
+  chipGrid('c-tattoo', ['Ninguno','🇦🇷 Bandera','# Número','Tribal'], i=>av.tattoo===i, i=>{av.tattoo=i;commit();}, (it)=>`<span class="ic" style="font-size:0.95rem">${it}</span>`);
+  chipGrid('c-meme', MEMES, it=>av.meme.includes(it.id), i=>{toggleMeme(MEMES[i].id);}, (it)=>`<span class="ic">${it.ic}</span><span class="lb">${it.lb}</span>`);
+}
+function toggleAcc(id){ const i=av.acc.indexOf(id); if(i>=0) av.acc.splice(i,1); else av.acc.push(id); commit(); }
+function toggleMeme(id){ const i=av.meme.indexOf(id); if(i>=0) av.meme.splice(i,1); else av.meme.push(id); commit(); }
+function commit(){ renderPreview(); refreshChips(); pop(); saveAll(); }
+
+/* inputs */
+$('f-mote').oninput=e=>{ av.mote=e.target.value; saveAll(); };
+$('f-frase').oninput=e=>{ av.frase=e.target.value; saveAll(); };
+$('f-number').oninput=e=>{ av.number=Math.max(1,Math.min(99,parseInt(e.target.value)||0)); renderPreview(); saveAll(); };
+$('rnd-mote').onclick=()=>{ av.mote=rnd(MOTES); $('f-mote').value=av.mote; vibrate(12); saveAll(); };
+$('rnd-frase').onclick=()=>{ av.frase=rnd(FRASES); $('f-frase').value=av.frase; vibrate(12); saveAll(); };
+$('tg-captain').onclick=()=>{ av.captain=!av.captain; $('cap-state').textContent=av.captain?'ON':'OFF'; $('tg-captain').classList.toggle('on',av.captain); commit(); };
+$('tg-meme').onclick=()=>{ av.memeMode=!av.memeMode; $('meme-state').textContent=av.memeMode?'ON':'OFF'; $('tg-meme').classList.toggle('on',av.memeMode); $('sect-meme').style.display=av.memeMode?'block':'none'; commit(); };
+
+// swipe camiseta
+let sx=null;
+$('stage').addEventListener('pointerdown',e=>sx=e.clientX);
+$('stage').addEventListener('pointerup',e=>{ if(sx===null) return; const dx=e.clientX-sx; sx=null; if(dx>32){av.kit=(av.kit-1+KITS.length)%KITS.length;commit();} else if(dx<-32){av.kit=(av.kit+1)%KITS.length;commit();} });
+
+/* ===================== JUEGO (dominio) ===================== */
+const cv=$('cv'), ctx=cv.getContext('2d'); const CW=cv.width, CH=cv.height;
+let game=null, raf=null, avatarImg=null, gameType='dominio', bestPen=0, pg=null, penRaf=null;
+function avatarToImg(cb){ const svg=buildAvatarSVG(av,{pose:0}); const img=new Image(); img.onload=()=>cb(img); img.onerror=()=>cb(null); img.src='data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(svg))); }
+function startDominio(){
+  gameType='dominio'; showScreen('game'); $('g-best').textContent=best;
+  $('hud-lbl-1').textContent='Toques'; $('hud-lbl-2').textContent='Récord';
+  $('game-hint').textContent='Tocá la pelota para mantenerla en el aire. ¡No la dejes caer!';
+  if(penRaf){cancelAnimationFrame(penRaf);penRaf=null;}
+  avatarToImg(img=>{ avatarImg=img; game={ball:{x:CW/2,y:140,vx:(Math.random()*3-1.5),vy:0,r:17},score:0,over:false,g:0.30,flash:0}; $('g-score').textContent='0'; if(raf)cancelAnimationFrame(raf); loop(); });
+}
+function startGame(){ gameType==='penales' ? startPenales() : startDominio(); }
+cv.addEventListener('pointerdown',e=>{ if(gameType!=='dominio'||!game||game.over) return; const rect=cv.getBoundingClientRect(); const x=(e.clientX-rect.left)*(CW/rect.width), y=(e.clientY-rect.top)*(CH/rect.height); const b=game.ball; if(Math.hypot(x-b.x,y-b.y)<b.r+42){ b.vy=-9.3-Math.min(game.score*0.06,3.5); b.vx+=(b.x-x)*0.09+(Math.random()*1.6-0.8); b.vx=Math.max(-7,Math.min(7,b.vx)); game.score++; $('g-score').textContent=game.score; game.flash=8; vibrate(15); if(game.score%10===0) confettiBurst(); } });
+function loop(){ const b=game.ball; b.vy+=game.g; b.x+=b.vx; b.y+=b.vy; if(b.x<b.r){b.x=b.r;b.vx=Math.abs(b.vx);} if(b.x>CW-b.r){b.x=CW-b.r;b.vx=-Math.abs(b.vx);} if(b.y<b.r){b.y=b.r;b.vy=Math.abs(b.vy)*0.6;} if(b.y+b.r>=CH-18&&!game.over){game.over=true;endGame();} if(game.flash>0)game.flash--; drawGame(); if(!game.over)raf=requestAnimationFrame(loop); }
+function drawGame(){ for(let i=0;i<8;i++){ctx.fillStyle=i%2?'#0e2a40':'#0c2236';ctx.fillRect(0,i*CH/8,CW,CH/8);} ctx.strokeStyle='rgba(56,189,248,0.25)';ctx.lineWidth=2;ctx.strokeRect(8,8,CW-16,CH-16); ctx.fillStyle='rgba(56,189,248,0.18)';ctx.fillRect(0,CH-16,CW,16); if(avatarImg){const w=92,h=w*252/200;ctx.drawImage(avatarImg,CW/2-w/2,CH-h-6,w,h);} const b=game.ball; ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,7);ctx.fillStyle=game.flash>0?'#fff7cc':'#fff';ctx.fill();ctx.lineWidth=2;ctx.strokeStyle='#111';ctx.stroke(); ctx.beginPath();ctx.arc(b.x,b.y,b.r*0.45,0,7);ctx.fillStyle='#111';ctx.fill(); }
+function endGame(){ vibrate([20,40,20]); if(game.score>best){best=game.score;saveAll();} setTimeout(showResult,500); }
+
+/* ===================== JUEGO 2: PENALES ===================== */
+const PGX1=100, PGX2=260, PGY=44, PKY=60;
+function cvPos(e){ const r=cv.getBoundingClientRect(); return { x:(e.clientX-r.left)*(CW/r.width), y:(e.clientY-r.top)*(CH/r.height) }; }
+function startPenales(){
+  gameType='penales'; showScreen('game');
+  $('hud-lbl-1').textContent='Goles'; $('hud-lbl-2').textContent='Penal';
+  $('game-hint').textContent='Deslizá desde la pelota hacia el ángulo. ¡Tenés 5 penales!';
+  if(raf){cancelAnimationFrame(raf);raf=null;}
+  avatarToImg(img=>{ avatarImg=img;
+    pg={ goals:0, shot:0, total:5, ball:{x:CW/2,y:CH-58,r:13}, phase:'aim', aim:null, keeper:{x:CW/2,diveTo:CW/2}, t:0, from:null, target:null, flash:'', flashT:0, ended:false };
+    updatePenHud(); if(penRaf)cancelAnimationFrame(penRaf); penLoop();
+  });
+}
+function updatePenHud(){ $('g-score').textContent=pg.goals; $('g-best').textContent=pg.shot+'/'+pg.total; }
+cv.addEventListener('pointerdown',e=>{ if(gameType!=='penales'||!pg||pg.phase!=='aim') return; const p=cvPos(e); pg.aim={sx:p.x,sy:p.y,cx:p.x,cy:p.y}; });
+cv.addEventListener('pointermove',e=>{ if(gameType!=='penales'||!pg||!pg.aim) return; const p=cvPos(e); pg.aim.cx=p.x; pg.aim.cy=p.y; });
+cv.addEventListener('pointerup',e=>{ if(gameType!=='penales'||!pg||!pg.aim||pg.phase!=='aim') return; const p=cvPos(e); const dx=p.x-pg.aim.sx, dy=p.y-pg.aim.sy; pg.aim=null; if(Math.hypot(dx,dy)<14) return; penShoot(dx); });
+function penShoot(dx){
+  const tx=Math.max(PGX1-30,Math.min(PGX2+30, pg.ball.x+dx*1.5));
+  pg.from={x:pg.ball.x,y:pg.ball.y}; pg.target={x:tx,y:PGY+8}; pg.t=0; pg.phase='flying';
+  const corners=[PGX1+34,(PGX1+PGX2)/2,PGX2-34];
+  pg.keeper.diveTo = Math.random()<0.45 ? (tx<(PGX1+PGX2)/2?corners[0]:corners[2]) : corners[Math.floor(Math.random()*3)];
+  vibrate(15);
+}
+function penLoop(){
+  drawPen();
+  if(pg.phase==='flying'){
+    pg.t+=0.045;
+    pg.ball.x=pg.from.x+(pg.target.x-pg.from.x)*pg.t;
+    pg.ball.y=pg.from.y+(pg.target.y-pg.from.y)*pg.t;
+    pg.keeper.x += (pg.keeper.diveTo-pg.keeper.x)*0.12;
+    if(pg.t>=1) resolvePen();
+  }
+  if(pg.flashT>0) pg.flashT--;
+  if(!pg.ended) penRaf=requestAnimationFrame(penLoop);
+}
+function resolvePen(){
+  const tx=pg.target.x; let res;
+  if(tx<PGX1||tx>PGX2) res='afuera';
+  else if(Math.abs(pg.keeper.x-tx)<27) res='atajado';
+  else res='gol';
+  pg.shot++;
+  if(res==='gol'){ pg.goals++; pg.flash='¡GOL! ⚽'; vibrate(20); confettiBurst(); }
+  else if(res==='atajado'){ pg.flash='¡Atajó! 🧤'; }
+  else { pg.flash='¡Afuera! 😖'; }
+  pg.flashT=45; updatePenHud(); pg.phase='reset';
+  setTimeout(()=>{ if(pg.shot>=pg.total){ endPenales(); } else { pg.ball={x:CW/2,y:CH-58,r:13}; pg.keeper={x:CW/2,diveTo:CW/2}; pg.phase='aim'; } }, 900);
+}
+function endPenales(){ pg.ended=true; if(penRaf)cancelAnimationFrame(penRaf); if(pg.goals>bestPen){bestPen=pg.goals;saveAll();} vibrate([20,40,20]); setTimeout(showResult,400); }
+function drawPenDude(x,y,color){ ctx.beginPath(); ctx.arc(x,y,13,0,7); ctx.fillStyle=color; ctx.fill(); ctx.lineWidth=2.5; ctx.strokeStyle='#000'; ctx.stroke(); ctx.fillStyle=color; ctx.fillRect(x-10,y+10,20,22); }
+function drawPen(){
+  for(let i=0;i<10;i++){ ctx.fillStyle=i%2?'#0d4a2c':'#11572f'; ctx.fillRect(0,i*CH/10,CW,CH/10); }
+  ctx.strokeStyle='rgba(255,255,255,0.35)'; ctx.lineWidth=2; ctx.strokeRect(60,PGY,CW-120,92);
+  ctx.fillStyle='rgba(255,255,255,0.9)'; ctx.fillRect(PGX1,PGY-6,PGX2-PGX1,6);
+  ctx.strokeStyle='rgba(255,255,255,0.6)'; ctx.strokeRect(PGX1,0,PGX2-PGX1,PGY);
+  drawPenDude(pg.keeper.x,PKY,'#f4cd60');
+  if(avatarImg){ const w=70,h=w*252/200; ctx.drawImage(avatarImg,CW/2-w/2,CH-h-2,w,h); }
+  if(pg.aim){ ctx.strokeStyle='rgba(212,168,46,0.9)'; ctx.lineWidth=3; ctx.setLineDash([6,5]); ctx.beginPath(); ctx.moveTo(pg.ball.x,pg.ball.y); ctx.lineTo(pg.aim.cx,pg.aim.cy); ctx.stroke(); ctx.setLineDash([]); }
+  ctx.beginPath(); ctx.arc(pg.ball.x,pg.ball.y,pg.ball.r,0,7); ctx.fillStyle='#fff'; ctx.fill(); ctx.lineWidth=2; ctx.strokeStyle='#111'; ctx.stroke();
+  ctx.beginPath(); ctx.arc(pg.ball.x,pg.ball.y,pg.ball.r*0.45,0,7); ctx.fillStyle='#111'; ctx.fill();
+  if(pg.flashT>0){ ctx.fillStyle='#fff'; ctx.font='bold 26px Anton, sans-serif'; ctx.textAlign='center'; ctx.fillText(pg.flash,CW/2,CH/2); }
+}
+
+/* ===================== CARTA RESULTADO ===================== */
+function fillCard(){
+  $('card-bg').style.background = BGS[av.bg].css;
+  if(av.bg===3){ // estadio: flashes
+    $('card-bg').innerHTML = '<svg width="100%" height="100%">'+Array.from({length:40},()=>`<circle cx="${Math.random()*100}%" cy="${Math.random()*100}%" r="${Math.random()*1.6+0.4}" fill="#fff" opacity="${Math.random()*0.7+0.2}"/>`).join('')+'</svg>';
+  } else if(av.bg===4){ $('card-bg').innerHTML='<svg width="100%" height="100%">'+Array.from({length:8},()=>`<rect x="${Math.random()*90}%" y="${Math.random()*90}%" width="${Math.random()*30+10}" height="8" rx="3" fill="hsl(${Math.random()*360},70%,55%)" opacity="0.5"/>`).join('')+'</svg>'; }
+  else { $('card-bg').innerHTML=''; }
+  $('avatar-card').innerHTML = buildAvatarSVG(av);
+  $('r-name').textContent = (av.mote || 'Mi Crack').toUpperCase();
+  $('r-frase').textContent = av.frase || '';
+  $('r-frase').style.display = av.frase ? 'block' : 'none';
+  $('r-team').textContent = `#${av.number} · ${KITS[av.kit].n}`;
+}
+function showResult(){
+  fillCard();
+  if(gameType==='penales'){
+    $('r-score').textContent = pg ? pg.goals : 0;
+    $('r-score-lbl').textContent = `GOLES DE ${pg?pg.total:5} PENALES`;
+    $('r-pre').textContent = (pg && pg.goals>=bestPen && pg.goals>0) ? '★ ¡NUEVO RÉCORD! ★' : '★ Mi Crack ★';
+    showScreen('result');
+    if(pg && pg.goals>=4) confettiBurst();
+  } else {
+    $('r-score').textContent = game ? game.score : 0;
+    $('r-score-lbl').textContent = 'TOQUES SEGUIDOS · DOMINIO';
+    $('r-pre').textContent = (game && game.score>=best && game.score>0) ? '★ ¡NUEVO RÉCORD! ★' : '★ Mi Crack ★';
+    showScreen('result');
+    if(game && game.score>=best && game.score>0) confettiBurst();
+  }
+}
+
+function confettiBurst(){ const cols=['#4ade80','#d4a82e','#38bdf8','#f87171','#f4cd60']; for(let i=0;i<26;i++){ const c=document.createElement('div'); c.className='confetti'; c.style.left=(10+Math.random()*80)+'vw'; c.style.background=cols[i%cols.length]; c.style.transform=`rotate(${Math.random()*360}deg)`; document.body.appendChild(c); const dur=1200+Math.random()*900; c.animate([{top:'-10px',opacity:1},{top:'100vh',opacity:0.9}],{duration:dur,easing:'cubic-bezier(.3,.6,.6,1)'}); setTimeout(()=>c.remove(),dur); } }
+
+/* ===================== DESCARGAS ===================== */
+function snap(node,filename,bg){ const w=node.offsetWidth,h=node.offsetHeight; html2canvas(node,{backgroundColor:bg,scale:2,useCORS:true,allowTaint:true,logging:false,width:w,height:h,windowWidth:document.documentElement.clientWidth,windowHeight:document.documentElement.clientHeight}).then(canvas=>{ const link=document.createElement('a'); link.download=filename; link.href=canvas.toDataURL('image/png'); link.click(); }); }
+function dlCardFromState(){ // carta temporal con fondo y pose
+  fillCard();
+  const card=document.createElement('div'); card.className='card'; card.style.cssText+='position:fixed;left:-9999px;top:0;width:340px;';
+  card.innerHTML=`<div class="card-bg" style="background:${BGS[av.bg].css}">${$('card-bg').innerHTML}</div><div class="card-inner"><div class="card-pre">★ Mi Crack ★</div><div class="avatar-wrap" style="width:150px;margin:0.3rem auto">${buildAvatarSVG(av)}</div><div class="card-name" style="color:#fff">${(av.mote||'Mi Crack').toUpperCase()}</div>${av.frase?`<div class="card-frase">${av.frase}</div>`:''}<div class="card-team">#${av.number} · ${KITS[av.kit].n}</div><div class="card-wm" style="margin-top:0.8rem">CREÁ TU CRACK · MUNDIAL 2026 · @JUVENTUD_LAPAMPA</div></div>`;
+  document.body.appendChild(card);
+  setTimeout(()=>{ snap(card,`mi-crack-${(av.mote||'crack').toLowerCase().replace(/[^a-z0-9]+/g,'-')}.png`,'#070d14'); setTimeout(()=>card.remove(),700); },60);
+}
+function dlSticker(){ // solo avatar, fondo transparente
+  const box=document.createElement('div'); box.style.cssText='position:fixed;left:-9999px;top:0;width:300px;padding:10px;';
+  box.innerHTML=buildAvatarSVG(av);
+  document.body.appendChild(box);
+  setTimeout(()=>{ snap(box,`sticker-${(av.mote||'crack').toLowerCase().replace(/[^a-z0-9]+/g,'-')}.png`,null); setTimeout(()=>box.remove(),700); },60);
+}
+function shareReto(text){ if(navigator.share){navigator.share({title:'Creá tu Crack · Mundial 2026',text}).catch(()=>{});} else if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>alert('¡Reto copiado! Mandáselo a un amigo 📲'),()=>prompt('Copiá tu reto:',text));} else {prompt('Copiá tu reto:',text);} }
+
+/* ===================== NAV ===================== */
+function showScreen(s){ if(s!=='game'){ if(raf){cancelAnimationFrame(raf);raf=null;} if(penRaf){cancelAnimationFrame(penRaf);penRaf=null;} } document.querySelectorAll('.screen').forEach(el=>el.classList.remove('active')); $('screen-'+s).classList.add('active'); window.scrollTo(0,0); }
+$('play-dominio').onclick=startDominio;
+$('play-penales').onclick=startPenales;
+$('back-editor').onclick=()=>showScreen('editor');
+$('replay').onclick=startGame;
+$('to-editor').onclick=()=>{ renderPreview(); refreshChips(); showScreen('editor'); };
+$('dl-result').onclick=dlCardFromState;
+$('dl-editor').onclick=dlCardFromState;
+$('dl-sticker').onclick=dlSticker;
+$('dl-sticker2').onclick=dlSticker;
+$('share-result').onclick=()=>{ const sc = gameType==='penales' ? `metí ${pg?pg.goals:0}/${pg?pg.total:5} penales` : `hice ${game?game.score:0} toques de dominio`; shareReto(`⚽ Me armé "${(av.mote||'Mi Crack')}" con la ${KITS[av.kit].n} y ${sc} en "Creá tu Crack" del Mundial 2026. ¿Me superás? 📲 @juventud_lapampa`); };
+
+/* ===================== INIT ===================== */
+loadSaved();
+$('f-mote').value=av.mote||''; $('f-frase').value=av.frase||''; $('f-number').value=av.number||10;
+$('cap-state').textContent=av.captain?'ON':'OFF'; $('tg-captain').classList.toggle('on',av.captain);
+$('meme-state').textContent=av.memeMode?'ON':'OFF'; $('tg-meme').classList.toggle('on',av.memeMode); $('sect-meme').style.display=av.memeMode?'block':'none';
+renderPreview(); refreshChips();
+</script>
+</body>
+</html>

@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Tiros Libres · Mundial 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #050d08;
+    --verde: #1a8a4a;
+    --verde-2: #0d4a2c;
+    --verde-fluo: #4ade80;
+    --gold: #d4a82e;
+    --gold-2: #f4cd60;
+    --crema: #f4ecd8;
+    --rojo: #dc2626;
+    --azul: #2563eb;
+  }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    background-image: radial-gradient(ellipse at top, rgba(13,59,38,0.7), transparent 70%);
+    color: var(--crema);
+    padding: 1rem;
+    min-height: 100vh;
+    user-select: none;
+  }
+  body.shaking { animation: shake 0.4s; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+  .container { max-width: 700px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 1rem; }
+  .header-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+  h1 {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-top: 0.3rem;
+    line-height: 0.95;
+  }
+  h1 span { color: var(--gold); text-shadow: 0 0 30px rgba(212,168,46,0.5); }
+  .screen { display: none; }
+  .screen.active { display: block; animation: fadeIn 0.3s; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .panel {
+    background: rgba(0,0,0,0.6);
+    border: 2px solid rgba(212,168,46,0.3);
+    border-radius: 16px;
+    padding: 1.3rem;
+  }
+  .input-name {
+    width: 100%;
+    background: rgba(0,0,0,0.5);
+    border: 2px solid rgba(244,236,216,0.3);
+    color: var(--crema);
+    padding: 0.9rem;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1.05rem;
+    margin-bottom: 0.7rem;
+  }
+  .input-name:focus { outline: none; border-color: var(--gold); }
+  select {
+    width: 100%;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid rgba(212,168,46,0.4);
+    color: var(--crema);
+    padding: 0.6rem;
+    border-radius: 6px;
+    font-family: inherit;
+  }
+  label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+    display: block;
+    margin-top: 0.6rem;
+  }
+  .btn {
+    background: linear-gradient(135deg, var(--rojo), #b91c1c);
+    color: white;
+    border: none;
+    padding: 1.1rem;
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 0.15em;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 100%;
+    text-transform: uppercase;
+    font-size: 1.15rem;
+    box-shadow: 0 6px 0 #7f1d1d;
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 0 #7f1d1d; }
+  .btn:active { transform: translateY(3px); box-shadow: 0 3px 0 #7f1d1d; }
+  .btn-gold { background: linear-gradient(135deg, var(--gold), var(--gold-2)); color: #000; box-shadow: 0 6px 0 #927200; }
+  .btn-secondary { background: rgba(0,0,0,0.4); border: 2px solid var(--gold); color: var(--crema); box-shadow: none; }
+
+  /* GAME HUD */
+  .hud {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.5rem;
+    margin-bottom: 0.8rem;
+    background: rgba(0,0,0,0.6);
+    border: 2px solid var(--gold);
+    border-radius: 10px;
+    padding: 0.6rem 0.8rem;
+  }
+  .hud-block { text-align: center; }
+  .hud-block-num {
+    font-family: 'Anton', sans-serif;
+    color: var(--gold);
+    font-size: 1.4rem;
+    line-height: 1;
+  }
+  .hud-block-lab {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+  .hud-block.score .hud-block-num { color: var(--verde-fluo); }
+  .hud-block.tries .hud-block-num { color: var(--rojo); }
+
+  /* CANCHA - vista lateral 2D */
+  .cancha-wrap {
+    background: linear-gradient(180deg, #1a3a2a 0%, #0d4a2c 100%);
+    border: 3px solid rgba(255,255,255,0.4);
+    border-radius: 10px;
+    padding: 1rem 0.5rem;
+    margin-bottom: 0.8rem;
+    aspect-ratio: 4/3;
+    position: relative;
+    overflow: hidden;
+    background-image: repeating-linear-gradient(90deg, transparent, transparent 8%, rgba(255,255,255,0.04) 8%, rgba(255,255,255,0.04) 16%);
+  }
+  /* Arco arriba */
+  .arco {
+    position: absolute;
+    top: 8%;
+    left: 18%;
+    right: 18%;
+    height: 30%;
+  }
+  .arco-frame {
+    position: absolute;
+    inset: 0;
+    border: 5px solid white;
+    border-bottom: none;
+    background:
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.12) 0 1px, transparent 1px 9px),
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.12) 0 1px, transparent 1px 9px);
+  }
+  /* Zonas del arco - 6 zonas */
+  .zonas {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr 1fr;
+    gap: 4px;
+    padding: 8px;
+    z-index: 3;
+  }
+  .zona {
+    background: rgba(212,168,46,0.1);
+    border: 2px dashed rgba(212,168,46,0.4);
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Anton', sans-serif;
+    font-size: 1.2rem;
+    color: rgba(255,255,255,0.6);
+    transition: all 0.15s;
+  }
+  .zona:hover, .zona:active {
+    background: rgba(212,168,46,0.4);
+    border-color: var(--gold);
+    border-style: solid;
+    transform: scale(1.05);
+  }
+  .zona.selected {
+    background: rgba(74,222,128,0.4);
+    border-color: var(--verde-fluo);
+    border-style: solid;
+    color: var(--verde-fluo);
+  }
+  /* Arquero */
+  .arquero {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 38px;
+    height: 50px;
+    z-index: 4;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .arquero-body { fill: #fbbf24; }
+  .arquero-head { fill: #fde68a; }
+  /* Muro (barrera) */
+  .muro {
+    position: absolute;
+    top: 48%;
+    left: 25%;
+    right: 25%;
+    display: flex;
+    justify-content: space-around;
+    z-index: 2;
+    transition: top 0.5s cubic-bezier(0.5, 0, 0.5, 1);
+  }
+  .muro.jumping { top: 42%; }
+  .defensor {
+    width: 16%;
+    aspect-ratio: 1/2.5;
+    background: #1e40af;
+    border-radius: 3px 3px 0 0;
+    position: relative;
+  }
+  .defensor::before {
+    content: '';
+    position: absolute;
+    top: -8px; left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    aspect-ratio: 1;
+    background: #fde68a;
+    border-radius: 50%;
+    border: 1px solid #000;
+  }
+  /* Tirador abajo */
+  .tirador {
+    position: absolute;
+    bottom: 6%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 3;
+  }
+  .tirador-fig {
+    font-size: 2.5rem;
+    line-height: 1;
+  }
+  .tirador-nombre {
+    font-family: 'Anton', sans-serif;
+    color: var(--gold);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    margin-top: 0.2rem;
+    background: rgba(0,0,0,0.5);
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+  /* Pelota */
+  .pelota {
+    position: absolute;
+    bottom: 18%;
+    left: 50%;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: white;
+    border: 1.5px solid #000;
+    transform: translate(-50%, 0);
+    z-index: 5;
+    transition: all 0.7s cubic-bezier(0.4, 0, 0.6, 1);
+  }
+  .pelota.flying { transition: all 0.7s cubic-bezier(0.3, 0, 0.5, 1); }
+  /* Mensajes */
+  .big-msg {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
+    color: var(--gold);
+    text-shadow: 0 0 30px var(--gold), 0 0 60px var(--rojo);
+    letter-spacing: 0.08em;
+    z-index: 100;
+    pointer-events: none;
+    text-align: center;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+  .big-msg.show { animation: bigShow 1.5s ease; }
+  @keyframes bigShow {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    20% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
+    70% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(0.95); opacity: 0; }
+  }
+  .big-msg.gol { color: var(--verde-fluo); text-shadow: 0 0 30px var(--verde-fluo); }
+  .big-msg.atajada { color: var(--azul); }
+  .big-msg.muro { color: var(--gold-2); }
+  .big-msg.afuera { color: var(--rojo); }
+
+  /* Instruction */
+  .instruction {
+    background: rgba(0,0,0,0.75);
+    border-left: 3px solid var(--gold);
+    border-radius: 6px;
+    padding: 0.7rem 0.9rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    text-align: center;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.6rem;
+    min-height: 38px;
+  }
+  .instruction.power { border-left-color: var(--rojo); }
+  .instruction.curve { border-left-color: var(--azul); }
+
+  /* Power bar */
+  .power-bar-wrap {
+    background: rgba(0,0,0,0.7);
+    border: 2px solid var(--gold);
+    border-radius: 8px;
+    padding: 0.5rem;
+    margin-bottom: 0.6rem;
+    display: none;
+  }
+  .power-bar-wrap.active { display: block; }
+  .power-bar-track {
+    height: 28px;
+    background: linear-gradient(90deg,
+      #dc2626 0%, #dc2626 20%,
+      #f59e0b 20%, #f59e0b 35%,
+      var(--verde-fluo) 35%, var(--verde-fluo) 75%,
+      #f59e0b 75%, #f59e0b 92%,
+      #dc2626 92%, #dc2626 100%);
+    border-radius: 4px;
+    position: relative;
+    cursor: pointer;
+  }
+  .power-marker {
+    position: absolute;
+    top: -3px;
+    bottom: -3px;
+    width: 6px;
+    background: white;
+    border: 1px solid #000;
+    border-radius: 2px;
+    box-shadow: 0 0 10px white;
+  }
+  .power-bar-label {
+    font-family: 'Anton', sans-serif;
+    color: var(--crema);
+    text-align: center;
+    margin-bottom: 0.3rem;
+    letter-spacing: 0.1em;
+  }
+
+  /* Curve buttons */
+  .curve-wrap {
+    display: none;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+  }
+  .curve-wrap.active { display: grid; grid-template-columns: 1fr 1fr 1fr; }
+  .curve-btn {
+    background: rgba(37,99,235,0.4);
+    border: 2px solid var(--azul);
+    color: white;
+    padding: 0.8rem;
+    border-radius: 8px;
+    font-family: 'Anton', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  .curve-btn:hover, .curve-btn:active { background: var(--azul); }
+
+  /* Result */
+  .result-final { text-align: center; }
+  .result-trophy { font-size: 4rem; line-height: 1; }
+  .result-score { font-family: 'Anton', sans-serif; font-size: 3.5rem; color: var(--gold); line-height: 1; }
+  .verdict-text { font-family: 'Anton', sans-serif; color: var(--gold-2); font-size: 1.3rem; margin: 0.8rem 0; letter-spacing: 0.05em; }
+  .ranking-list { background: rgba(0,0,0,0.4); border-radius: 8px; margin-top: 1rem; }
+  .ranking-item { display: grid; grid-template-columns: 35px 1fr auto; gap: 0.8rem; align-items: center; padding: 0.6rem 0.9rem; border-bottom: 1px solid rgba(244,236,216,0.1); }
+  .rank-n { font-family: 'Anton', sans-serif; color: var(--gold); }
+  .rank-pts { font-family: 'JetBrains Mono', monospace; color: var(--verde-fluo); font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="header-tag">Tiros Libres · Mundial 2026</div>
+    <h1>TIROS <span>LIBRES</span></h1>
+  </header>
+
+  <!-- INTRO -->
+  <div class="screen active" id="screen-intro">
+    <div class="panel">
+      <div style="font-family:'Anton',sans-serif;color:var(--gold);font-size:1.1rem;letter-spacing:0.1em;margin-bottom:0.7rem;text-transform:uppercase">⚽ Cómo jugar</div>
+      <p style="line-height:1.5;font-size:0.85rem;margin-bottom:0.8rem">
+        <strong>3 toques por tiro</strong>: 1) elegís la zona del arco, 2) tap en la barra de potencia (el centro verde es el sweet spot), 3) le metés curva izq/der/recto. Tenés 10 tiros, vas sumando puntos por cada gol.
+      </p>
+      <p style="line-height:1.5;font-size:0.85rem;margin-bottom:1rem;color:var(--gold-2)">
+        ⚡ <strong>Pateador real</strong> de la selección que elijas. <strong>Arquero IA</strong> de la lista oficial: aprende de tus tiros y va para donde cree que vas a patear.
+      </p>
+      <input type="text" class="input-name" id="player-name" placeholder="Tu nombre" maxlength="18">
+      <label>Tu selección (pateador)</label>
+      <select id="sel-team"></select>
+      <label>Arquero rival (IA)</label>
+      <select id="sel-gk"></select>
+      <button class="btn" id="start" style="margin-top:1rem">⚽ EMPEZAR · 10 TIROS</button>
+    </div>
+  </div>
+
+  <!-- GAME -->
+  <div class="screen" id="screen-game">
+    <div class="hud">
+      <div class="hud-block"><div class="hud-block-num"><span id="hud-tiro">1</span>/10</div><div class="hud-block-lab">Tiro</div></div>
+      <div class="hud-block score"><div class="hud-block-num" id="hud-score">0</div><div class="hud-block-lab">Puntos</div></div>
+      <div class="hud-block tries"><div class="hud-block-num" id="hud-goles">0</div><div class="hud-block-lab">Goles</div></div>
+    </div>
+    <div class="instruction" id="instruction">🎯 TAP EN UNA ZONA DEL ARCO</div>
+    <div class="cancha-wrap" id="cancha">
+      <div class="arco">
+        <div class="arco-frame"></div>
+        <div class="zonas" id="zonas">
+          <div class="zona" data-z="0">↖</div>
+          <div class="zona" data-z="1">↑</div>
+          <div class="zona" data-z="2">↗</div>
+          <div class="zona" data-z="3">←</div>
+          <div class="zona" data-z="4">↓</div>
+          <div class="zona" data-z="5">→</div>
+        </div>
+        <svg class="arquero" id="arquero" viewBox="0 0 38 50">
+          <circle class="arquero-head" cx="19" cy="9" r="6.5" stroke="#000" stroke-width="0.8"/>
+          <rect class="arquero-body" x="11" y="15" width="16" height="20" rx="2"/>
+          <rect x="6" y="18" width="6" height="10" rx="2" fill="#dc2626"/>
+          <rect x="26" y="18" width="6" height="10" rx="2" fill="#dc2626"/>
+          <rect x="11" y="35" width="7" height="13" fill="#000"/>
+          <rect x="20" y="35" width="7" height="13" fill="#000"/>
+        </svg>
+      </div>
+      <div class="muro" id="muro">
+        <div class="defensor"></div>
+        <div class="defensor"></div>
+        <div class="defensor"></div>
+        <div class="defensor"></div>
+      </div>
+      <div class="tirador">
+        <div class="tirador-fig">🧍</div>
+        <div class="tirador-nombre" id="tirador-name">PATEADOR</div>
+      </div>
+      <div class="pelota" id="pelota"></div>
+      <div class="big-msg" id="big-msg"></div>
+    </div>
+    <div class="power-bar-wrap" id="power-bar-wrap">
+      <div class="power-bar-label">⚡ POTENCIA · TAP CUANDO LLEGUE AL VERDE</div>
+      <div class="power-bar-track" id="power-bar"><div class="power-marker" id="power-marker"></div></div>
+    </div>
+    <div class="curve-wrap" id="curve-wrap">
+      <button class="curve-btn" data-curve="-1">← CURVA IZQUIERDA</button>
+      <button class="curve-btn" data-curve="0">↑ DERECHO</button>
+      <button class="curve-btn" data-curve="1">→ CURVA DERECHA</button>
+    </div>
+    <button class="btn btn-secondary" id="quit" style="padding:0.7rem;font-size:0.9rem">⏏ SALIR DEL JUEGO</button>
+  </div>
+
+  <!-- RESULT -->
+  <div class="screen" id="screen-result">
+    <div class="panel" id="result-panel">
+      <div class="result-final">
+        <div class="result-trophy" id="r-trophy">🏆</div>
+        <div style="font-family:'Anton',sans-serif;color:var(--gold);font-size:0.9rem;letter-spacing:0.1em" id="r-line">PATEADOR vs ARQUERO</div>
+        <div class="result-score" id="r-score">0</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.75rem;letter-spacing:0.2em;color:rgba(244,236,216,0.7)"><span id="r-goles">0</span>/10 GOLES</div>
+        <div class="verdict-text" id="r-verdict"></div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;color:rgba(244,236,216,0.5);margin-top:0.6rem">⚽ TIROS LIBRES · MUNDIAL 2026 · @juventud_lapampa</div>
+      </div>
+    </div>
+    <button class="btn btn-gold" style="margin-top:0.6rem" id="r-download">📸 COMPARTIR RESULTADO</button>
+    <button class="btn btn-secondary" style="margin-top:0.5rem" onclick="restart()">⚽ Otra partida</button>
+  </div>
+</div>
+
+<script>
+// ========================================================================
+// AUDIO
+// ========================================================================
+let audioCtx = null;
+function initAudio() { if (!audioCtx) { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){} } }
+function beep(f, d, t='sine', v=0.15) { if (!audioCtx) return; try { const o = audioCtx.createOscillator(), g = audioCtx.createGain(); o.type=t; o.frequency.value=f; g.gain.value=v; o.connect(g); g.connect(audioCtx.destination); o.start(); g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + d); o.stop(audioCtx.currentTime + d); } catch(e){} }
+const sfx = {
+  kick: () => beep(120, 0.08, 'square', 0.25),
+  gol: () => { beep(523, 0.1); setTimeout(() => beep(659, 0.1), 80); setTimeout(() => beep(784, 0.2), 160); setTimeout(() => beep(1047, 0.3), 280); },
+  ataj: () => { beep(659, 0.1, 'square', 0.15); setTimeout(() => beep(880, 0.2, 'square', 0.15), 80); },
+  muro: () => beep(180, 0.15, 'sawtooth', 0.25),
+  afuera: () => beep(200, 0.2, 'sawtooth', 0.2)
+};
+
+// ========================================================================
+// DATA
+// ========================================================================
+const PATEADORES = [
+  { team:'Argentina', flag:'🇦🇷', star:'Lionel Messi' },
+  { team:'Brasil', flag:'🇧🇷', star:'Vinícius Jr' },
+  { team:'Francia', flag:'🇫🇷', star:'Kylian Mbappé' },
+  { team:'España', flag:'🇪🇸', star:'Pedri' },
+  { team:'Inglaterra', flag:'🇬🇧', star:'Jude Bellingham' },
+  { team:'Portugal', flag:'🇵🇹', star:'Cristiano Ronaldo' },
+  { team:'Alemania', flag:'🇩🇪', star:'Florian Wirtz' },
+  { team:'Países Bajos', flag:'🇳🇱', star:'Memphis Depay' },
+  { team:'Uruguay', flag:'🇺🇾', star:'Federico Valverde' },
+  { team:'Croacia', flag:'🇭🇷', star:'Luka Modrić' },
+  { team:'Colombia', flag:'🇨🇴', star:'James Rodríguez' },
+  { team:'Marruecos', flag:'🇲🇦', star:'Hakim Ziyech' },
+  { team:'México', flag:'🇲🇽', star:'Hirving Lozano' },
+  { team:'Bélgica', flag:'🇧🇪', star:'Kevin De Bruyne' },
+  { team:'Polonia', flag:'🇵🇱', star:'Robert Lewandowski' },
+  { team:'Noruega', flag:'🇳🇴', star:'Erling Haaland' }
+];
+const ARQUEROS = [
+  { team:'Argentina', flag:'🇦🇷', name:'Emiliano Martínez', level: 92 },
+  { team:'Brasil', flag:'🇧🇷', name:'Alisson', level: 91 },
+  { team:'Francia', flag:'🇫🇷', name:'Mike Maignan', level: 89 },
+  { team:'Bélgica', flag:'🇧🇪', name:'Thibaut Courtois', level: 93 },
+  { team:'España', flag:'🇪🇸', name:'Unai Simón', level: 86 },
+  { team:'Inglaterra', flag:'🇬🇧', name:'Jordan Pickford', level: 85 },
+  { team:'Alemania', flag:'🇩🇪', name:'Manuel Neuer', level: 88 },
+  { team:'Portugal', flag:'🇵🇹', name:'Diogo Costa', level: 86 },
+  { team:'Italia', flag:'🇮🇹', name:'Gigi Donnarumma', level: 91 },
+  { team:'Croacia', flag:'🇭🇷', name:'Dominik Livaković', level: 84 },
+  { team:'Marruecos', flag:'🇲🇦', name:'Yassine Bounou', level: 87 },
+  { team:'Senegal', flag:'🇸🇳', name:'Édouard Mendy', level: 85 },
+  { team:'México', flag:'🇲🇽', name:'Guillermo Ochoa', level: 84 }
+];
+
+// ========================================================================
+// SETUP
+// ========================================================================
+function initSelects() {
+  const team = document.getElementById('sel-team');
+  PATEADORES.forEach(p => { team.innerHTML += `<option value="${p.team}">${p.team} — ⭐ ${p.star}</option>`; });
+  team.value = 'Argentina';
+  const gk = document.getElementById('sel-gk');
+  ARQUEROS.forEach(a => { gk.innerHTML += `<option value="${a.name}">${a.name} (${a.team}) · nivel ${a.level}</option>`; });
+  gk.value = 'Thibaut Courtois';
+}
+initSelects();
+
+// ========================================================================
+// ESTADO
+// ========================================================================
+let game = {
+  name: '', team: null, gk: null,
+  tiro: 0, score: 0, goles: 0,
+  state: 'IDLE', // IDLE | ZONA | POWER | CURVA | FLY
+  zone: null, power: 0, curve: 0,
+  // historial de zonas elegidas para que la IA "aprenda"
+  zonasHist: [],
+  powerInterval: null
+};
+
+document.getElementById('start').onclick = () => {
+  const name = document.getElementById('player-name').value.trim();
+  if (!name) { alert('Ingresá tu nombre'); return; }
+  initAudio();
+  game.name = name;
+  game.team = PATEADORES.find(p => p.team === document.getElementById('sel-team').value);
+  game.gk = ARQUEROS.find(a => a.name === document.getElementById('sel-gk').value);
+  game.tiro = 0; game.score = 0; game.goles = 0;
+  game.zonasHist = [];
+  document.getElementById('tirador-name').textContent = game.team.star.toUpperCase();
+  show('game');
+  nextTiro();
+};
+
+function nextTiro() {
+  if (game.tiro >= 10) { finish(); return; }
+  game.tiro++;
+  game.state = 'ZONA';
+  game.zone = null;
+  game.power = 0;
+  game.curve = 0;
+  updateHUD();
+  // Reset visuales
+  document.querySelectorAll('.zona').forEach(z => z.classList.remove('selected'));
+  document.getElementById('power-bar-wrap').classList.remove('active');
+  document.getElementById('curve-wrap').classList.remove('active');
+  document.getElementById('arquero').style.left = '50%';
+  document.getElementById('arquero').style.top = '25%';
+  document.getElementById('arquero').style.transform = 'translateX(-50%) rotate(0deg)';
+  document.getElementById('muro').classList.remove('jumping');
+  // Reset pelota
+  const p = document.getElementById('pelota');
+  p.style.transition = 'none';
+  p.style.bottom = '18%';
+  p.style.left = '50%';
+  p.style.transform = 'translate(-50%, 0) scale(1)';
+  p.style.opacity = '1';
+  setTimeout(() => { p.style.transition = ''; }, 50);
+  setInstruction('🎯 TAP EN UNA ZONA DEL ARCO');
+}
+
+function setInstruction(text, type='') {
+  const el = document.getElementById('instruction');
+  el.textContent = text;
+  el.className = 'instruction ' + type;
+}
+
+function updateHUD() {
+  document.getElementById('hud-tiro').textContent = game.tiro;
+  document.getElementById('hud-score').textContent = game.score;
+  document.getElementById('hud-goles').textContent = game.goles;
+}
+
+// ========================================================================
+// CONTROLES (zona → power → curva)
+// ========================================================================
+document.querySelectorAll('.zona').forEach(z => {
+  z.onclick = () => {
+    if (game.state !== 'ZONA') return;
+    game.zone = parseInt(z.dataset.z);
+    document.querySelectorAll('.zona').forEach(x => x.classList.remove('selected'));
+    z.classList.add('selected');
+    sfx.kick();
+    setTimeout(startPowerBar, 250);
+  };
+});
+
+function startPowerBar() {
+  game.state = 'POWER';
+  setInstruction('⚡ TAP CUANDO EL MARCADOR LLEGUE AL VERDE', 'power');
+  document.getElementById('power-bar-wrap').classList.add('active');
+  const marker = document.getElementById('power-marker');
+  let pos = 0, dir = 1, speed = 3.0;
+  game.powerInterval = setInterval(() => {
+    pos += dir * speed;
+    if (pos >= 100) { pos = 100; dir = -1; }
+    if (pos <= 0) { pos = 0; dir = 1; }
+    marker.style.left = `calc(${pos}% - 3px)`;
+    game.power = pos;
+  }, 16);
+  document.getElementById('power-bar').onclick = () => {
+    if (game.state !== 'POWER') return;
+    clearInterval(game.powerInterval);
+    setTimeout(showCurve, 200);
+  };
+}
+
+function showCurve() {
+  game.state = 'CURVA';
+  document.getElementById('power-bar-wrap').classList.remove('active');
+  setInstruction('🌀 ELEGÍ EFECTO: IZQUIERDA, DERECHO O DERECHA', 'curve');
+  document.getElementById('curve-wrap').classList.add('active');
+}
+document.querySelectorAll('.curve-btn').forEach(b => {
+  b.onclick = () => {
+    if (game.state !== 'CURVA') return;
+    game.curve = parseInt(b.dataset.curve);
+    document.getElementById('curve-wrap').classList.remove('active');
+    setInstruction('🚀 PATEANDO...', '');
+    fireBall();
+  };
+});
+
+// ========================================================================
+// SIMULAR EL TIRO
+// ========================================================================
+function fireBall() {
+  game.state = 'FLY';
+  // El muro salta!
+  document.getElementById('muro').classList.add('jumping');
+  // La IA del arquero predice según tu historial
+  const arqueroVa = aiPredecir();
+  game.zonasHist.push(game.zone);
+
+  // Resolver resultado
+  const result = resolveShot(game.zone, game.power, game.curve, arqueroVa);
+
+  // Animar arquero al destino predicho
+  setTimeout(() => moveArquero(arqueroVa), 200);
+
+  // Animar pelota
+  setTimeout(() => animateBall(result), 350);
+
+  // Mostrar resultado tras animación
+  setTimeout(() => showResult(result), 1100);
+  setTimeout(() => { game.tiro >= 10 ? finish() : nextTiro(); }, 2400);
+}
+
+function aiPredecir() {
+  // Si tenés historial, va al lado más usado con probabilidad alta
+  if (game.zonasHist.length === 0) return Math.floor(Math.random() * 6);
+  const lado = game.zonasHist.length >= 3 && Math.random() < (0.3 + (game.gk.level - 80) * 0.025);
+  if (lado) {
+    // Tomar el lado más común (col)
+    const cols = [0, 0, 0];
+    game.zonasHist.forEach(z => cols[z % 3]++);
+    const maxCol = cols.indexOf(Math.max(...cols));
+    // Tirarse a esa columna (fila al azar)
+    return maxCol + (Math.random() < 0.5 ? 0 : 3);
+  }
+  return Math.floor(Math.random() * 6);
+}
+
+function resolveShot(zone, power, curve, arqueroVa) {
+  const isCentro = zone === 1 || zone === 4;
+  // Pegó en el muro? si zone abajo central + power bajo → muro
+  if (zone === 4 && power < 40) return { type: 'muro' };
+  // Tiro muy débil → arquero ataja
+  if (power < 25) return { type: 'atajada', zone };
+  // Tiro pasado (muy fuerte) → afuera
+  if (power > 92) return { type: 'afuera', zone };
+  // Sweet spot
+  const sweet = power >= 35 && power <= 75;
+  // El arquero atina al lado?
+  let atajada = false;
+  if (arqueroVa === zone) {
+    atajada = Math.random() < (sweet ? 0.5 : 0.75);
+  } else if (Math.floor(arqueroVa/3) === Math.floor(zone/3)) {
+    // Misma fila pero diferente columna - 25% atajada
+    atajada = Math.random() < 0.2;
+  }
+  // La curva ayuda: si el arquero acierta el lado pero hay curva, puede entrar
+  if (atajada && Math.abs(curve) === 1 && Math.random() < 0.35) atajada = false;
+  if (atajada) return { type: 'atajada', zone };
+  return { type: 'gol', zone, sweet, isCentro };
+}
+
+function moveArquero(zone) {
+  const arq = document.getElementById('arquero');
+  // Mapear zona a posición x dentro del arco
+  const cols = ['22%', '50%', '78%'];
+  const rows = ['18%', '38%']; // 0=arriba, 1=abajo
+  arq.style.left = cols[zone % 3];
+  arq.style.top = rows[Math.floor(zone / 3)];
+  const tilt = zone % 3 === 0 ? -45 : zone % 3 === 2 ? 45 : 0;
+  arq.style.transform = `translateX(-50%) rotate(${tilt}deg)`;
+}
+
+function animateBall(result) {
+  const p = document.getElementById('pelota');
+  p.classList.add('flying');
+  if (result.type === 'muro') {
+    // Pelota choca al muro y rebota un poco
+    p.style.bottom = '45%';
+    p.style.transform = 'translate(-50%, 0) scale(0.7) rotate(180deg)';
+    setTimeout(() => { p.style.bottom = '20%'; }, 400);
+  } else if (result.type === 'afuera') {
+    // Por arriba del travesaño
+    p.style.bottom = '90%';
+    p.style.transform = 'translate(-50%, 0) scale(0.5)';
+    p.style.opacity = '0.5';
+  } else {
+    // Llega al arco
+    const cols = ['22%', '50%', '78%'];
+    const rows = ['25%', '12%']; // top desde abajo (más arriba = mayor número en bottom)
+    const bottoms = ['58%', '70%']; // bottom para zonas top y bottom
+    const r = Math.floor(result.zone / 3);
+    p.style.bottom = bottoms[1 - r]; // invertir porque arriba en pantalla = abajo en bottom
+    p.style.left = cols[result.zone % 3];
+    p.style.transform = `translate(-50%, 0) scale(0.6) rotate(${result.zone % 3 === 0 ? -360 : 360}deg)`;
+  }
+}
+
+function showResult(result) {
+  if (result.type === 'gol') {
+    game.goles++;
+    let pts = 100;
+    if (result.sweet) pts += 50;
+    if (result.isCentro && game.power < 30) pts += 100; // Panenka!
+    game.score += pts;
+    showBigMsg(result.isCentro && game.power < 30 ? '¡PANENKA!' : '¡GOOOL!', 'gol');
+    sfx.gol();
+  } else if (result.type === 'atajada') {
+    showBigMsg('¡ATAJÓ!', 'atajada');
+    sfx.ataj();
+  } else if (result.type === 'muro') {
+    showBigMsg('¡EN EL MURO!', 'muro');
+    sfx.muro();
+    shake();
+  } else {
+    showBigMsg('¡AFUERA!', 'afuera');
+    sfx.afuera();
+    shake();
+  }
+  updateHUD();
+}
+
+function showBigMsg(text, type) {
+  const m = document.getElementById('big-msg');
+  m.textContent = text;
+  m.className = 'big-msg ' + type;
+  void m.offsetWidth;
+  m.classList.add('show');
+}
+function shake() { document.body.classList.add('shaking'); setTimeout(() => document.body.classList.remove('shaking'), 400); }
+
+document.getElementById('quit').onclick = () => { if (confirm('¿Salir?')) finish(); };
+
+// ========================================================================
+// FINISH
+// ========================================================================
+function finish() {
+  show('result');
+  document.getElementById('r-score').textContent = game.score;
+  document.getElementById('r-goles').textContent = game.goles;
+  document.getElementById('r-line').textContent = `${game.team.star.toUpperCase()} vs ${game.gk.name.toUpperCase()}`;
+  let t = '⚽', v = 'Hay que entrenar';
+  if (game.goles >= 9) { t = '🏆'; v = '¡MAESTRO DEL TIRO LIBRE!'; }
+  else if (game.goles >= 7) { t = '🥇'; v = '¡Crack absoluto!'; }
+  else if (game.goles >= 5) { t = '🥈'; v = 'Buen pateador'; }
+  else if (game.goles >= 3) { t = '🥉'; v = 'Vas mejorando'; }
+  document.getElementById('r-trophy').textContent = t;
+  document.getElementById('r-verdict').textContent = v;
+}
+
+// Compartir
+document.getElementById('r-download').onclick = () => {
+  const node = document.getElementById('result-panel');
+  const w = node.offsetWidth, h = node.offsetHeight;
+  html2canvas(node, {
+    backgroundColor: '#050d08', scale: 2, useCORS: true, allowTaint: true, logging: false,
+    width: w, height: h,
+    windowWidth: document.documentElement.clientWidth,
+    windowHeight: document.documentElement.clientHeight
+  }).then(canvas => {
+    const link = document.createElement('a');
+    link.download = `tiros-libres-${game.team.team.toLowerCase().replace(/[^a-z0-9]+/g,'-')}-${game.name.toLowerCase().replace(/[^a-z0-9]+/g,'-')}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  });
+};
+
+function show(s) {
+  document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+  document.getElementById('screen-' + s).classList.add('active');
+}
+function restart() { show('intro'); }
+window.restart = restart;
+</script>
+</body>
+</html>

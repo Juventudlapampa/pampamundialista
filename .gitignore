@@ -1,0 +1,8 @@
+# Notas internas / dev (no van a la web pública)
+_HANDOFF-PARA-CLAUDE.md
+.claude/
+server.js
+launch.json
+*.zip
+.DS_Store
+Thumbs.db

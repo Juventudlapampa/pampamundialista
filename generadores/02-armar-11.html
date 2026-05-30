@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Armá tu 11 · Mundial 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --verde: #0d3b26;
+    --verde-2: #145c39;
+    --verde-fluo: #4ade80;
+    --dorado: #d4a82e;
+    --dorado-2: #f4cd60;
+    --crema: #f4ecd8;
+    --negro: #0a0a0a;
+    --rojo: #dc2626;
+    --azul: #2563eb;
+    --azul-claro: #60a5fa;
+  }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #050d08;
+    background-image: radial-gradient(ellipse at top, rgba(13,59,38,0.6), transparent 70%);
+    min-height: 100vh;
+    color: var(--crema);
+    padding: 1.5rem 1rem;
+  }
+  .container { max-width: 1400px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 1.5rem; }
+  .header-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    color: var(--dorado);
+    text-transform: uppercase;
+  }
+  h1 {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    letter-spacing: 0.05em;
+    line-height: 1;
+    text-transform: uppercase;
+    margin-top: 0.5rem;
+  }
+  h1 span { color: var(--verde-fluo); }
+
+  .tabs {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid rgba(212,168,46,0.2);
+  }
+  .tab {
+    background: transparent;
+    color: var(--crema);
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 0.9rem 1.5rem;
+    font-family: 'Anton', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    text-transform: uppercase;
+    margin-bottom: -2px;
+    opacity: 0.6;
+  }
+  .tab:hover { opacity: 1; }
+  .tab.active { opacity: 1; border-bottom-color: var(--dorado); color: var(--dorado); }
+
+  .modo { display: none; }
+  .modo.active { display: block; }
+
+  .modo-desc {
+    text-align: center;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(212,168,46,0.3);
+    border-radius: 8px;
+    padding: 0.7rem 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+  }
+
+  .formaciones {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin: 1rem 0;
+    flex-wrap: wrap;
+  }
+  .form-btn {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(212,168,46,0.4);
+    color: var(--crema);
+    padding: 0.5rem 1.2rem;
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 0.1em;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .form-btn.active { background: var(--dorado); color: var(--negro); }
+
+  .dt-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    align-items: center;
+  }
+  .dt-row select, .dt-row input {
+    background: rgba(0,0,0,0.5);
+    border: 1px solid rgba(212,168,46,0.4);
+    color: var(--crema);
+    padding: 0.6rem;
+    border-radius: 6px;
+    font-family: inherit;
+  }
+  .dt-row label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: var(--dorado);
+    text-transform: uppercase;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 1.5rem;
+  }
+  @media (max-width: 1000px) {
+    .layout { grid-template-columns: 1fr; }
+  }
+  .cancha-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .cancha-wrap {
+    background: rgba(0,0,0,0.3);
+    border-radius: 16px;
+    padding: 1rem;
+    border: 1px solid rgba(212,168,46,0.2);
+    position: relative;
+  }
+  .juv-watermark {
+    position: absolute;
+    bottom: 6px;
+    right: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: rgba(212, 168, 46, 0.95);
+    letter-spacing: 0.08em;
+    z-index: 10;
+    pointer-events: none;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.7);
+    font-weight: 700;
+  }
+  .cancha-title {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    font-family: 'Anton', sans-serif;
+    color: var(--dorado);
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    z-index: 5;
+  }
+  .cancha-dt {
+    position: absolute;
+    bottom: 6px;
+    left: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: rgba(244,236,216,0.7);
+    letter-spacing: 0.08em;
+    z-index: 5;
+  }
+  .cancha {
+    position: relative;
+    aspect-ratio: 2/3;
+    max-width: 600px;
+    margin: 0 auto;
+    background: linear-gradient(180deg, #1a7a4a 0%, #0d4a2c 100%);
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 8%, rgba(255,255,255,0.04) 8%, rgba(255,255,255,0.04) 16%);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 3px solid rgba(255,255,255,0.4);
+  }
+  .cancha svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  .slot {
+    position: absolute;
+    width: 12%;
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.5);
+    border: 2px dashed rgba(244,236,216,0.4);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .slot:hover {
+    background: rgba(212,168,46,0.3);
+    border-color: var(--dorado);
+  }
+  .slot.filled {
+    background: linear-gradient(135deg, var(--dorado), var(--dorado-2));
+    border: 2px solid var(--crema);
+    color: var(--negro);
+  }
+  .slot-name {
+    font-family: 'Anton', sans-serif;
+    font-size: 0.55rem;
+    text-align: center;
+    letter-spacing: 0.05em;
+    line-height: 1.1;
+    padding: 2px;
+    word-break: break-word;
+  }
+  .slot-empty { font-size: 1.2rem; color: rgba(244,236,216,0.5); }
+  .badge-formacion {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(0,0,0,0.7);
+    color: var(--dorado);
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 0.15em;
+    font-size: 0.85rem;
+    border: 1px solid var(--dorado);
+    z-index: 5;
+  }
+
+  .panel-players {
+    background: rgba(0,0,0,0.4);
+    border-radius: 16px;
+    padding: 1rem;
+    border: 1px solid rgba(212,168,46,0.2);
+    max-height: 700px;
+    overflow-y: auto;
+  }
+  .panel-title {
+    font-family: 'Anton', sans-serif;
+    color: var(--dorado);
+    font-size: 1.1rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.6rem;
+    text-transform: uppercase;
+  }
+  .search {
+    width: 100%;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(244,236,216,0.2);
+    color: var(--crema);
+    padding: 0.55rem;
+    border-radius: 6px;
+    margin-bottom: 0.6rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+  }
+  .pos-filters {
+    display: flex;
+    gap: 0.3rem;
+    margin-bottom: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .pos-filter {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(244,236,216,0.2);
+    color: var(--crema);
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+  }
+  .pos-filter.active { background: var(--dorado); color: var(--negro); }
+  .player {
+    background: rgba(13,59,38,0.6);
+    border: 1px solid rgba(244,236,216,0.1);
+    padding: 0.5rem 0.7rem;
+    border-radius: 8px;
+    margin-bottom: 0.3rem;
+    cursor: pointer;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 0.4rem;
+    align-items: center;
+    font-size: 0.85rem;
+  }
+  .player:hover { background: rgba(212,168,46,0.15); border-color: var(--dorado); }
+  .player.placed { opacity: 0.4; pointer-events: none; }
+  .player-flag-mini {
+    display: inline-block;
+    width: 18px;
+    height: 12px;
+    border: 1px solid rgba(0,0,0,0.5);
+    border-radius: 2px;
+  }
+  .player-flag-mini.v {
+    background: linear-gradient(to right, var(--fc1) 33%, var(--fc2) 33% 66%, var(--fc3) 66%);
+  }
+  .player-flag-mini.h {
+    background: linear-gradient(to bottom, var(--fc1) 33%, var(--fc2) 33% 66%, var(--fc3) 66%);
+  }
+  .player-name { font-weight: 700; }
+  .player-club {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--verde-fluo);
+    letter-spacing: 0.05em;
+  }
+  .player-pos {
+    background: rgba(212,168,46,0.2);
+    color: var(--dorado);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 0.6rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  .btn {
+    background: linear-gradient(135deg, var(--dorado), var(--dorado-2));
+    color: var(--negro);
+    border: none;
+    padding: 0.85rem;
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 0.1em;
+    border-radius: 8px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+  }
+  .btn-secondary {
+    background: rgba(0,0,0,0.5);
+    color: var(--crema);
+    border: 1px solid rgba(212,168,46,0.4);
+  }
+
+  .modal {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 1rem;
+  }
+  .modal.active { display: flex; }
+  .modal-content {
+    background: var(--verde);
+    border: 1px solid var(--dorado);
+    border-radius: 12px;
+    padding: 1.2rem;
+    max-width: 420px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  .modal-content h3 {
+    font-family: 'Anton', sans-serif;
+    color: var(--dorado);
+    margin-bottom: 1rem;
+    letter-spacing: 0.1em;
+  }
+  @media (max-width: 340px) { .modo-desc { padding: 0.8rem 0.6rem; } }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="header-tag">Armá tu 11 · Mundial 2026</div>
+    <h1>ARMÁ TU <span>11</span></h1>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" data-modo="arg">🇦🇷 Formación Argentina</button>
+    <button class="tab" data-modo="ideal">⭐ Selección Ideal del Mundial</button>
+  </div>
+
+  <!-- MODO ARGENTINA -->
+  <div class="modo active" id="modo-arg">
+    <div class="modo-desc">
+      Armá tu <strong>11 titular argentino</strong> con la <strong>lista oficial de 26</strong> de Scaloni para el Mundial 2026. Elegí formación, asigná posiciones y elegí tu DT.
+    </div>
+    <div class="dt-row">
+      <div>
+        <label>Director técnico</label>
+        <select id="dt-arg">
+          <option>Lionel Scaloni</option>
+          <option>Pablo Aimar</option>
+          <option>Walter Samuel</option>
+          <option>Diego Placente</option>
+          <option>Otro (editá)</option>
+        </select>
+      </div>
+      <div style="text-align:right">
+        <label>Camiseta</label>
+        <div style="display:flex;align-items:center;gap:0.4rem;margin-top:0.4rem">
+          <span class="player-flag-mini h" style="--fc1:#75AADB;--fc2:#FFFFFF;--fc3:#75AADB;width:30px;height:20px"></span>
+          <strong>ARGENTINA</strong>
+        </div>
+      </div>
+    </div>
+    <div class="formaciones">
+      <button class="form-btn active" data-form="4-3-3">4-3-3</button>
+      <button class="form-btn" data-form="4-4-2">4-4-2</button>
+      <button class="form-btn" data-form="3-5-2">3-5-2</button>
+      <button class="form-btn" data-form="4-2-3-1">4-2-3-1</button>
+      <button class="form-btn" data-form="3-4-3">3-4-3</button>
+    </div>
+    <div class="layout">
+      <div class="cancha-col">
+        <div class="cancha-wrap" id="cancha-wrap-arg">
+          <div class="cancha-title">FORMACIÓN ARGENTINA</div>
+          <div class="cancha-dt" id="cancha-dt-arg">DT: SCALONI</div>
+          <div class="juv-watermark">@juventud_lapampa</div>
+          <div class="cancha" id="cancha-arg">
+            <div class="badge-formacion" id="badge-form-arg">4-3-3</div>
+            <svg viewBox="0 0 100 150" preserveAspectRatio="none">
+              <line x1="0" y1="75" x2="100" y2="75" stroke="rgba(255,255,255,0.4)" stroke-width="0.4"/>
+              <circle cx="50" cy="75" r="9" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="0.4"/>
+              <rect x="22" y="0" width="56" height="18" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="0.4"/>
+              <rect x="22" y="132" width="56" height="18" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="0.4"/>
+            </svg>
+          </div>
+        </div>
+        <div class="controls">
+          <button class="btn btn-secondary" id="reset-arg">↻ Reset</button>
+          <button class="btn" id="download-arg">⬇ Descargar imagen</button>
+        </div>
+      </div>
+      <div class="panel-players">
+        <div class="panel-title">Lista oficial (26)</div>
+        <input type="text" class="search" id="search-arg" placeholder="🔍 Buscar jugador...">
+        <div class="pos-filters" id="filter-arg"></div>
+        <div id="players-list-arg"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODO IDEAL -->
+  <div class="modo" id="modo-ideal">
+    <div class="modo-desc">
+      Armá tu <strong>11 ideal</strong> con los mejores 50 jugadores del mundo (de las 48 selecciones del Mundial 2026). Cualquier combinación: vos elegís.
+    </div>
+    <div class="dt-row">
+      <div>
+        <label>Director técnico ideal</label>
+        <select id="dt-ideal">
+          <option>Lionel Scaloni</option>
+          <option>Pep Guardiola</option>
+          <option>Carlo Ancelotti</option>
+          <option>Jürgen Klopp</option>
+          <option>Diego Simeone</option>
+          <option>Mikel Arteta</option>
+          <option>Xabi Alonso</option>
+          <option>Hansi Flick</option>
+        </select>
+      </div>
+      <div style="text-align:right;font-size:0.8rem;color:var(--verde-fluo)">⭐ Mejor 11 del planeta</div>
+    </div>
+    <div class="formaciones">
+      <button class="form-btn active" data-form-ideal="4-3-3">4-3-3</button>
+      <button class="form-btn" data-form-ideal="4-4-2">4-4-2</button>
+      <button class="form-btn" data-form-ideal="3-5-2">3-5-2</button>
+      <button class="form-btn" data-form-ideal="4-2-3-1">4-2-3-1</button>
+      <button class="form-btn" data-form-ideal="3-4-3">3-4-3</button>
+    </div>
+    <div class="layout">
+      <div class="cancha-col">
+        <div class="cancha-wrap" id="cancha-wrap-ideal">
+          <div class="cancha-title">11 IDEAL DEL MUNDIAL</div>
+          <div class="cancha-dt" id="cancha-dt-ideal">DT: SCALONI</div>
+          <div class="juv-watermark">@juventud_lapampa</div>
+          <div class="cancha" id="cancha-ideal">
+            <div class="badge-formacion" id="badge-form-ideal">4-3-3</div>
+            <svg viewBox="0 0 100 150" preserveAspectRatio="none">
+              <line x1="0" y1="75" x2="100" y2="75" stroke="rgba(255,255,255,0.4)" stroke-width="0.4"/>
+              <circle cx="50" cy="75" r="9" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="0.4"/>
+              <rect x="22" y="0" width="56" height="18" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="0.4"/>
+              <rect x="22" y="132" width="56" height="18" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="0.4"/>
+            </svg>
+          </div>
+        </div>
+        <div class="controls">
+          <button class="btn btn-secondary" id="reset-ideal">↻ Reset</button>
+          <button class="btn" id="download-ideal">⬇ Descargar imagen</button>
+        </div>
+      </div>
+      <div class="panel-players">
+        <div class="panel-title">Top 50 del mundo</div>
+        <input type="text" class="search" id="search-ideal" placeholder="🔍 Buscar jugador o país...">
+        <div class="pos-filters" id="filter-ideal"></div>
+        <div id="players-list-ideal"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <h3 id="modal-title">Asignar jugador</h3>
+    <input type="text" class="search" id="modal-search" placeholder="🔍 Buscar...">
+    <div id="modal-list" style="max-height:50vh;overflow-y:auto"></div>
+    <button class="btn btn-secondary" style="margin-top:1rem;width:100%" onclick="closeModal()">Cancelar</button>
+  </div>
+</div>
+
+<script>
+  // ========================================================================
+  // COLORES DE BANDERAS PARA LAS MINI-BANDERAS CSS
+  // ========================================================================
+  const FLAGS = {
+    'ARG': { c1:'#75AADB', c2:'#FFFFFF', c3:'#75AADB', dir:'h' },
+    'BRA': { c1:'#009C3B', c2:'#FFDF00', c3:'#002776', dir:'h' },
+    'FRA': { c1:'#0055A4', c2:'#FFFFFF', c3:'#EF4135', dir:'v' },
+    'ESP': { c1:'#AA151B', c2:'#F1BF00', c3:'#AA151B', dir:'h' },
+    'ALE': { c1:'#000000', c2:'#DD0000', c3:'#FFCE00', dir:'h' },
+    'ING': { c1:'#FFFFFF', c2:'#CE1124', c3:'#FFFFFF', dir:'h' },
+    'POR': { c1:'#006600', c2:'#006600', c3:'#FF0000', dir:'v' },
+    'ITA': { c1:'#009246', c2:'#FFFFFF', c3:'#CE2B37', dir:'v' },
+    'NED': { c1:'#AE1C28', c2:'#FFFFFF', c3:'#21468B', dir:'h' },
+    'BEL': { c1:'#000000', c2:'#FAE042', c3:'#ED2939', dir:'v' },
+    'URU': { c1:'#FFFFFF', c2:'#0038A8', c3:'#FFFFFF', dir:'h' },
+    'NOR': { c1:'#EF2B2D', c2:'#FFFFFF', c3:'#002868', dir:'h' },
+    'POL': { c1:'#FFFFFF', c2:'#DC143C', c3:'#DC143C', dir:'h' },
+    'CRO': { c1:'#FF0000', c2:'#FFFFFF', c3:'#171796', dir:'h' },
+    'KOR': { c1:'#FFFFFF', c2:'#003478', c3:'#C60C30', dir:'h' },
+    'MAR': { c1:'#C1272D', c2:'#C1272D', c3:'#006233', dir:'h' },
+    'SEN': { c1:'#00853F', c2:'#FDEF42', c3:'#E31B23', dir:'v' },
+    'EGY': { c1:'#CE1126', c2:'#FFFFFF', c3:'#000000', dir:'h' },
+    'COL': { c1:'#FCD116', c2:'#003893', c3:'#CE1126', dir:'h' },
+    'GEO': { c1:'#FFFFFF', c2:'#FF0000', c3:'#FFFFFF', dir:'h' },
+    'NIG': { c1:'#008751', c2:'#FFFFFF', c3:'#008751', dir:'v' }
+  };
+
+  // ========================================================================
+  // POOL ARGENTINA: LISTA OFICIAL DE 26 (Scaloni · Mundial 2026)
+  // ========================================================================
+  const ARG_POOL = [
+    // Arqueros (3)
+    { n:'Emiliano Martínez', pos:'POR', club:'Aston Villa' },
+    { n:'Gerónimo Rulli', pos:'POR', club:'Marsella' },
+    { n:'Juan Musso', pos:'POR', club:'Como' },
+    // Defensores (9)
+    { n:'Gonzalo Montiel', pos:'DEF', club:'River' },
+    { n:'Nahuel Molina', pos:'DEF', club:'Atlético' },
+    { n:'Nicolás Otamendi', pos:'DEF', club:'Benfica' },
+    { n:'Cristian Romero', pos:'DEF', club:'Tottenham' },
+    { n:'Leonardo Balerdi', pos:'DEF', club:'Marsella' },
+    { n:'Lisandro Martínez', pos:'DEF', club:'Man United' },
+    { n:'Nicolás Tagliafico', pos:'DEF', club:'Lyon' },
+    { n:'Facundo Medina', pos:'DEF', club:'Marsella' },
+    { n:'Valentín Barco', pos:'DEF', club:'Estrasburgo' },
+    // Mediocampistas (8)
+    { n:'Giovani Lo Celso', pos:'MED', club:'Real Betis' },
+    { n:'Nico Paz', pos:'MED', club:'Como' },
+    { n:'Enzo Fernández', pos:'MED', club:'Chelsea' },
+    { n:'Leandro Paredes', pos:'MED', club:'Boca' },
+    { n:'Alexis Mac Allister', pos:'MED', club:'Liverpool' },
+    { n:'Rodrigo De Paul', pos:'MED', club:'Inter Miami' },
+    { n:'Exequiel Palacios', pos:'MED', club:'Bayer Leverkusen' },
+    { n:'Thiago Almada', pos:'MED', club:'Atlético' },
+    // Delanteros (6)
+    { n:'Nicolás González', pos:'DEL', club:'Juventus' },
+    { n:'Giuliano Simeone', pos:'DEL', club:'Atlético' },
+    { n:'Lionel Messi', pos:'DEL', club:'Inter Miami' },
+    { n:'Julián Álvarez', pos:'DEL', club:'Atlético' },
+    { n:'Lautaro Martínez', pos:'DEL', club:'Inter' },
+    { n:'Flaco López', pos:'DEL', club:'Palmeiras' }
+  ];
+
+  // ========================================================================
+  // POOL IDEAL: 50 mejores del mundo (mezcla de selecciones)
+  // ========================================================================
+  const IDEAL_POOL = [
+    // POR
+    { n:'Emiliano Martínez', pos:'POR', club:'Aston Villa', flag:'ARG' },
+    { n:'Thibaut Courtois', pos:'POR', club:'Real Madrid', flag:'BEL' },
+    { n:'Mike Maignan', pos:'POR', club:'Milan', flag:'FRA' },
+    { n:'Alisson', pos:'POR', club:'Liverpool', flag:'BRA' },
+    { n:'Gianluigi Donnarumma', pos:'POR', club:'PSG', flag:'ITA' },
+    // DEF
+    { n:'Cristian Romero', pos:'DEF', club:'Tottenham', flag:'ARG' },
+    { n:'Virgil van Dijk', pos:'DEF', club:'Liverpool', flag:'NED' },
+    { n:'Marquinhos', pos:'DEF', club:'PSG', flag:'BRA' },
+    { n:'Rubén Dias', pos:'DEF', club:'Man City', flag:'POR' },
+    { n:'William Saliba', pos:'DEF', club:'Arsenal', flag:'FRA' },
+    { n:'Antonio Rüdiger', pos:'DEF', club:'Real Madrid', flag:'ALE' },
+    { n:'Achraf Hakimi', pos:'DEF', club:'PSG', flag:'MAR' },
+    { n:'Théo Hernández', pos:'DEF', club:'Al-Hilal', flag:'FRA' },
+    { n:'Alphonso Davies', pos:'DEF', club:'Bayern', flag:'CAN' },
+    { n:'Trent Alexander-Arnold', pos:'DEF', club:'Real Madrid', flag:'ING' },
+    // MED
+    { n:'Rodri', pos:'MED', club:'Man City', flag:'ESP' },
+    { n:'Jude Bellingham', pos:'MED', club:'Real Madrid', flag:'ING' },
+    { n:'Pedri', pos:'MED', club:'Barcelona', flag:'ESP' },
+    { n:'Bruno Fernandes', pos:'MED', club:'Man United', flag:'POR' },
+    { n:'Kevin De Bruyne', pos:'MED', club:'Napoli', flag:'BEL' },
+    { n:'Enzo Fernández', pos:'MED', club:'Chelsea', flag:'ARG' },
+    { n:'Federico Valverde', pos:'MED', club:'Real Madrid', flag:'URU' },
+    { n:'Aurélien Tchouaméni', pos:'MED', club:'Real Madrid', flag:'FRA' },
+    { n:'Bruno Guimarães', pos:'MED', club:'Newcastle', flag:'BRA' },
+    { n:'Florian Wirtz', pos:'MED', club:'Liverpool', flag:'ALE' },
+    { n:'Jamal Musiala', pos:'MED', club:'Bayern', flag:'ALE' },
+    { n:'Cole Palmer', pos:'MED', club:'Chelsea', flag:'ING' },
+    { n:'Eduardo Camavinga', pos:'MED', club:'Real Madrid', flag:'FRA' },
+    { n:'Phil Foden', pos:'MED', club:'Man City', flag:'ING' },
+    { n:'Khvicha Kvaratskhelia', pos:'MED', club:'PSG', flag:'GEO' },
+    { n:'Alexis Mac Allister', pos:'MED', club:'Liverpool', flag:'ARG' },
+    { n:'Martin Ødegaard', pos:'MED', club:'Arsenal', flag:'NOR' },
+    // DEL
+    { n:'Lionel Messi', pos:'DEL', club:'Inter Miami', flag:'ARG' },
+    { n:'Kylian Mbappé', pos:'DEL', club:'Real Madrid', flag:'FRA' },
+    { n:'Erling Haaland', pos:'DEL', club:'Man City', flag:'NOR' },
+    { n:'Vinícius Jr', pos:'DEL', club:'Real Madrid', flag:'BRA' },
+    { n:'Lamine Yamal', pos:'DEL', club:'Barcelona', flag:'ESP' },
+    { n:'Harry Kane', pos:'DEL', club:'Bayern', flag:'ING' },
+    { n:'Rodrygo', pos:'DEL', club:'Real Madrid', flag:'BRA' },
+    { n:'Bukayo Saka', pos:'DEL', club:'Arsenal', flag:'ING' },
+    { n:'Lautaro Martínez', pos:'DEL', club:'Inter', flag:'ARG' },
+    { n:'Robert Lewandowski', pos:'DEL', club:'Barcelona', flag:'POL' },
+    { n:'Julián Álvarez', pos:'DEL', club:'Atlético', flag:'ARG' },
+    { n:'Cristiano Ronaldo', pos:'DEL', club:'Al-Nassr', flag:'POR' },
+    { n:'Rafael Leão', pos:'DEL', club:'Milan', flag:'POR' },
+    { n:'Mohamed Salah', pos:'DEL', club:'Liverpool', flag:'EGY' },
+    { n:'Ousmane Dembélé', pos:'DEL', club:'PSG', flag:'FRA' },
+    { n:'Antoine Griezmann', pos:'DEL', club:'Atlético', flag:'FRA' },
+    { n:'Son Heung-Min', pos:'DEL', club:'LAFC', flag:'KOR' },
+    { n:'Victor Osimhen', pos:'DEL', club:'Galatasaray', flag:'NIG' },
+    { n:'Darwin Núñez', pos:'DEL', club:'Al-Hilal', flag:'URU' },
+    { n:'Jhon Durán', pos:'DEL', club:'Fenerbahçe', flag:'COL' }
+  ];
+
+  // ========================================================================
+  // FORMACIONES
+  // ========================================================================
+  const formaciones = {
+    '4-3-3': [
+      {x:50,y:90,pos:'POR'},
+      {x:15,y:75,pos:'DEF'},{x:38,y:78,pos:'DEF'},{x:62,y:78,pos:'DEF'},{x:85,y:75,pos:'DEF'},
+      {x:25,y:50,pos:'MED'},{x:50,y:55,pos:'MED'},{x:75,y:50,pos:'MED'},
+      {x:20,y:22,pos:'DEL'},{x:50,y:18,pos:'DEL'},{x:80,y:22,pos:'DEL'}
+    ],
+    '4-4-2': [
+      {x:50,y:90,pos:'POR'},
+      {x:15,y:75,pos:'DEF'},{x:38,y:78,pos:'DEF'},{x:62,y:78,pos:'DEF'},{x:85,y:75,pos:'DEF'},
+      {x:15,y:50,pos:'MED'},{x:38,y:53,pos:'MED'},{x:62,y:53,pos:'MED'},{x:85,y:50,pos:'MED'},
+      {x:35,y:22,pos:'DEL'},{x:65,y:22,pos:'DEL'}
+    ],
+    '3-5-2': [
+      {x:50,y:90,pos:'POR'},
+      {x:25,y:75,pos:'DEF'},{x:50,y:78,pos:'DEF'},{x:75,y:75,pos:'DEF'},
+      {x:10,y:50,pos:'MED'},{x:30,y:55,pos:'MED'},{x:50,y:58,pos:'MED'},{x:70,y:55,pos:'MED'},{x:90,y:50,pos:'MED'},
+      {x:35,y:22,pos:'DEL'},{x:65,y:22,pos:'DEL'}
+    ],
+    '4-2-3-1': [
+      {x:50,y:90,pos:'POR'},
+      {x:15,y:75,pos:'DEF'},{x:38,y:78,pos:'DEF'},{x:62,y:78,pos:'DEF'},{x:85,y:75,pos:'DEF'},
+      {x:35,y:60,pos:'MED'},{x:65,y:60,pos:'MED'},
+      {x:20,y:38,pos:'MED'},{x:50,y:42,pos:'MED'},{x:80,y:38,pos:'MED'},
+      {x:50,y:18,pos:'DEL'}
+    ],
+    '3-4-3': [
+      {x:50,y:90,pos:'POR'},
+      {x:25,y:75,pos:'DEF'},{x:50,y:78,pos:'DEF'},{x:75,y:75,pos:'DEF'},
+      {x:15,y:50,pos:'MED'},{x:38,y:53,pos:'MED'},{x:62,y:53,pos:'MED'},{x:85,y:50,pos:'MED'},
+      {x:20,y:22,pos:'DEL'},{x:50,y:18,pos:'DEL'},{x:80,y:22,pos:'DEL'}
+    ]
+  };
+
+  // ========================================================================
+  // ESTADO POR MODO
+  // ========================================================================
+  const state = {
+    arg: { pool: ARG_POOL, formacion: '4-3-3', asignados: {}, filter: '', searchText: '' },
+    ideal: { pool: IDEAL_POOL, formacion: '4-3-3', asignados: {}, filter: '', searchText: '' }
+  };
+  let activeModo = 'arg';
+  let currentSlot = null;
+
+  // Tabs
+  document.querySelectorAll('.tab').forEach(t => {
+    t.onclick = () => {
+      activeModo = t.dataset.modo;
+      document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      document.querySelectorAll('.modo').forEach(m => m.classList.remove('active'));
+      document.getElementById('modo-' + activeModo).classList.add('active');
+    };
+  });
+
+  // ========================================================================
+  // RENDER
+  // ========================================================================
+  function renderCancha(modo) {
+    const cancha = document.getElementById('cancha-' + modo);
+    cancha.querySelectorAll('.slot').forEach(s => s.remove());
+    document.getElementById('badge-form-' + modo).textContent = state[modo].formacion;
+    formaciones[state[modo].formacion].forEach((slot, i) => {
+      const el = document.createElement('div');
+      el.className = 'slot';
+      el.style.left = slot.x + '%';
+      el.style.top = slot.y + '%';
+      const player = state[modo].asignados[i];
+      if (player !== undefined) {
+        el.classList.add('filled');
+        const j = state[modo].pool[player];
+        const lastName = j.n.split(' ').slice(-1)[0];
+        el.innerHTML = `<div class="slot-name">${lastName}</div>`;
+      } else {
+        el.innerHTML = `<div class="slot-empty">+</div>`;
+      }
+      el.addEventListener('click', () => openModal(modo, i, slot.pos));
+      cancha.appendChild(el);
+    });
+  }
+
+  function renderPlayers(modo) {
+    const list = document.getElementById('players-list-' + modo);
+    list.innerHTML = '';
+    const placed = Object.values(state[modo].asignados);
+    const filtered = state[modo].pool
+      .map((j, i) => ({ ...j, idx: i }))
+      .filter(j => !state[modo].filter || j.pos === state[modo].filter)
+      .filter(j => {
+        if (!state[modo].searchText) return true;
+        const q = state[modo].searchText.toLowerCase();
+        return j.n.toLowerCase().includes(q) || (j.flag && j.flag.toLowerCase().includes(q)) || j.club.toLowerCase().includes(q);
+      });
+    filtered.forEach(j => {
+      const el = document.createElement('div');
+      el.className = 'player' + (placed.includes(j.idx) ? ' placed' : '');
+      const flagHtml = (modo === 'ideal' && j.flag && FLAGS[j.flag])
+        ? `<span class="player-flag-mini ${FLAGS[j.flag].dir}" style="--fc1:${FLAGS[j.flag].c1};--fc2:${FLAGS[j.flag].c2};--fc3:${FLAGS[j.flag].c3}"></span>`
+        : '';
+      el.innerHTML = `
+        ${flagHtml}
+        <div>
+          <div class="player-name">${j.n}</div>
+          <div class="player-club">${j.club}</div>
+        </div>
+        <span class="player-pos">${j.pos}</span>
+      `;
+      el.onclick = () => {
+        // Reemplazar en cualquier slot ya asignado
+        Object.keys(state[modo].asignados).forEach(k => {
+          if (state[modo].asignados[k] === j.idx) delete state[modo].asignados[k];
+        });
+        // Buscar primer slot disponible que matchee la posición
+        const formaSlots = formaciones[state[modo].formacion];
+        let target = formaSlots.findIndex((s, i) => s.pos === j.pos && state[modo].asignados[i] === undefined);
+        if (target === -1) target = formaSlots.findIndex((s, i) => state[modo].asignados[i] === undefined);
+        if (target === -1) { alert('Plantel completo. Reseteá o cambiá un slot.'); return; }
+        state[modo].asignados[target] = j.idx;
+        renderCancha(modo);
+        renderPlayers(modo);
+      };
+      list.appendChild(el);
+    });
+  }
+
+  function renderFilters(modo) {
+    const filter = document.getElementById('filter-' + modo);
+    filter.innerHTML = '';
+    ['', 'POR', 'DEF', 'MED', 'DEL'].forEach(pos => {
+      const b = document.createElement('button');
+      b.className = 'pos-filter' + (state[modo].filter === pos ? ' active' : '');
+      b.textContent = pos || 'TODOS';
+      b.onclick = () => { state[modo].filter = pos; renderFilters(modo); renderPlayers(modo); };
+      filter.appendChild(b);
+    });
+  }
+
+  // ========================================================================
+  // MODAL
+  // ========================================================================
+  function openModal(modo, slotIdx, pos) {
+    activeModo = modo;
+    currentSlot = slotIdx;
+    document.getElementById('modal-title').textContent = `Asignar ${pos}`;
+    document.getElementById('modal-search').value = '';
+    renderModalList(pos, '');
+    document.getElementById('modal').classList.add('active');
+    setTimeout(() => document.getElementById('modal-search').focus(), 50);
+  }
+  function renderModalList(pos, q) {
+    const list = document.getElementById('modal-list');
+    list.innerHTML = '';
+    const placed = new Set(Object.values(state[activeModo].asignados));
+    if (state[activeModo].asignados[currentSlot] !== undefined) {
+      const btn = document.createElement('div');
+      btn.className = 'player';
+      btn.style.background = 'rgba(220,38,38,0.2)';
+      btn.innerHTML = `<span></span><span>✕ Quitar jugador actual</span><span></span>`;
+      btn.onclick = () => {
+        delete state[activeModo].asignados[currentSlot];
+        closeModal();
+        renderCancha(activeModo);
+        renderPlayers(activeModo);
+      };
+      list.appendChild(btn);
+    }
+    state[activeModo].pool
+      .map((j, i) => ({ ...j, idx: i }))
+      .filter(j => j.pos === pos)
+      .filter(j => !placed.has(j.idx))
+      .filter(j => !q || j.n.toLowerCase().includes(q.toLowerCase()) || j.club.toLowerCase().includes(q.toLowerCase()))
+      .forEach(j => {
+        const el = document.createElement('div');
+        el.className = 'player';
+        const flagHtml = (activeModo === 'ideal' && j.flag && FLAGS[j.flag])
+          ? `<span class="player-flag-mini ${FLAGS[j.flag].dir}" style="--fc1:${FLAGS[j.flag].c1};--fc2:${FLAGS[j.flag].c2};--fc3:${FLAGS[j.flag].c3}"></span>`
+          : '<span></span>';
+        el.innerHTML = `
+          ${flagHtml}
+          <div>
+            <div class="player-name">${j.n}</div>
+            <div class="player-club">${j.club}</div>
+          </div>
+          <span class="player-pos">${j.pos}</span>
+        `;
+        el.onclick = () => {
+          // Quitar de otros slots si está
+          Object.keys(state[activeModo].asignados).forEach(k => {
+            if (state[activeModo].asignados[k] === j.idx) delete state[activeModo].asignados[k];
+          });
+          state[activeModo].asignados[currentSlot] = j.idx;
+          closeModal();
+          renderCancha(activeModo);
+          renderPlayers(activeModo);
+        };
+        list.appendChild(el);
+      });
+  }
+  function closeModal() { document.getElementById('modal').classList.remove('active'); }
+  window.closeModal = closeModal;
+  document.getElementById('modal-search').oninput = e => {
+    const pos = document.getElementById('modal-title').textContent.replace('Asignar ', '');
+    renderModalList(pos, e.target.value);
+  };
+
+  // ========================================================================
+  // CONTROLES
+  // ========================================================================
+  ['arg', 'ideal'].forEach(modo => {
+    const formAttr = modo === 'arg' ? 'data-form' : 'data-form-ideal';
+    document.querySelectorAll(`[${formAttr}]`).forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll(`[${formAttr}]`).forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state[modo].formacion = btn.getAttribute(formAttr);
+        state[modo].asignados = {};
+        renderCancha(modo);
+        renderPlayers(modo);
+      };
+    });
+    document.getElementById('search-' + modo).oninput = e => {
+      state[modo].searchText = e.target.value;
+      renderPlayers(modo);
+    };
+    document.getElementById('reset-' + modo).onclick = () => {
+      if (confirm('¿Reiniciar?')) {
+        state[modo].asignados = {};
+        renderCancha(modo);
+        renderPlayers(modo);
+      }
+    };
+    document.getElementById('download-' + modo).onclick = () => downloadCancha(modo);
+  });
+
+  // Update DT display
+  document.getElementById('dt-arg').onchange = e => {
+    document.getElementById('cancha-dt-arg').textContent = 'DT: ' + e.target.value.toUpperCase();
+  };
+  document.getElementById('dt-ideal').onchange = e => {
+    document.getElementById('cancha-dt-ideal').textContent = 'DT: ' + e.target.value.toUpperCase();
+  };
+
+  // Download
+  function downloadCancha(modo) {
+    const wrap = document.getElementById('cancha-wrap-' + modo);
+    const w = wrap.offsetWidth, h = wrap.offsetHeight;
+    const origCss = wrap.getAttribute('style') || '';
+    wrap.style.cssText = origCss +
+      `;width:${w}px!important;height:${h}px!important;max-width:${w}px!important;max-height:${h}px!important;overflow:hidden!important;box-sizing:border-box!important;`;
+
+    html2canvas(wrap, {
+      backgroundColor: '#050d08',
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      logging: false,
+      width: w, height: h,
+      windowWidth: document.documentElement.clientWidth,
+      windowHeight: document.documentElement.clientHeight,
+      onclone: (doc) => {
+        const c = doc.getElementById('cancha-wrap-' + modo);
+        if (c) { c.style.width = w + 'px'; c.style.height = h + 'px'; }
+      }
+    }).then(canvas => {
+      wrap.setAttribute('style', origCss);
+      const link = document.createElement('a');
+      link.download = `mi-11-${modo === 'arg' ? 'argentina' : 'ideal'}-mundial-2026.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }).catch(err => {
+      wrap.setAttribute('style', origCss);
+      alert('Error: ' + err.message);
+    });
+  }
+
+  // Init
+  renderFilters('arg');
+  renderFilters('ideal');
+  renderCancha('arg');
+  renderCancha('ideal');
+  renderPlayers('arg');
+  renderPlayers('ideal');
+</script>
+</body>
+</html>

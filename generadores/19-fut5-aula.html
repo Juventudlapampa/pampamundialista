@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FUT5 del Aula · Mundial 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --verde: #0d3b26;
+    --verde-2: #145c39;
+    --verde-fluo: #4ade80;
+    --gold: #d4a82e;
+    --gold-2: #f4cd60;
+    --crema: #f4ecd8;
+    --negro: #0a0a0a;
+    --rojo: #dc2626;
+  }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--verde);
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(212,168,46,0.15), transparent 50%),
+      radial-gradient(circle at 80% 90%, rgba(74,222,128,0.1), transparent 50%);
+    min-height: 100vh;
+    color: var(--crema);
+    padding: 1.5rem 1rem;
+  }
+  .container { max-width: 1100px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 1.5rem; }
+  .header-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+  h1 {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-top: 0.3rem;
+    line-height: 1;
+  }
+  h1 span { color: var(--gold); }
+  .subtitle { font-size: 0.95rem; opacity: 0.85; margin-top: 0.6rem; }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+  }
+
+  .panel {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(212,168,46,0.3);
+    border-radius: 12px;
+    padding: 1.3rem;
+  }
+  .panel-title {
+    font-family: 'Anton', sans-serif;
+    color: var(--gold);
+    font-size: 1.2rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.8rem;
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 0.4rem;
+  }
+  label {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--verde-fluo);
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+    margin-top: 1rem;
+  }
+  input[type="text"], select {
+    width: 100%;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid rgba(244,236,216,0.2);
+    color: var(--crema);
+    padding: 0.7rem;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 1rem;
+  }
+  input:focus, select:focus { outline: none; border-color: var(--gold); }
+
+  .jugador-row {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(212,168,46,0.2);
+    border-radius: 8px;
+    padding: 0.7rem;
+    margin-bottom: 0.6rem;
+  }
+  .jugador-row.profe {
+    border-color: var(--gold);
+    background: rgba(212,168,46,0.05);
+  }
+  .jugador-row-header {
+    font-family: 'Anton', sans-serif;
+    font-size: 0.8rem;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+    margin-bottom: 0.4rem;
+  }
+  .jugador-row-grid {
+    display: grid;
+    grid-template-columns: 70px 1fr;
+    gap: 0.7rem;
+    align-items: center;
+  }
+  .photo-upload {
+    width: 70px;
+    height: 70px;
+    background: rgba(0,0,0,0.5);
+    border: 2px dashed rgba(212,168,46,0.4);
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+  }
+  .photo-upload img { width: 100%; height: 100%; object-fit: cover; }
+  .photo-upload input { display: none; }
+  .photo-upload-icon { font-size: 1.4rem; opacity: 0.5; }
+  .jugador-row input[type="text"] { padding: 0.4rem 0.6rem; font-size: 0.9rem; margin-bottom: 0.3rem; }
+  .apodo-input { font-size: 0.75rem !important; }
+
+  .btn {
+    background: linear-gradient(135deg, var(--gold), var(--gold-2));
+    color: var(--negro);
+    border: none;
+    padding: 0.9rem;
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 0.1em;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    text-transform: uppercase;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+  }
+
+  /* CANCHA OUTPUT */
+  .cancha-wrap {
+    background: linear-gradient(180deg, #1a7a4a 0%, #0d4a2c 100%);
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 8%, rgba(255,255,255,0.04) 8%, rgba(255,255,255,0.04) 16%);
+    border-radius: 12px;
+    padding: 1.2rem 0.8rem;
+    position: relative;
+    border: 3px solid rgba(255,255,255,0.4);
+    aspect-ratio: 5/7;
+  }
+  .equipo-title {
+    text-align: center;
+    font-family: 'Anton', sans-serif;
+    color: var(--gold);
+    font-size: 1.1rem;
+    letter-spacing: 0.15em;
+    margin-bottom: 0.8rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+  }
+  .equipo-formacion {
+    display: grid;
+    grid-template-rows: auto auto auto;
+    gap: 1rem;
+    height: calc(100% - 80px);
+    align-content: space-evenly;
+  }
+  .formacion-row {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+  .jugador-cancha {
+    text-align: center;
+    flex: 1;
+    max-width: 100px;
+  }
+  .jugador-photo-cancha {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.6);
+    border: 3px solid var(--gold);
+    overflow: hidden;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  }
+  .jugador-photo-cancha img { width: 100%; height: 100%; object-fit: cover; }
+  .jugador-photo-cancha .icon { font-size: 1.8rem; opacity: 0.5; }
+  .jugador-photo-cancha.profe { border-color: var(--rojo); }
+  .jugador-nombre {
+    font-family: 'Anton', sans-serif;
+    color: var(--crema);
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    margin-top: 0.3rem;
+    background: rgba(0,0,0,0.7);
+    padding: 2px 6px;
+    border-radius: 3px;
+    display: inline-block;
+  }
+  .jugador-apodo {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--verde-fluo);
+    font-size: 0.55rem;
+    letter-spacing: 0.05em;
+    margin-top: 0.15rem;
+    line-height: 1.1;
+  }
+  .jugador-pos {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--gold);
+    font-size: 0.5rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .juv-watermark {
+    position: absolute;
+    bottom: 6px;
+    right: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    color: rgba(212, 168, 46, 0.95);
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.7);
+  }
+  .equipo-aula {
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--gold);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    margin-top: 0.6rem;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="header-tag">FUT5 del Aula · Mundial 2026</div>
+    <h1>FUT5 DE <span>TU AULA</span></h1>
+    <p class="subtitle">Armá el equipo de fútbol 5 de tu curso con foto: 5 jugadores + 1 profe DT. Apodo, posición y descarga para compartir.</p>
+  </header>
+
+  <div class="layout">
+    <!-- FORM -->
+    <div>
+      <div class="panel">
+        <div class="panel-title">⚙ Datos del equipo</div>
+        <label>Nombre del aula / curso</label>
+        <input type="text" id="aula" placeholder="Ej: 5° A · Liceo N°10" maxlength="35">
+        <label>Nombre del equipo</label>
+        <input type="text" id="equipo-nombre" placeholder="Ej: Los Tucanes FC" maxlength="25">
+      </div>
+
+      <div class="panel" style="margin-top:1rem">
+        <div class="panel-title">👥 Jugadores (5)</div>
+        <div id="jugadores-form"></div>
+      </div>
+
+      <div class="panel" style="margin-top:1rem">
+        <div class="panel-title">🧠 Profe DT (1)</div>
+        <div id="profe-form"></div>
+      </div>
+
+      <button class="btn" id="download">⬇ DESCARGAR EQUIPO</button>
+    </div>
+
+    <!-- PREVIEW -->
+    <div>
+      <div class="cancha-wrap" id="cancha-output">
+        <div class="equipo-title" id="output-title">TU EQUIPO FC</div>
+        <div class="equipo-formacion">
+          <div class="formacion-row">
+            <div class="jugador-cancha" id="cancha-1">
+              <div class="jugador-photo-cancha"><span class="icon">👤</span></div>
+              <div class="jugador-nombre">JUGADOR 1</div>
+              <div class="jugador-pos">DELANTERO</div>
+              <div class="jugador-apodo"></div>
+            </div>
+            <div class="jugador-cancha" id="cancha-2">
+              <div class="jugador-photo-cancha"><span class="icon">👤</span></div>
+              <div class="jugador-nombre">JUGADOR 2</div>
+              <div class="jugador-pos">DELANTERO</div>
+              <div class="jugador-apodo"></div>
+            </div>
+          </div>
+          <div class="formacion-row">
+            <div class="jugador-cancha" id="cancha-3">
+              <div class="jugador-photo-cancha"><span class="icon">👤</span></div>
+              <div class="jugador-nombre">JUGADOR 3</div>
+              <div class="jugador-pos">MEDIO</div>
+              <div class="jugador-apodo"></div>
+            </div>
+          </div>
+          <div class="formacion-row">
+            <div class="jugador-cancha" id="cancha-4">
+              <div class="jugador-photo-cancha"><span class="icon">👤</span></div>
+              <div class="jugador-nombre">JUGADOR 4</div>
+              <div class="jugador-pos">DEFENSOR</div>
+              <div class="jugador-apodo"></div>
+            </div>
+            <div class="jugador-cancha" id="cancha-5">
+              <div class="jugador-photo-cancha"><span class="icon">👤</span></div>
+              <div class="jugador-nombre">JUGADOR 5</div>
+              <div class="jugador-pos">ARQUERO</div>
+              <div class="jugador-apodo"></div>
+            </div>
+          </div>
+          <div class="formacion-row">
+            <div class="jugador-cancha" id="cancha-profe">
+              <div class="jugador-photo-cancha profe"><span class="icon">🎓</span></div>
+              <div class="jugador-nombre" style="background:var(--rojo);color:white">PROFE DT</div>
+              <div class="jugador-pos">DIRECTOR TÉCNICO</div>
+              <div class="jugador-apodo"></div>
+            </div>
+          </div>
+        </div>
+        <div class="equipo-aula" id="output-aula">★ MUNDIAL 2026 · FUT5 DEL AULA ★</div>
+        <div class="juv-watermark">@juventud_lapampa</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const POSICIONES = ['DELANTERO', 'DELANTERO', 'MEDIO', 'DEFENSOR', 'ARQUERO'];
+
+// Render dynamic form rows
+const jugadoresForm = document.getElementById('jugadores-form');
+for (let i = 0; i < 5; i++) {
+  const div = document.createElement('div');
+  div.className = 'jugador-row';
+  div.innerHTML = `
+    <div class="jugador-row-header">JUGADOR #${i+1} · ${POSICIONES[i]}</div>
+    <div class="jugador-row-grid">
+      <label class="photo-upload" for="photo-${i+1}">
+        <span class="photo-upload-icon">📸</span>
+        <input type="file" id="photo-${i+1}" accept="image/*">
+      </label>
+      <div>
+        <input type="text" id="nombre-${i+1}" placeholder="Nombre" maxlength="14">
+        <input type="text" id="apodo-${i+1}" class="apodo-input" placeholder="Apodo o frase (opcional)" maxlength="22">
+      </div>
+    </div>
+  `;
+  jugadoresForm.appendChild(div);
+}
+
+// Profe form
+const profeDiv = document.getElementById('profe-form');
+profeDiv.innerHTML = `
+  <div class="jugador-row profe">
+    <div class="jugador-row-grid">
+      <label class="photo-upload" for="photo-profe">
+        <span class="photo-upload-icon">🎓</span>
+        <input type="file" id="photo-profe" accept="image/*">
+      </label>
+      <div>
+        <input type="text" id="nombre-profe" placeholder="Nombre del/la profe" maxlength="16">
+        <input type="text" id="apodo-profe" class="apodo-input" placeholder="Materia o apodo (opcional)" maxlength="22">
+      </div>
+    </div>
+  </div>
+`;
+
+// Bindings
+function bindPhoto(inputId, targetSel) {
+  document.getElementById(inputId).addEventListener('change', e => {
+    const f = e.target.files[0]; if (!f) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const wrap = document.querySelector(targetSel + ' .jugador-photo-cancha');
+      wrap.innerHTML = `<img src="${ev.target.result}">`;
+      // También actualizar el preview circular del form
+      const formWrap = document.querySelector(`label[for="${inputId}"]`);
+      formWrap.innerHTML = `<img src="${ev.target.result}"><input type="file" id="${inputId}" accept="image/*">`;
+      // Re-bindear el listener
+      bindPhoto(inputId, targetSel);
+    };
+    reader.readAsDataURL(f);
+  });
+}
+for (let i = 1; i <= 5; i++) bindPhoto(`photo-${i}`, `#cancha-${i}`);
+bindPhoto('photo-profe', '#cancha-profe');
+
+function bindText(inputId, targetSel, cls, defaultText, upper=true) {
+  document.getElementById(inputId).addEventListener('input', e => {
+    const v = e.target.value;
+    const el = document.querySelector(targetSel + ' ' + cls);
+    if (el) el.textContent = upper ? (v.toUpperCase() || defaultText) : (v || defaultText);
+  });
+}
+for (let i = 1; i <= 5; i++) {
+  bindText(`nombre-${i}`, `#cancha-${i}`, '.jugador-nombre', `JUGADOR ${i}`);
+  bindText(`apodo-${i}`, `#cancha-${i}`, '.jugador-apodo', '');
+}
+bindText('nombre-profe', '#cancha-profe', '.jugador-nombre', 'PROFE DT');
+bindText('apodo-profe', '#cancha-profe', '.jugador-apodo', '');
+
+document.getElementById('aula').addEventListener('input', e => {
+  document.getElementById('output-aula').textContent = '★ ' + (e.target.value.toUpperCase() || 'TU AULA') + ' · FUT5 DEL MUNDIAL 2026 ★';
+});
+document.getElementById('equipo-nombre').addEventListener('input', e => {
+  document.getElementById('output-title').textContent = e.target.value.toUpperCase() || 'TU EQUIPO FC';
+});
+
+// Download
+document.getElementById('download').onclick = () => {
+  const node = document.getElementById('cancha-output');
+  const w = node.offsetWidth, h = node.offsetHeight;
+  const origCss = node.getAttribute('style') || '';
+  node.style.cssText = origCss + `;width:${w}px!important;height:${h}px!important;overflow:hidden!important;`;
+  html2canvas(node, {
+    backgroundColor: null, scale: 2, useCORS: true, allowTaint: true, logging: false,
+    width: w, height: h,
+    windowWidth: document.documentElement.clientWidth,
+    windowHeight: document.documentElement.clientHeight,
+    onclone: (doc) => {
+      const c = doc.getElementById('cancha-output');
+      if (c) { c.style.width = w + 'px'; c.style.height = h + 'px'; }
+    }
+  }).then(canvas => {
+    node.setAttribute('style', origCss);
+    const link = document.createElement('a');
+    const name = (document.getElementById('equipo-nombre').value || 'fut5-aula').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    link.download = `fut5-aula-${name}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  }).catch(err => {
+    node.setAttribute('style', origCss);
+    alert('Error: ' + err.message);
+  });
+};
+</script>
+</body>
+</html>

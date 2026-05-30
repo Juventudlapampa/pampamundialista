@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Figurita de Promo · Mundial 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --verde: #0d3b26;
+    --verde-fluo: #4ade80;
+    --gold: #d4a82e;
+    --gold-2: #f4cd60;
+    --crema: #f4ecd8;
+    --negro: #0a0a0a;
+    --rojo: #dc2626;
+    --azul: #2563eb;
+  }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--verde);
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(212,168,46,0.15), transparent 50%),
+      radial-gradient(circle at 80% 90%, rgba(74,222,128,0.1), transparent 50%);
+    min-height: 100vh;
+    color: var(--crema);
+    padding: 1.5rem 1rem;
+  }
+  .container { max-width: 1100px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 1.5rem; }
+  .header-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+  h1 {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-top: 0.3rem;
+    line-height: 1;
+  }
+  h1 span { color: var(--gold); }
+  .subtitle {
+    font-size: 0.95rem;
+    opacity: 0.85;
+    max-width: 650px;
+    margin: 0.6rem auto 0;
+    line-height: 1.4;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 2rem;
+    align-items: start;
+    margin-top: 1.5rem;
+  }
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .preview-col { order: -1; }
+  }
+
+  .panel {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(212,168,46,0.3);
+    border-radius: 12px;
+    padding: 1.4rem;
+  }
+  .panel-title {
+    font-family: 'Anton', sans-serif;
+    color: var(--gold);
+    font-size: 1.15rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 0.4rem;
+  }
+  .form-group { margin-bottom: 1rem; }
+  label {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--verde-fluo);
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  input[type="text"], select {
+    width: 100%;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid rgba(244,236,216,0.2);
+    color: var(--crema);
+    padding: 0.7rem 0.9rem;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1rem;
+  }
+  input:focus, select:focus { outline: none; border-color: var(--gold); }
+
+  .file-upload {
+    border: 2px dashed rgba(212,168,46,0.5);
+    border-radius: 10px;
+    padding: 1.2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .file-upload:hover { background: rgba(212,168,46,0.05); border-color: var(--gold); }
+  .file-upload input { display: none; }
+
+  .quick-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.4rem;
+  }
+  .quick-btn {
+    background: rgba(212,168,46,0.1);
+    border: 1px solid rgba(212,168,46,0.3);
+    color: var(--crema);
+    padding: 0.3rem 0.7rem;
+    border-radius: 5px;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .quick-btn:hover {
+    background: var(--gold);
+    color: var(--negro);
+  }
+
+  .tags-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+  .tag-row {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(244,236,216,0.1);
+    border-radius: 6px;
+    padding: 0.5rem;
+  }
+  .tag-row label {
+    font-size: 0.6rem;
+    margin-bottom: 0.2rem;
+  }
+  .tag-row input {
+    padding: 0.4rem;
+    font-size: 0.85rem;
+  }
+
+  .btn {
+    background: linear-gradient(135deg, var(--gold), var(--gold-2));
+    color: var(--negro);
+    border: none;
+    padding: 1rem 2rem;
+    font-family: 'Anton', sans-serif;
+    font-size: 1.05rem;
+    letter-spacing: 0.15em;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 100%;
+    text-transform: uppercase;
+    margin-top: 0.5rem;
+    transition: transform 0.15s;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .btn-secondary {
+    background: rgba(0,0,0,0.4);
+    color: var(--crema);
+    border: 1px solid var(--gold);
+  }
+
+  /* FIGURITA */
+  .preview-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    position: sticky;
+    top: 1rem;
+  }
+  .figurita {
+    width: 320px;
+    height: 448px; /* 5:7 fijo en px */
+    background: linear-gradient(160deg, var(--gold-2) 0%, var(--gold) 30%, #b8860b 100%);
+    border-radius: 16px;
+    padding: 14px;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    overflow: hidden;
+  }
+  .figurita::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.05) 10px, rgba(255,255,255,0.05) 11px);
+    pointer-events: none;
+  }
+  .fig-inner {
+    background: linear-gradient(180deg, #145c39 0%, #0d3b26 100%);
+    width: 100%;
+    height: 420px;
+    border-radius: 8px;
+    padding: 12px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+  }
+  .fig-inner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% -10%, rgba(212,168,46,0.3), transparent 60%);
+  }
+  .fig-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--gold);
+    font-family: 'Anton', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    z-index: 2;
+    position: relative;
+    text-transform: uppercase;
+  }
+  .fig-photo {
+    margin: 6px auto;
+    background: rgba(0,0,0,0.3);
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    z-index: 2;
+    width: 120px;  /* selfie cuadrada chica - foto carnet style */
+    height: 120px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--gold);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+  .fig-photo img { width: 100%; height: 100%; object-fit: cover; }
+  .fig-photo img { width: 100%; height: 100%; object-fit: cover; }
+  .fig-photo-placeholder { color: rgba(244,236,216,0.4); font-size: 3rem; }
+  .fig-info {
+    z-index: 2;
+    position: relative;
+    color: var(--crema);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .fig-name {
+    font-family: 'Anton', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    line-height: 1;
+    color: var(--gold);
+  }
+  .fig-cualidad-principal {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--verde-fluo);
+    margin-top: 4px;
+    text-transform: uppercase;
+    line-height: 1.3;
+  }
+  .fig-tags {
+    margin-top: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .fig-tag {
+    background: rgba(0,0,0,0.4);
+    padding: 4px 7px;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    border-left: 2px solid var(--gold);
+    line-height: 1.3;
+  }
+  .fig-tag-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.5rem;
+    color: var(--verde-fluo);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .fig-tag-text { color: var(--crema); margin-top: 1px; }
+  .fig-frase {
+    margin-top: auto;
+    padding-top: 6px;
+    font-style: italic;
+    font-size: 0.7rem;
+    color: rgba(244,236,216,0.85);
+    line-height: 1.3;
+    text-align: center;
+  }
+  .fig-frase::before {
+    content: '"';
+    color: var(--gold);
+    font-size: 1rem;
+    font-weight: 700;
+  }
+  .fig-frase::after {
+    content: '"';
+    color: var(--gold);
+    font-size: 1rem;
+    font-weight: 700;
+  }
+  .fig-bottom {
+    margin-top: 8px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.5rem;
+    letter-spacing: 0.25em;
+    color: rgba(244,236,216,0.5);
+    z-index: 2;
+    position: relative;
+    text-transform: uppercase;
+  }
+  .juv-watermark {
+    position: absolute;
+    bottom: 1px;
+    right: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.5rem;
+    color: rgba(13, 59, 38, 0.9);
+    letter-spacing: 0.1em;
+    z-index: 4;
+    pointer-events: none;
+    font-weight: 800;
+  }
+  .fig-pred {
+    background: linear-gradient(90deg, rgba(220,38,38,0.3), rgba(212,168,46,0.3));
+    border-left: 3px solid var(--rojo);
+    padding: 6px 8px;
+    margin-top: 6px;
+    border-radius: 4px;
+  }
+  .fig-pred-lab {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.5rem;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .fig-pred-text {
+    color: var(--crema);
+    font-size: 0.7rem;
+    margin-top: 1px;
+    line-height: 1.3;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="header-tag">Tu Figurita Personal · Mundial 2026</div>
+    <h1>FIGURITA DEL <span>GRUPO</span></h1>
+    <p class="subtitle">Armá la figurita de un compañero/a, hermano/a, amigo/a o vos mismo. Cualidades reales, foto estilo carnet, frase típica y "más probable que…". Para el curso, la familia, el equipo de fútbol 5.</p>
+  </header>
+
+  <div class="layout">
+    <div>
+      <div class="panel">
+        <div class="panel-title">📷 Datos básicos</div>
+        <div class="form-group">
+          <label>Foto</label>
+          <label class="file-upload" for="photo">
+            <div style="font-size:1.5rem;margin-bottom:0.3rem">📸</div>
+            <div>Subí una foto del personaje</div>
+            <input type="file" id="photo" accept="image/*">
+          </label>
+        </div>
+        <div class="form-group">
+          <label>Nombre o apodo</label>
+          <input type="text" id="name" maxlength="14" placeholder="Apellido o apodo">
+        </div>
+        <div class="form-group">
+          <label>Curso / Año / Grupo</label>
+          <input type="text" id="curso" maxlength="20" placeholder="Ej: 6° A · Promo 2026">
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:1rem">
+        <div class="panel-title">⭐ Cualidad principal</div>
+        <div class="form-group">
+          <label>Es famoso/a por...</label>
+          <input type="text" id="cualidad" maxlength="35" placeholder="Ej: Mejor chamuyero del curso">
+          <div class="quick-buttons" id="cualidad-quick"></div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:1rem">
+        <div class="panel-title">🏷 3 tags personales</div>
+        <p style="font-size:0.85rem;opacity:0.8;margin-bottom:0.8rem">Tres frases cortas que lo describan. Tipo: "Llega siempre tarde", "Vive en el celular", "Sabe de música".</p>
+        <div class="tags-grid">
+          <div class="tag-row">
+            <label>Tag 1</label>
+            <input type="text" id="tag1" maxlength="30" placeholder="Tag 1">
+          </div>
+          <div class="tag-row">
+            <label>Tag 2</label>
+            <input type="text" id="tag2" maxlength="30" placeholder="Tag 2">
+          </div>
+          <div class="tag-row">
+            <label>Tag 3</label>
+            <input type="text" id="tag3" maxlength="30" placeholder="Tag 3">
+          </div>
+        </div>
+        <div class="quick-buttons" id="tags-quick"></div>
+      </div>
+
+      <div class="panel" style="margin-top:1rem">
+        <div class="panel-title">💬 Frase típica</div>
+        <div class="form-group">
+          <label>Lo que más repite</label>
+          <input type="text" id="frase" maxlength="50" placeholder='Ej: "qué bardo loco"'>
+          <div class="quick-buttons" id="frases-quick"></div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:1rem">
+        <div class="panel-title">🔮 Más probable que...</div>
+        <div class="form-group">
+          <label>Predicción a 10 años</label>
+          <input type="text" id="prediccion" maxlength="55" placeholder="Ej: termine en cana o sea presidente">
+          <div class="quick-buttons" id="pred-quick"></div>
+        </div>
+        <button class="btn" id="download" style="margin-top:1rem">⬇ DESCARGAR FIGURITA</button>
+        <button class="btn btn-secondary" id="random" style="margin-top:0.5rem">🎲 Cargar ejemplo aleatorio</button>
+      </div>
+    </div>
+
+    <!-- PREVIEW -->
+    <div class="preview-col">
+      <div class="figurita" id="figurita">
+        <div class="fig-inner">
+          <div class="fig-top">
+            <span id="fig-curso">TU CURSO · PROMO 2026</span>
+            <span>★ ESPECIAL ★</span>
+          </div>
+          <div class="fig-photo">
+            <img id="fig-img" style="display:none">
+            <div class="fig-photo-placeholder" id="fig-placeholder">👤</div>
+          </div>
+          <div class="fig-info">
+            <div class="fig-name" id="fig-name">APELLIDO</div>
+            <div class="fig-cualidad-principal" id="fig-cualidad">★ CUALIDAD PRINCIPAL ★</div>
+            <div class="fig-tags">
+              <div class="fig-tag">
+                <div class="fig-tag-label">TAG #1</div>
+                <div class="fig-tag-text" id="fig-tag1">—</div>
+              </div>
+              <div class="fig-tag">
+                <div class="fig-tag-label">TAG #2</div>
+                <div class="fig-tag-text" id="fig-tag2">—</div>
+              </div>
+              <div class="fig-tag">
+                <div class="fig-tag-label">TAG #3</div>
+                <div class="fig-tag-text" id="fig-tag3">—</div>
+              </div>
+            </div>
+            <div class="fig-frase" id="fig-frase">SU FRASE TÍPICA</div>
+            <div class="fig-pred">
+              <div class="fig-pred-lab">★ Más probable que ★</div>
+              <div class="fig-pred-text" id="fig-pred">PREDICCIÓN A 10 AÑOS</div>
+            </div>
+          </div>
+          <div class="fig-bottom">★ MUNDIAL 2026 · TU FIGURITA ★</div>
+        </div>
+        <div class="juv-watermark">@juventud_lapampa</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const $ = id => document.getElementById(id);
+
+  const cualidadesEjemplo = [
+    'EL/LA QUE SIEMPRE LLEGA TARDE',
+    'MEJOR CHAMUYERO/A',
+    'EL ALMA DE LA FIESTA',
+    'EL/LA RESPONSABLE DEL GRUPO',
+    'EL/LA QUE NUNCA ESTUDIA Y APRUEBA',
+    'EL/LA PAYASO DEL CURSO',
+    'EL/LA QUE SE DUERME PRIMERO',
+    'AGUANTA MÁS BIRRA',
+    'EL/LA COMPAÑERO/A IDEAL',
+    'EL/LA QUE INVENTA TODO',
+    'EL/LA DRAMÁTICO DEL GRUPO',
+    'EL/LA SABE TODO',
+    'EL/LA INVISIBLE DEL CURSO',
+    'EL/LA RUTINA Y NADA MÁS',
+    'EL/LA QUE NUNCA SE OFENDE'
+  ];
+
+  const tagsEjemplo = [
+    'LLEGA TARDE A TODO',
+    'VIVE EN EL CELULAR',
+    'SE OLVIDA TODO',
+    'NUNCA TRAE EL CARNET',
+    'COPIÓN PROFESIONAL',
+    'CONTADOR DE CHISTES MALOS',
+    'INVENTOR DE EXCUSAS',
+    'EL ALMA DE LA FIESTA',
+    'VIVE PARA EL VIERNES',
+    'NO COME VERDURAS',
+    'TIENE OPINIÓN PARA TODO',
+    'NUNCA SE ENOJA',
+    'GENIO DE MATEMÁTICA',
+    'NULO PARA LOS DEPORTES',
+    'CAMPEÓN COMIENDO',
+    'BAILA HASTA EL HIMNO',
+    'CANTA TODO MAL',
+    'PIDE COMIDA AJENA',
+    'SIEMPRE ESTÁ DE BUENA',
+    'DRAMÁTICO/A POR NATURALEZA',
+    'OBSESIONADO/A CON EL FÚTBOL',
+    'FAN DE LAS SERIES',
+    'JURA QUE VA AL GIMNASIO',
+    'NO TIENE FOTOS BUENAS',
+    'TODOS LE DEBEN PLATA',
+    'PERDIÓ MIL CARGADORES',
+    'COLECCIONA REMERAS',
+    'AMA A SU MASCOTA',
+    'SE CONOCE TODOS LOS MEMES',
+    'CARÁCTER FUERTE',
+    'SIEMPRE VESTIDO/A IGUAL'
+  ];
+
+  const frasesEjemplo = [
+    'MAÑANA EMPIEZO EL GIMNASIO',
+    'TE JURO QUE ESTUDIÉ',
+    'NO ME QUEDA SALDO',
+    'BANCAME UN MINUTO',
+    'YO YA NO TOMO MÁS',
+    'LA SEMANA QUE VIENE EMPIEZO',
+    'NO ESCUCHÉ NADA',
+    'YO TE LO DIJE',
+    'NO ESTOY ENOJADO/A',
+    '¿QUÉ HAY DE COMER?',
+    'LO TENGO POR ALGÚN LADO',
+    'AHORA SALGO',
+    'ME OLVIDÉ',
+    'ESTOY MUERTO/A',
+    'TIPO QUE'
+  ];
+
+  const prediccionesEjemplo = [
+    'SE CASE PRIMERO QUE TODOS',
+    'SE VAYA A VIVIR AFUERA',
+    'SE HAGA FAMOSO/A EN TIKTOK',
+    'TENGA 4 HIJOS Y UN PERRO',
+    'SE COMPRE UNA QUINTA',
+    'NUNCA SE VAYA DE SU CIUDAD',
+    'SEA EL/LA MILLONARIO/A DEL GRUPO',
+    'ABRA SU PROPIO NEGOCIO',
+    'SIGA SOLTERO/A A LOS 40',
+    'TERMINE DE PROFE',
+    'SE HAGA YOUTUBER',
+    'GANE UN MUNDIAL DE FÚTBOL 5',
+    'SEA EL PRIMERO/A EN DESAPARECER DEL GRUPO',
+    'SE CONVIERTA EN EL/LA COSPLAYER OFICIAL',
+    'SE GANE LA LOTERÍA Y NO LE DIGA A NADIE',
+    'LE PONGA EL NOMBRE DE UN INTEGRANTE A SU HIJO',
+    'SE COMPRE 7 GATOS Y VIVA SOLO/A',
+    'SIGA CON SU NOVIO/A DEL SECUNDARIO',
+    'TERMINE DIRIGIENDO LA EMPRESA DEL PADRE'
+  ];
+
+  function setupQuickButtons(containerId, options, targetId) {
+    const cont = document.getElementById(containerId);
+    options.slice(0, 6).forEach(opt => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'quick-btn';
+      btn.textContent = opt.length > 25 ? opt.substring(0, 25) + '…' : opt;
+      btn.title = opt;
+      btn.onclick = () => {
+        document.getElementById(targetId).value = opt;
+        document.getElementById(targetId).dispatchEvent(new Event('input'));
+      };
+      cont.appendChild(btn);
+    });
+  }
+
+  setupQuickButtons('cualidad-quick', cualidadesEjemplo, 'cualidad');
+  setupQuickButtons('frases-quick', frasesEjemplo, 'frase');
+  setupQuickButtons('pred-quick', prediccionesEjemplo, 'prediccion');
+
+  // Tags quick (van rotando)
+  const tagsCont = document.getElementById('tags-quick');
+  function refreshTagsQuick() {
+    tagsCont.innerHTML = '';
+    const shuffled = [...tagsEjemplo].sort(() => Math.random() - 0.5).slice(0, 8);
+    shuffled.forEach(t => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'quick-btn';
+      btn.textContent = t.length > 22 ? t.substring(0, 22) + '…' : t;
+      btn.title = t;
+      btn.onclick = () => {
+        // Llenar el primer tag vacío, o el más corto, o el primero
+        const tags = ['tag1', 'tag2', 'tag3'].map(id => $(id));
+        const empty = tags.find(t => !t.value.trim());
+        const target = empty || tags[0];
+        target.value = t;
+        target.dispatchEvent(new Event('input'));
+      };
+      tagsCont.appendChild(btn);
+    });
+    // botón shuffle al final
+    const refresh = document.createElement('button');
+    refresh.type = 'button';
+    refresh.className = 'quick-btn';
+    refresh.style.background = 'rgba(74,222,128,0.2)';
+    refresh.style.borderColor = 'var(--verde-fluo)';
+    refresh.textContent = '🔄 Más sugerencias';
+    refresh.onclick = refreshTagsQuick;
+    tagsCont.appendChild(refresh);
+  }
+  refreshTagsQuick();
+
+  // Foto
+  $('photo').addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      $('fig-img').src = ev.target.result;
+      $('fig-img').style.display = 'block';
+      $('fig-placeholder').style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // Live updates
+  const bindings = [
+    ['name', 'fig-name', v => v.toUpperCase() || 'APELLIDO'],
+    ['curso', 'fig-curso', v => v.toUpperCase() || 'TU CURSO · PROMO 2026'],
+    ['cualidad', 'fig-cualidad', v => '★ ' + (v.toUpperCase() || 'CUALIDAD PRINCIPAL') + ' ★'],
+    ['tag1', 'fig-tag1', v => v.toUpperCase() || '—'],
+    ['tag2', 'fig-tag2', v => v.toUpperCase() || '—'],
+    ['tag3', 'fig-tag3', v => v.toUpperCase() || '—'],
+    ['frase', 'fig-frase', v => v.toUpperCase() || 'SU FRASE TÍPICA'],
+    ['prediccion', 'fig-pred', v => v.toUpperCase() || 'PREDICCIÓN A 10 AÑOS']
+  ];
+  bindings.forEach(([from, to, fn]) => {
+    $(from).addEventListener('input', () => $(to).textContent = fn($(from).value));
+  });
+
+  // Random
+  $('random').onclick = () => {
+    const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+    const nombres = ['EL COQUE', 'LA NEGRA', 'EL FLACO', 'LA SOLE', 'EL CHANGO', 'LA TINI', 'EL JOTA', 'LA LULA', 'EL TONI', 'LA CHUCK'];
+    $('name').value = pick(nombres);
+    $('cualidad').value = pick(cualidadesEjemplo);
+    const usados = new Set();
+    [['tag1'], ['tag2'], ['tag3']].forEach(([id]) => {
+      let t;
+      do { t = pick(tagsEjemplo); } while (usados.has(t));
+      usados.add(t);
+      $(id).value = t;
+    });
+    $('frase').value = pick(frasesEjemplo);
+    $('prediccion').value = pick(prediccionesEjemplo);
+    bindings.forEach(([from]) => $(from).dispatchEvent(new Event('input')));
+  };
+
+  // Download con forzado de dimensiones
+  $('download').onclick = () => {
+    const node = $('figurita');
+    const origCss = node.getAttribute('style') || '';
+    node.style.cssText = origCss +
+      ';width:320px!important;height:448px!important;max-width:320px!important;max-height:448px!important;overflow:hidden!important;box-sizing:border-box!important;';
+
+    html2canvas(node, {
+      backgroundColor: null,
+      scale: 3,
+      useCORS: true,
+      allowTaint: true,
+      logging: false,
+      width: 320,
+      height: 448,
+      windowWidth: document.documentElement.clientWidth,
+      windowHeight: document.documentElement.clientHeight,
+      onclone: (doc) => {
+        const c = doc.getElementById('figurita');
+        if (c) {
+          c.style.width = '320px';
+          c.style.height = '448px';
+          c.style.maxWidth = '320px';
+          c.style.maxHeight = '448px';
+          c.style.overflow = 'hidden';
+          c.style.boxSizing = 'border-box';
+        }
+      }
+    }).then(canvas => {
+      node.setAttribute('style', origCss);
+      const link = document.createElement('a');
+      const name = ($('name').value || 'figurita').toLowerCase().replace(/[^a-z0-9]/g,'-');
+      link.download = `figurita-promo-${name}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }).catch(err => {
+      node.setAttribute('style', origCss);
+      alert('Error al descargar: ' + err.message);
+    });
+  };
+</script>
+</body>
+</html>

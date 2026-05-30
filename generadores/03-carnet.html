@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carnet Mundial 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --azul: #0a1f3d;
+    --azul-2: #1e3a5f;
+    --dorado: #d4a82e;
+    --dorado-2: #f4cd60;
+    --crema: #f4ecd8;
+    --rojo: #c41e3a;
+    --negro: #000;
+  }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #060a14;
+    background-image:
+      radial-gradient(circle at 30% 20%, rgba(212,168,46,0.1), transparent 50%),
+      radial-gradient(circle at 70% 80%, rgba(196,30,58,0.08), transparent 50%);
+    min-height: 100vh;
+    color: var(--crema);
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  header { text-align: center; margin-bottom: 2rem; }
+  .header-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    color: var(--dorado);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  h1 {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  h1 span { color: var(--rojo); }
+  .layout {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 2rem;
+    max-width: 1100px;
+    width: 100%;
+  }
+  @media (max-width: 850px) { .layout { grid-template-columns: 1fr; } }
+
+  .panel {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(212,168,46,0.3);
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+  .panel-title {
+    font-family: 'Anton', sans-serif;
+    color: var(--dorado);
+    font-size: 1.2rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--dorado);
+    padding-bottom: 0.4rem;
+  }
+  .form-group { margin-bottom: 1rem; }
+  label {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--dorado);
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  input[type="text"], input[type="date"] {
+    width: 100%;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(244,236,216,0.2);
+    color: var(--crema);
+    padding: 0.7rem;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 1rem;
+  }
+  input:focus { outline: none; border-color: var(--dorado); }
+  .file-upload {
+    border: 2px dashed rgba(212,168,46,0.5);
+    border-radius: 10px;
+    padding: 1.2rem;
+    text-align: center;
+    cursor: pointer;
+  }
+  .file-upload:hover { background: rgba(212,168,46,0.05); }
+  .file-upload input { display: none; }
+
+  .btn {
+    background: linear-gradient(135deg, var(--dorado), var(--dorado-2));
+    color: var(--negro);
+    border: none;
+    padding: 1rem;
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 0.15em;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    text-transform: uppercase;
+    margin-top: 0.5rem;
+  }
+  .btn-secondary {
+    background: rgba(0,0,0,0.5);
+    color: var(--crema);
+    border: 1px solid rgba(212,168,46,0.4);
+  }
+
+  /* CARNET */
+  .carnet-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  .carnet {
+    width: 380px;
+    max-width: 100%;
+    height: 240px; /* ratio 1.586:1 fijo en px para html2canvas */
+    background: linear-gradient(135deg, #0a1f3d 0%, #1e3a5f 100%);
+    border-radius: 12px;
+    padding: 14px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+    border: 1px solid var(--dorado);
+    transition: background 0.4s ease;
+  }
+  @media (max-width: 420px) {
+    .carnet { width: 100%; height: 220px; }
+  }
+  .carnet-flag-big {
+    display: none;
+  }
+  /* Mini bandera CSS para el carnet */
+  .flag-block {
+    display: inline-block;
+    width: 28px;
+    height: 18px;
+    border: 1px solid rgba(0,0,0,0.4);
+    border-radius: 2px;
+    vertical-align: middle;
+    margin-right: 6px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  }
+  .flag-block.v {
+    background: linear-gradient(to right, var(--fc1) 33%, var(--fc2) 33% 66%, var(--fc3) 66%);
+  }
+  .flag-block.h {
+    background: linear-gradient(to bottom, var(--fc1) 33%, var(--fc2) 33% 66%, var(--fc3) 66%);
+  }
+  .carnet::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 80% 20%, rgba(212,168,46,0.2), transparent 40%),
+      repeating-linear-gradient(135deg, transparent 0px, transparent 8px, rgba(255,255,255,0.02) 8px, rgba(255,255,255,0.02) 16px);
+    pointer-events: none;
+  }
+  .carnet-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    z-index: 2;
+    position: relative;
+  }
+  .fifa-logo {
+    font-family: 'Anton', sans-serif;
+    color: var(--dorado);
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+  }
+  .copa-mundo {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    color: var(--crema);
+    letter-spacing: 0.2em;
+    text-align: right;
+    line-height: 1.2;
+  }
+  .carnet-body {
+    display: flex;
+    gap: 12px;
+    z-index: 2;
+    position: relative;
+    height: calc(100% - 60px);
+  }
+  .carnet-photo {
+    width: 90px;
+    height: 120px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 6px;
+    border: 2px solid var(--dorado);
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .carnet-photo img { width: 100%; height: 100%; object-fit: cover; }
+  .carnet-photo-empty { font-size: 2rem; opacity: 0.3; }
+  .carnet-info { flex: 1; min-width: 0; }
+  .carnet-row {
+    margin-bottom: 6px;
+  }
+  .carnet-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.5rem;
+    color: var(--dorado);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1px;
+  }
+  .carnet-value {
+    font-family: 'Anton', sans-serif;
+    font-size: 0.9rem;
+    color: var(--crema);
+    letter-spacing: 0.05em;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .carnet-value-big {
+    font-size: 1.25rem;
+    color: var(--dorado);
+  }
+  .carnet-footer {
+    position: absolute;
+    bottom: 8px;
+    left: 14px;
+    right: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    z-index: 2;
+  }
+  .carnet-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--dorado);
+    letter-spacing: 0.12em;
+    font-weight: 700;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  }
+  .carnet-trofeo {
+    display: none; /* sacado, quedaba feo */
+  }
+  .carnet-stripe {
+    position: absolute;
+    bottom: 32px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--rojo), var(--dorado), var(--rojo));
+    z-index: 2;
+  }
+  .juv-watermark {
+    position: absolute;
+    bottom: 3px;
+    right: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.5rem;
+    color: rgba(212, 168, 46, 0.85);
+    letter-spacing: 0.06em;
+    z-index: 5;
+    pointer-events: none;
+    font-weight: 700;
+  }
+  .countries-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="header-tag">Credencial Oficial Hincha · 2026</div>
+  <h1>TU <span>CARNET</span> MUNDIALISTA</h1>
+</header>
+
+<div class="layout">
+  <!-- FORM -->
+  <div class="panel">
+    <div class="panel-title">Datos del Hincha</div>
+    <div class="form-group">
+      <label>Foto</label>
+      <label class="file-upload" for="photo">
+        <div style="font-size:1.5rem">📸</div>
+        <div style="font-size:0.85rem">Subí tu foto</div>
+        <input type="file" id="photo" accept="image/*">
+      </label>
+    </div>
+    <div class="form-group">
+      <label>Nombre Completo</label>
+      <input type="text" id="name" placeholder="Tu nombre y apellido" maxlength="22">
+    </div>
+    <div class="form-group">
+      <label>País que bancás (48 selecciones Mundial 2026)</label>
+      <input type="text" id="country" placeholder="ARGENTINA" maxlength="22" list="paises-list">
+      <datalist id="paises-list"></datalist>
+    </div>
+    <div class="form-group">
+      <label>Fecha de Nacimiento</label>
+      <input type="date" id="dob">
+    </div>
+    <div class="form-group">
+      <label>Ciudad</label>
+      <input type="text" id="city" placeholder="Ej: SANTA ROSA, LA PAMPA" maxlength="28">
+    </div>
+
+    <div class="countries-row">
+      <button class="btn btn-secondary" id="random-id">🎲 ID nuevo</button>
+      <button class="btn" id="download">⬇ Descargar</button>
+    </div>
+  </div>
+
+  <!-- CARNET -->
+  <div class="carnet-wrap">
+    <div class="carnet" id="carnet">
+      <div class="carnet-header">
+        <div class="fifa-logo">★ CARNET OFICIAL DE HINCHA ★</div>
+        <div class="copa-mundo">MUNDIAL<br>2026</div>
+      </div>
+      <div class="carnet-body">
+        <div class="carnet-photo">
+          <img id="carnet-img" style="display:none">
+          <div class="carnet-photo-empty" id="carnet-placeholder">👤</div>
+        </div>
+        <div class="carnet-info">
+          <div class="carnet-row">
+            <div class="carnet-label">Nombre</div>
+            <div class="carnet-value" id="c-name">TU NOMBRE</div>
+          </div>
+          <div class="carnet-row">
+            <div class="carnet-label">Selección</div>
+            <div class="carnet-value carnet-value-big" id="c-country"><span class="flag-block h" id="c-flag-block"></span>ARGENTINA</div>
+          </div>
+          <div class="carnet-row">
+            <div class="carnet-label">Nacimiento</div>
+            <div class="carnet-value" id="c-dob">— / — / ——</div>
+          </div>
+          <div class="carnet-row">
+            <div class="carnet-label">Ciudad</div>
+            <div class="carnet-value" id="c-city">TU CIUDAD</div>
+          </div>
+        </div>
+      </div>
+      <div class="carnet-stripe"></div>
+      <div class="carnet-footer">
+        <div class="carnet-id" id="c-id">ID: WC-2026-840291</div>
+        <div class="carnet-trofeo">🏆</div>
+      </div>
+      <div class="juv-watermark">@juventud_lapampa</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const $ = id => document.getElementById(id);
+
+  $('photo').addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      $('carnet-img').src = ev.target.result;
+      $('carnet-img').style.display = 'block';
+      $('carnet-placeholder').style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // ========================================================================
+  // COLORES OFICIALES DE LAS 48 SELECCIONES DEL MUNDIAL 2026
+  // ========================================================================
+  const PAIS_COLORS = {
+    'CANADÁ':           { c1:'#FF0000', c2:'#FFFFFF', c3:'#FF0000', dir:'v', grad:['#FF0000','#FFFFFF','#C8102E'] },
+    'MÉXICO':           { c1:'#006847', c2:'#FFFFFF', c3:'#CE1126', dir:'v', grad:['#006847','#FFFFFF','#CE1126'] },
+    'ESTADOS UNIDOS':   { c1:'#B22234', c2:'#FFFFFF', c3:'#B22234', dir:'h', grad:['#B22234','#FFFFFF','#3C3B6E'] },
+    'CURAZAO':          { c1:'#002B7F', c2:'#F9E814', c3:'#002B7F', dir:'h', grad:['#002B7F','#F9E814','#002B7F'] },
+    'HAITÍ':            { c1:'#00209F', c2:'#D21034', c3:'#00209F', dir:'h', grad:['#00209F','#D21034','#00209F'] },
+    'PANAMÁ':           { c1:'#005AA7', c2:'#FFFFFF', c3:'#DA121A', dir:'h', grad:['#005AA7','#FFFFFF','#DA121A'] },
+    'ARGENTINA':        { c1:'#75AADB', c2:'#FFFFFF', c3:'#75AADB', dir:'h', grad:['#75AADB','#FFFFFF','#FFD700'] },
+    'BRASIL':           { c1:'#009C3B', c2:'#FFDF00', c3:'#002776', dir:'h', grad:['#009C3B','#FFDF00','#002776'] },
+    'COLOMBIA':         { c1:'#FCD116', c2:'#003893', c3:'#CE1126', dir:'h', grad:['#FCD116','#003893','#CE1126'] },
+    'ECUADOR':          { c1:'#FFDD00', c2:'#0072CE', c3:'#EF3340', dir:'h', grad:['#FFDD00','#0072CE','#EF3340'] },
+    'PARAGUAY':         { c1:'#D52B1E', c2:'#FFFFFF', c3:'#0038A8', dir:'h', grad:['#D52B1E','#FFFFFF','#0038A8'] },
+    'URUGUAY':          { c1:'#FFFFFF', c2:'#0038A8', c3:'#FFFFFF', dir:'h', grad:['#0038A8','#FFFFFF','#FCD116'] },
+    'AUSTRALIA':        { c1:'#012169', c2:'#012169', c3:'#E4002B', dir:'h', grad:['#012169','#FFFFFF','#E4002B'] },
+    'ARABIA SAUDITA':   { c1:'#006C35', c2:'#006C35', c3:'#FFFFFF', dir:'h', grad:['#006C35','#FFFFFF','#006C35'] },
+    'CATAR':            { c1:'#FFFFFF', c2:'#8A1538', c3:'#8A1538', dir:'v', grad:['#FFFFFF','#8A1538','#8A1538'] },
+    'IRAK':             { c1:'#CE1126', c2:'#FFFFFF', c3:'#000000', dir:'h', grad:['#CE1126','#FFFFFF','#000000'] },
+    'IRÁN':             { c1:'#239F40', c2:'#FFFFFF', c3:'#DA0000', dir:'h', grad:['#239F40','#FFFFFF','#DA0000'] },
+    'JAPÓN':            { c1:'#FFFFFF', c2:'#BC002D', c3:'#FFFFFF', dir:'h', grad:['#BC002D','#FFFFFF','#000000'] },
+    'JORDANIA':         { c1:'#000000', c2:'#FFFFFF', c3:'#007A3D', dir:'h', grad:['#000000','#FFFFFF','#CE1126'] },
+    'COREA DEL SUR':    { c1:'#FFFFFF', c2:'#003478', c3:'#C60C30', dir:'h', grad:['#003478','#FFFFFF','#C60C30'] },
+    'UZBEKISTÁN':       { c1:'#1EB53A', c2:'#FFFFFF', c3:'#0099B5', dir:'h', grad:['#0099B5','#FFFFFF','#1EB53A'] },
+    'NUEVA ZELANDA':    { c1:'#012169', c2:'#FFFFFF', c3:'#C8102E', dir:'h', grad:['#012169','#FFFFFF','#C8102E'] },
+    'ARGELIA':          { c1:'#006233', c2:'#FFFFFF', c3:'#D21034', dir:'v', grad:['#006233','#FFFFFF','#D21034'] },
+    'CABO VERDE':       { c1:'#003893', c2:'#FFFFFF', c3:'#CF2027', dir:'h', grad:['#003893','#FFFFFF','#CF2027'] },
+    'CONGO RD':         { c1:'#007FFF', c2:'#F7D618', c3:'#CE1021', dir:'h', grad:['#007FFF','#F7D618','#CE1021'] },
+    'COSTA DE MARFIL':  { c1:'#F77F00', c2:'#FFFFFF', c3:'#009E60', dir:'v', grad:['#F77F00','#FFFFFF','#009E60'] },
+    'EGIPTO':           { c1:'#CE1126', c2:'#FFFFFF', c3:'#000000', dir:'h', grad:['#CE1126','#FFFFFF','#000000'] },
+    'GHANA':            { c1:'#CE1126', c2:'#FCD116', c3:'#006B3F', dir:'h', grad:['#CE1126','#FCD116','#006B3F'] },
+    'MARRUECOS':        { c1:'#C1272D', c2:'#C1272D', c3:'#006233', dir:'h', grad:['#C1272D','#006233','#FFFFFF'] },
+    'SENEGAL':          { c1:'#00853F', c2:'#FDEF42', c3:'#E31B23', dir:'v', grad:['#00853F','#FDEF42','#E31B23'] },
+    'SUDÁFRICA':        { c1:'#007A4D', c2:'#FFB81C', c3:'#000000', dir:'h', grad:['#007A4D','#FFB81C','#DE3831'] },
+    'TÚNEZ':            { c1:'#E70013', c2:'#E70013', c3:'#FFFFFF', dir:'h', grad:['#E70013','#FFFFFF','#E70013'] },
+    'ALEMANIA':         { c1:'#000000', c2:'#DD0000', c3:'#FFCE00', dir:'h', grad:['#000000','#DD0000','#FFCE00'] },
+    'AUSTRIA':          { c1:'#ED2939', c2:'#FFFFFF', c3:'#ED2939', dir:'h', grad:['#ED2939','#FFFFFF','#ED2939'] },
+    'BÉLGICA':          { c1:'#000000', c2:'#FAE042', c3:'#ED2939', dir:'v', grad:['#000000','#FAE042','#ED2939'] },
+    'BOSNIA Y HERZEGOVINA': { c1:'#002F6C', c2:'#FECB00', c3:'#002F6C', dir:'h', grad:['#002F6C','#FECB00','#FFFFFF'] },
+    'CROACIA':          { c1:'#FF0000', c2:'#FFFFFF', c3:'#171796', dir:'h', grad:['#FF0000','#FFFFFF','#171796'] },
+    'ESCOCIA':          { c1:'#005EB8', c2:'#005EB8', c3:'#FFFFFF', dir:'h', grad:['#005EB8','#FFFFFF','#005EB8'] },
+    'ESPAÑA':           { c1:'#AA151B', c2:'#F1BF00', c3:'#AA151B', dir:'h', grad:['#AA151B','#F1BF00','#000000'] },
+    'FRANCIA':          { c1:'#0055A4', c2:'#FFFFFF', c3:'#EF4135', dir:'v', grad:['#0055A4','#FFFFFF','#EF4135'] },
+    'INGLATERRA':       { c1:'#FFFFFF', c2:'#CE1124', c3:'#FFFFFF', dir:'h', grad:['#FFFFFF','#CE1124','#012169'] },
+    'NORUEGA':          { c1:'#EF2B2D', c2:'#FFFFFF', c3:'#002868', dir:'h', grad:['#EF2B2D','#FFFFFF','#002868'] },
+    'PAÍSES BAJOS':     { c1:'#AE1C28', c2:'#FFFFFF', c3:'#21468B', dir:'h', grad:['#FF6600','#FFFFFF','#21468B'] },
+    'PORTUGAL':         { c1:'#006600', c2:'#006600', c3:'#FF0000', dir:'v', grad:['#006600','#FF0000','#FFD700'] },
+    'REPÚBLICA CHECA':  { c1:'#FFFFFF', c2:'#D7141A', c3:'#11457E', dir:'h', grad:['#FFFFFF','#D7141A','#11457E'] },
+    'SUECIA':           { c1:'#006AA7', c2:'#006AA7', c3:'#FECC00', dir:'h', grad:['#006AA7','#FECC00','#006AA7'] },
+    'SUIZA':            { c1:'#FF0000', c2:'#FFFFFF', c3:'#FF0000', dir:'h', grad:['#FF0000','#FFFFFF','#FF0000'] },
+    'TURQUÍA':          { c1:'#E30A17', c2:'#E30A17', c3:'#FFFFFF', dir:'h', grad:['#E30A17','#FFFFFF','#E30A17'] }
+  };
+  function hexLuminance(hex) {
+    const r = parseInt(hex.slice(1,3), 16) / 255;
+    const g = parseInt(hex.slice(3,5), 16) / 255;
+    const b = parseInt(hex.slice(5,7), 16) / 255;
+    return 0.299 * r + 0.587 * g + 0.114 * b;
+  }
+  function applyPaisColors(countryStr) {
+    const nombre = countryStr.replace(/[\u{1F1E6}-\u{1F1FF}]/gu, '').trim().toUpperCase();
+    const colors = PAIS_COLORS[nombre];
+    if (!colors) return;
+    const carnet = document.getElementById('carnet');
+    carnet.style.background = `linear-gradient(135deg, ${colors.grad[0]} 0%, ${colors.grad[1]} 50%, ${colors.grad[2]} 100%)`;
+    // Update country text + flag CSS block
+    $('c-country').innerHTML = `<span class="flag-block ${colors.dir}" style="--fc1:${colors.c1};--fc2:${colors.c2};--fc3:${colors.c3}"></span>${nombre}`;
+    const wm = document.querySelector('.juv-watermark');
+    if (wm) {
+      const luma = hexLuminance(colors.grad[1]);
+      wm.style.color = luma > 0.5 ? 'rgba(13,59,38,0.95)' : 'rgba(212,168,46,0.95)';
+    }
+  }
+
+  $('name').oninput = e => $('c-name').textContent = e.target.value.toUpperCase() || 'TU NOMBRE';
+  $('country').oninput = e => {
+    const v = e.target.value || 'ARGENTINA';
+    applyPaisColors(v);
+  };
+  $('city').oninput = e => $('c-city').textContent = e.target.value.toUpperCase() || 'TU CIUDAD';
+  $('dob').oninput = e => {
+    if (!e.target.value) { $('c-dob').textContent = '— / — / ——'; return; }
+    const [y,m,d] = e.target.value.split('-');
+    $('c-dob').textContent = `${d} / ${m} / ${y}`;
+  };
+
+  function randomId() {
+    const n = Math.floor(Math.random() * 900000) + 100000;
+    $('c-id').textContent = `ID: WC-2026-${n}`;
+  }
+  $('random-id').onclick = randomId;
+
+  // Poblar el datalist con los 48 países del mapa
+  const datalist = document.getElementById('paises-list');
+  Object.keys(PAIS_COLORS).forEach(p => {
+    const o = document.createElement('option');
+    o.value = p;
+    datalist.appendChild(o);
+  });
+
+  // Aplicar Argentina por defecto
+  applyPaisColors('ARGENTINA');
+
+  $('download').onclick = () => {
+    const carnet = $('carnet');
+    const w = carnet.offsetWidth, h = carnet.offsetHeight;
+    const origCss = carnet.getAttribute('style') || '';
+    carnet.style.cssText = origCss +
+      `;width:${w}px!important;height:${h}px!important;max-width:${w}px!important;max-height:${h}px!important;overflow:hidden!important;box-sizing:border-box!important;`;
+
+    html2canvas(carnet, {
+      backgroundColor: null,
+      scale: 3,
+      useCORS: true,
+      allowTaint: true,
+      logging: false,
+      width: w,
+      height: h,
+      windowWidth: document.documentElement.clientWidth,
+      windowHeight: document.documentElement.clientHeight,
+      onclone: (doc) => {
+        const c = doc.getElementById('carnet');
+        if (c) {
+          c.style.width = w + 'px';
+          c.style.height = h + 'px';
+          c.style.maxWidth = w + 'px';
+          c.style.maxHeight = h + 'px';
+          c.style.overflow = 'hidden';
+          c.style.boxSizing = 'border-box';
+        }
+      }
+    }).then(canvas => {
+      carnet.setAttribute('style', origCss);
+      const link = document.createElement('a');
+      const name = ($('name').value || 'carnet').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      link.download = `carnet-mundial-2026-${name}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }).catch(err => {
+      carnet.setAttribute('style', origCss);
+      alert('Error: ' + err.message);
+    });
+  };
+</script>
+</body>
+</html>
