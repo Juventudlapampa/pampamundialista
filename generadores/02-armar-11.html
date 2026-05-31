@@ -197,11 +197,11 @@
     aspect-ratio: 2/3;
     max-width: 600px;
     margin: 0 auto;
-    background: linear-gradient(180deg, #1a7a4a 0%, #0d4a2c 100%);
-    background-image: repeating-linear-gradient(0deg, transparent, transparent 8%, rgba(255,255,255,0.04) 8%, rgba(255,255,255,0.04) 16%);
-    border-radius: 8px;
+    background: #147a3e;
+    border-radius: 10px;
     overflow: hidden;
-    border: 3px solid rgba(255,255,255,0.4);
+    border: 3px solid rgba(255,255,255,0.55);
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.35);
   }
   .cancha svg {
     position: absolute;
@@ -209,42 +209,63 @@
     width: 100%;
     height: 100%;
     pointer-events: none;
+    z-index: 1;
   }
   .slot {
     position: absolute;
-    width: 12%;
-    aspect-ratio: 1;
+    width: 14%;
     transform: translate(-50%, -50%);
-    background: rgba(0,0,0,0.5);
-    border: 2px dashed rgba(244,236,216,0.4);
-    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     cursor: pointer;
+    z-index: 4;
+    transition: transform 0.15s;
+  }
+  .slot:hover { transform: translate(-50%, -50%) scale(1.09); }
+  .tok {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s;
+    background-image: radial-gradient(circle at 36% 28%, rgba(255,255,255,0.55), rgba(255,255,255,0) 46%);
+    border: 2px solid #fff;
+    box-shadow: 0 3px 7px rgba(0,0,0,0.5);
   }
-  .slot:hover {
-    background: rgba(212,168,46,0.3);
-    border-color: var(--dorado);
+  .tok.empty {
+    background-color: rgba(0,0,0,0.34) !important;
+    background-image: none;
+    border: 2px dashed rgba(255,255,255,0.6);
+    box-shadow: none;
   }
-  .slot.filled {
-    background: linear-gradient(135deg, var(--dorado), var(--dorado-2));
-    border: 2px solid var(--crema);
-    color: var(--negro);
-  }
-  .slot-name {
+  .tok-pos {
     font-family: 'Anton', sans-serif;
-    font-size: 0.55rem;
-    text-align: center;
-    letter-spacing: 0.05em;
-    line-height: 1.1;
-    padding: 2px;
-    word-break: break-word;
+    font-size: 0.6rem;
+    color: #fff;
+    letter-spacing: 0.02em;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.55);
   }
-  .slot-empty { font-size: 1.2rem; color: rgba(244,236,216,0.5); }
+  .tok.empty .tok-pos { color: rgba(255,255,255,0.75); font-size: 1.05rem; }
+  .slot-lbl {
+    margin-top: 3px;
+    max-width: 160%;
+    background: rgba(8,20,14,0.88);
+    color: #fff;
+    font-family: 'Anton', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    padding: 1px 6px;
+    border-radius: 6px;
+    white-space: nowrap;
+    border: 1px solid rgba(212,168,46,0.55);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  }
   .badge-formacion {
     position: absolute;
+    z-index: 6;
     top: 12px;
     right: 12px;
     background: rgba(0,0,0,0.7);
@@ -452,10 +473,30 @@
           <div class="cancha" id="cancha-arg">
             <div class="badge-formacion" id="badge-form-arg">4-3-3</div>
             <svg viewBox="0 0 100 150" preserveAspectRatio="none">
-              <line x1="0" y1="75" x2="100" y2="75" stroke="rgba(255,255,255,0.4)" stroke-width="0.4"/>
-              <circle cx="50" cy="75" r="9" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="0.4"/>
-              <rect x="22" y="0" width="56" height="18" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="0.4"/>
-              <rect x="22" y="132" width="56" height="18" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="0.4"/>
+              <defs>
+                <linearGradient id="grass-arg" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#23a558"/><stop offset="0.5" stop-color="#1a934c"/><stop offset="1" stop-color="#0f7e3f"/>
+                </linearGradient>
+                <radialGradient id="vig-arg" cx="0.5" cy="0.42" r="0.72">
+                  <stop offset="0.55" stop-color="#000000" stop-opacity="0"/><stop offset="1" stop-color="#000000" stop-opacity="0.42"/>
+                </radialGradient>
+              </defs>
+              <rect x="0" y="0" width="100" height="150" fill="url(#grass-arg)"/>
+              <g fill="#ffffff" opacity="0.06"><rect x="0" y="0" width="100" height="15"/><rect x="0" y="30" width="100" height="15"/><rect x="0" y="60" width="100" height="15"/><rect x="0" y="90" width="100" height="15"/><rect x="0" y="120" width="100" height="15"/></g>
+              <rect x="0" y="0" width="100" height="150" fill="url(#vig-arg)"/>
+              <g fill="none" stroke="#ffffff" stroke-opacity="0.72" stroke-width="0.5" stroke-linecap="round">
+                <rect x="2.5" y="2.5" width="95" height="145"/>
+                <line x1="2.5" y1="75" x2="97.5" y2="75"/>
+                <circle cx="50" cy="75" r="9"/>
+                <rect x="22" y="2.5" width="56" height="17.5"/><rect x="22" y="130" width="56" height="17.5"/>
+                <rect x="37" y="2.5" width="26" height="7"/><rect x="37" y="140.5" width="26" height="7"/>
+                <path d="M41 20 Q50 26 59 20"/><path d="M41 130 Q50 124 59 130"/>
+                <path d="M2.5 6 Q2.5 2.5 6 2.5"/><path d="M94 2.5 Q97.5 2.5 97.5 6"/><path d="M2.5 144 Q2.5 147.5 6 147.5"/><path d="M94 147.5 Q97.5 147.5 97.5 144"/>
+              </g>
+              <g fill="#ffffff" fill-opacity="0.85">
+                <circle cx="50" cy="75" r="0.9"/><circle cx="50" cy="13.5" r="0.9"/><circle cx="50" cy="136.5" r="0.9"/>
+                <rect x="42" y="0.5" width="16" height="2"/><rect x="42" y="147.5" width="16" height="2"/>
+              </g>
             </svg>
           </div>
         </div>
@@ -512,10 +553,30 @@
           <div class="cancha" id="cancha-ideal">
             <div class="badge-formacion" id="badge-form-ideal">4-3-3</div>
             <svg viewBox="0 0 100 150" preserveAspectRatio="none">
-              <line x1="0" y1="75" x2="100" y2="75" stroke="rgba(255,255,255,0.4)" stroke-width="0.4"/>
-              <circle cx="50" cy="75" r="9" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="0.4"/>
-              <rect x="22" y="0" width="56" height="18" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="0.4"/>
-              <rect x="22" y="132" width="56" height="18" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="0.4"/>
+              <defs>
+                <linearGradient id="grass-ideal" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#23a558"/><stop offset="0.5" stop-color="#1a934c"/><stop offset="1" stop-color="#0f7e3f"/>
+                </linearGradient>
+                <radialGradient id="vig-ideal" cx="0.5" cy="0.42" r="0.72">
+                  <stop offset="0.55" stop-color="#000000" stop-opacity="0"/><stop offset="1" stop-color="#000000" stop-opacity="0.42"/>
+                </radialGradient>
+              </defs>
+              <rect x="0" y="0" width="100" height="150" fill="url(#grass-ideal)"/>
+              <g fill="#ffffff" opacity="0.06"><rect x="0" y="0" width="100" height="15"/><rect x="0" y="30" width="100" height="15"/><rect x="0" y="60" width="100" height="15"/><rect x="0" y="90" width="100" height="15"/><rect x="0" y="120" width="100" height="15"/></g>
+              <rect x="0" y="0" width="100" height="150" fill="url(#vig-ideal)"/>
+              <g fill="none" stroke="#ffffff" stroke-opacity="0.72" stroke-width="0.5" stroke-linecap="round">
+                <rect x="2.5" y="2.5" width="95" height="145"/>
+                <line x1="2.5" y1="75" x2="97.5" y2="75"/>
+                <circle cx="50" cy="75" r="9"/>
+                <rect x="22" y="2.5" width="56" height="17.5"/><rect x="22" y="130" width="56" height="17.5"/>
+                <rect x="37" y="2.5" width="26" height="7"/><rect x="37" y="140.5" width="26" height="7"/>
+                <path d="M41 20 Q50 26 59 20"/><path d="M41 130 Q50 124 59 130"/>
+                <path d="M2.5 6 Q2.5 2.5 6 2.5"/><path d="M94 2.5 Q97.5 2.5 97.5 6"/><path d="M2.5 144 Q2.5 147.5 6 147.5"/><path d="M94 147.5 Q97.5 147.5 97.5 144"/>
+              </g>
+              <g fill="#ffffff" fill-opacity="0.85">
+                <circle cx="50" cy="75" r="0.9"/><circle cx="50" cy="13.5" r="0.9"/><circle cx="50" cy="136.5" r="0.9"/>
+                <rect x="42" y="0.5" width="16" height="2"/><rect x="42" y="147.5" width="16" height="2"/>
+              </g>
             </svg>
           </div>
         </div>
@@ -732,6 +793,7 @@
   // ========================================================================
   // RENDER
   // ========================================================================
+  const POSCOLOR = { POR:'#f59e0b', DEF:'#3b82f6', MED:'#22c55e', DEL:'#ef4444' };
   function renderCancha(modo) {
     const cancha = document.getElementById('cancha-' + modo);
     cancha.querySelectorAll('.slot').forEach(s => s.remove());
@@ -746,9 +808,10 @@
         el.classList.add('filled');
         const j = state[modo].pool[player];
         const lastName = j.n.split(' ').slice(-1)[0];
-        el.innerHTML = `<div class="slot-name">${lastName}</div>`;
+        const pc = POSCOLOR[slot.pos] || '#6CACE4';
+        el.innerHTML = `<div class="tok" style="background-color:${pc}"><span class="tok-pos">${slot.pos}</span></div><div class="slot-lbl">${lastName}</div>`;
       } else {
-        el.innerHTML = `<div class="slot-empty">+</div>`;
+        el.innerHTML = `<div class="tok empty"><span class="tok-pos">+</span></div>`;
       }
       el.addEventListener('click', () => openModal(modo, i, slot.pos));
       cancha.appendChild(el);
