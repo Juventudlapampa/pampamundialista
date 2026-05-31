@@ -18,6 +18,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="../pampa-share.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
@@ -461,6 +462,8 @@
       </div>
 
       <button class="btn" id="download">⬇ Descargar Figurita</button>
+      <button class="btn" id="download-story" style="margin-top:0.5rem;background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff">📲 Descargar para HISTORIA (9:16)</button>
+      <button class="btn" id="share-fig" style="margin-top:0.5rem;background:linear-gradient(135deg,#22c55e,#16a34a);color:#04210f">🔗 Compartir</button>
     </div>
 
     <!-- PREVIEW -->
@@ -692,7 +695,6 @@
         }
       }
     }).then(canvas => {
-      // Restaurar el style original
       node.setAttribute('style', origCss);
       const link = document.createElement('a');
       const name = ($('name').value || 'figurita').toLowerCase().replace(/[^a-z0-9]+/g, '-');
@@ -702,6 +704,69 @@
     }).catch(err => {
       node.setAttribute('style', origCss);
       alert('Error al descargar: ' + err.message);
+    });
+  });
+
+  // ===== Reutilizable: captura la figurita y devuelve el canvas =====
+  function captureFigCanvas() {
+    const node = document.getElementById('figurita');
+    const origCss = node.getAttribute('style') || '';
+    node.style.cssText = origCss + ';width:320px!important;height:448px!important;max-width:320px!important;max-height:448px!important;overflow:hidden!important;box-sizing:border-box!important;';
+    return html2canvas(node, { backgroundColor:null, scale:3, useCORS:true, logging:false, allowTaint:true, width:320, height:448,
+      windowWidth:document.documentElement.clientWidth, windowHeight:document.documentElement.clientHeight,
+      onclone:(doc)=>{ const c=doc.getElementById('figurita'); if(c){c.style.width='320px';c.style.height='448px';c.style.maxWidth='320px';c.style.maxHeight='448px';c.style.overflow='hidden';c.style.boxSizing='border-box';} const p=doc.querySelector('.fig-photo'); if(p){p.style.cssText+=';width:240px!important;height:240px!important;flex:0 0 240px!important;';} }
+    }).then(canvas => { node.setAttribute('style', origCss); return canvas; });
+  }
+
+  // ===== Story 9:16 (1080x1920) con marca Pampa Juega =====
+  function buildStory(cardCanvas) {
+    const SW=1080, SH=1920, st=document.createElement('canvas'); st.width=SW; st.height=SH;
+    const g=st.getContext('2d');
+    const grad=g.createLinearGradient(0,0,SW,SH); grad.addColorStop(0,'#081b10'); grad.addColorStop(1,'#0d3b26');
+    g.fillStyle=grad; g.fillRect(0,0,SW,SH);
+    // halos
+    g.fillStyle='rgba(212,168,46,0.10)'; g.beginPath(); g.arc(180,260,300,0,7); g.fill();
+    g.beginPath(); g.arc(900,1700,360,0,7); g.fillStyle='rgba(74,222,128,0.08)'; g.fill();
+    // titulo arriba
+    g.textAlign='center'; g.fillStyle='#d4a82e'; g.font='bold 46px Arial';
+    g.fillText('PAMPA JUEGA', SW/2, 150);
+    g.fillStyle='rgba(244,236,216,0.85)'; g.font='28px Arial';
+    g.fillText('MI FIGURITA DEL MUNDIAL 2026', SW/2, 200);
+    // card centrada
+    const cw=720, ch=cw*cardCanvas.height/cardCanvas.width, cx=(SW-cw)/2, cy=290;
+    g.save(); g.shadowColor='rgba(0,0,0,0.55)'; g.shadowBlur=40; g.shadowOffsetY=18;
+    g.drawImage(cardCanvas, cx, cy, cw, ch); g.restore();
+    // pie
+    g.fillStyle='#f4cd60'; g.font='bold 34px Arial';
+    g.fillText('Armá la tuya gratis 👇', SW/2, cy+ch+90);
+    g.fillStyle='rgba(244,236,216,0.9)'; g.font='26px Arial';
+    g.fillText('juventudlapampa.github.io/pampa-juega', SW/2, cy+ch+140);
+    g.fillStyle='#4ade80'; g.font='bold 30px Arial';
+    g.fillText('@pampajuega · #DesafioPampaJuega', SW/2, cy+ch+200);
+    return st;
+  }
+
+  $('download-story').addEventListener('click', () => {
+    captureFigCanvas().then(card => {
+      const story = buildStory(card);
+      const link = document.createElement('a');
+      const name = ($('name').value || 'figurita').toLowerCase().replace(/[^a-z0-9]+/g,'-');
+      link.download = `historia-figurita-${name}.png`;
+      link.href = story.toDataURL('image/png'); link.click();
+    }).catch(e=>alert('Error: '+e.message));
+  });
+
+  $('share-fig').addEventListener('click', () => {
+    const txt = `🃏 Me armé mi figurita del Mundial 2026 en Pampa Juega. Armá la tuya gratis 👉 juventudlapampa.github.io/pampa-juega · @pampajuega`;
+    captureFigCanvas().then(card => {
+      card.toBlob(blob => {
+        const file = new File([blob], 'mi-figurita.png', {type:'image/png'});
+        if (navigator.canShare && navigator.canShare({files:[file]})) {
+          navigator.share({ files:[file], text:txt, title:'Mi Figurita · Pampa Juega' }).catch(()=>{});
+        } else if (navigator.share) { navigator.share({ text:txt, title:'Pampa Juega' }).catch(()=>{}); }
+        else if (navigator.clipboard) { navigator.clipboard.writeText(txt).then(()=>alert('¡Texto copiado! Descargá la imagen y subila etiquetando a @pampajuega'),()=>{}); }
+        else alert('Descargá la imagen y subila etiquetando a @pampajuega');
+      });
     });
   });
 </script>

@@ -227,6 +227,30 @@
   .ranking-item { display: grid; grid-template-columns: 35px 1fr auto; gap: 0.8rem; padding: 0.6rem 1rem; border-bottom: 1px solid rgba(244,236,216,0.1); align-items: center; }
   .rank-n { font-family: 'Anton', sans-serif; color: var(--gold); }
   .rank-time { font-family: 'JetBrains Mono', monospace; color: var(--verde); font-weight: 700; }
+
+  /* ===== ESCENA INMERSIVA ===== */
+  #screen-game.shake { animation: shk 0.3s; }
+  @keyframes shk { 0%,100%{transform:translate(0,0)} 20%{transform:translate(-6px,2px)} 40%{transform:translate(6px,-2px)} 60%{transform:translate(-4px,1px)} 80%{transform:translate(4px,-1px)} }
+  .scene { position:relative; height:170px; border-radius:14px; overflow:hidden; margin-bottom:1rem; border:2px solid rgba(212,168,46,0.3); box-shadow: inset 0 0 50px rgba(0,0,0,0.6); }
+  .scene-room { position:absolute; inset:0; }
+  .scene-floor { position:absolute; left:0; right:0; bottom:0; height:38%; }
+  .scene-label { position:absolute; left:10px; bottom:8px; font-family:'JetBrains Mono',monospace; font-size:0.62rem; letter-spacing:0.18em; color:rgba(244,236,216,0.85); text-shadow:0 1px 3px #000; text-transform:uppercase; z-index:3; }
+  .scene-obj { position:absolute; font-size:2.4rem; filter:drop-shadow(0 3px 5px rgba(0,0,0,0.6)); z-index:2; }
+  .scene-glow { position:absolute; inset:0; background:radial-gradient(circle at 50% 35%, rgba(212,168,46,0.18), transparent 60%); z-index:1; pointer-events:none; animation:flick 4s infinite; }
+  @keyframes flick { 0%,100%{opacity:0.7} 45%{opacity:1} 70%{opacity:0.55} }
+  .locker { position:absolute; top:14px; width:34px; height:80px; border-radius:4px 4px 0 0; background:linear-gradient(180deg,#243a4d,#16252f); border:1px solid rgba(0,0,0,0.4); }
+  .locker::after { content:''; position:absolute; top:30px; left:50%; transform:translateX(-50%); width:4px; height:4px; border-radius:50%; background:#d4a82e; }
+  .door { position:absolute; top:18px; left:50%; transform:translateX(-50%); width:64px; height:118px; border-radius:8px 8px 0 0; background:linear-gradient(180deg,#3a2417,#241308); border:3px solid #1a0d04; z-index:2; transition:transform 0.9s cubic-bezier(.6,0,.2,1); transform-origin:left center; }
+  .door.open { transform:translateX(-50%) perspective(400px) rotateY(-78deg); }
+  .door::after { content:'🔒'; position:absolute; top:52px; right:8px; font-size:1rem; }
+  .door.open::after { content:'🔓'; }
+
+  /* transición de puerta entre acertijos */
+  #door-wipe { position:fixed; inset:0; background:linear-gradient(180deg,#1a0d04,#3a2417); z-index:999; transform:scaleY(0); transform-origin:top; transition:transform 0.35s ease; display:flex; align-items:center; justify-content:center; pointer-events:none; }
+  #door-wipe.on { transform:scaleY(1); }
+  #door-wipe span { font-size:3rem; opacity:0; transition:opacity 0.2s 0.1s; }
+  #door-wipe.on span { opacity:1; }
+  .snd-btn { position:absolute; top:8px; right:10px; z-index:4; background:rgba(0,0,0,0.5); border:1px solid var(--gold); color:var(--gold-2); border-radius:8px; font-size:1rem; cursor:pointer; padding:2px 7px; }
 </style>
 </head>
 <body>
@@ -254,6 +278,10 @@
 
   <!-- GAME -->
   <div class="screen" id="screen-game">
+    <div class="scene" id="scene">
+      <button class="snd-btn" id="snd-btn">🔊</button>
+      <div class="scene-label" id="scene-label">VESTUARIO</div>
+    </div>
     <div class="hud">
       <div class="hud-block"><div class="hud-num" id="hud-puzzle">1</div><div class="hud-lab">Acertijo / 5</div></div>
       <div class="hud-block"><div class="hud-num timer" id="hud-timer">10:00</div><div class="hud-lab">Tiempo</div></div>
@@ -261,6 +289,7 @@
     </div>
     <div id="puzzle-container"></div>
   </div>
+  <div id="door-wipe"><span>🚪</span></div>
 
   <!-- RESULT -->
   <div class="screen" id="screen-result">
@@ -430,6 +459,51 @@ const PUZZLES = [
 ];
 
 // ========================================================================
+// AUDIO + ESCENA
+// ========================================================================
+let soundOn = true, audioCtx = null;
+function actx(){ if(!audioCtx){ try{ audioCtx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return audioCtx; }
+function tone(freqs, dur, type='sine', vol=0.16){
+  if(!soundOn) return; const c=actx(); if(!c) return;
+  freqs.forEach((f,i)=>{ const o=c.createOscillator(), g=c.createGain(); o.type=type; o.frequency.value=f;
+    const t0=c.currentTime+i*0.08; g.gain.setValueAtTime(vol,t0); g.gain.exponentialRampToValueAtTime(0.001,t0+dur);
+    o.connect(g); g.connect(c.destination); o.start(t0); o.stop(t0+dur); });
+}
+const sndRight = () => tone([523,659,880],0.18,'sine',0.15);
+const sndWrong = () => tone([200,120],0.22,'sawtooth',0.16);
+const sndClick = () => tone([440],0.04,'square',0.1);
+const sndDoor  = () => tone([90,70,55],0.5,'sawtooth',0.13);
+const sndEscape= () => tone([523,659,784,1047,1319],0.3,'sawtooth',0.16);
+function vibe(ms){ try{ if(navigator.vibrate) navigator.vibrate(ms); }catch(e){} }
+
+// escenas por acertijo (ambiente que cambia de sala)
+const ROOMS = [
+  { label:'VESTUARIO', wall:'linear-gradient(180deg,#1c2a36,#0e171f)', floor:'repeating-linear-gradient(90deg,#2a1a10,#2a1a10 18px,#241409 18px,#241409 36px)', build: s => {
+      [16,54,92,130,168,206].forEach((x,i)=>{ const l=document.createElement('div'); l.className='locker'; l.style.left=(x*1.5)+'px'; s.appendChild(l); });
+      addObj(s,'🔢','45%','40%'); addObj(s,'🧦','78%','60%'); } },
+  { label:'PARED DE BANDERAS', wall:'linear-gradient(180deg,#241a2e,#120a18)', floor:'linear-gradient(180deg,#2a1f12,#1a130a)', build: s => { addObj(s,'🚩','25%','30%'); addObj(s,'🚩','55%','25%'); addObj(s,'🚩','75%','35%'); } },
+  { label:'PIZARRÓN DEL DT', wall:'linear-gradient(180deg,#12231a,#08130d)', floor:'linear-gradient(180deg,#241a10,#150d06)', build: s => { addObj(s,'📋','50%','30%'); addObj(s,'✏️','72%','58%'); addObj(s,'⚽','22%','62%'); } },
+  { label:'CAJA FUERTE', wall:'linear-gradient(180deg,#2a2418,#14110a)', floor:'linear-gradient(180deg,#1f1a10,#100c06)', build: s => { addObj(s,'🔐','50%','34%'); addObj(s,'💰','75%','60%'); } },
+  { label:'PUERTA FINAL', wall:'linear-gradient(180deg,#1a1410,#0a0805)', floor:'linear-gradient(180deg,#15100a,#080604)', build: s => { const d=document.createElement('div'); d.className='door'; d.id='final-door'; s.appendChild(d); addObj(s,'🏆','20%','55%'); } }
+];
+function addObj(s,emoji,left,top){ const o=document.createElement('div'); o.className='scene-obj'; o.textContent=emoji; o.style.left=left; o.style.top=top; s.appendChild(o); }
+function renderScene(idx){
+  const s = document.getElementById('scene');
+  // limpiar todo menos botón sonido y label
+  Array.from(s.querySelectorAll('.scene-room,.scene-floor,.scene-glow,.locker,.scene-obj,.door')).forEach(e=>e.remove());
+  const r = ROOMS[idx] || ROOMS[0];
+  const wall = document.createElement('div'); wall.className='scene-room'; wall.style.background=r.wall; s.insertBefore(wall, s.firstChild);
+  const floor = document.createElement('div'); floor.className='scene-floor'; floor.style.background=r.floor; s.appendChild(floor);
+  const glow = document.createElement('div'); glow.className='scene-glow'; s.appendChild(glow);
+  r.build(s);
+  document.getElementById('scene-label').textContent = r.label;
+}
+function doorWipe(cb){
+  const w = document.getElementById('door-wipe'); w.classList.add('on'); sndDoor();
+  setTimeout(()=>{ cb&&cb(); setTimeout(()=>w.classList.remove('on'), 250); }, 400);
+}
+
+// ========================================================================
 // ESTADO
 // ========================================================================
 let state = {
@@ -470,6 +544,7 @@ function renderPuzzle() {
   const p = PUZZLES[state.currentPuzzle];
   document.getElementById('hud-puzzle').textContent = (state.currentPuzzle + 1);
   document.getElementById('hud-tries').textContent = state.tries;
+  renderScene(state.currentPuzzle);
   const cont = document.getElementById('puzzle-container');
   cont.innerHTML = `
     <div class="puzzle">
@@ -501,16 +576,21 @@ function check() {
   state.tries++;
   document.getElementById('hud-tries').textContent = state.tries;
   if (p.check(val)) {
-    document.getElementById('feedback').textContent = '✓ ¡CORRECTO!';
+    document.getElementById('feedback').textContent = '✓ ¡CORRECTO! Puerta desbloqueada';
     document.getElementById('feedback').className = 'feedback right';
+    sndRight(); vibe(40);
+    // abrir la puerta final si es el último
+    const fd = document.getElementById('final-door'); if (fd) fd.classList.add('open');
     setTimeout(() => {
       state.currentPuzzle++;
       if (state.currentPuzzle >= PUZZLES.length) finish();
-      else renderPuzzle();
+      else doorWipe(renderPuzzle);
     }, 800);
   } else {
     document.getElementById('feedback').textContent = '✗ INCORRECTO. SEGUÍ INTENTANDO.';
     document.getElementById('feedback').className = 'feedback wrong';
+    sndWrong(); vibe([30,40,30]);
+    const sc = document.getElementById('screen-game'); sc.classList.remove('shake'); void sc.offsetWidth; sc.classList.add('shake');
     // Penalización: -10s
     state.timeLeft = Math.max(0, state.timeLeft - 10);
     updateTimer();
@@ -524,6 +604,7 @@ function failTimeOut() {
 
 function finish() {
   clearInterval(state.timerInterval);
+  sndEscape(); vibe([40,60,40,60,80]);
   const elapsed = 600 - state.timeLeft;
   const m = Math.floor(elapsed / 60);
   const s = elapsed % 60;
@@ -557,6 +638,9 @@ function goRanking() {
 }
 window.goRanking = goRanking;
 document.getElementById('ver-ranking').onclick = goRanking;
+document.getElementById('snd-btn').onclick = (e) => { e.stopPropagation(); soundOn = !soundOn; document.getElementById('snd-btn').textContent = soundOn ? '🔊' : '🔇'; };
+// click en objetos de la escena = sonidito (inmersión)
+document.getElementById('scene').addEventListener('click', e => { if (e.target.classList.contains('scene-obj') || e.target.classList.contains('locker') || e.target.classList.contains('door')) sndClick(); });
 
 document.getElementById('r-download').onclick = () => {
   const node = document.querySelector('.escape-banner');

@@ -17,6 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="../pampa-share.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
@@ -462,6 +463,8 @@
           <button class="btn btn-secondary" id="reset-arg">↻ Reset</button>
           <button class="btn" id="download-arg">⬇ Descargar imagen</button>
         </div>
+        <button class="btn" id="story-arg" style="margin-top:0.5rem;background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff;width:100%">📲 Historia 9:16</button>
+        <button class="btn" id="share-arg" style="margin-top:0.5rem;background:linear-gradient(135deg,#22c55e,#16a34a);color:#04210f;width:100%">🔗 Compartir</button>
       </div>
       <div class="panel-players">
         <div class="panel-title">Lista oficial (26)</div>
@@ -520,6 +523,8 @@
           <button class="btn btn-secondary" id="reset-ideal">↻ Reset</button>
           <button class="btn" id="download-ideal">⬇ Descargar imagen</button>
         </div>
+        <button class="btn" id="story-ideal" style="margin-top:0.5rem;background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff;width:100%">📲 Historia 9:16</button>
+        <button class="btn" id="share-ideal" style="margin-top:0.5rem;background:linear-gradient(135deg,#22c55e,#16a34a);color:#04210f;width:100%">🔗 Compartir</button>
       </div>
       <div class="panel-players">
         <div class="panel-title">Top 50 del mundo</div>
@@ -901,6 +906,8 @@
       }
     };
     document.getElementById('download-' + modo).onclick = () => downloadCancha(modo);
+    document.getElementById('story-' + modo).onclick = () => pampaStory(document.getElementById('cancha-wrap-' + modo), modo==='arg'?'MI 11 DE ARGENTINA':'MI 11 IDEAL DEL MUNDIAL', 'historia-11-'+modo);
+    document.getElementById('share-' + modo).onclick = () => pampaShare(document.getElementById('cancha-wrap-' + modo), '⚽ Armé mi 11 del Mundial 2026 en Pampa Juega. Armá el tuyo gratis 👉 juventudlapampa.github.io/pampa-juega · @pampajuega');
   });
 
   // Update DT display

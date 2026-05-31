@@ -477,6 +477,15 @@ const sfx = {
   ataj: () => { beep(659, 0.1, 'square', 0.15); setTimeout(() => beep(880, 0.2, 'square', 0.15), 80); },
   miss: () => beep(200, 0.3, 'sawtooth', 0.2)
 };
+function vibe(ms){ try{ if(navigator.vibrate) navigator.vibrate(ms); }catch(e){} }
+function confeti(){
+  const cols=['#4ade80','#d4a82e','#f4cd60','#38bdf8','#fff','#f87171'];
+  for(let i=0;i<28;i++){ const c=document.createElement('div');
+    c.style.cssText=`position:fixed;top:-12px;left:${10+Math.random()*80}vw;width:9px;height:14px;z-index:9999;pointer-events:none;background:${cols[i%cols.length]};transform:rotate(${Math.random()*360}deg)`;
+    document.body.appendChild(c); const dur=1100+Math.random()*900;
+    c.animate([{top:'-12px',opacity:1},{top:'100vh',opacity:0.9}],{duration:dur,easing:'cubic-bezier(.3,.6,.6,1)'});
+    setTimeout(()=>c.remove(),dur); }
+}
 
 // ========================================================================
 // EQUIPOS
@@ -724,7 +733,7 @@ function zoneClick(zone, isPatea) {
     const gol = !atajada;
     ms.golesYo.push(gol);
     if (gol) {
-      showBigMsg('¡GOL!', 'gol'); sfx.gol();
+      showBigMsg('¡GOL!', 'gol'); sfx.gol(); confeti(); vibe(60);
     } else {
       showBigMsg('¡ATAJÓ!', 'atajada'); sfx.ataj();
     }
@@ -741,9 +750,9 @@ function zoneClick(zone, isPatea) {
     // Simplificamos: gol si NO atajaste
     ms.golesRival.push(!atajada);
     if (atajada) {
-      showBigMsg('¡LA ATAJASTE!', 'atajada'); sfx.ataj();
+      showBigMsg('¡LA ATAJASTE!', 'atajada'); sfx.ataj(); confeti(); vibe(50);
     } else {
-      showBigMsg('GOL', 'gol'); sfx.gol();
+      showBigMsg('GOL', 'gol'); sfx.gol(); vibe(40);
     }
   }
   setTimeout(() => {

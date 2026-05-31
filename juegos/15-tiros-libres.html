@@ -792,10 +792,10 @@ function showResult(result) {
     if (result.isCentro && game.power < 30) pts += 100; // Panenka!
     game.score += pts;
     showBigMsg(result.isCentro && game.power < 30 ? '¡PANENKA!' : '¡GOOOL!', 'gol');
-    sfx.gol();
+    sfx.gol(); confeti(); vibe(60);
   } else if (result.type === 'atajada') {
     showBigMsg('¡ATAJÓ!', 'atajada');
-    sfx.ataj();
+    sfx.ataj(); vibe(25);
   } else if (result.type === 'muro') {
     showBigMsg('¡EN EL MURO!', 'muro');
     sfx.muro();
@@ -816,6 +816,15 @@ function showBigMsg(text, type) {
   m.classList.add('show');
 }
 function shake() { document.body.classList.add('shaking'); setTimeout(() => document.body.classList.remove('shaking'), 400); }
+function vibe(ms){ try{ if(navigator.vibrate) navigator.vibrate(ms); }catch(e){} }
+function confeti(){
+  const cols=['#4ade80','#d4a82e','#f4cd60','#38bdf8','#fff','#f87171'];
+  for(let i=0;i<30;i++){ const c=document.createElement('div');
+    c.style.cssText=`position:fixed;top:-12px;left:${10+Math.random()*80}vw;width:9px;height:14px;z-index:9999;pointer-events:none;background:${cols[i%cols.length]};transform:rotate(${Math.random()*360}deg)`;
+    document.body.appendChild(c); const dur=1100+Math.random()*900;
+    c.animate([{top:'-12px',opacity:1},{top:'100vh',opacity:0.9}],{duration:dur,easing:'cubic-bezier(.3,.6,.6,1)'});
+    setTimeout(()=>c.remove(),dur); }
+}
 
 document.getElementById('quit').onclick = () => { if (confirm('¿Salir?')) finish(); };
 

@@ -17,6 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="../pampa-share.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
@@ -294,6 +295,8 @@
       </div>
 
       <button class="btn" id="download">⬇ DESCARGAR EQUIPO</button>
+      <button class="btn" id="download-story" style="margin-top:0.5rem;background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff">📲 DESCARGAR PARA HISTORIA (9:16)</button>
+      <button class="btn" id="share-fut5" style="margin-top:0.5rem;background:linear-gradient(135deg,#22c55e,#16a34a);color:#04210f">🔗 COMPARTIR</button>
     </div>
 
     <!-- PREVIEW -->
@@ -462,6 +465,9 @@ document.getElementById('download').onclick = () => {
     alert('Error: ' + err.message);
   });
 };
+
+document.getElementById('download-story').onclick = () => pampaStory(document.getElementById('cancha-output'), 'EL FUT5 DE MI AULA', 'historia-fut5-aula');
+document.getElementById('share-fut5').onclick = () => pampaShare(document.getElementById('cancha-output'), '🏫 Armamos el FUT5 de nuestro curso en Pampa Juega. Armá el de tu aula 👉 juventudlapampa.github.io/pampa-juega · @pampajuega');
 </script>
 </body>
 </html>

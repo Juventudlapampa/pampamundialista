@@ -17,6 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="../pampa-share.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
@@ -341,6 +342,8 @@
     <div class="countries-row">
       <button class="btn btn-secondary" id="random-id">🎲 ID nuevo</button>
       <button class="btn" id="download">⬇ Descargar</button>
+      <button class="btn" id="download-story" style="margin-top:0.5rem;background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff">📲 Descargar para HISTORIA (9:16)</button>
+      <button class="btn" id="share-card" style="margin-top:0.5rem;background:linear-gradient(135deg,#22c55e,#16a34a);color:#04210f">🔗 Compartir</button>
     </div>
   </div>
 
@@ -543,6 +546,9 @@
       alert('Error: ' + err.message);
     });
   };
+
+  $('download-story').onclick = () => pampaStory($('carnet'), 'MI CARNET DE HINCHA', 'historia-carnet');
+  $('share-card').onclick = () => pampaShare($('carnet'), '🪪 Saqué mi carnet oficial de hincha del Mundial 2026 en Pampa Juega. Hacé el tuyo gratis 👉 juventudlapampa.github.io/pampa-juega · @pampajuega');
 </script>
 </body>
 </html>

@@ -17,6 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="../pampa-share.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
@@ -453,6 +454,8 @@
           <div class="quick-buttons" id="pred-quick"></div>
         </div>
         <button class="btn" id="download" style="margin-top:1rem">⬇ DESCARGAR FIGURITA</button>
+        <button class="btn" id="download-story" style="margin-top:0.5rem;background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff">📲 DESCARGAR PARA HISTORIA (9:16)</button>
+        <button class="btn" id="share-promo" style="margin-top:0.5rem;background:linear-gradient(135deg,#22c55e,#16a34a);color:#04210f">🔗 COMPARTIR</button>
         <button class="btn btn-secondary" id="random" style="margin-top:0.5rem">🎲 Cargar ejemplo aleatorio</button>
       </div>
     </div>
@@ -734,6 +737,9 @@
       alert('Error al descargar: ' + err.message);
     });
   };
+
+  $('download-story').onclick = () => pampaStory($('figurita'), 'FIGURITA DEL GRUPO', 'historia-figurita-grupo');
+  $('share-promo').onclick = () => pampaShare($('figurita'), '🎓 Le armé la figurita a un/a compañero/a en Pampa Juega. Armá la del grupo gratis 👉 juventudlapampa.github.io/pampa-juega · @pampajuega');
 </script>
 </body>
 </html>
