@@ -4,6 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pampa Juega · Mundial 2026 · Juventudes La Pampa</title>
+<meta name="description" content="Jugá, armá tu carta y competí por premios mundialistas. 19 juegos gratis desde el celu.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Pampa Juega - El Mundial de Juventudes La Pampa">
+<meta property="og:description" content="Jugá, armá tu carta y competí por premios mundialistas. 19 juegos gratis desde el celu.">
+<meta property="og:image" content="https://juventudlapampa.github.io/pampa-juega/og-image.png">
+<meta property="og:url" content="https://juventudlapampa.github.io/pampa-juega/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Pampa Juega - El Mundial de Juventudes La Pampa">
+<meta name="twitter:image" content="https://juventudlapampa.github.io/pampa-juega/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
@@ -94,6 +104,29 @@
 
   footer { text-align: center; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(212,168,46,0.2); font-size: 0.8rem; opacity: 0.6; line-height: 1.6; }
   footer a { color: var(--gold); }
+
+  /* NIVELES */
+  .niveles { display: flex; gap: 0.5rem; margin: 0.9rem 0; }
+  .nivel { flex: 1; text-align: center; background: rgba(0,0,0,0.4); border: 2px solid rgba(212,168,46,0.2); border-radius: 10px; padding: 0.6rem 0.3rem; transition: all 0.25s; }
+  .nivel.on { border-color: var(--gold); background: rgba(212,168,46,0.15); box-shadow: 0 0 14px rgba(212,168,46,0.25); }
+  .nivel .medal { font-size: 1.7rem; line-height: 1; filter: grayscale(1) opacity(0.4); transition: all 0.25s; }
+  .nivel.on .medal { filter: none; }
+  .nivel .nivel-name { font-family: 'Anton', sans-serif; font-size: 0.85rem; letter-spacing: 0.05em; margin-top: 0.2rem; }
+  .nivel .nivel-req { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; opacity: 0.6; }
+
+  /* MISIONES DE CREACIÓN */
+  .mis-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: 0.7rem; margin-top: 0.9rem; }
+  .mision { background: rgba(0,0,0,0.4); border: 1px solid rgba(74,222,128,0.25); border-radius: 12px; padding: 1rem; display: flex; flex-direction: column; gap: 0.4rem; }
+  .mision.wpp { border-color: rgba(37,211,102,0.4); }
+  .mis-top { display: flex; align-items: center; gap: 0.5rem; }
+  .mis-ic { font-size: 1.5rem; }
+  .mis-name { font-family: 'Anton', sans-serif; font-size: 1rem; letter-spacing: 0.03em; text-transform: uppercase; line-height: 1; }
+  .mis-sello { margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--gold-2); border: 1px solid rgba(212,168,46,0.4); border-radius: 20px; padding: 0.15rem 0.5rem; white-space: nowrap; }
+  .mis-desc { font-size: 0.8rem; opacity: 0.82; line-height: 1.4; }
+  .mis-btn { margin-top: auto; text-decoration: none; text-align: center; background: rgba(74,222,128,0.15); border: 1px solid var(--verde-fluo); color: var(--verde-fluo); border-radius: 8px; padding: 0.5rem; font-family: 'Anton', sans-serif; letter-spacing: 0.05em; font-size: 0.8rem; cursor: pointer; }
+  .mis-btn.wpp { background: rgba(37,211,102,0.18); border-color: #25d366; color: #5af58e; }
+  .mis-btn:hover { filter: brightness(1.2); }
+  .desafio-cta { display: block; text-align: center; background: linear-gradient(135deg, var(--gold), var(--gold-2)); color: #06140c; text-decoration: none; font-family: 'Anton', sans-serif; letter-spacing: 0.08em; padding: 0.9rem; border-radius: 10px; margin-top: 1rem; text-transform: uppercase; }
 </style>
 </head>
 <body>
@@ -223,11 +256,19 @@
     </div>
   </section>
 
-  <!-- CONCURSO -->
+  <!-- EL DESAFÍO -->
   <div class="block" id="concurso">
-    <div class="block-title">🏅 Sumate al concurso</div>
-    <p>Jugá, hacé tus cartas y <b>sumá sellos en tu pasaporte</b>. No se gana por azar ni por plata: se gana <b>participando</b>. Podés competir <b>solo o en grupo</b>, y cada categoría compite contra su misma categoría (las aulas con aulas, los clubes con clubes), así es justo.</p>
-    <p style="margin-bottom:0.3rem"><b>¿Cómo participás?</b> Elegí qué sos:</p>
+    <div class="block-title">🏅 El Desafío Pampa Juega</div>
+    <p>Hacé <b>misiones</b>, juntá <b>sellos</b> y entrá al <b>sorteo de premios mundialistas</b>. No se gana por azar ni por plata: se gana <b>participando</b>. Cada misión que cumplís y compartís te da un sello en tu pasaporte (mirá el de arriba 👆).</p>
+
+    <p style="margin:0.6rem 0 0.2rem"><b>Subí de nivel juntando sellos:</b></p>
+    <div class="niveles" id="niveles">
+      <div class="nivel" data-min="3"><div class="medal">🥉</div><div class="nivel-name">Bronce</div><div class="nivel-req">3 sellos</div></div>
+      <div class="nivel" data-min="6"><div class="medal">🥈</div><div class="nivel-name">Plata</div><div class="nivel-req">6 sellos</div></div>
+      <div class="nivel" data-min="10"><div class="medal">🥇</div><div class="nivel-name">Oro</div><div class="nivel-req">10 sellos</div></div>
+    </div>
+
+    <p style="margin:1rem 0 0.2rem"><b>¿Cómo participás?</b> Elegí qué sos (cada categoría compite contra su par):</p>
     <div class="part-chips" id="part-chips">
       <button class="part-chip" data-c="Individual">🙋 Individual</button>
       <button class="part-chip" data-c="Aula">🏫 Aula</button>
@@ -237,12 +278,17 @@
       <button class="part-chip" data-c="Otro grupo">✨ Otro grupo</button>
     </div>
     <div class="part-out" id="part-out">Tocá una opción y te decimos contra quiénes competís.</div>
+
+    <p style="margin:1.2rem 0 0.2rem"><b>🎙️ Misiones de Creación</b> — además de jugar, podés crear y mandar:</p>
+    <div class="mis-grid" id="mis-grid"></div>
+
     <ul class="bases">
-      <li>Jugá las herramientas y juntá sellos (mirá tu pasaporte arriba 👆).</li>
-      <li>Compartí tus cartas/resultados etiquetando a <b>@juventud_lapampa</b>.</li>
+      <li>Las <b>misiones de juego</b> se cumplen usando las herramientas de arriba: cada una te da un sello.</li>
+      <li>Las <b>misiones de creación</b> se mandan por WhatsApp o se suben a tu cuenta etiquetando.</li>
       <li>Para llevarte premios necesitás <b>Tarjeta Joven</b> (mirá abajo 👇).</li>
-      <li>Cada categoría tiene su propio premio. Bases completas en las redes de la Subse.</li>
+      <li>El equipo de Juventud valida las misiones para el sorteo. Bases completas en las redes de la Subse.</li>
     </ul>
+    <a class="desafio-cta" id="inscribite-btn" href="#" target="_blank" rel="noopener">📋 Inscribite al Desafío</a>
   </div>
 
   <!-- TARJETA JOVEN -->
@@ -251,13 +297,13 @@
     <h2>¿Tenés la <span>Tarjeta Joven</span>?</h2>
     <p>Jugar es <b>libre y sin registro</b>. Pero para <b>llevarte los premios</b> del concurso necesitás tu Tarjeta Joven (de 14 a 30 años). Elegí tu caso:</p>
     <div class="tj-paths">
-      <a class="tj-path" href="https://juventudes.lapampa.gob.ar/tj.html" target="_blank" rel="noopener">
+      <a class="tj-path" href="https://tarjetajoven.lapampa.gob.ar/" target="_blank" rel="noopener">
         <div class="e">✅</div><div class="t"><b>Ya la tengo</b><small>Guardá tu N° de beneficiario: te lo vamos a pedir para los premios 😉</small></div><div class="go">OK →</div>
       </a>
-      <a class="tj-path" href="https://juventudes.lapampa.gob.ar/tj.html" target="_blank" rel="noopener">
+      <a class="tj-path" href="https://tarjetajoven.lapampa.gob.ar/" target="_blank" rel="noopener">
         <div class="e">🆕</div><div class="t"><b>No la tengo</b><small>Sacala gratis acá, es online y rapidísimo.</small></div><div class="go">Sacar →</div>
       </a>
-      <a class="tj-path" href="https://juventudes.lapampa.gob.ar/tj.html" target="_blank" rel="noopener">
+      <a class="tj-path" href="https://tarjetajoven.lapampa.gob.ar/" target="_blank" rel="noopener">
         <div class="e">🔎</div><div class="t"><b>No sé si la tengo / actualizar datos</b><small>Chequealo y actualizá tus datos en el mismo lugar.</small></div><div class="go">Chequear →</div>
       </a>
     </div>
@@ -272,6 +318,11 @@
 </div>
 
 <script>
+  // ===== CONFIG (cambiá en un solo lugar) =====
+  const CUENTA = "@pampajuega";            // cuenta del Desafío (placeholder, cambiá cuando la definas)
+  const WHATSAPP_JUVENTUD = "5492954801601"; // WhatsApp institucional de la Subse
+  const INSCRIPCION_URL = "#";             // TODO: pegar acá el link al Google Form de inscripción
+
   // Acordeón de puertas
   function togglePuerta(btn){ btn.parentElement.classList.toggle('open'); }
 
@@ -287,15 +338,64 @@
     document.getElementById('pass-n').textContent = n;
     document.getElementById('pass-fill').style.width = Math.round(n/TOTAL*100) + '%';
     const msg = document.getElementById('pass-msg');
+    let nivel = '';
+    if (n >= 10) nivel = ' · 🥇 NIVEL ORO';
+    else if (n >= 6) nivel = ' · 🥈 NIVEL PLATA';
+    else if (n >= 3) nivel = ' · 🥉 NIVEL BRONCE';
     if (n === 0) msg.textContent = '¡arrancá a jugar y llenalo!';
-    else if (n < 7) msg.textContent = '¡bien ahí, seguí sumando!';
-    else if (n < TOTAL) msg.textContent = '¡sos un crack, te falta poco!';
+    else if (n < 7) msg.textContent = '¡bien ahí, seguí sumando!' + nivel;
+    else if (n < TOTAL) msg.textContent = '¡sos un crack, te falta poco!' + nivel;
     else msg.textContent = '🏆 ¡completaste el pasaporte! Sos leyenda pampeana.';
+    // niveles visuales
+    document.querySelectorAll('.nivel').forEach(el => el.classList.toggle('on', n >= +el.dataset.min));
   }
   cards.forEach(c => c.addEventListener('click', () => {
     if (!sellos.includes(c.dataset.id)) { sellos.push(c.dataset.id); try { localStorage.setItem(SEAL_KEY, JSON.stringify(sellos)); } catch(e){} }
   }));
   renderSellos();
+
+  // ===== Misiones de Creación =====
+  const wppBase = (txt) => `https://wa.me/${WHATSAPP_JUVENTUD}?text=${encodeURIComponent(txt)}`;
+  const MISIONES = [
+    { ic:'🎙️', name:'Relato de Gol', sello:'1 sello x fecha', wpp:true,
+      desc:'Relatá un gol como relator de cancha y mandá tu audio. Los mejores salen en la cuenta. ¡Una por fecha del Mundial!',
+      btn:'Mandar mi relato', link:wppBase('¡Hola! Mando mi relato de gol para el Desafío Pampa Juega 🎙️⚽') },
+    { ic:'🎨', name:'Dibujá tu Selección', sello:'1 sello', wpp:false,
+      desc:'Dibujá a tu selección o tu jugador favorito, sacale una foto y subila etiquetando a '+CUENTA+'. (¡Ideal para los más chicos!)',
+      btn:'Subir y etiquetar', link:'#' },
+    { ic:'🧤', name:'Penal Imposible', sello:'1 sello', wpp:false,
+      desc:'Pateá un penal vendado, atado a un compañero o de espaldas, filmalo y subilo etiquetando a '+CUENTA+'.',
+      btn:'Subir y etiquetar', link:'#' },
+    { ic:'🎉', name:'Festejo del Curso', sello:'2 sellos', wpp:false,
+      desc:'Inventen un festejo de gol entre todo el curso y fílmenlo. ¡Las grupales valen doble!',
+      btn:'Subir y etiquetar', link:'#' },
+    { ic:'📣', name:'Cántico Pampeano', sello:'1 sello', wpp:false,
+      desc:'Creen el cántico de su localidad o su curso y grábenlo. Cada pueblo defiende el suyo.',
+      btn:'Subir y etiquetar', link:'#' },
+    { ic:'🧑‍🏫', name:'El Profe Relata', sello:'1 sello', wpp:false,
+      desc:'Sumá a un profe a relatar un gol o a patear un penal, filmalo y subilo etiquetando a '+CUENTA+'.',
+      btn:'Subir y etiquetar', link:'#' }
+  ];
+  const misGrid = document.getElementById('mis-grid');
+  MISIONES.forEach(m => {
+    const div = document.createElement('div');
+    div.className = 'mision' + (m.wpp ? ' wpp' : '');
+    const btnHtml = m.wpp
+      ? `<a class="mis-btn wpp" href="${m.link}" target="_blank" rel="noopener">📲 ${m.btn}</a>`
+      : `<a class="mis-btn" href="${m.link}" data-share="${m.name}">📤 ${m.btn}</a>`;
+    div.innerHTML = `<div class="mis-top"><span class="mis-ic">${m.ic}</span><span class="mis-name">${m.name}</span><span class="mis-sello">${m.sello}</span></div>
+      <div class="mis-desc">${m.desc}</div>${btnHtml}`;
+    misGrid.appendChild(div);
+  });
+  // botones de "subir y etiquetar" -> abren share nativo / copian la consigna
+  document.querySelectorAll('.mis-btn[data-share]').forEach(b => b.addEventListener('click', e => {
+    e.preventDefault();
+    const txt = `Estoy haciendo la misión "${b.dataset.share}" del Desafío Pampa Juega ⚽ Subí la tuya y etiquetá a ${CUENTA} · Mundial 2026 · Juventudes La Pampa`;
+    if (navigator.share) { navigator.share({ title:'Desafío Pampa Juega', text:txt }).catch(()=>{}); }
+    else if (navigator.clipboard) { navigator.clipboard.writeText(txt).then(()=>alert('¡Consigna copiada! Subí tu material y etiquetá a '+CUENTA),()=>{}); }
+    else { alert('Subí tu material y etiquetá a '+CUENTA); }
+  }));
+  document.getElementById('inscribite-btn').href = INSCRIPCION_URL;
 
   // Concurso: categoría
   const OUT = {

@@ -4,6 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>El Picado · Mundial 2026</title>
+<meta name="description" content="Jugá los juegos del Mundial 2026 de Juventudes La Pampa. Gratis, desde el celu.">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Pampa Juega - Mundial 2026">
+<meta property="og:description" content="Jugá los juegos del Mundial 2026 de Juventudes La Pampa. Gratis, desde el celu.">
+<meta property="og:image" content="https://juventudlapampa.github.io/pampa-juega/og-image.png">
+<meta property="og:url" content="https://juventudlapampa.github.io/pampa-juega/juegos/25-picado.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Pampa Juega - Mundial 2026">
+<meta name="twitter:image" content="https://juventudlapampa.github.io/pampa-juega/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -93,6 +103,7 @@
   <div class="screen" id="screen-game">
     <div class="hud">
       <div class="hud-box"><div class="hud-num" id="hud-goals">0</div><div class="hud-lbl">Goles</div></div>
+      <button id="snd-toggle" style="background:rgba(0,0,0,0.5);border:1px solid var(--gold);color:var(--gold-2);border-radius:10px;font-size:1.3rem;cursor:pointer;padding:0 0.7rem">🔊</button>
       <div class="hud-box" style="border-color:var(--verde-fluo)"><div class="hud-num" id="hud-time" style="color:var(--verde-fluo)">60</div><div class="hud-lbl">Segundos</div></div>
     </div>
     <canvas id="cv" width="360" height="500"></canvas>
@@ -133,6 +144,32 @@ const cv = $('cv'), ctx = cv.getContext('2d');
 const W = cv.width, H = cv.height;
 const GOAL_X1 = 110, GOAL_X2 = 250, GOAL_Y = 16, KEEPER_Y = 38;
 let st = null, raf = null, timerInt = null, mode = 'solo';
+
+// ===== JUICE: partículas, shake, estela, audio =====
+let particles = [], shake = 0, trail = [], camY = 0, frameN = 0;
+let soundOn = true;
+let audioCtx = null;
+function actx(){ if(!audioCtx){ try{ audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return audioCtx; }
+function beep(freqs, dur, type='sine', vol=0.18){
+  if(!soundOn) return; const c=actx(); if(!c) return;
+  freqs.forEach((f,i)=>{ const o=c.createOscillator(), g=c.createGain(); o.type=type; o.frequency.value=f;
+    const t0=c.currentTime+i*0.07; g.gain.setValueAtTime(vol,t0); g.gain.exponentialRampToValueAtTime(0.001,t0+dur);
+    o.connect(g); g.connect(c.destination); o.start(t0); o.stop(t0+dur); });
+}
+const sndGol = () => beep([523,659,784,1047],0.22,'sawtooth',0.16);   // acorde ascendente = gol
+const sndAtaja = () => beep([180,120],0.12,'square',0.14);
+const sndAfuera = () => beep([160,90],0.18,'triangle',0.12);
+const sndRobo = () => beep([200,140],0.1,'square',0.12);
+const sndKick = () => beep([330],0.05,'sine',0.1);
+function vibe(ms){ try{ if(navigator.vibrate) navigator.vibrate(ms); }catch(e){} }
+function burst(x,y,colors,n=22){
+  for(let i=0;i<n;i++){ const a=Math.random()*Math.PI*2, sp=2+Math.random()*4.5;
+    particles.push({ x,y, vx:Math.cos(a)*sp, vy:Math.sin(a)*sp-2, life:1, col:colors[i%colors.length], r:2+Math.random()*3, rot:Math.random()*6 }); }
+}
+function goalCelebration(x,y){
+  burst(x,y,['#4ade80','#d4a82e','#f4cd60','#fff','#38bdf8'],34);
+  shake = 9; vibe(60); sndGol();
+}
 
 document.querySelectorAll('.mode-btn').forEach(b => b.onclick = () => {
   document.querySelectorAll('.mode-btn').forEach(x => x.classList.remove('sel'));
@@ -193,6 +230,7 @@ function shoot() {
   else if (st.input.right) aimX = GOAL_X2 - 15;
   const dx = aimX - p.x, dy = (GOAL_Y - 6) - p.y, d = Math.hypot(dx, dy) || 1;
   st.ball = { x: p.x, y: p.y - p.r, vx: dx/d*9, vy: dy/d*9, mode:'shot', target:-1 };
+  sndKick(); vibe(8);
 }
 function doPass() {
   if (!st || !st.running || st.ball.mode !== 'carried' || mode !== 'equipo') return;
@@ -242,7 +280,7 @@ function update() {
   if (st.ball.mode === 'carried' && st.cooldown <= 0) {
     for (const d of st.defs) {
       if (Math.hypot(activeP().x-d.x, activeP().y-d.y) < activeP().r + d.r) {
-        flash('¡Te robó! 🔴', '#f87171'); st.cooldown = 30; resetPositions(); break;
+        flash('¡Te robó! 🔴', '#f87171'); sndRobo(); shake=4; st.cooldown = 30; resetPositions(); break;
       }
     }
   }
@@ -277,12 +315,12 @@ function update() {
   if (st.ball.mode === 'shot') {
     st.ball.x += st.ball.vx; st.ball.y += st.ball.vy;
     if (Math.hypot(st.ball.x-k.x, st.ball.y-k.y) < k.r + 7) {
-      flash('¡Atajó el arquero! 🧤', '#fbbf24'); st.ball.mode='carried'; st.cooldown=25; resetPositions();
+      flash('¡Atajó el arquero! 🧤', '#fbbf24'); sndAtaja(); shake=3; burst(k.x,k.y,['#f4cd60','#fff'],10); st.ball.mode='carried'; st.cooldown=25; resetPositions();
     } else if (st.ball.y <= GOAL_Y) {
-      if (st.ball.x > GOAL_X1 && st.ball.x < GOAL_X2) { st.goals++; $('hud-goals').textContent = st.goals; flash('¡GOOOOL! ⚽', 'var(--verde-fluo)'); }
-      else flash('Afuera 😖', '#f87171');
+      if (st.ball.x > GOAL_X1 && st.ball.x < GOAL_X2) { st.goals++; $('hud-goals').textContent = st.goals; flash('¡GOOOOL! ⚽', 'var(--verde-fluo)'); goalCelebration(st.ball.x, GOAL_Y); }
+      else { flash('Afuera 😖', '#f87171'); sndAfuera(); }
       st.ball.mode='carried'; st.cooldown=25; resetPositions();
-    } else if (st.ball.x<-10||st.ball.x>W+10||st.ball.y>H+10) { flash('Afuera 😖', '#f87171'); st.ball.mode='carried'; st.cooldown=20; resetPositions(); }
+    } else if (st.ball.x<-10||st.ball.x>W+10||st.ball.y>H+10) { flash('Afuera 😖', '#f87171'); sndAfuera(); st.ball.mode='carried'; st.cooldown=20; resetPositions(); }
   }
 
   if (st.cooldown > 0) st.cooldown--;
@@ -291,25 +329,93 @@ function update() {
 }
 
 function draw() {
-  ctx.clearRect(0,0,W,H);
-  for (let i=0;i<10;i++){ ctx.fillStyle = i%2? '#0d4a2c':'#11572f'; ctx.fillRect(0, i*H/10, W, H/10); }
-  ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 2; ctx.strokeRect(60, GOAL_Y, W-120, 90);
-  ctx.fillStyle = 'rgba(255,255,255,0.9)'; ctx.fillRect(GOAL_X1, GOAL_Y-6, GOAL_X2-GOAL_X1, 6);
-  ctx.strokeStyle = 'rgba(255,255,255,0.6)'; ctx.strokeRect(GOAL_X1, 0, GOAL_X2-GOAL_X1, GOAL_Y);
-  drawDude(st.keeper.x, st.keeper.y, '#f4cd60', '#000');
+  ctx.save();
+  // screen shake
+  if (shake > 0) { ctx.translate((Math.random()-0.5)*shake, (Math.random()-0.5)*shake); }
+  ctx.clearRect(-12,-12,W+24,H+24);
+
+  // --- TRIBUNA (parallax leve arriba) ---
+  const crowdY = GOAL_Y - 4;
+  ctx.fillStyle = '#0a1620'; ctx.fillRect(0, 0, W, crowdY);
+  const off = (frameN*0.3) % 14;
+  for (let cy=2; cy<crowdY; cy+=7){
+    for (let cx=-14+((cy%14<7)?off:-off); cx<W; cx+=14){
+      const h=(cx*7+cy*13)%5; ctx.fillStyle = ['#1b2a3a','#24384d','#2e4a66','#1b2a3a','#314f6e'][h];
+      ctx.fillRect(cx, cy, 5, 4);
+    }
+  }
+  // luz de cancha
+  const grad = ctx.createLinearGradient(0,crowdY,0,H);
+  grad.addColorStop(0,'#1a7a4a'); grad.addColorStop(1,'#0c4a2a');
+  ctx.fillStyle = grad; ctx.fillRect(0, crowdY, W, H-crowdY);
+  // franjas de césped
+  for (let i=0;i<12;i++){ if(i%2){ ctx.fillStyle='rgba(255,255,255,0.04)'; ctx.fillRect(0, crowdY+i*(H-crowdY)/12, W, (H-crowdY)/12); } }
+  // líneas
+  ctx.strokeStyle = 'rgba(255,255,255,0.32)'; ctx.lineWidth = 2;
+  ctx.strokeRect(58, GOAL_Y, W-116, 92);
+  ctx.beginPath(); ctx.arc(W/2, GOAL_Y+92, 26, 0, Math.PI); ctx.stroke();
+
+  // --- ARCO con red ---
+  ctx.fillStyle = 'rgba(255,255,255,0.95)';
+  ctx.fillRect(GOAL_X1-3, GOAL_Y-6, GOAL_X2-GOAL_X1+6, 6);
+  ctx.fillRect(GOAL_X1-3, 0, 4, GOAL_Y); ctx.fillRect(GOAL_X2-1, 0, 4, GOAL_Y);
+  ctx.strokeStyle = 'rgba(255,255,255,0.25)'; ctx.lineWidth = 1;
+  for (let nx=GOAL_X1; nx<=GOAL_X2; nx+=8){ ctx.beginPath(); ctx.moveTo(nx,0); ctx.lineTo(nx,GOAL_Y); ctx.stroke(); }
+  for (let ny=2; ny<GOAL_Y; ny+=5){ ctx.beginPath(); ctx.moveTo(GOAL_X1,ny); ctx.lineTo(GOAL_X2,ny); ctx.stroke(); }
+
+  // arquero, defensores, jugadores
+  drawDude(st.keeper.x, st.keeper.y, '#f4cd60', '#1a1a1a', '🧤');
   st.defs.forEach(d => drawDude(d.x, d.y, '#dc2626', '#fff'));
   st.players.forEach((p,i) => {
     drawDude(p.x, p.y, '#2563eb', i===st.active ? '#f4cd60' : '#fff');
-    if (mode==='equipo' && i===st.active) { // flechita sobre el activo
-      ctx.beginPath(); ctx.moveTo(p.x, p.y-22); ctx.lineTo(p.x-6, p.y-30); ctx.lineTo(p.x+6, p.y-30); ctx.closePath(); ctx.fillStyle='#f4cd60'; ctx.fill();
+    if (mode==='equipo' && i===st.active) {
+      ctx.beginPath(); ctx.moveTo(p.x, p.y-24); ctx.lineTo(p.x-6, p.y-32); ctx.lineTo(p.x+6, p.y-32); ctx.closePath(); ctx.fillStyle='#f4cd60'; ctx.fill();
     }
   });
-  const b = st.ball;
-  ctx.beginPath(); ctx.arc(b.x, b.y, 6, 0, 7); ctx.fillStyle='#fff'; ctx.fill(); ctx.strokeStyle='#000'; ctx.lineWidth=1; ctx.stroke();
-}
-function drawDude(x,y,color,ring){ ctx.beginPath(); ctx.arc(x,y,13,0,7); ctx.fillStyle=color; ctx.fill(); ctx.lineWidth=2.5; ctx.strokeStyle=ring; ctx.stroke(); }
 
-function frame() { update(); draw(); if (st.running) raf = requestAnimationFrame(frame); }
+  // estela de la pelota
+  for (let i=0;i<trail.length;i++){ const t=trail[i], a=(i+1)/trail.length*0.4;
+    ctx.beginPath(); ctx.arc(t.x, t.y, 5*a+1, 0, 7); ctx.fillStyle='rgba(255,255,255,'+a+')'; ctx.fill(); }
+  // pelota con sombra
+  const b = st.ball;
+  ctx.beginPath(); ctx.ellipse(b.x, b.y+7, 6, 2.5, 0, 0, 7); ctx.fillStyle='rgba(0,0,0,0.25)'; ctx.fill();
+  ctx.beginPath(); ctx.arc(b.x, b.y, 6.5, 0, 7); ctx.fillStyle='#fff'; ctx.fill();
+  ctx.strokeStyle='#111'; ctx.lineWidth=1.2; ctx.stroke();
+  ctx.beginPath(); ctx.arc(b.x, b.y, 2.4, 0, 7); ctx.fillStyle='#111'; ctx.fill();
+
+  // partículas
+  particles.forEach(pt => { ctx.save(); ctx.globalAlpha=Math.max(0,pt.life); ctx.fillStyle=pt.col;
+    ctx.translate(pt.x,pt.y); ctx.rotate(pt.rot); ctx.fillRect(-pt.r,-pt.r,pt.r*2,pt.r*2.4); ctx.restore(); });
+
+  ctx.restore();
+}
+function drawDude(x,y,color,ring,emoji){
+  // sombra
+  ctx.beginPath(); ctx.ellipse(x, y+13, 11, 3.5, 0, 0, 7); ctx.fillStyle='rgba(0,0,0,0.22)'; ctx.fill();
+  // piernas (animación simple por frame)
+  const sw = Math.sin(frameN*0.4 + x)*2;
+  ctx.strokeStyle=color; ctx.lineWidth=4; ctx.lineCap='round';
+  ctx.beginPath(); ctx.moveTo(x-3,y+8); ctx.lineTo(x-4+sw,y+15); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x+3,y+8); ctx.lineTo(x+4-sw,y+15); ctx.stroke();
+  // cuerpo
+  ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x-9,y-4,18,14,4) : ctx.rect(x-9,y-4,18,14); ctx.fillStyle=color; ctx.fill();
+  // cabeza
+  ctx.beginPath(); ctx.arc(x,y-10,7,0,7); ctx.fillStyle='#f0c79a'; ctx.fill();
+  ctx.lineWidth=2.5; ctx.strokeStyle=ring; ctx.stroke();
+}
+
+function frame() {
+  frameN++;
+  // estela
+  if (st && st.ball.mode==='shot'){ trail.push({x:st.ball.x,y:st.ball.y}); if(trail.length>8) trail.shift(); }
+  else if (trail.length) trail.shift();
+  // partículas
+  particles.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; p.vy+=0.18; p.vx*=0.98; p.rot+=0.2; p.life-=0.02; });
+  particles = particles.filter(p=>p.life>0);
+  if (shake>0) shake*=0.85; if (shake<0.3) shake=0;
+  update(); draw();
+  if (st.running) raf = requestAnimationFrame(frame);
+}
 
 function startGame() {
   st = newState();
@@ -338,6 +444,7 @@ function endGame() {
 }
 function showScreen(s) { document.querySelectorAll('.screen').forEach(el => el.classList.remove('active')); $('screen-' + s).classList.add('active'); }
 
+$('snd-toggle').onclick = () => { soundOn = !soundOn; $('snd-toggle').textContent = soundOn ? '🔊' : '🔇'; };
 $('start').onclick = startGame;
 $('replay').onclick = startGame;
 $('download').onclick = () => {
