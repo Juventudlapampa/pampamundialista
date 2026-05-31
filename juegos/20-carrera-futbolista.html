@@ -295,8 +295,11 @@
       <p style="line-height:1.5;font-size:0.9rem;margin-bottom:0.8rem">
         Empezás a los <strong style="color:var(--gold-2)">8 años</strong> jugando en el potrero de tu pueblo en La Pampa. En cada decisión vas a <strong style="color:var(--gold-2)">tirar el dado de la vida</strong>: según lo que salga, te va a ir mejor o peor. Siempre tenés <strong style="color:var(--gold-2)">5 caminos</strong> para elegir.
       </p>
-      <p style="line-height:1.5;font-size:0.85rem;margin-bottom:1rem;opacity:0.8">
+      <p style="line-height:1.5;font-size:0.85rem;margin-bottom:0.7rem;opacity:0.8">
         Hay <strong>12 finales</strong> posibles: estrella mundial, ídolo del pueblo, profe de educación física, relator, médico deportivo, creador de contenido… o algo que no te imaginás.
+      </p>
+      <p style="line-height:1.5;font-size:0.85rem;margin-bottom:1rem;opacity:0.8">
+        De La Pampa salió <strong style="color:var(--gold-2)">Alexis Mac Allister</strong>, nacido en Santa Rosa y campeón del mundo 🏆. Vas a subir escalones reales: el club de tu pueblo → <strong>Liga Pampeana</strong> → <strong>Torneo Regional</strong> → <strong>Federal A</strong> → <strong>Primera Nacional</strong> → <strong>Primera División</strong> → la <strong>Selección</strong>. ¿Hasta dónde llegás?
       </p>
       <input type="text" class="input-name" id="player-name" placeholder="Tu nombre" maxlength="20">
       <select id="genero" style="margin-bottom:0.7rem">
@@ -306,12 +309,20 @@
       </select>
       <select id="origen">
         <option value="santarosa">Santa Rosa</option>
-        <option value="genera">General Pico</option>
-        <option value="trenel">Trenel</option>
-        <option value="realico">Realicó</option>
-        <option value="acha">General Acha</option>
+        <option value="pico">General Pico</option>
         <option value="toay">Toay</option>
-        <option value="winifreda">Winifreda</option>
+        <option value="acha">General Acha</option>
+        <option value="venticinco">Colonia 25 de Mayo</option>
+        <option value="castex">Eduardo Castex</option>
+        <option value="alvear">Intendente Alvear</option>
+        <option value="realico">Realicó</option>
+        <option value="victorica">Victorica</option>
+        <option value="macachin">Macachín</option>
+        <option value="guatrache">Guatraché</option>
+        <option value="luiggi">Ingeniero Luiggi</option>
+        <option value="catrilo">Catriló</option>
+        <option value="quemu">Quemú Quemú</option>
+        <option value="rancul">Rancul</option>
         <option value="otro">Otro pueblo de La Pampa</option>
       </select>
       <button class="btn" id="start">▶ EMPEZAR MI CARRERA</button>
@@ -385,9 +396,23 @@ let game = {
 };
 const $ = id => document.getElementById(id);
 const STAT_LABEL = { talento:'TALENTO', fisico:'FÍSICO', estudio:'ESTUDIO', fama:'FAMA' };
-const ORIGEN_NOMBRES = {
-  santarosa: 'Santa Rosa', genera: 'General Pico', trenel: 'Trenel', realico: 'Realicó',
-  acha: 'General Acha', toay: 'Toay', winifreda: 'Winifreda', otro: 'tu pueblo'
+const TOWNS = {
+  santarosa: { n:'Santa Rosa',          club:'All Boys' },
+  pico:      { n:'General Pico',         club:'Ferro de General Pico' },
+  toay:      { n:'Toay',                 club:'Ferro de Toay' },
+  acha:      { n:'General Acha',         club:'Independiente de General Acha' },
+  venticinco:{ n:'Colonia 25 de Mayo',   club:'Atlético 25 de Mayo' },
+  castex:    { n:'Eduardo Castex',       club:'Cultural Argentino' },
+  alvear:    { n:'Intendente Alvear',    club:'Ferro de Alvear' },
+  realico:   { n:'Realicó',              club:'Ferro de Realicó' },
+  victorica: { n:'Victorica',            club:'Banco Nación de Victorica' },
+  macachin:  { n:'Macachín',             club:'Atlético Macachín' },
+  guatrache: { n:'Guatraché',            club:'Pampero de Guatraché' },
+  luiggi:    { n:'Ingeniero Luiggi',     club:'Costa Brava de Luiggi' },
+  catrilo:   { n:'Catriló',              club:'Atlético Catriló' },
+  quemu:     { n:'Quemú Quemú',          club:'San Martín de Quemú' },
+  rancul:    { n:'Rancul',               club:'Deportivo Rancul' },
+  otro:      { n:'tu pueblo',            club:'el club de tu pueblo' }
 };
 function gen(m, f, x) {
   if (game.genero === 'f') return f;
@@ -396,7 +421,8 @@ function gen(m, f, x) {
 }
 function clamp(v){ return Math.max(0, Math.min(99, v)); }
 const NAME = () => game.name.toUpperCase();
-const ORI = () => ORIGEN_NOMBRES[game.origen];
+const ORI = () => (TOWNS[game.origen] || TOWNS.otro).n;
+const CLUB = () => (TOWNS[game.origen] || TOWNS.otro).club;
 
 // ========================================================================
 // DADO DE LA VIDA
@@ -425,9 +451,9 @@ function resolveLuck(roll, s) {
 const STORY = {
   // ---------- EDAD 8 ----------
   start: { edad: 8, tag: () => 'EDAD 8 · POTRERO DE ' + ORI().toUpperCase(),
-    text: () => `Tenés 8 años. Vivís en <strong>${ORI()}</strong>, La Pampa. Todas las tardes vas al potrero a jugar hasta que se hace de noche. Tu vieja te dice que estudies; tu viejo te lleva a ver fútbol. ¿Por dónde arrancás?`,
+    text: () => `Tenés 8 años. Vivís en <strong>${ORI()}</strong>, La Pampa. Todas las tardes vas al potrero hasta que se hace de noche, y soñás con la camiseta de <strong>${CLUB()}</strong>, el club de tu pueblo. Tu vieja te dice que estudies; tu viejo te lleva a ver fútbol. ¿Por dónde arrancás?`,
     opciones: [
-      { t:'⚽ Anotarme en la escuelita del club del pueblo', s:{ talento:+8, fisico:+5 }, next:'e12_club' },
+      { t:()=>'⚽ Anotarme en la escuelita de '+CLUB(), s:{ talento:+8, fisico:+5 }, next:'e12_club' },
       { t:'🥅 Pedir ir al arco, me gusta atajar', s:{ fisico:+8, talento:+4 }, next:'e12_arquero' },
       { t:'🏠 Jugar libre en el potrero con mis amigos', s:{ talento:+6, fama:+3 }, next:'e12_potrero' },
       { t:'📚 La escuela primero, fútbol los fines de semana', s:{ estudio:+12, talento:-3 }, next:'e12_escuela' },
@@ -435,8 +461,8 @@ const STORY = {
     ] },
 
   // ---------- EDAD 12 ----------
-  e12_club: { edad: 12, tag: () => 'EDAD 12 · INFERIORES DEL CLUB',
-    text: () => `4 años en el club. Tu profe dice que tenés condiciones y viene un scout de <strong>General Pico</strong> a verte. Justo caen los exámenes del cole.`,
+  e12_club: { edad: 12, tag: () => 'EDAD 12 · INFERIORES DE ' + CLUB().toUpperCase(),
+    text: () => `4 años en las inferiores de <strong>${CLUB()}</strong>, jugando la <strong>Liga Pampeana</strong>. Tu profe dice que tenés condiciones y viene un scout de un club grande a verte. Justo caen los exámenes del cole.`,
     opciones: [
       { t:'🚀 Ir a la prueba en Pico ya, faltando al examen', s:{ talento:+10, fama:+6, estudio:-5 }, branch:{ good:'e15_proyecto', bad:'e15_local' }, check:'talento' },
       { t:'⚖ Prepararme un año más antes de probar', s:{ talento:+6, fisico:+5 }, next:'e15_local' },
@@ -463,7 +489,7 @@ const STORY = {
       { t:'🥅 Un día tapo todo y me prueban de arquero', s:{ fisico:+8, talento:+4 }, next:'e15_arquero' }
     ] },
   e12_escuela: { edad: 12, tag: () => 'EDAD 12 · TORNEO ESCOLAR',
-    text: () => `Sos buen alumno y el fútbol es un hobby, pero llegaste a la final del torneo escolar y un periodista local te filma. ¿Qué hacés con eso?`,
+    text: () => `Sos ${gen('buen alumno','buena alumna','buen alumne')} y el fútbol es un hobby, pero llegaste a la final del torneo escolar y un periodista local te filma. ¿Qué hacés con eso?`,
     opciones: [
       { t:'🏆 Jugar la final a muerte y dar el batacazo', s:{ talento:+8, fama:+6 }, branch:{ good:'e15_viral', bad:'e15_local' }, check:'talento' },
       { t:'📚 Seguir con el promedio 10', s:{ estudio:+12 }, next:'e15_estudio' },
@@ -472,7 +498,7 @@ const STORY = {
       { t:'🤸 Anotarme en atletismo de la escuela', s:{ fisico:+10 }, branch:{ good:'e15_proyecto', bad:'e15_estudio' }, check:'fisico' }
     ] },
   e12_poli: { edad: 12, tag: () => 'EDAD 12 · MULTIDEPORTE',
-    text: () => `Hacés de todo: atletismo, básquet, fútbol. Sos rapidísimo y tenés buen físico, pero te dicen que tenés que elegir uno para destacarte.`,
+    text: () => `Hacés de todo: atletismo, básquet, fútbol. Sos ${gen('rapidísimo','rapidísima','rapidísimo/a')} y tenés buen físico, pero te dicen que tenés que elegir uno para destacarte.`,
     opciones: [
       { t:'⚽ Volcarme 100% al fútbol', s:{ talento:+10, fisico:+6 }, branch:{ good:'e15_proyecto', bad:'e15_local' }, check:'talento' },
       { t:'🏃 Seguir con atletismo, sos un rayo', s:{ fisico:+12 }, next:'e15_local' },
@@ -483,7 +509,7 @@ const STORY = {
 
   // ---------- EDAD 15 ----------
   e15_proyecto: { edad: 15, tag: () => 'EDAD 15 · PROMESA',
-    text: () => `Sos figura de las inferiores. Clubes grandes te miran. Es el momento de las decisiones grandes.`,
+    text: () => `Sos figura de las inferiores y ya jugaste el <strong>Torneo Regional Federal Amateur</strong> con ${CLUB()}, enfrentando a clubes de otras provincias. Los grandes te miran. Es el momento de las decisiones grandes.`,
     opciones: [
       { t:'✈ Mudarme a Buenos Aires a probar en un grande', s:{ talento:+12, fama:+10, estudio:-8 }, branch:{ good:'e18_grande', bad:'e18_ascenso' }, check:'talento' },
       { t:'🌎 Aceptar una oferta de Sudamérica', s:{ talento:+8, fama:+8 }, branch:{ good:'e18_exterior', bad:'e18_ascenso' }, check:'talento' },
@@ -509,11 +535,11 @@ const STORY = {
       { t:'📚 Bajar un cambio y estudiar', s:{ estudio:+12 }, next:'e18_estudia' },
       { t:'🥅 Especializarme en freestyle de arquero', s:{ fisico:+6, fama:+8 }, next:'e18_arquero' }
     ] },
-  e15_arquero: { edad: 15, tag: () => 'EDAD 15 · ARQUERO PROMETEDOR',
-    text: () => `Sos un 1 prometedor. Los reclutadores buscan arqueros y vos tenés con qué. ¿Hacia dónde vas?`,
+  e15_arquero: { edad: 15, tag: () => 'EDAD 15 · ' + gen('ARQUERO PROMETEDOR','ARQUERA PROMETEDORA','ARQUERO/A PROMETEDOR/A'),
+    text: () => `Sos ${gen('un 1 prometedor','una 1 prometedora','un/a 1 prometedor/a')}. Los reclutadores buscan ${gen('arqueros','arqueras','arqueros/as')} y vos tenés con qué. ¿Hacia dónde vas?`,
     opciones: [
       { t:'🧤 Probar de arquero en un grande', s:{ talento:+10, fisico:+8 }, branch:{ good:'e18_grande', bad:'e18_ascenso' }, check:'fisico' },
-      { t:'🏠 Ser el 1 indiscutido del club local', s:{ fisico:+8, talento:+5 }, next:'e18_ascenso' },
+      { t:()=>'🏠 Ser '+gen('el 1 indiscutido','la 1 indiscutida','el/la 1 indiscutible')+' del club local', s:{ fisico:+8, talento:+5 }, next:'e18_ascenso' },
       { t:'📚 Estudiar y atajar amateur', s:{ estudio:+12 }, next:'e18_estudia' },
       { t:'📱 Hacer contenido de atajadas', s:{ fama:+12 }, branch:{ good:'e18_redes', bad:'e18_amateur' }, check:'fama' },
       { t:'🏘 Quedarme de ídolo en el arco del pueblo', s:{ fama:+10 }, next:'e18_amateur' }
@@ -528,7 +554,7 @@ const STORY = {
       { t:'🏘 Jugar amateur por placer', s:{ fama:+6, estudio:+5 }, next:'e18_amateur' }
     ] },
   e15_bajon: { edad: 15, tag: () => 'EDAD 15 · LESIÓN Y BAJÓN',
-    text: () => `Te lesionaste fuerte y estuviste meses parado. Fue un bajón. La rehabilitación es dura, pero también es una oportunidad para repensar todo.`,
+    text: () => `Te lesionaste fuerte y estuviste meses ${gen('parado','parada','parade')}. Fue un bajón. La rehabilitación es dura, pero también es una oportunidad para repensar todo.`,
     opciones: [
       { t:'💪 Rehabilitarme con todo y volver más fuerte', s:{ fisico:+12, talento:+6 }, branch:{ good:'e18_grande', bad:'e18_ascenso' }, check:'fisico' },
       { t:'📚 Aprovechar para meterle al estudio', s:{ estudio:+14 }, next:'e18_estudia' },
@@ -539,7 +565,7 @@ const STORY = {
 
   // ---------- EDAD 18 ----------
   e18_grande: { edad: 18, tag: () => 'EDAD 18 · DEBUT EN PRIMERA',
-    text: () => `¡Debutaste en Primera de un club grande! Ahora tenés que afianzarte y elegir qué tipo de jugador sos.`,
+    text: () => `¡Debutaste en <strong>Primera División</strong> de un club grande! Del potrero de ${ORI()} a la elite. Ahora tenés que afianzarte y elegir qué tipo de jugador${gen('','a','e')} sos.`,
     opciones: [
       { t:'⚽ Ser el 9 goleador, que Europa me mire', s:{ talento:+12, fama:+15, estudio:-5 }, branch:{ good:'e22_elite', bad:'e22_pro' }, check:'talento' },
       { t:'🎯 Enganche creativo, la pelota es mía', s:{ talento:+15, fama:+10 }, branch:{ good:'e22_elite', bad:'e22_pro' }, check:'talento' },
@@ -554,10 +580,10 @@ const STORY = {
       { t:'🇪🇺 De ahí dar el salto a Europa', s:{ talento:+10, fama:+14 }, branch:{ good:'e22_elite', bad:'e22_pro' }, check:'talento' },
       { t:'🇲🇽 Liga de México, me pagan muy bien', s:{ fama:+12 }, next:'e22_pro' },
       { t:'🇦🇷 Volver a Argentina con cartel', s:{ fama:+10, talento:+5 }, next:'e22_pro' },
-      { t:'🏘 Cansado de viajar, volver al pueblo', s:{ fama:+6 }, next:'e22_vida' }
+      { t:()=>'🏘 '+gen('Cansado','Cansada','Cansade')+' de viajar, volver al pueblo', s:{ fama:+6 }, next:'e22_vida' }
     ] },
   e18_ascenso: { edad: 18, tag: () => 'EDAD 18 · ASCENSO E INTERIOR',
-    text: () => `No llegaste a un grande, pero sos profesional en el ascenso o en un club del interior. La carrera sigue abierta.`,
+    text: () => `No llegaste a un grande, pero sos ${gen('profesional','profesional','profesional')} en el <strong>Federal A</strong> o la <strong>Primera Nacional</strong>, peleando por subir a la elite. La carrera sigue muy abierta.`,
     opciones: [
       { t:'📈 Pelear el ascenso y que me compre un grande', s:{ talento:+8, fama:+8 }, branch:{ good:'e22_pro', bad:'e22_vida' }, check:'talento' },
       { t:'🌎 Aceptar una liga exótica (Asia, etc.)', s:{ fama:+12 }, branch:{ good:'e22_pro', bad:'e22_vida' }, check:'fama' },
@@ -593,7 +619,7 @@ const STORY = {
       { t:'📱 Especialista en contenido de arqueros', s:{ fama:+14 }, next:'fin_creator' }
     ] },
   e18_amateur: { edad: 18, tag: () => 'EDAD 18 · ÍDOLO DEL BARRIO',
-    text: () => `El fútbol profesional pasó de largo, pero en tu liga local sos un crack y todos te admiran. ¿Qué hacés con tu vida?`,
+    text: () => `El fútbol profesional pasó de largo, pero en la <strong>Liga Pampeana</strong> sos ${gen('un crack','una crack','un/a crack')} y todos te admiran. ¿Qué hacés con tu vida?`,
     opciones: [
       { t:'🏘 Ser el ídolo eterno de la liga local', s:{ fama:+15 }, next:'fin_idolo' },
       { t:'⚽ Una última prueba en el profesionalismo', s:{ talento:+6 }, branch:{ good:'e22_pro', bad:'fin_idolo' }, check:'talento' },
@@ -708,7 +734,8 @@ function goNode(key) {
   node.opciones.forEach(op => {
     const b = document.createElement('button');
     b.className = 'decision-btn';
-    b.innerHTML = `${op.t}<span class="decision-impact">${buildHint(op)}</span>`;
+    const label = (typeof op.t === 'function') ? op.t() : op.t;
+    b.innerHTML = `${label}<span class="decision-impact">${buildHint(op)}</span>`;
     b.onclick = () => chooseOption(op);
     dec.appendChild(b);
   });
@@ -741,7 +768,9 @@ function chooseOption(op) {
       const score = roll + Math.floor(stat / 25);
       const good = score >= 6;
       next = good ? op.branch.good : op.branch.bad;
-      msg += good ? ' 🚀 ¡Se te abrió la puerta grande!' : ' 🚪 Esta vez no se dio… pero hay otros caminos.';
+      const gm = op.goodMsg || ' 🚀 ¡Salió bien y diste un salto en tu carrera!';
+      const bm = op.badMsg  || ' 🚪 No se dio por ese lado… pero la vida sigue y hay otros caminos.';
+      msg += good ? gm : bm;
     }
     $('dice-msg').textContent = msg;
 
