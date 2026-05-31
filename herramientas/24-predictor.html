@@ -82,10 +82,11 @@
   .tercero.sel .check { opacity:1; }
 
   /* BRACKET */
-  .bracket { display:flex; gap:1rem; overflow-x:auto; padding-bottom:1rem; }
-  .ronda { min-width:200px; flex:none; }
-  .ronda-title { font-family:'Anton',sans-serif; color:var(--gold); letter-spacing:0.1em; font-size:0.9rem; text-align:center; margin-bottom:0.6rem; text-transform:uppercase; }
-  .match { background:rgba(0,0,0,0.45); border:1px solid rgba(212,168,46,0.2); border-radius:8px; margin-bottom:0.6rem; overflow:hidden; }
+  .bracket { display:flex; gap:0.6rem; overflow-x:auto; padding-bottom:1rem; align-items:stretch; }
+  .ronda { min-width:170px; flex:1 1 0; display:flex; flex-direction:column; }
+  .ronda-title { font-family:'Anton',sans-serif; color:var(--gold); letter-spacing:0.08em; font-size:0.85rem; text-align:center; margin-bottom:0.5rem; text-transform:uppercase; }
+  .ronda-matches { flex:1; display:flex; flex-direction:column; justify-content:space-around; gap:0.4rem; }
+  .match { background:rgba(0,0,0,0.45); border:1px solid rgba(212,168,46,0.25); border-radius:8px; overflow:hidden; }
   .match-team { display:flex; align-items:center; gap:0.45rem; padding:0.5rem 0.6rem; cursor:pointer; font-size:0.85rem; border-bottom:1px solid rgba(255,255,255,0.05); transition:all 0.12s; }
   .match-team:last-child { border-bottom:none; }
   .match-team:hover { background: rgba(212,168,46,0.12); }
@@ -108,6 +109,16 @@
   .champ-name { font-family:'Anton',sans-serif; font-size:2.8rem; text-transform:uppercase; line-height:1; margin-top:0.6rem; color:var(--gold-2); }
   .champ-sub { font-family:'JetBrains Mono',monospace; font-size:0.7rem; letter-spacing:0.15em; opacity:0.7; margin-top:0.8rem; }
   .juv-wm { font-family:'JetBrains Mono',monospace; font-size:0.6rem; letter-spacing:0.2em; color:rgba(212,168,46,0.9); margin-top:1rem; }
+
+  /* PREMIOS */
+  .awards-panel { background:rgba(0,0,0,0.4); border:1px solid rgba(212,168,46,0.3); border-radius:14px; padding:1rem 1.1rem; margin-top:1rem; }
+  .awards-title { font-family:'Anton',sans-serif; color:var(--gold); letter-spacing:0.08em; font-size:1.05rem; text-transform:uppercase; margin-bottom:0.15rem; }
+  .awards-sub { font-size:0.78rem; opacity:0.7; margin-bottom:0.8rem; }
+  .awards-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.7rem; }
+  @media (max-width:560px){ .awards-grid { grid-template-columns:1fr; } }
+  .award-field label { display:block; font-family:'JetBrains Mono',monospace; font-size:0.68rem; letter-spacing:0.06em; color:var(--gold-2); text-transform:uppercase; margin-bottom:0.25rem; }
+  .award-field input { width:100%; background:rgba(0,0,0,0.5); border:1px solid rgba(244,236,216,0.25); color:var(--crema); padding:0.6rem 0.7rem; border-radius:8px; font-family:inherit; font-size:0.92rem; }
+  .award-field input:focus { outline:none; border-color:var(--gold); }
 </style>
 </head>
 <body>
@@ -168,8 +179,23 @@
       <div class="champ-sub">Predicción · Estados Unidos · México · Canadá</div>
       <div class="juv-wm">@juventud_lapampa</div>
     </div>
+    <div class="awards-panel" id="awards-panel">
+      <div class="awards-title">🏅 Premios del Mundial</div>
+      <div class="awards-sub">Tu predicción de los premios individuales (opcional, se suman a la descarga).</div>
+      <div class="awards-grid">
+        <div class="award-field"><label>👟 Bota de Oro · Goleador</label><input id="aw-bota" list="dl-jugadores" placeholder="Ej: Lautaro Martínez" maxlength="28"></div>
+        <div class="award-field"><label>🌟 Balón de Oro · Mejor jugador</label><input id="aw-balon" list="dl-jugadores" placeholder="Ej: Lionel Messi" maxlength="28"></div>
+        <div class="award-field"><label>🧤 Guante de Oro · Mejor arquero</label><input id="aw-guante" list="dl-arqueros" placeholder="Ej: Dibu Martínez" maxlength="28"></div>
+        <div class="award-field"><label>🤝 Fair Play · Equipo</label><input id="aw-fairplay" list="dl-equipos" placeholder="Ej: Japón" maxlength="28"></div>
+      </div>
+    </div>
+
     <div class="btn-row">
-      <button class="btn" id="download-campeon">📸 Descargar campeón</button>
+      <button class="btn" id="download-resumen">🏅 Descargar predicción completa</button>
+      <button class="btn btn-sec" id="download-cuadro2">📋 Descargar cuadro (fixture)</button>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-sec" id="download-campeon">📸 Descargar campeón</button>
       <button class="btn btn-sec" id="download-grupos">📋 Descargar grupos</button>
     </div>
     <div class="btn-row">
@@ -177,8 +203,14 @@
     </div>
   </div>
 
-  <!-- contenedor oculto para captura de grupos -->
+  <datalist id="dl-jugadores"></datalist>
+  <datalist id="dl-arqueros"></datalist>
+  <datalist id="dl-equipos"></datalist>
+
+  <!-- contenedores ocultos para captura -->
   <div id="grupos-capture" style="position:fixed;left:-9999px;top:0;width:760px;"></div>
+  <div id="cuadro-capture" style="position:fixed;left:-9999px;top:0;width:1120px;"></div>
+  <div id="resumen-capture" style="position:fixed;left:-9999px;top:0;width:560px;"></div>
 </div>
 
 <script>
@@ -252,7 +284,7 @@ const GRUPOS = {
   L:['Turquía','República Checa','Congo RD','Bosnia y Herzegovina']
 };
 
-let pred = { orden:{}, thirds:[], rounds:[] };
+let pred = { orden:{}, thirds:[], rounds:[], awards:{bota:'',balon:'',guante:'',fairplay:''} };
 GROUPS.forEach(g => pred.orden[g] = []);
 
 function flagHtml(name, cls='flag') {
@@ -379,20 +411,18 @@ function clearDownstream(r, m) {
 function renderBracket() {
   const wrap = $('bracket');
   wrap.innerHTML = '';
+  const teamRow = (match, slot, r, m) => {
+    const team = match[slot];
+    if (!team) return `<div class="match-team tba">por definir</div>`;
+    const isW = match.w === team;
+    const isL = match.w && match.w !== team;
+    return `<div class="match-team ${isW?'win':''} ${isL?'lose':''}" data-r="${r}" data-m="${m}" data-team="${team}">${flagHtml(team)}<span>${team}</span></div>`;
+  };
   pred.rounds.forEach((ronda, r) => {
     const col = document.createElement('div');
     col.className = 'ronda';
-    col.innerHTML = `<div class="ronda-title">${RONDA_NOMBRES[r]}</div>`;
-    ronda.forEach((match, m) => {
-      const teamRow = (slot) => {
-        const team = match[slot];
-        if (!team) return `<div class="match-team tba">por definir</div>`;
-        const isW = match.w === team;
-        const isL = match.w && match.w !== team;
-        return `<div class="match-team ${isW?'win':''} ${isL?'lose':''}" data-r="${r}" data-m="${m}" data-team="${team}">${flagHtml(team)}<span>${team}</span></div>`;
-      };
-      col.innerHTML += `<div class="match">${teamRow('a')}${teamRow('b')}</div>`;
-    });
+    const matchesHtml = ronda.map((match, m) => `<div class="match">${teamRow(match,'a',r,m)}${teamRow(match,'b',r,m)}</div>`).join('');
+    col.innerHTML = `<div class="ronda-title">${RONDA_NOMBRES[r]}</div><div class="ronda-matches">${matchesHtml}</div>`;
     wrap.appendChild(col);
   });
   wrap.querySelectorAll('.match-team[data-team]').forEach(el => {
@@ -440,10 +470,7 @@ function capture(node, filename, bg) {
   });
 }
 $('download-campeon').onclick = () => capture($('champ-card'), 'mi-campeon-mundial-2026.png', '#050d08');
-$('download-cuadro').onclick = () => {
-  // armamos una versión vertical compacta para captura
-  capture($('bracket'), 'mi-cuadro-mundial-2026.png', '#050d08');
-};
+$('download-cuadro').onclick = () => captureCuadro();
 $('download-grupos').onclick = () => {
   const cap = $('grupos-capture');
   cap.style.background = '#050d08';
@@ -465,8 +492,81 @@ $('download-grupos').onclick = () => {
 $('restart').onclick = () => {
   GROUPS.forEach(g => pred.orden[g] = []);
   pred.thirds = []; pred.rounds = [];
+  pred.awards = {bota:'',balon:'',guante:'',fairplay:''};
+  ['bota','balon','guante','fairplay'].forEach(k=>{ const el=$('aw-'+k); if(el) el.value=''; });
   renderGrupos(); goScreen('grupos');
 };
+
+// ---------- PREMIOS ----------
+const JUGADORES = ['Lionel Messi','Lautaro Martínez','Julián Álvarez','Kylian Mbappé','Erling Haaland','Vinícius Jr','Jude Bellingham','Lamine Yamal','Harry Kane','Pedri','Rodrigo De Paul','Florian Wirtz','Vitinha','Rafael Leão','Cole Palmer','Phil Foden','Bukayo Saka','Federico Valverde','Antoine Griezmann','Kevin De Bruyne','Rodri','Jamal Musiala'];
+const ARQUEROS = ['Dibu Martínez','Thibaut Courtois','Gianluigi Donnarumma','Ederson','Alisson','Jan Oblak','Mike Maignan','Unai Simón','Yassine Bounou','Marc-André ter Stegen','Diogo Costa'];
+function fillDatalist(id, arr){ const el=$(id); if(el) el.innerHTML = arr.map(x=>`<option value="${x}"></option>`).join(''); }
+fillDatalist('dl-jugadores', JUGADORES);
+fillDatalist('dl-arqueros', ARQUEROS);
+fillDatalist('dl-equipos', Object.keys(TEAMS).sort((a,b)=>a.localeCompare(b)));
+['bota','balon','guante','fairplay'].forEach(k=>{ const el=$('aw-'+k); if(el) el.oninput=()=>{ pred.awards[k]=el.value.trim(); }; });
+
+// ---------- CAPTURA: cuadro completo (fixture) ----------
+function captureCuadro(){
+  if(!pred.rounds || !pred.rounds.length){ return; }
+  const champ = pred.rounds[4] && pred.rounds[4][0].w;
+  const cap = $('cuadro-capture');
+  cap.style.background='#050d08'; cap.style.padding='22px';
+  cap.innerHTML = `<div style="font-family:'Anton',sans-serif;color:#d4a82e;font-size:1.7rem;text-align:center;letter-spacing:0.08em;margin-bottom:4px">MI CUADRO · MUNDIAL 2026</div>
+    ${champ?`<div style="text-align:center;color:#f4cd60;font-family:'JetBrains Mono',monospace;font-size:0.72rem;letter-spacing:0.15em;margin-bottom:14px">🏆 CAMPEÓN: ${champ.toUpperCase()}</div>`:`<div style="height:14px"></div>`}
+    <div style="display:flex;gap:8px;align-items:stretch">
+      ${pred.rounds.map((ronda,r)=>`<div style="flex:1;display:flex;flex-direction:column;min-width:150px">
+        <div style="font-family:'Anton',sans-serif;color:#d4a82e;text-align:center;font-size:0.82rem;letter-spacing:0.06em;margin-bottom:6px;text-transform:uppercase">${RONDA_NOMBRES[r]}</div>
+        <div style="flex:1;display:flex;flex-direction:column;justify-content:space-around;gap:6px">
+          ${ronda.map(match=>`<div style="background:rgba(0,0,0,0.5);border:1px solid rgba(212,168,46,0.3);border-radius:7px;overflow:hidden">
+            ${['a','b'].map(s=>{ const team=match[s];
+              if(!team) return `<div style="padding:6px 8px;font-size:0.72rem;color:#f4ecd8;opacity:0.4;font-style:italic">por definir</div>`;
+              const win=match.w===team;
+              return `<div style="display:flex;align-items:center;gap:6px;padding:6px 8px;font-size:0.76rem;color:#f4ecd8;${win?'background:rgba(74,222,128,0.22);font-weight:700':(match.w?'opacity:0.42':'')}">${flagHtml(team)}<span>${team}</span></div>`;
+            }).join('')}
+          </div>`).join('')}
+        </div>
+      </div>`).join('')}
+    </div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:0.2em;color:#d4a82e;text-align:center;margin-top:14px">PREDICTOR · @juventud_lapampa · MUNDIAL 2026</div>`;
+  setTimeout(()=>capture(cap,'mi-cuadro-mundial-2026.png','#050d08'),60);
+}
+
+// ---------- CAPTURA: predicción completa (campeón + top4 + premios) ----------
+function captureResumen(){
+  const fin = pred.rounds[4][0]; const champ=fin.w;
+  const runner = champ ? (fin.a===champ?fin.b:fin.a) : null;
+  const semis = pred.rounds[3];
+  const semiTeams=[semis[0].a,semis[0].b,semis[1].a,semis[1].b].filter(Boolean);
+  const losers = semiTeams.filter(t=>t!==champ && t!==runner);
+  const aw = pred.awards;
+  const big = (emoji,lbl,team)=> team?`<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(0,0,0,0.4);border:1px solid rgba(212,168,46,0.3);border-radius:10px;margin-bottom:8px">
+      <span style="font-size:1.5rem">${emoji}</span><div style="flex:1">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;color:#f4cd60;text-transform:uppercase">${lbl}</div>
+      <div style="display:flex;align-items:center;gap:7px;font-family:'Anton',sans-serif;font-size:1.1rem;color:#f4ecd8;margin-top:2px">${flagHtml(team)}<span>${team}</span></div></div></div>`:'';
+  const small = (emoji,lbl,val,isTeam)=> val?`<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(0,0,0,0.35);border-radius:8px;margin-bottom:6px">
+      <span style="font-size:1.1rem">${emoji}</span><div style="flex:1">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:#f4cd60;text-transform:uppercase">${lbl}</div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:0.92rem;color:#f4ecd8;margin-top:1px">${isTeam&&TEAMS[val]?flagHtml(val):''}<span>${val}</span></div></div></div>`:'';
+  const cap=$('resumen-capture');
+  cap.style.background='#050d08'; cap.style.padding='22px';
+  cap.innerHTML = `<div style="font-family:'Anton',sans-serif;color:#d4a82e;font-size:1.55rem;text-align:center;letter-spacing:0.05em">MI PREDICCIÓN · MUNDIAL 2026</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:0.58rem;letter-spacing:0.2em;text-align:center;color:#f4ecd8;opacity:0.6;margin:4px 0 14px">EE.UU · MÉXICO · CANADÁ</div>
+    ${big('🏆','Campeón',champ)}
+    ${big('🥈','Subcampeón',runner)}
+    ${losers.length?`<div style="display:flex;gap:8px;margin-bottom:10px">${losers.map(t=>`<div style="flex:1;display:flex;align-items:center;gap:6px;padding:8px 10px;background:rgba(0,0,0,0.35);border-radius:8px"><span>🥉</span>${flagHtml(t)}<span style="font-size:0.82rem;color:#f4ecd8">${t}</span></div>`).join('')}</div>`:''}
+    <div style="font-family:'Anton',sans-serif;color:#d4a82e;font-size:1rem;letter-spacing:0.06em;margin:8px 0 8px;text-transform:uppercase">🏅 Premios</div>
+    ${small('👟','Bota de Oro · Goleador',aw.bota,false)}
+    ${small('🌟','Balón de Oro · Mejor jugador',aw.balon,false)}
+    ${small('🧤','Guante de Oro · Arquero',aw.guante,false)}
+    ${small('🤝','Fair Play · Equipo',aw.fairplay,true)}
+    ${(!aw.bota&&!aw.balon&&!aw.guante&&!aw.fairplay)?`<div style="font-size:0.78rem;opacity:0.55;text-align:center;padding:6px">(Completá los premios arriba para sumarlos)</div>`:''}
+    <div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;color:#d4a82e;text-align:center;margin-top:14px">PREDICTOR · @juventud_lapampa</div>`;
+  setTimeout(()=>capture(cap,'mi-prediccion-mundial-2026.png','#050d08'),60);
+}
+
+$('download-resumen').onclick = captureResumen;
+$('download-cuadro2').onclick = captureCuadro;
 
 // init
 renderGrupos();
