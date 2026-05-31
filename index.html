@@ -321,7 +321,7 @@
   // ===== CONFIG (cambiá en un solo lugar) =====
   const CUENTA = "@pampajuega";            // cuenta del Desafío (placeholder, cambiá cuando la definas)
   const WHATSAPP_JUVENTUD = "5492954801601"; // WhatsApp institucional de la Subse
-  const INSCRIPCION_URL = "#";             // TODO: pegar acá el link al Google Form de inscripción
+  const INSCRIPCION_URL = "https://forms.gle/sCAEagJnVTMughh3A"; // Google Form de inscripción al Desafío
 
   // Acordeón de puertas
   function togglePuerta(btn){ btn.parentElement.classList.toggle('open'); }
@@ -395,7 +395,7 @@
     else if (navigator.clipboard) { navigator.clipboard.writeText(txt).then(()=>alert('¡Consigna copiada! Subí tu material y etiquetá a '+CUENTA),()=>{}); }
     else { alert('Subí tu material y etiquetá a '+CUENTA); }
   }));
-  document.getElementById('inscribite-btn').href = INSCRIPCION_URL;
+  (function(){ var ib = document.getElementById('inscribite-btn'); ib.href = INSCRIPCION_URL; ib.target = '_blank'; ib.rel = 'noopener'; })();
 
   // Concurso: categoría
   const OUT = {
