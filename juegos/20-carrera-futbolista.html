@@ -305,7 +305,7 @@
       <select id="genero" style="margin-bottom:0.7rem">
         <option value="f">Mujer</option>
         <option value="m" selected>Varón</option>
-        <option value="x">Otre / Prefiero no decir</option>
+        <option value="x">Prefiero no decir</option>
       </select>
       <select id="origen">
         <option value="santarosa">Santa Rosa</option>
@@ -489,7 +489,7 @@ const STORY = {
       { t:'🥅 Un día tapo todo y me prueban de arquero', s:{ fisico:+8, talento:+4 }, next:'e15_arquero' }
     ] },
   e12_escuela: { edad: 12, tag: () => 'EDAD 12 · TORNEO ESCOLAR',
-    text: () => `Sos ${gen('buen alumno','buena alumna','buen alumne')} y el fútbol es un hobby, pero llegaste a la final del torneo escolar y un periodista local te filma. ¿Qué hacés con eso?`,
+    text: () => `Te va muy bien en el cole y el fútbol es un hobby, pero llegaste a la final del torneo escolar y un periodista local te filma. ¿Qué hacés con eso?`,
     opciones: [
       { t:'🏆 Jugar la final a muerte y dar el batacazo', s:{ talento:+8, fama:+6 }, branch:{ good:'e15_viral', bad:'e15_local' }, check:'talento' },
       { t:'📚 Seguir con el promedio 10', s:{ estudio:+12 }, next:'e15_estudio' },
@@ -498,7 +498,7 @@ const STORY = {
       { t:'🤸 Anotarme en atletismo de la escuela', s:{ fisico:+10 }, branch:{ good:'e15_proyecto', bad:'e15_estudio' }, check:'fisico' }
     ] },
   e12_poli: { edad: 12, tag: () => 'EDAD 12 · MULTIDEPORTE',
-    text: () => `Hacés de todo: atletismo, básquet, fútbol. Sos ${gen('rapidísimo','rapidísima','rapidísimo/a')} y tenés buen físico, pero te dicen que tenés que elegir uno para destacarte.`,
+    text: () => `Hacés de todo: atletismo, básquet, fútbol. Sos una flecha y tenés muy buen físico, pero te dicen que tenés que elegir uno para destacarte.`,
     opciones: [
       { t:'⚽ Volcarme 100% al fútbol', s:{ talento:+10, fisico:+6 }, branch:{ good:'e15_proyecto', bad:'e15_local' }, check:'talento' },
       { t:'🏃 Seguir con atletismo, sos un rayo', s:{ fisico:+12 }, next:'e15_local' },
@@ -535,16 +535,16 @@ const STORY = {
       { t:'📚 Bajar un cambio y estudiar', s:{ estudio:+12 }, next:'e18_estudia' },
       { t:'🥅 Especializarme en freestyle de arquero', s:{ fisico:+6, fama:+8 }, next:'e18_arquero' }
     ] },
-  e15_arquero: { edad: 15, tag: () => 'EDAD 15 · ' + gen('ARQUERO PROMETEDOR','ARQUERA PROMETEDORA','ARQUERO/A PROMETEDOR/A'),
-    text: () => `Sos ${gen('un 1 prometedor','una 1 prometedora','un/a 1 prometedor/a')}. Los reclutadores buscan ${gen('arqueros','arqueras','arqueros/as')} y vos tenés con qué. ¿Hacia dónde vas?`,
+  e15_arquero: { edad: 15, tag: () => 'EDAD 15 · PROMESA DEL ARCO',
+    text: () => `Sos una promesa bajo los tres palos. Los reclutadores buscan nombres nuevos para el arco y vos tenés con qué. ¿Hacia dónde vas?`,
     opciones: [
       { t:'🧤 Probar de arquero en un grande', s:{ talento:+10, fisico:+8 }, branch:{ good:'e18_grande', bad:'e18_ascenso' }, check:'fisico' },
-      { t:()=>'🏠 Ser '+gen('el 1 indiscutido','la 1 indiscutida','el/la 1 indiscutible')+' del club local', s:{ fisico:+8, talento:+5 }, next:'e18_ascenso' },
+      { t:'🏠 Ser titular fijo en el arco del club local', s:{ fisico:+8, talento:+5 }, next:'e18_ascenso' },
       { t:'📚 Estudiar y atajar amateur', s:{ estudio:+12 }, next:'e18_estudia' },
       { t:'📱 Hacer contenido de atajadas', s:{ fama:+12 }, branch:{ good:'e18_redes', bad:'e18_amateur' }, check:'fama' },
       { t:'🏘 Quedarme de ídolo en el arco del pueblo', s:{ fama:+10 }, next:'e18_amateur' }
     ] },
-  e15_estudio: { edad: 15, tag: () => 'EDAD 15 · ' + gen('BUEN ALUMNO','BUENA ALUMNA','BUEN ALUMNE'),
+  e15_estudio: { edad: 15, tag: () => 'EDAD 15 · BUEN PROMEDIO',
     text: () => `Tenés buenas notas y una vida equilibrada. El fútbol sigue ahí, pero no es lo único. ¿Cómo seguís?`,
     opciones: [
       { t:'🎓 Apuntar derecho a la universidad', s:{ estudio:+15 }, next:'e18_estudia' },
@@ -554,7 +554,7 @@ const STORY = {
       { t:'🏘 Jugar amateur por placer', s:{ fama:+6, estudio:+5 }, next:'e18_amateur' }
     ] },
   e15_bajon: { edad: 15, tag: () => 'EDAD 15 · LESIÓN Y BAJÓN',
-    text: () => `Te lesionaste fuerte y estuviste meses ${gen('parado','parada','parade')}. Fue un bajón. La rehabilitación es dura, pero también es una oportunidad para repensar todo.`,
+    text: () => `Te lesionaste fuerte y estuviste meses sin jugar. Fue un bajón. La rehabilitación es dura, pero también es una oportunidad para repensar todo.`,
     opciones: [
       { t:'💪 Rehabilitarme con todo y volver más fuerte', s:{ fisico:+12, talento:+6 }, branch:{ good:'e18_grande', bad:'e18_ascenso' }, check:'fisico' },
       { t:'📚 Aprovechar para meterle al estudio', s:{ estudio:+14 }, next:'e18_estudia' },
@@ -565,7 +565,7 @@ const STORY = {
 
   // ---------- EDAD 18 ----------
   e18_grande: { edad: 18, tag: () => 'EDAD 18 · DEBUT EN PRIMERA',
-    text: () => `¡Debutaste en <strong>Primera División</strong> de un club grande! Del potrero de ${ORI()} a la elite. Ahora tenés que afianzarte y elegir qué tipo de jugador${gen('','a','e')} sos.`,
+    text: () => `¡Debutaste en <strong>Primera División</strong> de un club grande! Del potrero de ${ORI()} a la elite. Ahora tenés que afianzarte y elegir qué clase de futbolista sos.`,
     opciones: [
       { t:'⚽ Ser el 9 goleador, que Europa me mire', s:{ talento:+12, fama:+15, estudio:-5 }, branch:{ good:'e22_elite', bad:'e22_pro' }, check:'talento' },
       { t:'🎯 Enganche creativo, la pelota es mía', s:{ talento:+15, fama:+10 }, branch:{ good:'e22_elite', bad:'e22_pro' }, check:'talento' },
@@ -580,10 +580,10 @@ const STORY = {
       { t:'🇪🇺 De ahí dar el salto a Europa', s:{ talento:+10, fama:+14 }, branch:{ good:'e22_elite', bad:'e22_pro' }, check:'talento' },
       { t:'🇲🇽 Liga de México, me pagan muy bien', s:{ fama:+12 }, next:'e22_pro' },
       { t:'🇦🇷 Volver a Argentina con cartel', s:{ fama:+10, talento:+5 }, next:'e22_pro' },
-      { t:()=>'🏘 '+gen('Cansado','Cansada','Cansade')+' de viajar, volver al pueblo', s:{ fama:+6 }, next:'e22_vida' }
+      { t:'🏘 Extrañás demasiado: dejar de viajar y volver al pueblo', s:{ fama:+6 }, next:'e22_vida' }
     ] },
   e18_ascenso: { edad: 18, tag: () => 'EDAD 18 · ASCENSO E INTERIOR',
-    text: () => `No llegaste a un grande, pero sos ${gen('profesional','profesional','profesional')} en el <strong>Federal A</strong> o la <strong>Primera Nacional</strong>, peleando por subir a la elite. La carrera sigue muy abierta.`,
+    text: () => `No llegaste a un grande, pero sos profesional en el <strong>Federal A</strong> o la <strong>Primera Nacional</strong>, peleando por subir a la elite. La carrera sigue muy abierta.`,
     opciones: [
       { t:'📈 Pelear el ascenso y que me compre un grande', s:{ talento:+8, fama:+8 }, branch:{ good:'e22_pro', bad:'e22_vida' }, check:'talento' },
       { t:'🌎 Aceptar una liga exótica (Asia, etc.)', s:{ fama:+12 }, branch:{ good:'e22_pro', bad:'e22_vida' }, check:'fama' },
@@ -591,7 +591,7 @@ const STORY = {
       { t:'📚 Estudiar mientras juego', s:{ estudio:+12 }, next:'e22_vida' },
       { t:'🏘 Volver al club del pueblo como ídolo', s:{ fama:+10 }, next:'e22_vida' }
     ] },
-  e18_redes: { edad: 18, tag: () => 'EDAD 18 · ' + gen('CREADOR','CREADORA','CREADOR/A'),
+  e18_redes: { edad: 18, tag: () => 'EDAD 18 · CREACIÓN DE CONTENIDO',
     text: () => `Tenés cientos de miles de seguidores. Vivís del contenido futbolero, pero el fútbol "de verdad" todavía te tira.`,
     opciones: [
       { t:'📱 Apostar todo al contenido', s:{ fama:+18 }, next:'fin_creator' },
@@ -619,9 +619,9 @@ const STORY = {
       { t:'📱 Especialista en contenido de arqueros', s:{ fama:+14 }, next:'fin_creator' }
     ] },
   e18_amateur: { edad: 18, tag: () => 'EDAD 18 · ÍDOLO DEL BARRIO',
-    text: () => `El fútbol profesional pasó de largo, pero en la <strong>Liga Pampeana</strong> sos ${gen('un crack','una crack','un/a crack')} y todos te admiran. ¿Qué hacés con tu vida?`,
+    text: () => `El fútbol profesional pasó de largo, pero en la <strong>Liga Pampeana</strong> sos una figura y todos te admiran. ¿Qué hacés con tu vida?`,
     opciones: [
-      { t:()=>'🏘 Ser '+gen('el ídolo eterno','la ídola eterna','le ídole eterne')+' de la liga local', s:{ fama:+15 }, next:'fin_idolo' },
+      { t:'🏘 Ser la leyenda eterna de la liga local', s:{ fama:+15 }, next:'fin_idolo' },
       { t:'⚽ Una última prueba en el profesionalismo', s:{ talento:+6 }, branch:{ good:'e22_pro', bad:'fin_idolo' }, check:'talento' },
       { t:'🏫 Estudiar para profe de Educación Física', s:{ estudio:+14 }, next:'fin_profe' },
       { t:'📋 Dirigir al equipo de mi barrio', s:{ estudio:+8, talento:+5 }, next:'fin_dt' },
@@ -675,31 +675,31 @@ const STORY = {
 const FINALES = {
   estrella: { trofeo:'🏆',
     t: () => gen('ESTRELLA MUNDIAL','ESTRELLA MUNDIAL','ESTRELLA MUNDIAL'),
-    sub: () => gen('CAMPEÓN DEL MUNDO CON ARGENTINA','CAMPEONA DEL MUNDO CON ARGENTINA','CAMPEÓN/A DEL MUNDO'),
+    sub: () => gen('CAMPEÓN DEL MUNDO CON ARGENTINA','CAMPEONA DEL MUNDO CON ARGENTINA','EN LA CIMA DEL MUNDO CON ARGENTINA'),
     text: () => gen(
       `${NAME()} llegó a lo más alto: campeón del mundo con Argentina. La pelota que pateabas en el potrero de ${ORI()} hoy la levantan millones. De pibe de pueblo a leyenda mundial.`,
       `${NAME()} hizo historia: campeona del mundo y referente del fútbol femenino. Desde ${ORI()} hasta la cima, le abriste la cancha a miles de pibas. Tu nombre ya es bandera.`,
       `${NAME()} tocó el cielo: campeón del mundo. Tu historia, de ${ORI()} a la gloria, la cuentan en todas las escuelas.`) },
   pro: { trofeo:'⚽', t: () => 'PROFESIONAL DE ELITE',
     sub: () => gen('JUGADOR DE PRIMERA EN EUROPA','JUGADORA DE PRIMERA EN EUROPA','PRIMERA EN EUROPA'),
-    text: () => `${NAME()} hizo una gran carrera profesional en Europa. No ganaste el Mundial, pero viviste del fútbol al máximo nivel, conociste el mundo y te ganaste el respeto de todos. ${gen('Un crack','Una crack','Un fenómeno')} de verdad.` },
-  idolo: { trofeo:'⭐', t: () => gen('ÍDOLO DEL PUEBLO','ÍDOLA DEL PUEBLO','ÍDOLE DEL PUEBLO'), sub: () => 'LA LEYENDA LOCAL DE LA PAMPA',
-    text: () => `${NAME()} es ${gen('el ídolo eterno','la ídola eterna','le ídole eterne')} de ${ORI()}. En el club hay una camiseta con tu nombre colgada. No jugaste en Europa, pero cada pibe del pueblo te quiere imitar. Esa es tu Copa del Mundo.` },
-  arquero: { trofeo:'🧤', t: () => gen('ARQUERO LEYENDA','ARQUERA LEYENDA','ARQUERO/A LEYENDA'), sub: () => 'HÉROE DE LOS PENALES',
+    text: () => `${NAME()} hizo una gran carrera profesional en Europa. No ganaste el Mundial, pero viviste del fútbol al máximo nivel, conociste el mundo y te ganaste el respeto de todos. ${gen('Un crack','Una crack','Una máquina')} de verdad.` },
+  idolo: { trofeo:'⭐', t: () => gen('ÍDOLO DEL PUEBLO','ÍDOLA DEL PUEBLO','LEYENDA DEL PUEBLO'), sub: () => 'LA LEYENDA LOCAL DE LA PAMPA',
+    text: () => `${NAME()} es ${gen('el ídolo eterno','la ídola eterna','la leyenda eterna')} de ${ORI()}. En el club hay una camiseta con tu nombre colgada. No jugaste en Europa, pero en el pueblo todo el mundo te quiere imitar. Esa es tu Copa del Mundo.` },
+  arquero: { trofeo:'🧤', t: () => gen('ARQUERO LEYENDA','ARQUERA LEYENDA','LEYENDA DEL ARCO'), sub: () => 'HÉROE DE LOS PENALES',
     text: () => `${NAME()} se hizo leyenda bajo los tres palos. Atajaste los penales decisivos de una final y tu apellido quedó grabado en la historia del arco. El miedo del delantero tiene tu cara.` },
-  creator: { trofeo:'📱', t: () => gen('CREADOR DE CONTENIDO','CREADORA DE CONTENIDO','CREADOR/A DE CONTENIDO'), sub: () => 'INFLUENCER FUTBOLERO',
+  creator: { trofeo:'📱', t: () => gen('CREADOR DE CONTENIDO','CREADORA DE CONTENIDO','CREACIÓN DE CONTENIDO'), sub: () => 'INFLUENCER FUTBOLERO',
     text: () => `${NAME()} no jugó profesional, pero tiene millones de seguidores. Tus videos de fútbol recorren el mundo y las marcas se pelean por vos. Vivís del fútbol… desde el teléfono.` },
   profe: { trofeo:'🏫', t: () => 'PROFE DE EDU FÍSICA', sub: () => 'FORMADOR DE GENERACIONES',
-    text: () => `${NAME()} es ${gen('el profe','la profe','el/la profe')} de Educación Física más ${gen('querido','querida','queride')} del Liceo. Formaste a generaciones de pibes y pibas. Hiciste por el deporte pampeano más que muchos cracks.` },
-  dt: { trofeo:'📋', t: () => gen('ENTRENADOR','ENTRENADORA','ENTRENADOR/A'), sub: () => 'DESCUBRIDOR DE TALENTOS',
-    text: () => `${NAME()} se convirtió en ${gen('entrenador','entrenadora','entrenador/a')} y descubridor de talentos. De tus equipos infantiles ya salieron jugadores de Primera. Te dicen "el ojo clínico" de La Pampa.` },
-  medico: { trofeo:'🩺', t: () => gen('MÉDICO DEPORTIVO','MÉDICA DEPORTIVA','KINESIÓLOGO/A'), sub: () => 'LA CIENCIA DETRÁS DE LA COPA',
-    text: () => `${NAME()} es ${gen('médico','médica','profesional')} deportivo de elite. Cuidás los cuerpos de los cracks y viajás a los mundiales sin patear una pelota. Sin vos, nadie levanta la copa.` },
-  comentarista: { trofeo:'🎙', t: () => gen('RELATOR','RELATORA','RELATOR/A'), sub: () => 'LA VOZ DEL MUNDIAL',
+    text: () => `${NAME()} da Educación Física en el Liceo y es de las personas más queridas de la escuela. Formaste a generaciones de pibes y pibas. Hiciste por el deporte pampeano más que muchos cracks.` },
+  dt: { trofeo:'📋', t: () => gen('ENTRENADOR','ENTRENADORA','DIRECCIÓN TÉCNICA'), sub: () => 'OJO PARA EL TALENTO',
+    text: () => `${NAME()} agarró los buzos: dirige equipos y descubre talentos. De tus categorías infantiles ya salieron jugadores de Primera. Te dicen "el ojo clínico" de La Pampa.` },
+  medico: { trofeo:'🩺', t: () => gen('MÉDICO DEPORTIVO','MÉDICA DEPORTIVA','SALUD DEPORTIVA'), sub: () => 'LA CIENCIA DETRÁS DE LA COPA',
+    text: () => `${NAME()} trabaja en la salud deportiva de elite. Cuidás los cuerpos de los cracks y viajás a los mundiales sin patear una pelota. Sin ese laburo, nadie levanta la copa.` },
+  comentarista: { trofeo:'🎙', t: () => gen('RELATOR','RELATORA','LA VOZ DEL RELATO'), sub: () => 'LA VOZ DEL MUNDIAL',
     text: () => `${NAME()} es la voz que narra los partidos del Mundial. Tu relato se escucha en toda Latinoamérica. El fútbol pasa por tus palabras.` },
-  embajador: { trofeo:'🌍', t: () => gen('EMBAJADOR DEL DEPORTE','EMBAJADORA DEL DEPORTE','EMBAJADOR/A'), sub: () => 'FÚTBOL QUE INCLUYE',
-    text: () => `${NAME()} usa el fútbol para cambiar vidas: ${gen('embajador','embajadora','embajador/a')} de un programa que lleva el deporte a barrios y escuelas. Demostraste que la pelota también sirve para incluir.` },
-  emprendedor: { trofeo:'🏟', t: () => gen('DUEÑO DE ESCUELITA','DUEÑA DE ESCUELITA','DUEÑO/A DE ESCUELITA'), sub: () => 'EL SUEÑO HECHO CLUB',
+  embajador: { trofeo:'🌍', t: () => gen('EMBAJADOR DEL DEPORTE','EMBAJADORA DEL DEPORTE','AL SERVICIO DEL DEPORTE'), sub: () => 'FÚTBOL QUE INCLUYE',
+    text: () => `${NAME()} usa el fútbol para cambiar vidas: lleva adelante un programa que acerca el deporte a barrios y escuelas. Demostraste que la pelota también sirve para incluir.` },
+  emprendedor: { trofeo:'🏟', t: () => gen('DUEÑO DE ESCUELITA','DUEÑA DE ESCUELITA','ESCUELITA PROPIA'), sub: () => 'EL SUEÑO HECHO CLUB',
     text: () => `${NAME()} abrió su propia escuelita de fútbol en ${ORI()}. Cientos de chicos y chicas entrenan con tu método. Tu sueño se transformó en el sueño de muchos.` },
   normal: { trofeo:'🍞', t: () => 'VIDA DE BARRIO', sub: () => 'Y NO ESTÁ NADA MAL',
     text: () => `${NAME()} vive tranquilo en ${ORI()}, labura y juega al fútbol los sábados con los amigos. ${gen('Sos feliz','Sos feliz','Sos feliz')}. No todos los caminos terminan en un estadio: algunos terminan en un asado el domingo, y eso también es ganar.` }
