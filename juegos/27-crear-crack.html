@@ -422,7 +422,7 @@ function buildAvatarSVG(a, opt={}){
 function miniHead(opt){
   const a = Object.assign({}, av, opt);
   const skin = SKINS[a.skin], hc = HAIR_COLORS[a.hairColor], bc = darken(hc,0.9);
-  return `<svg viewBox="40 40 120 110"><circle cx="100" cy="92" r="38" fill="${skin}"/>${beardSVG(a.beard,bc)}${a.beard!==undefined&&opt.beard!==undefined?'':hairSVG(a.hair,hc)}${opt.hair!==undefined?hairSVG(a.hair,hc):''}<circle cx="86" cy="94" r="4" fill="#23150c"/><circle cx="114" cy="94" r="4" fill="#23150c"/></svg>`;
+  return `<svg viewBox="40 40 120 110"><circle cx="100" cy="92" r="38" fill="${skin}"/>${beardSVG(a.beard,bc)}${hairSVG(a.hair,hc)}<circle cx="86" cy="94" r="4" fill="#23150c"/><circle cx="114" cy="94" r="4" fill="#23150c"/></svg>`;
 }
 
 /* ===================== EDITOR ===================== */

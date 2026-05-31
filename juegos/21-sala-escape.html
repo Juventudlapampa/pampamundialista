@@ -340,20 +340,20 @@ const PUZZLES = [
     setup: (cont) => {
       cont.innerHTML = `
         <p class="puzzle-text">
-          La primera puerta tiene un candado de 4 dígitos. Encima dice: <em>"El año que Argentina ganó su primer Mundial, multiplicado por el número de la camiseta de Maradona, dividido entre las copas que ganó España"</em>.
+          La primera puerta tiene un candado de <strong>5 dígitos</strong>. Encima dice: <em>"El año en que Argentina ganó su primer Mundial, multiplicado por el número de la camiseta de Maradona"</em>.
         </p>
         <p class="puzzle-text" style="opacity:0.85;font-size:0.85rem">
-          Pistas: <strong>año primer Mundial Argentina</strong> · <strong>nº de Maradona</strong> · <strong>copas España</strong>
+          Pistas: <strong>año del primer Mundial de Argentina</strong> × <strong>nº de Maradona</strong>
         </p>
-        <input type="text" class="puzzle-input" id="puzzle-input" placeholder="0000" maxlength="6">
+        <input type="text" class="puzzle-input" id="puzzle-input" placeholder="00000" maxlength="6">
         <div class="feedback" id="feedback"></div>
       `;
     },
     check: (val) => {
-      // 1978 * 10 / 1 = 19780
+      // 1978 * 10 = 19780
       return val.replace(/\D/g, '') === '19780';
     },
-    hint: '1978 × 10 ÷ 1'
+    hint: '1978 × 10'
   },
   {
     n: 2,
@@ -361,7 +361,7 @@ const PUZZLES = [
     setup: (cont) => {
       cont.innerHTML = `
         <p class="puzzle-text">
-          En la pared hay 4 banderas pintadas. Una pertenece a la <strong>única selección que ganó 4 Copas América consecutivas</strong>. Tap en la correcta.
+          En la pared hay 4 banderas pintadas. Una pertenece a la <strong>única selección que ganó el primer Mundial de la historia, en 1930</strong>. Tap en la correcta.
         </p>
         <div class="puzzle-flags" id="flags-grid"></div>
         <div class="feedback" id="feedback"></div>
@@ -369,7 +369,7 @@ const PUZZLES = [
       const FLAGS = [
         { id:'BRA', label:'Brasil', bg: 'linear-gradient(to bottom, #009C3B 33%, #FFDF00 33% 66%, #002776 66%)' },
         { id:'ARG', label:'Argentina', bg: 'linear-gradient(to bottom, #75AADB 33%, #FFFFFF 33% 66%, #75AADB 66%)' },
-        { id:'URU', label:'Uruguay', bg: 'linear-gradient(to bottom, #0038A8 33%, #FFFFFF 33% 66%, #FFFFFF 66%)' }, // pista: Uruguay ganó 4 América entre 1916-1923 (no consecutivas pero las únicas 4 en pocos años)
+        { id:'URU', label:'Uruguay', bg: 'linear-gradient(to bottom, #0038A8 33%, #FFFFFF 33% 66%, #FFFFFF 66%)' }, // Uruguay: campeón del primer Mundial (1930), jugando de local
         { id:'CHI', label:'Chile', bg: 'linear-gradient(to bottom, #FFFFFF 50%, #D52B1E 50%)' }
       ];
       const grid = document.getElementById('flags-grid');
@@ -387,8 +387,8 @@ const PUZZLES = [
         grid.appendChild(d);
       });
     },
-    check: () => window.__currentFlag === 'URU', // Trampita histórica: Uruguay ganó las primeras 4 América. Es la respuesta "correcta" del puzzle.
-    hint: 'La selección celeste pequeña: ganó las primeras Copas América'
+    check: () => window.__currentFlag === 'URU', // Uruguay fue campeón del primer Mundial, en 1930, jugando de local.
+    hint: 'La celeste: fue campeona del primer Mundial de todos, en 1930, de local'
   },
   {
     n: 3,

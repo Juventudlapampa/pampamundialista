@@ -544,7 +544,7 @@ const STORY = {
       { t:'📱 Hacer contenido de atajadas', s:{ fama:+12 }, branch:{ good:'e18_redes', bad:'e18_amateur' }, check:'fama' },
       { t:'🏘 Quedarme de ídolo en el arco del pueblo', s:{ fama:+10 }, next:'e18_amateur' }
     ] },
-  e15_estudio: { edad: 15, tag: () => 'EDAD 15 · BUEN ALUMNO',
+  e15_estudio: { edad: 15, tag: () => 'EDAD 15 · ' + gen('BUEN ALUMNO','BUENA ALUMNA','BUEN ALUMNE'),
     text: () => `Tenés buenas notas y una vida equilibrada. El fútbol sigue ahí, pero no es lo único. ¿Cómo seguís?`,
     opciones: [
       { t:'🎓 Apuntar derecho a la universidad', s:{ estudio:+15 }, next:'e18_estudia' },
@@ -591,7 +591,7 @@ const STORY = {
       { t:'📚 Estudiar mientras juego', s:{ estudio:+12 }, next:'e22_vida' },
       { t:'🏘 Volver al club del pueblo como ídolo', s:{ fama:+10 }, next:'e22_vida' }
     ] },
-  e18_redes: { edad: 18, tag: () => 'EDAD 18 · CREADOR',
+  e18_redes: { edad: 18, tag: () => 'EDAD 18 · ' + gen('CREADOR','CREADORA','CREADOR/A'),
     text: () => `Tenés cientos de miles de seguidores. Vivís del contenido futbolero, pero el fútbol "de verdad" todavía te tira.`,
     opciones: [
       { t:'📱 Apostar todo al contenido', s:{ fama:+18 }, next:'fin_creator' },
@@ -621,7 +621,7 @@ const STORY = {
   e18_amateur: { edad: 18, tag: () => 'EDAD 18 · ÍDOLO DEL BARRIO',
     text: () => `El fútbol profesional pasó de largo, pero en la <strong>Liga Pampeana</strong> sos ${gen('un crack','una crack','un/a crack')} y todos te admiran. ¿Qué hacés con tu vida?`,
     opciones: [
-      { t:'🏘 Ser el ídolo eterno de la liga local', s:{ fama:+15 }, next:'fin_idolo' },
+      { t:()=>'🏘 Ser '+gen('el ídolo eterno','la ídola eterna','le ídole eterne')+' de la liga local', s:{ fama:+15 }, next:'fin_idolo' },
       { t:'⚽ Una última prueba en el profesionalismo', s:{ talento:+6 }, branch:{ good:'e22_pro', bad:'fin_idolo' }, check:'talento' },
       { t:'🏫 Estudiar para profe de Educación Física', s:{ estudio:+14 }, next:'fin_profe' },
       { t:'📋 Dirigir al equipo de mi barrio', s:{ estudio:+8, talento:+5 }, next:'fin_dt' },
@@ -683,14 +683,14 @@ const FINALES = {
   pro: { trofeo:'⚽', t: () => 'PROFESIONAL DE ELITE',
     sub: () => gen('JUGADOR DE PRIMERA EN EUROPA','JUGADORA DE PRIMERA EN EUROPA','PRIMERA EN EUROPA'),
     text: () => `${NAME()} hizo una gran carrera profesional en Europa. No ganaste el Mundial, pero viviste del fútbol al máximo nivel, conociste el mundo y te ganaste el respeto de todos. ${gen('Un crack','Una crack','Un fenómeno')} de verdad.` },
-  idolo: { trofeo:'⭐', t: () => 'ÍDOLO DEL PUEBLO', sub: () => 'LA LEYENDA LOCAL DE LA PAMPA',
-    text: () => `${NAME()} es el ídolo eterno de ${ORI()}. En el club hay una camiseta con tu nombre colgada. No jugaste en Europa, pero cada pibe del pueblo te quiere imitar. Esa es tu Copa del Mundo.` },
+  idolo: { trofeo:'⭐', t: () => gen('ÍDOLO DEL PUEBLO','ÍDOLA DEL PUEBLO','ÍDOLE DEL PUEBLO'), sub: () => 'LA LEYENDA LOCAL DE LA PAMPA',
+    text: () => `${NAME()} es ${gen('el ídolo eterno','la ídola eterna','le ídole eterne')} de ${ORI()}. En el club hay una camiseta con tu nombre colgada. No jugaste en Europa, pero cada pibe del pueblo te quiere imitar. Esa es tu Copa del Mundo.` },
   arquero: { trofeo:'🧤', t: () => gen('ARQUERO LEYENDA','ARQUERA LEYENDA','ARQUERO/A LEYENDA'), sub: () => 'HÉROE DE LOS PENALES',
     text: () => `${NAME()} se hizo leyenda bajo los tres palos. Atajaste los penales decisivos de una final y tu apellido quedó grabado en la historia del arco. El miedo del delantero tiene tu cara.` },
   creator: { trofeo:'📱', t: () => gen('CREADOR DE CONTENIDO','CREADORA DE CONTENIDO','CREADOR/A DE CONTENIDO'), sub: () => 'INFLUENCER FUTBOLERO',
     text: () => `${NAME()} no jugó profesional, pero tiene millones de seguidores. Tus videos de fútbol recorren el mundo y las marcas se pelean por vos. Vivís del fútbol… desde el teléfono.` },
   profe: { trofeo:'🏫', t: () => 'PROFE DE EDU FÍSICA', sub: () => 'FORMADOR DE GENERACIONES',
-    text: () => `${NAME()} es ${gen('el profe','la profe','el/la profe')} de Educación Física más querido del Liceo. Formaste a generaciones de pibes y pibas. Hiciste por el deporte pampeano más que muchos cracks.` },
+    text: () => `${NAME()} es ${gen('el profe','la profe','el/la profe')} de Educación Física más ${gen('querido','querida','queride')} del Liceo. Formaste a generaciones de pibes y pibas. Hiciste por el deporte pampeano más que muchos cracks.` },
   dt: { trofeo:'📋', t: () => gen('ENTRENADOR','ENTRENADORA','ENTRENADOR/A'), sub: () => 'DESCUBRIDOR DE TALENTOS',
     text: () => `${NAME()} se convirtió en ${gen('entrenador','entrenadora','entrenador/a')} y descubridor de talentos. De tus equipos infantiles ya salieron jugadores de Primera. Te dicen "el ojo clínico" de La Pampa.` },
   medico: { trofeo:'🩺', t: () => gen('MÉDICO DEPORTIVO','MÉDICA DEPORTIVA','KINESIÓLOGO/A'), sub: () => 'LA CIENCIA DETRÁS DE LA COPA',

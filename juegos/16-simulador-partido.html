@@ -581,7 +581,16 @@
     MAR: ['Hakimi', 'Ziyech', 'En-Nesyri', 'Saïss', 'Mazraoui', 'Amrabat', 'Aguerd', 'Bounou', 'Boufal', 'Cheddira', 'Ounahi', 'Sabiri', 'Ezzalzouli', 'Adli', 'Salmaoui'],
     JPN: ['Mitoma', 'Kubo', 'Doan', 'Endo', 'Itakura', 'Tanaka', 'Tomiyasu', 'Maeda', 'Suzuki', 'Sakai', 'Kamada', 'Asano', 'Minamino', 'Furuhashi', 'Ueda'],
     COL: ['James', 'Luis Díaz', 'Cuadrado', 'Falcao', 'Borja', 'Lerma', 'Yerry Mina', 'Sánchez', 'Vargas', 'Mojica', 'Muñoz', 'Uribe', 'Arias', 'Cucho', 'Carrascal'],
-    SEN: ['Mané', 'Sarr', 'Koulibaly', 'Mendy', 'Diatta', 'Diédhiou', 'Gueye', 'Kouyaté', 'Édouard Mendy', 'Cisse', 'Boulaye Dia', 'Ciss', 'Bamba Dieng', 'Loum', 'Jakobs']
+    SEN: ['Mané', 'Sarr', 'Koulibaly', 'Mendy', 'Diatta', 'Diédhiou', 'Gueye', 'Kouyaté', 'Édouard Mendy', 'Cisse', 'Boulaye Dia', 'Ciss', 'Bamba Dieng', 'Loum', 'Jakobs'],
+    USA: ['Pulisic', 'Balogun', 'Weah', 'McKennie', 'Adams', 'Musah', 'Reyna', 'Robinson', 'Dest', 'Richards', 'Ream', 'Turner', 'Aaronson', 'Pepi', 'Ferreira'],
+    CAN: ['Alphonso Davies', 'Jonathan David', 'Buchanan', 'Eustáquio', 'Larin', 'Hoilett', 'Laryea', 'Miller', 'Vitória', 'Johnston', 'Crépeau', 'Osorio', 'Cavallini', 'Koné', 'Kaye'],
+    ECU: ['Enner Valencia', 'Moisés Caicedo', 'Plata', 'Estupiñán', 'Hincapié', 'Pacho', 'Preciado', 'Mena', 'Sarmiento', 'Kendry Páez', 'Gonzalo Plata', 'Galíndez', 'Porozo', 'Yeboah', 'Rodríguez'],
+    CHI: ['Alexis Sánchez', 'Vidal', 'Pulgar', 'Brereton Díaz', 'Aravena', 'Suazo', 'Maripán', 'Medel', 'Bravo', 'Vegas', 'Osorio', 'Núñez', 'Dávila', 'Assadi', 'Loyola'],
+    NOR: ['Haaland', 'Ødegaard', 'Sørloth', 'Nusa', 'Berge', 'Aursnes', 'Ryerson', 'Ajer', 'Østigård', 'Nyland', 'Thorstvedt', 'Bobb', 'Strand Larsen', 'Berg', 'Schjelderup'],
+    SUI: ['Xhaka', 'Shaqiri', 'Embolo', 'Sow', 'Freuler', 'Akanji', 'Ricardo Rodríguez', 'Elvedi', 'Sommer', 'Ndoye', 'Amdouni', 'Vargas', 'Zakaria', 'Aebischer', 'Widmer'],
+    POL: ['Lewandowski', 'Zieliński', 'Szymański', 'Zalewski', 'Frankowski', 'Bednarek', 'Kiwior', 'Cash', 'Szczęsny', 'Piotrowski', 'Świderski', 'Buksa', 'Skóraś', 'Moder', 'Urbański'],
+    AUS: ['Mooy', 'Irvine', 'Goodwin', 'Duke', 'Boyle', 'Hrustic', 'Behich', 'Souttar', 'Rowles', 'Ryan', 'McGree', 'Metcalfe', 'Bos', 'Tilio', 'Velupillay'],
+    ITA: ['Donnarumma', 'Bastoni', 'Di Lorenzo', 'Calafiori', 'Dimarco', 'Barella', 'Tonali', 'Frattesi', 'Chiesa', 'Retegui', 'Raspadori', 'Scamacca', 'Pellegrini', 'Zaccagni', 'Ricci']
   };
   function pickJugador(equipoId) {
     const id = equipoId || 'ARG';
@@ -734,6 +743,7 @@
     estado.tiros_l = 0; estado.tiros_v = 0;
     estado.pos_l = 50;
     estado.paused = false;
+    estado.halftime = false;
     estado.speed = 1;
     estado.tactica_visit = 'equilibrado';
     estado.ordenesUsadas = [];
@@ -816,7 +826,7 @@
   function runMatch() {
     estado.running = true;
     estado.interval = setInterval(() => {
-      if (estado.paused) return;
+      if (estado.paused || estado.halftime) return;
       tickMinute();
     }, 800 / estado.speed);
   }
@@ -847,13 +857,13 @@
     // Entretiempo
     if (estado.min === 45) {
       document.getElementById('et-banner-container').innerHTML = '<div class="et-banner">⏸ ENTRETIEMPO · Cambiá tu táctica si querés</div>';
-      estado.paused = true;
+      estado.halftime = true;
       log(45, '⏱ ENTRETIEMPO. Resultado parcial.');
       setTimeout(() => {
         document.getElementById('et-banner-container').innerHTML = '';
-        estado.paused = false;
+        estado.halftime = false;
         log(45, '▶ Empieza el segundo tiempo.');
-      }, 3500);
+      }, 3500 / estado.speed);
       return;
     }
 
