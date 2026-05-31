@@ -188,7 +188,7 @@ const TOP_Y=10, BOT_Y=H-10;     // líneas de gol
 const PR=11, BR=6;              // radios jugador / pelota
 
 // ===== ESTADO =====
-let G=null, raf=null, timerInt=null, manualSwitch=-1;
+let G=null, raf=null, timerInt=null;
 
 function team(side){ return side==='me' ? TEAMS[myTeamIdx] : TEAMS[rivalTeamIdx]; }
 
@@ -217,10 +217,10 @@ function resetPositions(){
   G.me.forEach(p=>{ p.x=p.hx*W; p.y=p.hy*H; p.vx=p.vy=0; });
   G.ri.forEach(p=>{ p.x=p.hx*W; p.y=p.hy*H; p.vx=p.vy=0; });
   G.ball={ x:W/2, y:H/2, vx:0, vy:0, owner:null };
-  manualSwitch=-1;
+  G.grace=0; activeIdx=-1;
 }
 function newGame(){
-  G={ me:makePlayers('me'), ri:makePlayers('ri'), ball:null, scoreMe:0, scoreRi:0, time:120, running:true, kickReady:true, msg:'', msgT:0 };
+  G={ me:makePlayers('me'), ri:makePlayers('ri'), ball:null, scoreMe:0, scoreRi:0, time:120, running:true, kickReady:true, msg:'', msgT:0, grace:0 };
   resetPositions();
 }
 
@@ -243,23 +243,28 @@ $('kick-btn').addEventListener('pointerdown', e=>{ e.preventDefault(); doKick();
 $('switch-btn').addEventListener('pointerdown', e=>{ e.preventDefault(); cycleSwitch(); });
 $('snd-btn').onclick=()=>{ soundOn=!soundOn; $('snd-btn').textContent=soundOn?'🔊':'🔇'; };
 
-// ===== ¿quién controlo? =====
+// ===== ¿quién controlo? (con stickiness para que NO salte solo) =====
+let activeIdx=-1;
+function fieldIdxs(){ return G.me.map((p,i)=>i).filter(i=>!G.me[i].gk); }
+function dBall(i){ return Math.hypot(G.me[i].x-G.ball.x, G.me[i].y-G.ball.y); }
 function controlledIdx(){
-  // si tengo la pelota, controlo al dueño
-  if(G.ball.owner && G.ball.owner.side==='me') return G.me.indexOf(G.ball.owner);
-  // si forcé un cambio manual, respetarlo un toque
-  if(manualSwitch>=0) return manualSwitch;
-  // si no, el de campo más cercano a la pelota
-  let best=-1, bd=1e9;
-  G.me.forEach((p,i)=>{ if(p.gk) return; const d=Math.hypot(p.x-G.ball.x,p.y-G.ball.y); if(d<bd){bd=d;best=i;} });
-  return best;
+  // si tengo la pelota, controlo siempre al dueño
+  if(G.ball.owner && G.ball.owner.side==='me'){ activeIdx=G.me.indexOf(G.ball.owner); return activeIdx; }
+  const fs=fieldIdxs();
+  // inicializar (o si el activo quedó inválido): el más cercano a la pelota
+  if(activeIdx<0 || G.me[activeIdx].gk || fs.indexOf(activeIdx)<0){
+    activeIdx=fs.reduce((a,b)=>dBall(b)<dBall(a)?b:a, fs[0]); return activeIdx;
+  }
+  // mientras arrastro el dedo, NO cambio de jugador (control estable)
+  if(joy) return activeIdx;
+  // en reposo, sólo cambio si OTRO está bastante más cerca (histéresis 45px)
+  const closest=fs.reduce((a,b)=>dBall(b)<dBall(a)?b:a, fs[0]);
+  if(closest!==activeIdx && dBall(closest) < dBall(activeIdx)-45) activeIdx=closest;
+  return activeIdx;
 }
 function cycleSwitch(){
-  const out=G.me.map((p,i)=>i).filter(i=>!G.me[i].gk);
-  const cur=controlledIdx();
-  const k=out.indexOf(cur);
-  manualSwitch=out[(k+1)%out.length];
-  vibe(10);
+  const fs=fieldIdxs(); const k=fs.indexOf(controlledIdx());
+  activeIdx=fs[(k+1)%fs.length]; vibe(10);
 }
 
 // ===== PATEAR =====
@@ -311,11 +316,12 @@ function update(){
       const tx=Math.max(GMX1+12, Math.min(GMX2-12, b.x));
       p.vx=(tx-p.x)*0.08; p.vy=(p.hy*H - p.y)*0.06;
     } else {
-      // compañeros: si tengo la pelota, hacen lugar adelante; si no, vuelven a su zona
-      let tx,ty;
-      if(b.owner && b.owner.side==='me'){ tx = p.hx*W + (Math.random()*2-1); ty = Math.min(p.hy*H, b.y-90); }
-      else { tx=p.hx*W*0.6 + b.x*0.4; ty=p.hy*H*0.6 + b.y*0.4; }
-      p.vx=(tx-p.x)*0.03; p.vy=(ty-p.y)*0.03;
+      // compañeros: mantienen su CARRIL (no se amontonan). Atacando, suben a ofrecerse.
+      let tx = p.hx*W;   // x fija = su carril
+      let ty = p.hy*H;
+      if(b.owner && b.owner.side==='me'){ ty = Math.min(p.hy*H, Math.max(b.y-95, TOP_Y+55)); }
+      else { ty = p.hy*H*0.74 + b.y*0.26; }   // leve apoyo en y, sin colapsar la x
+      p.vx=(tx-p.x)*0.05; p.vy=(ty-p.y)*0.05;
     }
     p.x+=p.vx; p.y+=p.vy;
   });
@@ -339,8 +345,8 @@ function update(){
         p.vx=dx/mm*d.rivalSpeed; p.vy=dy/mm*d.rivalSpeed;
       }
     } else {
-      const tx=p.hx*W*0.6+b.x*0.4, ty=p.hy*H*0.6+b.y*0.4;
-      p.vx=(tx-p.x)*0.03; p.vy=(ty-p.y)*0.03;
+      const tx=p.hx*W*0.82+b.x*0.18, ty=p.hy*H*0.78+b.y*0.22;
+      p.vx=(tx-p.x)*0.035; p.vy=(ty-p.y)*0.035;
     }
     p.x+=p.vx; p.y+=p.vy;
   });
@@ -354,16 +360,19 @@ function update(){
     const o=b.owner; const dir = o.side==='me' ? -1 : 1;
     b.x=o.x; b.y=o.y + dir*(PR+3);
     b.vx=b.vy=0;
-    // robo: rival/mío contrario cerca del dueño
-    const foes = o.side==='me' ? G.ri : G.me;
-    for(const f of foes){ if(Math.hypot(f.x-o.x,f.y-o.y) < PR+8){ if(Math.random()<0.06){ b.owner=f; if(o.side==='me') flash('¡Te la robaron! 🔴','#f87171'); break; } } }
+    // robo: un rival cercano puede sacártela, pero NO al instante (hay gracia)
+    if(G.grace>0){ G.grace--; }
+    else {
+      const foes = o.side==='me' ? G.ri : G.me;
+      for(const f of foes){ if(!f.gk && Math.hypot(f.x-o.x,f.y-o.y) < PR+7){ const ch = o.side==='me'?0.022:0.03; if(Math.random()<ch){ b.owner=f; G.grace=35; if(o.side==='me') flash('¡Te la robaron! 🔴','#f87171'); break; } } }
+    }
   } else {
     b.x+=b.vx; b.y+=b.vy; b.vx*=0.985; b.vy*=0.985;
     if(b.x<BR){b.x=BR;b.vx=Math.abs(b.vx)*0.6;} if(b.x>W-BR){b.x=W-BR;b.vx=-Math.abs(b.vx)*0.6;}
     // tomar posesión
     let taker=null, tb=1e9;
     [...G.me,...G.ri].forEach(p=>{ const dd=Math.hypot(p.x-b.x,p.y-b.y); if(dd<PR+BR+2 && dd<tb){tb=dd;taker=p;} });
-    if(taker && Math.hypot(b.vx,b.vy)<7){ b.owner=taker; manualSwitch=-1; }
+    if(taker && Math.hypot(b.vx,b.vy)<7){ b.owner=taker; G.grace=30; }
     // arqueros atajan
     [G.me[0],G.ri[0]].forEach(gk=>{ if(Math.hypot(gk.x-b.x,gk.y-b.y)<PR+BR+3 && Math.hypot(b.vx,b.vy)>4){ if(Math.random()<d.gkSkill){ b.owner=gk; sSave(); flash('¡Atajó! 🧤','#fbbf24'); } } });
     // GOL
@@ -435,7 +444,8 @@ function drawPlayer(p,color,ring,active){
   ctx.beginPath(); ctx.ellipse(p.x,p.y+PR,9,3,0,0,7); ctx.fillStyle='rgba(0,0,0,0.22)'; ctx.fill();
   if(active){ ctx.beginPath(); ctx.arc(p.x,p.y,PR+5,0,7); ctx.strokeStyle='#f4cd60'; ctx.lineWidth=2.5; ctx.stroke();
     ctx.beginPath(); ctx.moveTo(p.x,p.y-PR-7); ctx.lineTo(p.x-5,p.y-PR-14); ctx.lineTo(p.x+5,p.y-PR-14); ctx.closePath(); ctx.fillStyle='#f4cd60'; ctx.fill(); }
-  ctx.beginPath(); ctx.roundRect ? ctx.roundRect(p.x-9,p.y-5,18,15,4) : ctx.rect(p.x-9,p.y-5,18,15); ctx.fillStyle=p.gk?'#f4cd60':color; ctx.fill();
+  ctx.beginPath(); ctx.roundRect ? ctx.roundRect(p.x-9,p.y-5,18,15,4) : ctx.rect(p.x-9,p.y-5,18,15); ctx.fillStyle=color; ctx.fill();
+  if(p.gk){ ctx.fillStyle='rgba(0,0,0,0.30)'; ctx.fillRect(p.x-9,p.y-1,18,6); }
   ctx.beginPath(); ctx.arc(p.x,p.y-9,6,0,7); ctx.fillStyle='#f0c79a'; ctx.fill();
   ctx.lineWidth=2; ctx.strokeStyle=ring; ctx.stroke();
 }
