@@ -274,6 +274,38 @@
   .clue-board .cb-text { font-size:0.84rem; line-height:1.38; color:var(--crema); }
   .clue-board .cb-text strong { color:var(--gold-2); }
   .clue-board .cb-hint { font-size:0.74rem; color:var(--verde); margin-top:0.4rem; border-top:1px dashed rgba(212,168,46,0.3); padding-top:0.35rem; }
+  /* objetos inspeccionables: las pistas viven en la sala */
+  .sObj.clue { cursor:pointer; }
+  .sObj.glow { animation:keyPulse 1.7s infinite; z-index:4; }
+  .sObj.flash { animation:keyFlash 0.45s 3; }
+  @keyframes keyFlash { 0%,100%{transform:scale(1)} 50%{transform:scale(1.28)} }
+  .sObj.found { opacity:0.5; }
+  .sObj.found::after { content:'✓'; position:absolute; top:-6px; right:-8px; font-size:0.8rem; color:var(--verde); text-shadow:0 1px 2px #000; }
+  /* lupa de inspección */
+  .ip-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:9000; opacity:0; pointer-events:none; transition:opacity 0.18s; }
+  .ip-backdrop.on { opacity:1; pointer-events:auto; }
+  .inspect-pop { position:fixed; left:50%; top:50%; transform:translate(-50%,-46%) scale(0.92); width:86%; max-width:360px; background:linear-gradient(180deg,rgba(14,10,6,0.98),rgba(28,18,10,0.98)); border:2px solid var(--gold); border-radius:14px; padding:1rem 1.05rem 1.1rem; z-index:9001; box-shadow:0 18px 50px rgba(0,0,0,0.85); opacity:0; pointer-events:none; transition:opacity 0.18s, transform 0.18s; }
+  .inspect-pop.on { opacity:1; transform:translate(-50%,-50%) scale(1); pointer-events:auto; }
+  .inspect-pop .ip-emoji { font-size:2.6rem; line-height:1; }
+  .inspect-pop .ip-title { font-family:'Anton',sans-serif; letter-spacing:0.04em; font-size:1.15rem; color:var(--gold-2); margin:0.3rem 0 0.4rem; text-transform:uppercase; }
+  .inspect-pop .ip-text { font-size:0.92rem; line-height:1.5; color:var(--crema); }
+  .inspect-pop .ip-text strong { color:var(--gold-2); }
+  .inspect-pop .ip-tag { display:inline-block; margin-top:0.7rem; font-family:'JetBrains Mono',monospace; font-size:0.6rem; letter-spacing:0.14em; text-transform:uppercase; padding:3px 8px; border-radius:6px; }
+  .inspect-pop .ip-tag.pista { background:rgba(74,222,128,0.18); color:var(--verde); border:1px solid rgba(74,222,128,0.5); }
+  .inspect-pop .ip-tag.nada { background:rgba(244,236,216,0.08); color:rgba(244,236,216,0.6); border:1px solid rgba(244,236,216,0.2); }
+  .inspect-pop .ip-close { position:absolute; top:6px; right:11px; background:none; border:none; color:var(--crema); font-size:1.15rem; cursor:pointer; opacity:0.65; }
+  .inspect-pop .ip-close:hover { opacity:1; }
+  /* registro de pistas encontradas */
+  .clue-log { background:rgba(0,0,0,0.45); border:1px solid rgba(212,168,46,0.35); border-radius:10px; padding:0.55rem 0.75rem; margin-bottom:0.7rem; }
+  .clue-log .cl-head { font-family:'JetBrains Mono',monospace; font-size:0.6rem; letter-spacing:0.13em; text-transform:uppercase; color:var(--gold); display:flex; justify-content:space-between; gap:0.5rem; }
+  .clue-log .cl-count { color:var(--verde); }
+  .clue-log .cl-empty { font-size:0.8rem; color:rgba(244,236,216,0.6); margin-top:0.4rem; line-height:1.4; }
+  .clue-log .cl-empty b { color:var(--gold-2); }
+  .clue-log .cl-list { margin-top:0.4rem; padding:0; }
+  .clue-log .cl-list li { list-style:none; font-size:0.82rem; line-height:1.45; padding:0.3rem 0; border-top:1px dashed rgba(212,168,46,0.2); }
+  .clue-log .cl-list li:first-child { border-top:none; }
+  .clue-log .cl-list b { color:var(--gold-2); }
+  .clue-log .cl-list strong { color:var(--gold-2); }
 .grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
 </style>
 </head>
@@ -289,7 +321,7 @@
     <div class="panel">
       <div style="font-family:'Anton',sans-serif;color:var(--rojo);font-size:1.2rem;letter-spacing:0.1em;margin-bottom:0.7rem;text-transform:uppercase">🔒 ESTÁS ENCERRADO/A</div>
       <p style="line-height:1.5;font-size:0.9rem;margin-bottom:1rem">
-        Sos el/la <strong style="color:var(--gold-2)">utilero/a oficial</strong> del vestuario justo antes de la final del Mundial 2026. El equipo ya está calentando y vos quedaste adentro: las puertas se trabaron. Resolvé <strong>5 acertijos</strong> contrarreloj y salí a la cancha antes del pitazo. <strong style="color:var(--gold-2)">Las pistas están en la sala</strong> (movés la cámara para mirar alrededor).
+        Sos el/la <strong style="color:var(--gold-2)">utilero/a oficial</strong> del vestuario justo antes de la final del Mundial 2026. El equipo ya está calentando y vos quedaste adentro: las puertas se trabaron. Resolvé <strong>5 acertijos</strong> contrarreloj y salí a la cancha antes del pitazo. <strong style="color:var(--gold-2)">Las pistas están escondidas en la sala</strong>: arrastrá para mirar alrededor y <strong style="color:var(--gold-2)">tocá los objetos</strong> para descubrirlas (algunos no sirven, son señuelos).
       </p>
       <p style="line-height:1.5;font-size:0.85rem;color:var(--gold-2);margin-bottom:0.9rem">
         Cada acertijo te abre el siguiente y te manda a otra sala. Tu tiempo queda en el ranking. ¿La sacás barata o quedás adentro?
@@ -297,8 +329,8 @@
       <input type="text" class="input-name" id="player-name" placeholder="Tu nombre" maxlength="18">
       <div style="font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:0.18em;color:var(--rojo);text-transform:uppercase;margin-bottom:0.3rem">Dificultad</div>
       <div class="diff-row" id="diff-row">
-        <button class="diff-opt sel" data-d="facil">😎 FÁCIL<small>12 min · pista extra en la sala</small></button>
-        <button class="diff-opt" data-d="dificil">🔥 DIFÍCIL<small>7 min · solo lo justo</small></button>
+        <button class="diff-opt sel" data-d="facil">😎 FÁCIL<small>12 min · los objetos clave brillan</small></button>
+        <button class="diff-opt" data-d="dificil">🔥 DIFÍCIL<small>7 min · sin brillos, buscá vos</small></button>
       </div>
       <button class="btn" id="start">🔓 A GANAR LA PUERTA</button>
       <button class="btn btn-secondary" style="margin-top:0.5rem" id="ver-ranking">🏆 Ranking</button>
@@ -312,7 +344,7 @@
       <div class="vignette"></div>
       <button class="look look-l" id="look-l">‹</button>
       <button class="look look-r" id="look-r">›</button>
-      <div class="look-hint" id="look-hint">↔ arrastrá para mirar la sala</div>
+      <div class="look-hint" id="look-hint">↔ arrastrá para mirar · 👆 tocá los objetos</div>
       <button class="snd-btn" id="snd-btn">🔊</button>
       <div class="scene-label" id="scene-label">VESTUARIO</div>
     </div>
@@ -324,6 +356,16 @@
     <div id="puzzle-container"></div>
   </div>
   <div id="door-wipe"><span>🚪</span></div>
+
+  <!-- LUPA: lo que ves al inspeccionar un objeto de la sala -->
+  <div class="ip-backdrop" id="ip-backdrop"></div>
+  <div class="inspect-pop" id="inspect-pop" role="dialog" aria-modal="true">
+    <button class="ip-close" id="ip-close" aria-label="Cerrar">✕</button>
+    <div class="ip-emoji">🔍</div>
+    <div class="ip-title"></div>
+    <div class="ip-text"></div>
+    <span class="ip-tag"></span>
+  </div>
 
   <!-- RESULT -->
   <div class="screen" id="screen-result">
@@ -377,7 +419,7 @@ const PUZZLES = [
           La primera puerta tiene un candado de <strong>5 dígitos</strong>. Encima dice: <em>"El año en que Argentina ganó su primer Mundial, multiplicado por el número de la camiseta de Maradona"</em>.
         </p>
         <p class="puzzle-text" style="opacity:0.85;font-size:0.85rem">
-          Pistas: <strong>año del primer Mundial de Argentina</strong> × <strong>nº de Maradona</strong>
+          🔎 Los dos números están <strong>escondidos en el vestuario</strong>. Tocá los objetos para encontrarlos.
         </p>
         <input type="text" class="puzzle-input" id="puzzle-input" placeholder="00000" maxlength="6">
         <div class="feedback" id="feedback"></div>
@@ -387,7 +429,7 @@ const PUZZLES = [
       // 1978 * 10 = 19780
       return val.replace(/\D/g, '') === '19780';
     },
-    hint: '1978 × 10'
+    hint: 'Buscá el AÑO en la vitrina de trofeos y el NÚMERO en la camiseta colgada. Después multiplicá uno por el otro.'
   },
   {
     n: 2,
@@ -422,7 +464,7 @@ const PUZZLES = [
       });
     },
     check: () => window.__currentFlag === 'URU', // Uruguay fue campeón del primer Mundial, en 1930, jugando de local.
-    hint: 'La celeste: fue campeona del primer Mundial de todos, en 1930, de local'
+    hint: 'El país que fue ANFITRIÓN y campeón en 1930 (mirá la foto y la copa de la sala). ¿De qué país es esa bandera?'
   },
   {
     n: 3,
@@ -441,7 +483,7 @@ const PUZZLES = [
       `;
     },
     check: (val) => val.toUpperCase().replace(/\s/g, '') === 'CAMPEON',
-    hint: 'DBNQFPO → CAMPEÓN'
+    hint: 'Corré cada letra UNA hacia atrás en el abecedario (la D pasa a ser C…). Fijate el ejemplo del pizarrón.'
   },
   {
     n: 4,
@@ -470,7 +512,7 @@ const PUZZLES = [
       });
     },
     check: () => window.__currentForm === '4-3-3',
-    hint: 'Tres delanteros: Messi-Di María-Álvarez'
+    hint: 'Contá en el pizarrón táctico: cuántos defensores van atrás y cuántas puntas arriba. Esa es la formación.'
   },
   {
     n: 5,
@@ -488,7 +530,7 @@ const PUZZLES = [
       const v = val.toUpperCase().replace(/\s/g, '');
       return v === 'METLIFE' || v === 'METLIFESTADIUM' || v === 'METLAIFE';
     },
-    hint: 'Está en New Jersey. Es el de los Giants y los Jets de la NFL.'
+    hint: 'Mirá la entrada y el banderín de la sala: es el estadio de los Giants y los Jets, en New Jersey. ¿Cómo se llama?'
   }
 ];
 
@@ -535,43 +577,103 @@ function stopCrowd(){
   try{ n.g.gain.setTargetAtTime(0.0001, actx().currentTime, 0.4); setTimeout(()=>{ try{ n.src.stop(); n.lfo.stop(); }catch(e){} }, 700); }catch(e){}
 }
 
-// pista que se LEE en la pared de la sala; .h = empujoncito extra que sólo aparece en Fácil
-const CLUES = [
-  { c:'En el candado dice: «el <strong>año</strong> en que Argentina ganó su <strong>1er Mundial</strong> × el <strong>nº de Maradona</strong>».', h:'1978 × 10 = 19780' },
-  { c:'Pintado en la pared: «tocá la bandera de la <strong>única selección que ganó el primer Mundial de la historia, en 1930</strong>».', h:'Fue campeona de local: la celeste.' },
-  { c:'En el pizarrón del DT: «<strong>DBNQFPO</strong>» — cada letra corrida <strong>1 lugar</strong> (A→B, B→C...).', h:'DBNQFPO → CAMPEÓN' },
-  { c:'Grabado en la caja fuerte: «la <strong>formación</strong> de Argentina en la final del Mundial 2022 (1er tiempo)».', h:'Tres delanteros: 4-3-3' },
-  { c:'Tallado en la última puerta: «el <strong>estadio</strong> donde se juega la <strong>final del Mundial 2026</strong>».', h:'MetLife, en New Jersey.' }
+// Pistas ESCONDIDAS en la sala: tocás los objetos y descubrís FRAGMENTOS.
+// Ninguno regala la respuesta: la armás juntando lo que encontrás. {clue:true} = sirve; el resto son señuelos.
+const FINDS = [
+  // 1 · Combinación numérica  (año del 1er título mundial de Argentina × nº de Maradona)
+  [
+    { e:'🏆', x:'13%', y:'30%', clue:true, t:'Vitrina de trofeos', d:'Una placa dorada: «ARGENTINA · su <strong>PRIMERA</strong> Copa del Mundo». Al lado, un almanaque viejo abierto en <strong>1978</strong>.' },
+    { e:'👕', x:'31%', y:'40%', clue:true, t:'Camiseta colgada', d:'De espaldas se ve el número bien gastado: la <strong>10</strong>. «La que hizo eterno a Diego».' },
+    { e:'🪑', x:'67%', y:'60%', t:'Banco de madera', d:'Una toalla mojada y un par de canilleras. Nada para anotar acá.' },
+    { e:'🧦', x:'87%', y:'58%', t:'Botines y medias', d:'Embarrados de la cancha. Solo huelen a final.' }
+  ],
+  // 2 · Selección oculta  (única campeona del 1er Mundial, 1930 = Uruguay)
+  [
+    { e:'🖼️', x:'12%', y:'34%', clue:true, t:'Foto sepia, 1930', d:'Un equipo levanta la <strong>primera Copa del Mundo</strong> en su propio estadio. El cartel del fondo dice «<strong>Montevideo</strong>».' },
+    { e:'🏅', x:'30%', y:'30%', clue:true, t:'Réplica de la copa', d:'Grabado en la base: «<strong>1ª edición · 1930</strong> — el país <strong>anfitrión</strong> se quedó con todo».' },
+    { e:'🎽', x:'70%', y:'56%', t:'Pechera de árbitro', d:'Silbato y tarjetas. No dice nada del 30.' },
+    { e:'📻', x:'89%', y:'40%', t:'Radio antigua', d:'Transmite estática y un relato viejo. No se entiende nada.' }
+  ],
+  // 3 · Mensaje cifrado  (corrido 1 atrás: DBNQFPO → CAMPEON)
+  [
+    { e:'📋', x:'15%', y:'32%', clue:true, t:'Esquina del pizarrón', d:'Un ejemplo resuelto en tiza: «<strong>MFP → LEO</strong>». Cada letra está corrida <strong>una hacia adelante</strong>; para leerla, volvé una para atrás.' },
+    { e:'🔤', x:'33%', y:'42%', clue:true, t:'Abecedario pegado', d:'Una tira con el abecedario y una flecha marcada: «<strong>D ← C</strong>, <strong>B ← A</strong>...».' },
+    { e:'✏️', x:'66%', y:'56%', t:'Tiza partida', d:'Polvo blanco en el piso. Sirve para escribir, no para resolver.' },
+    { e:'🧤', x:'88%', y:'48%', t:'Guantes del arquero', d:'Colgados a secar. Nada escrito en ellos.' }
+  ],
+  // 4 · Formación táctica  (Argentina, final 2022, 1er tiempo = 4-3-3)
+  [
+    { e:'📋', x:'15%', y:'34%', clue:true, t:'Pizarrón táctico', d:'El dibujo de la final 2022: una línea de <strong>CUATRO</strong> defensores atrás… y <strong>TRES</strong> puntas marcadas bien arriba.' },
+    { e:'📰', x:'33%', y:'44%', clue:true, t:'Recorte de diario', d:'«El <strong>tridente</strong> Messi–Di María–Julián de arranque desniveló la final». Tres de arriba.' },
+    { e:'📦', x:'67%', y:'58%', t:'Caja de pecheras', d:'Pecheras naranjas de entrenamiento. Para los picaditos.' },
+    { e:'🥤', x:'88%', y:'56%', t:'Bidones', d:'Agua y bebida isotónica. Nada táctico por acá.' }
+  ],
+  // 5 · Pregunta final  (estadio de la final del Mundial 2026 = MetLife)
+  [
+    { e:'🎫', x:'13%', y:'40%', clue:true, t:'Entrada plastificada', d:'«<strong>FINAL · 19 JUL 2026</strong> · East Rutherford, <strong>New Jersey</strong>». El número de asiento está borrado.' },
+    { e:'📣', x:'30%', y:'34%', clue:true, t:'Banderín de la NFL', d:'«Home of the <strong>Giants</strong> &amp; the <strong>Jets</strong>». El estadio que comparten los dos equipos de Nueva York.' },
+    { e:'⚽', x:'70%', y:'62%', t:'Pelota oficial', d:'Inflada y lista para la final. Te dan ganas de salir ya.' },
+    { e:'🧢', x:'88%', y:'44%', t:'Gorra olvidada', d:'Una gorra del campeón anterior. No ayuda.' }
+  ]
 ];
-// salas por acertijo: panorama ancho explorable, con textura y objetos repartidos
+// cuántas pistas reales hay por sala
+function clueCount(idx){ return (FINDS[idx]||[]).filter(s=>s.clue).length; }
+// salas por acertijo: panorama ancho explorable. Lo estructural (lockers, puerta) va acá;
+// los objetos inspeccionables (las pistas) los pone renderScene desde FINDS.
 const ROOMS = [
   { label:'VESTUARIO',
     wall:'linear-gradient(180deg,#21323f 0%,#16252f 55%,#0e171f 100%)',
     floor:'repeating-linear-gradient(90deg,#2a1a10,#2a1a10 18px,#241409 18px,#241409 36px)',
-    build: p => {
-      [4,12,20,80,88,96].forEach(x=>{ const l=document.createElement('div'); l.className='locker'; l.style.left=x+'%'; p.appendChild(l); });
-      addObj(p,'👕','9%','30%'); addObj(p,'🪑','30%','62%'); addObj(p,'🔢','49%','38%',true); addObj(p,'🧦','86%','58%'); } },
+    build: p => { [4,12,20,80,88,96].forEach(x=>{ const l=document.createElement('div'); l.className='locker'; l.style.left=x+'%'; p.appendChild(l); }); } },
   { label:'PARED DE BANDERAS',
     wall:'linear-gradient(180deg,#2a1f3a,#150c20),repeating-linear-gradient(90deg,rgba(255,255,255,0.03) 0 1px,transparent 1px 30px)',
     floor:'linear-gradient(180deg,#2a1f12,#150d06)',
-    build: p => { addObj(p,'🖼️','11%','34%'); addObj(p,'🚩','30%','30%'); addObj(p,'🚩','50%','26%',true); addObj(p,'🚩','70%','32%'); addObj(p,'🎽','90%','60%'); } },
+    build: p => {} },
   { label:'PIZARRÓN DEL DT',
     wall:'linear-gradient(180deg,#143026,#08130d)',
     floor:'linear-gradient(180deg,#241a10,#120a05)',
-    build: p => { addObj(p,'⚽','10%','62%'); addObj(p,'🧤','30%','66%'); addObj(p,'📋','50%','30%',true); addObj(p,'✏️','64%','56%'); addObj(p,'🥅','89%','46%'); } },
+    build: p => {} },
   { label:'CAJA FUERTE',
     wall:'linear-gradient(180deg,#322a18,#14110a),repeating-linear-gradient(0deg,rgba(0,0,0,0.18) 0 2px,transparent 2px 22px)',
     floor:'linear-gradient(180deg,#1f1a10,#0e0b06)',
-    build: p => { addObj(p,'💰','13%','60%'); addObj(p,'📦','30%','66%'); addObj(p,'🔐','50%','36%',true); addObj(p,'🏅','87%','58%'); } },
+    build: p => {} },
   { label:'TÚNEL A LA CANCHA',
     wall:'linear-gradient(180deg,#0a1410 0%,#102a1a 60%,#1c8f4c 100%)',
     floor:'linear-gradient(180deg,#0c6e36,#0a4f27)',
-    build: p => { const d=document.createElement('div'); d.className='door'; d.id='final-door'; d.style.left='50%'; p.appendChild(d); addObj(p,'🏆','13%','56%',true); addObj(p,'⚽','30%','66%'); addObj(p,'📣','88%','40%'); } }
+    build: p => { const d=document.createElement('div'); d.className='door'; d.id='final-door'; d.style.left='50%'; p.appendChild(d); } }
 ];
-function addObj(p,emoji,left,top,key){
-  const o=document.createElement('div'); o.className='sObj'+(key?' key':''); o.textContent=emoji; o.style.left=left; o.style.top=top;
-  o.addEventListener('pointerup', ev=>{ ev.stopPropagation(); if(!dragMoved) sndClick(); });
+// objeto inspeccionable: al tocarlo abre una "lupa" con lo que hay escrito/pintado.
+function addSpot(p, spot){
+  const o=document.createElement('div');
+  o.className='sObj'+(spot.clue?' clue':'')+((spot.clue && dificultad==='facil')?' glow':'');
+  o.textContent=spot.e; o.style.left=spot.x; o.style.top=spot.y;
+  o.addEventListener('pointerup', ev=>{ ev.stopPropagation(); if(dragMoved) return; inspect(spot, o); });
   p.appendChild(o);
+}
+let foundClues = [];
+function inspect(spot, el){
+  sndClick();
+  if(spot.clue){
+    if(el) el.classList.add('found');
+    if(!foundClues.some(f=>f.t===spot.t)){ foundClues.push({e:spot.e,t:spot.t,d:spot.d}); renderClueLog(); }
+  }
+  const pop=document.getElementById('inspect-pop'), bd=document.getElementById('ip-backdrop');
+  pop.querySelector('.ip-emoji').textContent=spot.e;
+  pop.querySelector('.ip-title').textContent=spot.t;
+  pop.querySelector('.ip-text').innerHTML=spot.d;
+  const tag=pop.querySelector('.ip-tag');
+  tag.className='ip-tag '+(spot.clue?'pista':'nada');
+  tag.textContent=spot.clue?'🔎 ¡Pista encontrada! Quedó anotada abajo':'Nada útil acá';
+  bd.classList.add('on'); pop.classList.add('on');
+}
+function closeInspect(){ const p=document.getElementById('inspect-pop'),b=document.getElementById('ip-backdrop'); if(p)p.classList.remove('on'); if(b)b.classList.remove('on'); }
+function renderClueLog(){
+  const box=document.getElementById('clue-log'); if(!box) return;
+  const list=box.querySelector('.cl-list'), empty=box.querySelector('.cl-empty'), cnt=box.querySelector('.cl-count');
+  if(cnt) cnt.textContent=foundClues.length;
+  if(!foundClues.length){ if(empty) empty.style.display='block'; list.innerHTML=''; return; }
+  if(empty) empty.style.display='none';
+  list.innerHTML=foundClues.map(f=>'<li>'+f.e+' <b>'+f.t+':</b> '+f.d+'</li>').join('');
 }
 function renderScene(idx){
   const r = ROOMS[idx] || ROOMS[0];
@@ -580,11 +682,8 @@ function renderScene(idx){
   p.style.background = r.wall;
   p.innerHTML = `<div class="pano-ceil"></div><div class="pano-floor" style="background:${r.floor}"></div>`;
   r.build(p);
-  // cartel de pista pegado en la pared (la pista vive EN la sala, en fácil y en difícil)
-  const cl = CLUES[idx] || {};
-  const cb = document.createElement('div'); cb.className='clue-board';
-  cb.innerHTML = '<div class="cb-tag">📋 Pista en la sala</div><div class="cb-text">'+(cl.c||'')+'</div>'+((dificultad==='facil'&&cl.h)?('<div class="cb-hint">💡 '+cl.h+'</div>'):'');
-  p.appendChild(cb);
+  // las pistas viven EN la sala: objetos repartidos que se inspeccionan
+  (FINDS[idx]||[]).forEach(spot => addSpot(p, spot));
   applyPan(false);
   document.getElementById('scene-label').textContent = r.label;
 }
@@ -599,6 +698,8 @@ function setupPan(){
   window.addEventListener('pointerup', ()=>{ dragging=false; });
   document.getElementById('look-l').onclick=()=>{ pan=Math.max(-1,pan-0.6); applyPan(true); sndClick(); };
   document.getElementById('look-r').onclick=()=>{ pan=Math.min(1,pan+0.6); applyPan(true); sndClick(); };
+  const ipc=document.getElementById('ip-close'); if(ipc) ipc.onclick=closeInspect;
+  const ipb=document.getElementById('ip-backdrop'); if(ipb) ipb.onclick=closeInspect;
 }
 function doorWalk(cb){
   const p=document.getElementById('pano'); const w=document.getElementById('door-wipe');
@@ -651,9 +752,17 @@ function renderPuzzle() {
   const p = PUZZLES[state.currentPuzzle];
   document.getElementById('hud-puzzle').textContent = (state.currentPuzzle + 1);
   document.getElementById('hud-tries').textContent = state.tries;
+  foundClues = [];              // las pistas se descubren de nuevo en cada sala
+  closeInspect();
   renderScene(state.currentPuzzle);
+  const nClues = clueCount(state.currentPuzzle);
   const cont = document.getElementById('puzzle-container');
   cont.innerHTML = `
+    <div class="clue-log" id="clue-log">
+      <div class="cl-head"><span>🔎 Pistas que encontraste · <span class="cl-count">0</span>/${nClues}</span><span style="opacity:.7">tocá los objetos</span></div>
+      <div class="cl-empty">Arrastrá para mirar la sala y <b>tocá los objetos</b>: algunos esconden la pista, otros no. Juntá las pistas y resolvé.</div>
+      <ul class="cl-list"></ul>
+    </div>
     <div class="puzzle">
       <div class="puzzle-num">ACERTIJO ${p.n}/5</div>
       <div class="puzzle-title">${p.titulo}</div>
@@ -662,14 +771,16 @@ function renderPuzzle() {
     <button class="btn" id="check-btn">▶ DALE, PROBÁ</button>
     <button class="btn btn-secondary" style="margin-top:0.5rem" id="hint-btn">💡 PISTA (-${dificultad==='facil'?20:45}s)</button>
   `;
+  renderClueLog();
   const body = document.getElementById('puzzle-body');
   p.setup(body);
   document.getElementById('check-btn').onclick = () => check();
   document.getElementById('hint-btn').onclick = () => {
     state.timeLeft = Math.max(0, state.timeLeft - (dificultad==='facil'?20:45));
     updateTimer();
-    document.getElementById('feedback').textContent = '💡 ' + p.hint;
-    document.getElementById('feedback').className = 'feedback wrong';
+    // la pista NO da la respuesta: te orienta y resalta los objetos clave de la sala
+    document.querySelectorAll('#pano .sObj.clue').forEach(o=>{ o.classList.add('glow'); o.classList.add('flash'); setTimeout(()=>o.classList.remove('flash'),1400); });
+    const fb=document.getElementById('feedback'); if(fb){ fb.textContent = '💡 ' + p.hint; fb.className = 'feedback wrong'; }
   };
   // Allow enter to check
   const input = document.querySelector('.puzzle-input');
