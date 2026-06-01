@@ -88,6 +88,10 @@
   }
   .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 0 #7f1d1d; }
   .btn-secondary { background: rgba(0,0,0,0.4); border: 2px solid var(--gold); color: var(--crema); box-shadow: none; }
+  .diff-row { display:flex; gap:0.6rem; margin:0.3rem 0 0.9rem; }
+  .diff-opt { flex:1; background:rgba(0,0,0,0.4); border:2px solid rgba(244,236,216,0.25); color:var(--crema); border-radius:10px; padding:0.7rem 0.4rem; cursor:pointer; font-family:'Anton',sans-serif; letter-spacing:0.04em; font-size:1.05rem; text-align:center; line-height:1.1; }
+  .diff-opt small { display:block; font-family:'DM Sans',sans-serif; font-weight:400; font-size:0.62rem; letter-spacing:0; opacity:0.75; margin-top:0.2rem; }
+  .diff-opt.sel { border-color:var(--rojo); background:rgba(220,38,38,0.16); color:#fff; }
 
   /* HUD */
   .hud {
@@ -231,7 +235,7 @@
   /* ===== ESCENA INMERSIVA (panorama explorable) ===== */
   #screen-game.shake { animation: shk 0.3s; }
   @keyframes shk { 0%,100%{transform:translate(0,0)} 20%{transform:translate(-6px,2px)} 40%{transform:translate(6px,-2px)} 60%{transform:translate(-4px,1px)} 80%{transform:translate(4px,-1px)} }
-  .scene { position:relative; height:240px; border-radius:14px; overflow:hidden; margin-bottom:1rem; border:2px solid rgba(212,168,46,0.35); box-shadow: inset 0 0 60px rgba(0,0,0,0.75); cursor:grab; touch-action:pan-y; user-select:none; }
+  .scene { position:relative; height:340px; border-radius:14px; overflow:hidden; margin-bottom:1rem; border:2px solid rgba(212,168,46,0.35); box-shadow: inset 0 0 60px rgba(0,0,0,0.75); cursor:grab; touch-action:pan-y; user-select:none; }
   .scene:active { cursor:grabbing; }
   .pano { position:absolute; top:0; bottom:0; left:-32%; width:164%; transform:translateX(0); }
   .pano.smooth { transition:transform 0.18s ease-out; }
@@ -264,6 +268,13 @@
   #door-wipe span { font-size:3.4rem; transform:scale(0.5); transition:transform 0.45s ease; }
   #door-wipe.on span { transform:scale(1.3); }
   .snd-btn { position:absolute; top:8px; right:10px; z-index:7; background:rgba(0,0,0,0.55); border:1px solid var(--gold); color:var(--gold-2); border-radius:8px; font-size:1rem; cursor:pointer; padding:2px 7px; }
+  /* cartel de pista pegado en la pared de la sala */
+  .clue-board { position:absolute; left:50%; top:9%; transform:translateX(-50%); width:64%; max-width:320px; background:linear-gradient(180deg,rgba(12,9,6,0.94),rgba(24,16,9,0.94)); border:2px solid var(--gold); border-radius:8px; padding:0.6rem 0.75rem; z-index:4; box-shadow:0 8px 22px rgba(0,0,0,0.65); }
+  .clue-board::after { content:''; position:absolute; top:-9px; left:50%; transform:translateX(-50%); width:10px; height:10px; border-radius:50%; background:#888; box-shadow:0 0 0 2px rgba(0,0,0,0.4); }
+  .clue-board .cb-tag { font-family:'JetBrains Mono',monospace; font-size:0.55rem; letter-spacing:0.18em; color:var(--rojo); text-transform:uppercase; margin-bottom:0.3rem; }
+  .clue-board .cb-text { font-size:0.84rem; line-height:1.38; color:var(--crema); }
+  .clue-board .cb-text strong { color:var(--gold-2); }
+  .clue-board .cb-hint { font-size:0.74rem; color:var(--verde); margin-top:0.4rem; border-top:1px dashed rgba(212,168,46,0.3); padding-top:0.35rem; }
 </style>
 </head>
 <body>
@@ -278,12 +289,17 @@
     <div class="panel">
       <div style="font-family:'Anton',sans-serif;color:var(--rojo);font-size:1.2rem;letter-spacing:0.1em;margin-bottom:0.7rem;text-transform:uppercase">🔒 ESTÁS ENCERRADO/A</div>
       <p style="line-height:1.5;font-size:0.9rem;margin-bottom:1rem">
-        Sos el/la <strong style="color:var(--gold-2)">utilero/a oficial</strong> del vestuario antes de la final del Mundial 2026. El equipo está calentando y vos te quedaste adentro. Las puertas se trabaron. Tenés <strong style="color:var(--rojo)">10 minutos</strong> para resolver <strong>5 acertijos</strong> y salir a la cancha antes del pitazo inicial.
+        Sos el/la <strong style="color:var(--gold-2)">utilero/a oficial</strong> del vestuario antes de la final del Mundial 2026. El equipo está calentando y vos te quedaste adentro. Las puertas se trabaron. Resolvé <strong>5 acertijos</strong> contrarreloj y salí a la cancha antes del pitazo. <strong style="color:var(--gold-2)">Las pistas están en la sala</strong> (movés la cámara para mirar alrededor).
       </p>
-      <p style="line-height:1.5;font-size:0.85rem;color:var(--gold-2);margin-bottom:1.2rem">
-        Cada acertijo desbloquea el siguiente. Tu tiempo queda en el ranking. ¿Salís?
+      <p style="line-height:1.5;font-size:0.85rem;color:var(--gold-2);margin-bottom:0.9rem">
+        Cada acertijo desbloquea el siguiente y te lleva a otra sala. Tu tiempo queda en el ranking. ¿Salís?
       </p>
       <input type="text" class="input-name" id="player-name" placeholder="Tu nombre" maxlength="18">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:0.18em;color:var(--rojo);text-transform:uppercase;margin-bottom:0.3rem">Dificultad</div>
+      <div class="diff-row" id="diff-row">
+        <button class="diff-opt sel" data-d="facil">😎 FÁCIL<small>12 min · pista extra en la sala</small></button>
+        <button class="diff-opt" data-d="dificil">🔥 DIFÍCIL<small>7 min · solo lo justo</small></button>
+      </div>
       <button class="btn" id="start">🔓 EMPEZAR ESCAPE</button>
       <button class="btn btn-secondary" style="margin-top:0.5rem" id="ver-ranking">🏆 Ranking</button>
     </div>
@@ -480,6 +496,7 @@ const PUZZLES = [
 // AUDIO + ESCENA
 // ========================================================================
 let soundOn = true, audioCtx = null;
+let dificultad = 'facil';
 function actx(){ if(!audioCtx){ try{ audioCtx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return audioCtx; }
 function tone(freqs, dur, type='sine', vol=0.16){
   if(!soundOn) return; const c=actx(); if(!c) return;
@@ -518,6 +535,14 @@ function stopCrowd(){
   try{ n.g.gain.setTargetAtTime(0.0001, actx().currentTime, 0.4); setTimeout(()=>{ try{ n.src.stop(); n.lfo.stop(); }catch(e){} }, 700); }catch(e){}
 }
 
+// pista que se LEE en la pared de la sala; .h = empujoncito extra que sólo aparece en Fácil
+const CLUES = [
+  { c:'En el candado dice: «el <strong>año</strong> en que Argentina ganó su <strong>1er Mundial</strong> × el <strong>nº de Maradona</strong>».', h:'1978 × 10 = 19780' },
+  { c:'Pintado en la pared: «tocá la bandera de la <strong>única selección que ganó el primer Mundial de la historia, en 1930</strong>».', h:'Fue campeona de local: la celeste.' },
+  { c:'En el pizarrón del DT: «<strong>DBNQFPO</strong>» — cada letra corrida <strong>1 lugar</strong> (A→B, B→C...).', h:'DBNQFPO → CAMPEÓN' },
+  { c:'Grabado en la caja fuerte: «la <strong>formación</strong> de Argentina en la final del Mundial 2022 (1er tiempo)».', h:'Tres delanteros: 4-3-3' },
+  { c:'Tallado en la última puerta: «el <strong>estadio</strong> donde se juega la <strong>final del Mundial 2026</strong>».', h:'MetLife, en New Jersey.' }
+];
 // salas por acertijo: panorama ancho explorable, con textura y objetos repartidos
 const ROOMS = [
   { label:'VESTUARIO',
@@ -555,6 +580,11 @@ function renderScene(idx){
   p.style.background = r.wall;
   p.innerHTML = `<div class="pano-ceil"></div><div class="pano-floor" style="background:${r.floor}"></div>`;
   r.build(p);
+  // cartel de pista pegado en la pared (la pista vive EN la sala, en fácil y en difícil)
+  const cl = CLUES[idx] || {};
+  const cb = document.createElement('div'); cb.className='clue-board';
+  cb.innerHTML = '<div class="cb-tag">📋 Pista en la sala</div><div class="cb-text">'+(cl.c||'')+'</div>'+((dificultad==='facil'&&cl.h)?('<div class="cb-hint">💡 '+cl.h+'</div>'):'');
+  p.appendChild(cb);
   applyPan(false);
   document.getElementById('scene-label').textContent = r.label;
 }
@@ -589,7 +619,7 @@ document.getElementById('start').onclick = () => {
   const name = document.getElementById('player-name').value.trim();
   if (!name) { alert('Ingresá tu nombre'); return; }
   state.name = name; state.currentPuzzle = 0; state.tries = 0;
-  state.startTime = Date.now(); state.timeLeft = 600;
+  state.startTime = Date.now(); state.timeLeft = (dificultad==='facil' ? 720 : 420);
   show('game');
   renderPuzzle();
   startTimer();
@@ -598,6 +628,7 @@ document.getElementById('start').onclick = () => {
 
 function startTimer() {
   if (state.timerInterval) clearInterval(state.timerInterval);
+  updateTimer();
   state.timerInterval = setInterval(() => {
     state.timeLeft--;
     if (state.timeLeft <= 0) {
@@ -629,13 +660,13 @@ function renderPuzzle() {
       <div id="puzzle-body"></div>
     </div>
     <button class="btn" id="check-btn">▶ COMPROBAR RESPUESTA</button>
-    <button class="btn btn-secondary" style="margin-top:0.5rem" id="hint-btn">💡 PISTA (-30s)</button>
+    <button class="btn btn-secondary" style="margin-top:0.5rem" id="hint-btn">💡 PISTA (-${dificultad==='facil'?20:45}s)</button>
   `;
   const body = document.getElementById('puzzle-body');
   p.setup(body);
   document.getElementById('check-btn').onclick = () => check();
   document.getElementById('hint-btn').onclick = () => {
-    state.timeLeft = Math.max(0, state.timeLeft - 30);
+    state.timeLeft = Math.max(0, state.timeLeft - (dificultad==='facil'?20:45));
     updateTimer();
     document.getElementById('feedback').textContent = '💡 ' + p.hint;
     document.getElementById('feedback').className = 'feedback wrong';
@@ -668,8 +699,8 @@ function check() {
     document.getElementById('feedback').className = 'feedback wrong';
     sndWrong(); vibe([30,40,30]);
     const sc = document.getElementById('screen-game'); sc.classList.remove('shake'); void sc.offsetWidth; sc.classList.add('shake');
-    // Penalización: -10s
-    state.timeLeft = Math.max(0, state.timeLeft - 10);
+    // Penalización por error
+    state.timeLeft = Math.max(0, state.timeLeft - (dificultad==='facil'?8:15));
     updateTimer();
   }
 }
@@ -696,7 +727,7 @@ function finish() {
 
 function saveScore(secs) {
   const r = JSON.parse(localStorage.getItem('escape-ranking') || '[]');
-  r.push({ name: state.name, secs, tries: state.tries, date: Date.now() });
+  r.push({ name: state.name, secs, tries: state.tries, dif: dificultad, date: Date.now() });
   r.sort((a, b) => a.secs - b.secs);
   localStorage.setItem('escape-ranking', JSON.stringify(r.slice(0, 50)));
 }
@@ -710,13 +741,14 @@ function goRanking() {
     const m = Math.floor(x.secs / 60), s = x.secs % 60;
     return `<div class="ranking-item">
       <div class="rank-n">${i+1}</div>
-      <div><strong>${x.name}</strong> <span style="font-size:0.7rem;opacity:0.6">· ${x.tries} errores</span></div>
+      <div><strong>${x.name}</strong> <span style="font-size:0.7rem;opacity:0.6">${x.dif==='dificil'?'🔥':'😎'} · ${x.tries} errores</span></div>
       <div class="rank-time">${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}</div>
     </div>`;
   }).join('');
 }
 window.goRanking = goRanking;
 document.getElementById('ver-ranking').onclick = goRanking;
+document.querySelectorAll('.diff-opt').forEach(b => b.onclick = () => { document.querySelectorAll('.diff-opt').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); dificultad = b.dataset.d; });
 document.getElementById('snd-btn').onclick = (e) => { e.stopPropagation(); soundOn = !soundOn; document.getElementById('snd-btn').textContent = soundOn ? '🔊' : '🔇'; if (soundOn) startCrowd(); else stopCrowd(); };
 // explorar la sala: mirar a los costados (arrastrar / flechas)
 setupPan();

@@ -184,6 +184,7 @@ const $ = id => document.getElementById(id);
 const cv = $('cv'), ctx = cv.getContext('2d');
 const W = cv.width, H = cv.height;
 const HORIZON = 170, CX = W/2, GROUND = H-44;
+const PLAYER_Z = 0.82;   // el jugador corre acá (visible por encima de los controles)
 
 const TEAMS = [
   { n:'Argentina', main:'#6CACE4', short:'#0A1F44', f:['#75AADB','#FFFFFF','#75AADB'] },
@@ -199,9 +200,9 @@ let myTeamIdx=0, rivalTeamIdx=2, diff='facil';
 // speed: avance rivales · gap: tiempo entre oleadas · react: ventana de reacción (zHint..zDead)
 // gk: rango de atajada del arquero · fake: prob de amago del arquero
 const DIFF = {
-  facil:  { speed:0.40, gap:1.55, zHint:0.34, zDead:0.99, gk:0.30, fake:0.00, need:4 },
-  normal: { speed:0.56, gap:1.20, zHint:0.42, zDead:0.97, gk:0.50, fake:0.22, need:4 },
-  dificil:{ speed:0.76, gap:0.95, zHint:0.50, zDead:0.95, gk:0.66, fake:0.42, need:5 }
+  facil:  { speed:0.46, gap:1.15, zHint:0.34, zDead:0.90, gk:0.30, fake:0.00, need:4 },
+  normal: { speed:0.62, gap:0.92, zHint:0.42, zDead:0.88, gk:0.50, fake:0.22, need:4 },
+  dificil:{ speed:0.82, gap:0.74, zHint:0.50, zDead:0.86, gk:0.66, fake:0.42, need:5 }
 };
 const LANES = [-0.62, 0, 0.62];        // 3 carriles
 function rivalOf(i){ return (i+2)%TEAMS.length; }
@@ -228,7 +229,7 @@ let G=null, raf=null, last=0, timerInt=null;
 
 function newGame(){
   G={ goles:0, gambetas:0, jugadas:0, combo:0, mejorCombo:0, time:90, running:true,
-      phase:'run', defs:[], wave:0, spawnT:0.7, scroll:0, stun:0, progress:0,
+      phase:'run', defs:[], wave:0, spawnT:0.7, scroll:0, runT:0, stun:0, progress:0,
       laneIdx:1, playerX:0,
       // shoot
       aimX:0, aimY:0.34, shotType:null, chargeT:0, kickT:0,
@@ -313,8 +314,8 @@ function beat(df, skill){
   if(G.progress>=1) enterShoot();
 }
 function failTackle(df){
-  df.state='tackled'; G.combo=0; G.progress=Math.max(0,G.progress-0.16); G.stun=0.5;
-  flash('¡Te lo robó! 🔴','#f87171',36); shake=8; vibe(60); sFail();
+  df.state='tackled'; G.combo=0; G.progress=Math.max(0,G.progress-0.12); G.stun=0.32;
+  flash('¡Uh, te lo sacó! 🔴','#f87171',32); shake=7; vibe(50); sFail();
   burst(laneX(df.z,LANES[df.laneIdx]), proj(df.z).y, 12, ['#f87171','#fff']);
   $('sb-combo').textContent=0;
 }
@@ -355,7 +356,8 @@ function update(dt){
   const tx=LANES[G.laneIdx]; G.playerX += (tx-G.playerX)*Math.min(1,dt*9);
 
   if(G.phase==='run'){
-    G.scroll += dt*2.0;
+    G.scroll += dt*2.7;
+    G.runT += dt*2.6;
     G.spawnT -= dt;
     const hayActivo = G.defs.some(df=>df.state==='incoming' && df.z<0.99);
     if(G.spawnT<=0 && !hayActivo){ G.spawnT=d.gap*(0.85+Math.random()*0.4); spawnWave(); }
@@ -484,9 +486,15 @@ function drawGuy(x,feetY,scale,main,short,opt){
   }
   const legSpread = stance==='stand' ? 9*s : (stance==='block'?6*s:5*s);
   const hx=x+lean*6*s;
-  // piernas
-  ctx.fillStyle='#e8c39a'; ctx.fillRect(x-legSpread-2*s,feetY-16*s,5*s,16*s); ctx.fillRect(x+legSpread-3*s,feetY-16*s,5*s,16*s);
-  ctx.fillStyle='#111'; ctx.fillRect(x-legSpread-4*s,feetY-3*s,8*s,4*s); ctx.fillRect(x+legSpread-5*s,feetY-3*s,8*s,4*s);
+  // piernas (con zancada si está corriendo)
+  const sw = (stance==='run' && opt.step!=null) ? Math.sin(opt.step*6.2832) : 0;
+  const lpush = sw*6*s, rpush = -sw*6*s, lift = Math.abs(sw)*4*s;
+  ctx.fillStyle='#e8c39a';
+  ctx.fillRect(x-legSpread-2*s+lpush, feetY-16*s, 5*s, 16*s-(sw>0?lift:0));
+  ctx.fillRect(x+legSpread-3*s+rpush, feetY-16*s, 5*s, 16*s-(sw<0?lift:0));
+  ctx.fillStyle='#111';
+  ctx.fillRect(x-legSpread-4*s+lpush, feetY-3*s-(sw>0?lift:0), 8*s, 4*s);
+  ctx.fillRect(x+legSpread-5*s+rpush, feetY-3*s-(sw<0?lift:0), 8*s, 4*s);
   // short
   ctx.fillStyle=short||'#0A1F44'; ctx.fillRect(x-9*s,feetY-20*s,18*s,9*s);
   // torso
@@ -544,14 +552,18 @@ function draw(){
     ctx.fillStyle='#4ade80'; ctx.fillRect(W/2-72,HORIZON+8,144*G.progress,8);
     ctx.fillStyle='rgba(244,236,216,0.85)'; ctx.font='bold 9px JetBrains Mono, monospace'; ctx.textAlign='center';
     ctx.fillText('AVANZÁ HASTA EL ÁREA', W/2, HORIZON+24);
+    const d=DIFF[diff];
     const order=[...G.defs].sort((a,b)=>a.z-b.z);
     for(const df of order){ const p=proj(df.z); const col=df.state==='tackled'?'#9aa':riT.main;
-      const st = df.state==='incoming' ? (df.type==='slide'?'slide':df.type==='stand'?'stand':'block') : 'run';
-      drawGuy(laneX(df.z,LANES[df.laneIdx]), p.y, p.scale, col, riT.short, {stance:st, dir:(LANES[df.laneIdx]<0?-1:1)});
+      // viene corriendo y se planta en su postura recién al acercarse (para leerlo)
+      let st='run'; const step=df.z*7+df.laneIdx;
+      if(df.state==='incoming') st = df.z>=d.zHint ? df.type : 'run';
+      else if(df.state==='tackled') st='stand';
+      drawGuy(laneX(df.z,LANES[df.laneIdx]), p.y, p.scale, col, riT.short, {stance:st, step, dir:(LANES[df.laneIdx]<0?-1:1)});
     }
-    const pp=proj(1); const plx=laneX(1,G.playerX);
-    drawGuy(plx, pp.y, pp.scale, myT.main, myT.short, {stance:'run', lean:(LANES[G.laneIdx]-G.playerX)*1.2});
-    drawBall(plx, pp.y-9, 7);
+    const pz=PLAYER_Z, pp=proj(pz), bob=Math.sin(G.runT*6.2832)*2, plx=laneX(pz,G.playerX), stumble=G.stun>0;
+    drawGuy(plx, pp.y-bob, pp.scale, myT.main, myT.short, {stance: stumble?'stand':'run', step:G.runT, lean:(LANES[G.laneIdx]-G.playerX)*1.2});
+    drawBall(plx+(stumble?7:0), pp.y-bob-9, 7);
 
   } else {
     // ESCENA MANO A MANO
@@ -581,7 +593,7 @@ function draw(){
   if(G.msgT>0){ ctx.globalAlpha=Math.min(1,G.msgT/22); ctx.fillStyle=G.msgC; ctx.font='bold 27px Anton, sans-serif'; ctx.textAlign='center'; ctx.strokeStyle='rgba(0,0,0,0.6)'; ctx.lineWidth=4; ctx.strokeText(G.msg,CX,H*0.62); ctx.fillText(G.msg,CX,H*0.62); ctx.globalAlpha=1; }
   ctx.restore();
 }
-function frame(ts){ if(!last)last=ts; let dt=(ts-last)/1000; last=ts; if(dt>0.05)dt=0.05; update(dt); draw(); if(G && G.running!==false) raf=requestAnimationFrame(frame); }
+function frame(ts){ if(!last)last=ts; let dt=(ts-last)/1000; last=ts; if(dt>0.05)dt=0.05; try{ update(dt); draw(); }catch(e){ /* nunca frenar el loop */ } if(G && G.running!==false) raf=requestAnimationFrame(frame); }
 
 // ====== FLOW ======
 function startMatch(){
