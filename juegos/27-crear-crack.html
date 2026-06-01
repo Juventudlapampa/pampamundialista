@@ -238,7 +238,6 @@ const BGS = [
 ];
 const KITS = [
   {n:'Argentina', main:'#6CACE4', accent:'#FFFFFF', shorts:'#0A1F44'},
-  {n:'La Pampa',  main:'#1FA35A', accent:'#FFFFFF', shorts:'#0A1F44'},
   {n:'Brasil',    main:'#FCD116', accent:'#009739', shorts:'#0A1F44'},
   {n:'Francia',   main:'#1E3A8A', accent:'#FFFFFF', shorts:'#FFFFFF'},
   {n:'España',    main:'#C60B1E', accent:'#FFD100', shorts:'#0A1F44'},
@@ -277,7 +276,7 @@ const has = id => av.acc.includes(id);
 const hasMeme = id => av.memeMode && av.meme.includes(id);
 
 /* ===================== PERSISTENCIA ===================== */
-function loadSaved(){ try { const s = JSON.parse(localStorage.getItem('crear-crack-v2')||'{}'); if(s.av) av = Object.assign(av, s.av); if(typeof s.best==='number') best = s.best; if(typeof s.bestPen==='number') bestPen = s.bestPen; } catch(e){} }
+function loadSaved(){ try { const s = JSON.parse(localStorage.getItem('crear-crack-v2')||'{}'); if(s.av) av = Object.assign(av, s.av); if(typeof s.best==='number') best = s.best; if(typeof s.bestPen==='number') bestPen = s.bestPen; } catch(e){} if(typeof av.kit!=='number' || av.kit<0 || av.kit>=KITS.length) av.kit=0; }
 function saveAll(){ try { localStorage.setItem('crear-crack-v2', JSON.stringify({av,best,bestPen})); } catch(e){} }
 
 /* ===================== AVATAR SVG ===================== */
