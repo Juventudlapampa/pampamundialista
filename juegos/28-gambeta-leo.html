@@ -234,9 +234,16 @@ const sOle=()=>tone([600,820,1000],0.09,'sine',0.1), sGol=()=>tone([523,659,784,
 function vibe(ms){ try{ if(navigator.vibrate) navigator.vibrate(ms); }catch(e){} }
 function burst(x,y,n=22,cols){ cols=cols||['#4ade80','#d4a82e','#f4cd60','#fff','#38bdf8']; for(let i=0;i<n;i++){ const a=Math.random()*6.28,sp=2+Math.random()*4.5; particles.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-3,life:1,col:cols[i%cols.length],r:2.5+Math.random()*3,rot:Math.random()*6}); } }
 const sTick=()=>tone([900],0.06,'square',0.13), sUrg=()=>tone([1100,820],0.13,'square',0.15);
+// sonidos por tipo de jugada
+const sCano=()=>tone([540,340,210],0.12,'sine',0.14);              // caño: por ABAJO, baja (túnel)
+const sSalto=()=>tone([360,640,1020,1240],0.13,'triangle',0.12);  // sombrero/salto: por ARRIBA, sube ("esaaa")
+const sChant=()=>{ tone([392,392,523],0.14,'sine',0.09); setTimeout(()=>tone([392,392,523],0.14,'sine',0.09),190); }; // mini "olé, olé olé"
 
 // ====== DIÁLOGOS al costado (risa / bronca) ======
-const OLE_BUBBLES=['¡Olé! 🪄','¡Tomá gambeta!','¡Pasó como el viento! 💨','¡Qué caño, papá! 🎩','¡Crack total! ⭐','¡Para el VAR! 📺','¡OLÉÉÉ! 📣','¡Ay, ay, ay! 🔥','¡Lo dejó pagando! 😵','¡Bailó al rival!'];
+const CANO_BUBBLES=['¡CAÑO, papá! 🎩','¡Por abajo! 🕳️','¡Túnel! 😱','¡Le pasó entre las piernas!','¡Caño y chau! 🪄','¡Lo metió por el ojo de la aguja!'];
+const SALTO_BUBBLES=['¡ESAAA! 🦘','¡Por arriba! ☂️','¡Sombrerito! 🎩','¡Lo saltó limpito! ⛹️','¡Qué sombrero, hermano!','¡Uyyy, por encima! ✨'];
+const ESQUIVE_BUBBLES=['¡La esquivó! 💨','¡Amague y pasó! ↔️','¡Le sacó el cuerpo!','¡Quiebre y adentro!','¡Pasó como el viento! 🌬️'];
+const OLE_CHANT=['¡Oleee, olé olé oléee! 📣','¡OLÉ OLÉ OLÉ! 🎶','¡Dale dale campeón! 📣','¡La hinchada de pie! 🙌','¡Esto es un baile! 💃'];
 const BRONCA_BUBBLES=['¡Ja! Te la saqué 😏','¡De acá no pasás! 🧱','¡Uhhh! 😬','¿A dónde ibas? 😎','¡Murallón, eh! 🧱','¡Ahí quedó! 🔴','¡Más vivo la próxima!','¡Técnica, pibe!'];
 const GOL_BUBBLES=['¡GOLAZO! 🎉','¡La hinchada explota! 📣','¡De otro planeta! 🚀','¡Para el archivo! 🎥','¡Lo grita el barrio!'];
 const SAVE_BUBBLES=['¡Manotazo del 1! 🧤','¡Uhhh, qué cerca! 😣','¡Voló el arquero!','¡Casi, casi!'];
@@ -327,21 +334,45 @@ function doSkill(key){
     flash('…',' #888',10); return;
   }
   if(target.type==='block'){ failTackle(target); return; } // al bloqueo no se le hace jugada: hay que esquivar
-  if(SKILL_FOR[target.type]===key){ beat(target, true); }
+  if(SKILL_FOR[target.type]===key){ beat(target, key==='D'?'cano':'salto'); }
   else failTackle(target);
 }
-function beat(df, skill){
+// kind: 'cano' (caño), 'salto' (sombrero), 'esquive' (al bloqueo, jugada correcta),
+//       'avoid' (esquivaste a un rival que pedía caño/salto: NO es jugada, casi no suma)
+function beat(df, kind){
   df.state='beaten'; df.flyDir=(G.laneIdx===0?1:G.laneIdx===2?-1:(Math.random()<0.5?-1:1));
-  const perfect = skill && df.z>0.66 && df.z<0.9;
+  const need=DIFF[diff].need;
+
+  // --- Esquivar al costado cuando había que hacerle caño o saltarlo: muy poquito ---
+  if(kind==='avoid'){
+    G.progress=Math.min(1,G.progress+(1.0/need)*0.15);   // ~15% de una gambeta real
+    G.combo=0; $('sb-combo').textContent=0;
+    flash('Lo dejaste pasar… (¡era caño o sombrero!) 😐','#9aa0a6',20);
+    if(G.progress>=1) enterShoot();
+    return;
+  }
+
+  const skill = (kind==='cano'||kind==='salto');
+  const perfect = skill && df.z>0.66 && df.z<0.9;   // jugada en el momento justo
   G.gambetas++; G.combo++; if(G.combo>G.mejorCombo)G.mejorCombo=G.combo;
-  G.progress=Math.min(1,G.progress+(perfect?1.0/(DIFF[diff].need-0.6):1.0/DIFF[diff].need));
-  if(perfect){ flash('¡OLÉ, CLASE! 🪄','#f4cd60',32); sPerfect(); }
-  else { flash(skill?'¡Olé! 👟':'¡La esquivó! 💨','#4ade80',24); sOle(); }
+  G.progress=Math.min(1,G.progress+(perfect?1.0/(need-0.6):1.0/need));
+
+  if(kind==='cano'){
+    flash(perfect?'¡CAÑO DE CLASE! 🎩':'¡Caño, papá! 🎩','#f4cd60',perfect?32:24);
+    sCano(); bubble(rnd(CANO_BUBBLES),'ole');
+  } else if(kind==='salto'){
+    flash(perfect?'¡ESAAA, GRAN SOMBRERO! ☂️':'¡Esaaa! Lo saltó ⛹️','#4ade80',perfect?32:24);
+    sSalto(); bubble(rnd(SALTO_BUBBLES),'ole');
+  } else { // esquive a un bloqueo (lectura del hueco): jugada válida
+    flash('¡La esquivó! 💨','#4ade80',22);
+    sOle(); bubble(rnd(ESQUIVE_BUBBLES),'ole');
+  }
+  if(perfect) sPerfect();
   burst(laneX(df.z,LANES[df.laneIdx]), proj(df.z).y-12, perfect?16:9, ['#4ade80','#f4cd60','#fff']);
   vibe(perfect?[15,30,15]:12);
-  if(Math.random()<0.55) bubble(rnd(OLE_BUBBLES),'ole');
   $('sb-gambetas').textContent=G.gambetas; $('sb-combo').textContent=G.combo;
-  if(G.combo>0 && G.combo%5===0) flash('¡COMBO x'+G.combo+'! 🔥','#f59e0b',30);
+  // combos: mezclar el "olé olé" de la hinchada
+  if(G.combo>0 && G.combo%4===0){ flash('¡COMBO x'+G.combo+'! 🔥','#f59e0b',30); bubble(rnd(OLE_CHANT),'festejo'); sChant(); }
   if(G.progress>=1) enterShoot();
 }
 function failTackle(df){
@@ -398,7 +429,7 @@ function update(dt){
         df.z += dt*d.speed*(0.55+df.z*0.7);
         if(df.z>=d.zDead){ // llegó: si está en mi carril y no lo resolví, me lo roba; si no, lo pasé
           if(df.laneIdx===G.laneIdx) failTackle(df);
-          else beat(df, false);
+          else beat(df, df.type==='block' ? 'esquive' : 'avoid'); // bloqueo=esquive válido; rival de caño/salto esquivado=casi no suma
         }
       } else if(df.state==='beaten'){ df.z += dt*1.4; }
       else if(df.state==='tackled'){ df.z += dt*0.6; }
