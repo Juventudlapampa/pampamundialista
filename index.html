@@ -71,6 +71,10 @@
   .pass-txt b { color: var(--gold-2); }
   .pass-bar { height: 8px; background: rgba(0,0,0,0.5); border-radius: 4px; overflow: hidden; margin-top: 0.4rem; }
   .pass-fill { height: 100%; width: 0; background: linear-gradient(90deg, var(--verde-fluo), var(--gold)); transition: width 0.6s; }
+  .pass-reset { flex: none; background: rgba(220,38,38,0.12); border: 1px solid rgba(220,38,38,0.45); color: #f1b4b4; border-radius: 9px; padding: 0.4rem 0.7rem; font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; letter-spacing: 0.06em; cursor: pointer; transition: background 0.15s, color 0.15s; }
+  .pass-reset:hover { background: rgba(220,38,38,0.25); color: #fff; }
+  .pass-reset.ok { background: rgba(74,222,128,0.18); border-color: rgba(74,222,128,0.5); color: var(--verde-fluo); }
+  @media (max-width: 560px) { .pass { flex-wrap: wrap; } .pass-reset { width: 100%; text-align: center; } }
 
   /* PUERTAS */
   .puerta { border-radius: 16px; margin-bottom: 0.9rem; overflow: hidden; border: 2px solid var(--ac, var(--gold)); background: rgba(0,0,0,0.35); }
@@ -184,9 +188,10 @@
   <div class="pass">
     <div class="pass-ic">🎟️</div>
     <div class="pass-body">
-      <div class="pass-txt">Tu pasaporte mundialista: <b id="pass-n">0</b> de 20 sellos · <span id="pass-msg">¡arrancá a jugar y llenalo!</span></div>
+      <div class="pass-txt">Tu pasaporte mundialista: <b id="pass-n">0</b> de <span id="pass-total">20</span> sellos · <span id="pass-msg">¡arrancá a jugar y llenalo!</span></div>
       <div class="pass-bar"><div class="pass-fill" id="pass-fill"></div></div>
     </div>
+    <button class="pass-reset" id="pass-reset" title="Borrar sellos, rankings y partidas guardadas de este dispositivo">🗑️ Limpiar mis avances</button>
   </div>
 
   <!-- PUERTA 1: CREÁ TU CRACK -->
@@ -392,7 +397,31 @@
   cards.forEach(c => c.addEventListener('click', () => {
     if (!sellos.includes(c.dataset.id)) { sellos.push(c.dataset.id); try { localStorage.setItem(SEAL_KEY, JSON.stringify(sellos)); } catch(e){} }
   }));
+  const passTot = document.getElementById('pass-total'); if (passTot) passTot.textContent = TOTAL;
   renderSellos();
+
+  // ===== Limpiar avances: borra sellos, rankings y partidas guardadas (este dispositivo) =====
+  // Todas las claves que usa Pampa Juega (mismo origen para todas las páginas).
+  const PAMPA_KEYS = [
+    'pampa-juega-sellos',        // pasaporte / sellos (home)
+    'mundial-fixture-2026-v2',   // fixture / torneo
+    'carton-mundialista-2026',   // bingo
+    'trivia-mundial-ranking',    // trivia
+    'escape-ranking',            // sala de escape
+    'crear-crack-v2'             // creá tu crack (avatar + récords)
+  ];
+  const resetBtn = document.getElementById('pass-reset');
+  if (resetBtn) resetBtn.addEventListener('click', () => {
+    if (!confirm('¿Seguro que querés borrar TODOS tus avances en este dispositivo?\n\nSe vacían el pasaporte, los rankings y las partidas guardadas (figurita, bingo, fixture, trivia, sala de escape, tu crack).\n\nEsto no se puede deshacer.')) return;
+    PAMPA_KEYS.forEach(k => { try { localStorage.removeItem(k); } catch(e){} });
+    sellos = [];
+    cards.forEach(c => c.classList.remove('done'));
+    renderSellos();
+    resetBtn.classList.add('ok');
+    resetBtn.textContent = '✓ Avances borrados';
+    if (window.__papel) window.__papel(14);
+    setTimeout(() => { resetBtn.classList.remove('ok'); resetBtn.textContent = '🗑️ Limpiar mis avances'; }, 2600);
+  });
 
   // ===== Misiones de Creación =====
   const wppBase = (txt) => `https://wa.me/${WHATSAPP_JUVENTUD}?text=${encodeURIComponent(txt)}`;
