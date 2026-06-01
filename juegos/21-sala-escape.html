@@ -306,6 +306,32 @@
   .clue-log .cl-list li:first-child { border-top:none; }
   .clue-log .cl-list b { color:var(--gold-2); }
   .clue-log .cl-list strong { color:var(--gold-2); }
+  /* ===== barra de zonas (sala NO lineal: elegís a dónde ir) ===== */
+  .zone-bar { display:flex; gap:0.4rem; overflow-x:auto; padding-bottom:0.35rem; margin-bottom:0.7rem; -webkit-overflow-scrolling:touch; }
+  .zone-btn { flex:0 0 auto; position:relative; background:rgba(0,0,0,0.45); border:2px solid rgba(244,236,216,0.2); color:var(--crema); border-radius:10px; padding:0.45rem 0.6rem; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:2px; min-width:60px; font-family:'JetBrains Mono',monospace; }
+  .zone-btn .zb-ic { font-size:1.25rem; line-height:1; }
+  .zone-btn .zb-lb { font-size:0.5rem; letter-spacing:0.05em; opacity:0.85; }
+  .zone-btn.cur { border-color:var(--gold); background:rgba(212,168,46,0.16); }
+  .zone-btn.done { border-color:var(--verde); }
+  .zone-btn .zb-ok { position:absolute; top:-6px; right:-5px; font-size:0.7rem; color:#04210f; background:var(--verde); border-radius:50%; width:15px; height:15px; line-height:15px; }
+  .zone-btn.locked { opacity:0.72; }
+  .zone-btn.door.ready { border-color:var(--verde); animation:doorReady 1.1s infinite alternate; }
+  @keyframes doorReady { from { box-shadow:0 0 0 rgba(74,222,128,0); } to { box-shadow:0 0 14px rgba(74,222,128,0.6); } }
+  /* ===== mochila: código de la puerta + llave ===== */
+  .bag { display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap; background:rgba(0,0,0,0.5); border:1px solid rgba(212,168,46,0.4); border-radius:10px; padding:0.5rem 0.7rem; margin-bottom:0.7rem; }
+  .bag-lb { font-family:'JetBrains Mono',monospace; font-size:0.55rem; letter-spacing:0.13em; text-transform:uppercase; color:var(--gold); }
+  .bag-slots { display:flex; gap:0.35rem; }
+  .bag-slot { display:inline-flex; align-items:center; gap:2px; font-size:0.95rem; background:rgba(0,0,0,0.4); border:1px solid rgba(244,236,216,0.18); border-radius:7px; padding:1px 6px; }
+  .bag-slot b { font-family:'JetBrains Mono',monospace; color:rgba(244,236,216,0.55); }
+  .bag-slot.has { border-color:var(--verde); } .bag-slot.has b { color:var(--verde); }
+  .bag-key { margin-left:auto; font-size:0.72rem; font-family:'JetBrains Mono',monospace; opacity:0.55; }
+  .bag-key.has { opacity:1; color:var(--gold-2); }
+  /* ===== teclado de la puerta ===== */
+  .keypad-slots { display:flex; justify-content:center; gap:0.6rem; margin:0.5rem 0 0.9rem; }
+  .kp-slot { display:flex; flex-direction:column; align-items:center; gap:3px; }
+  .kp-slot span { font-size:1.2rem; }
+  .kp-slot b { font-family:'JetBrains Mono',monospace; font-size:1.4rem; color:var(--gold-2); width:34px; height:42px; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.6); border:2px solid var(--gold); border-radius:7px; }
+  .inspect-pop .ip-tag.item { background:rgba(212,168,46,0.2); color:var(--gold-2); border:1px solid rgba(212,168,46,0.6); }
 .grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
 </style>
 </head>
@@ -321,10 +347,13 @@
     <div class="panel">
       <div style="font-family:'Anton',sans-serif;color:var(--rojo);font-size:1.2rem;letter-spacing:0.1em;margin-bottom:0.7rem;text-transform:uppercase">🔒 ESTÁS ENCERRADO/A</div>
       <p style="line-height:1.5;font-size:0.9rem;margin-bottom:1rem">
-        Sos el/la <strong style="color:var(--gold-2)">utilero/a oficial</strong> del vestuario justo antes de la final del Mundial 2026. El equipo ya está calentando y vos quedaste adentro: las puertas se trabaron. Resolvé <strong>5 acertijos</strong> contrarreloj y salí a la cancha antes del pitazo. <strong style="color:var(--gold-2)">Las pistas están escondidas en la sala</strong>: arrastrá para mirar alrededor y <strong style="color:var(--gold-2)">tocá los objetos</strong> para descubrirlas (algunos no sirven, son señuelos).
+        Sos el/la <strong style="color:var(--gold-2)">utilero/a oficial</strong> y quedaste encerrado/a en el vestuario antes de la final del Mundial 2026. La <strong>puerta al túnel</strong> tiene un candado de <strong>4 dígitos</strong>. Cada dígito está escondido en una parte del vestuario.
+      </p>
+      <p style="line-height:1.5;font-size:0.88rem;margin-bottom:1rem">
+        Movete <strong style="color:var(--gold-2)">a dónde quieras</strong> (vitrina, pizarrón, perchero, botiquín…), <strong style="color:var(--gold-2)">tocá los objetos</strong> para encontrar pistas y <strong>cajas</strong>, y conseguí los 4 dígitos. Ojo: <strong style="color:var(--gold-2)">algunas zonas están bajo llave</strong> y la llave aparece en otra. Después poné el código en la puerta y salí a la cancha.
       </p>
       <p style="line-height:1.5;font-size:0.85rem;color:var(--gold-2);margin-bottom:0.9rem">
-        Cada acertijo te abre el siguiente y te manda a otra sala. Tu tiempo queda en el ranking. ¿La sacás barata o quedás adentro?
+        No hay orden obligado: vos elegís por dónde empezar. Tu tiempo queda en el ranking. ¿La sacás barata?
       </p>
       <input type="text" class="input-name" id="player-name" placeholder="Tu nombre" maxlength="18">
       <div style="font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:0.18em;color:var(--rojo);text-transform:uppercase;margin-bottom:0.3rem">Dificultad</div>
@@ -346,11 +375,13 @@
       <button class="look look-r" id="look-r">›</button>
       <div class="look-hint" id="look-hint">↔ arrastrá para mirar · 👆 tocá los objetos</div>
       <button class="snd-btn" id="snd-btn">🔊</button>
-      <div class="scene-label" id="scene-label">VESTUARIO</div>
+      <div class="scene-label" id="scene-label">VITRINA DE TROFEOS</div>
     </div>
+    <div class="zone-bar" id="zone-bar"></div>
+    <div class="bag" id="bag"></div>
     <div class="hud">
-      <div class="hud-block"><div class="hud-num" id="hud-puzzle">1</div><div class="hud-lab">Acertijo / 5</div></div>
-      <div class="hud-block"><div class="hud-num timer" id="hud-timer">10:00</div><div class="hud-lab">Tiempo</div></div>
+      <div class="hud-block"><div class="hud-num" id="hud-puzzle">0</div><div class="hud-lab">Zonas / 4</div></div>
+      <div class="hud-block"><div class="hud-num timer" id="hud-timer">12:00</div><div class="hud-lab">Tiempo</div></div>
       <div class="hud-block"><div class="hud-num" id="hud-tries">0</div><div class="hud-lab">Errores</div></div>
     </div>
     <div id="puzzle-container"></div>
@@ -407,132 +438,71 @@
 
 <script>
 // ========================================================================
-// PUZZLES
+// SALA NO LINEAL — zonas que recorrés en el orden que quieras.
+// Objetivo: juntar los 4 dígitos del código de la puerta del túnel.
+// Cada zona te da UN dígito (lo deducís de lo que encontrás). El botiquín
+// está bajo llave: la llave aparece dentro de un baúl en otra zona.
 // ========================================================================
-const PUZZLES = [
-  {
-    n: 1,
-    titulo: '🔢 Combinación numérica',
-    setup: (cont) => {
-      cont.innerHTML = `
-        <p class="puzzle-text">
-          La primera puerta tiene un candado de <strong>5 dígitos</strong>. Encima dice: <em>"El año en que Argentina ganó su primer Mundial, multiplicado por el número de la camiseta de Maradona"</em>.
-        </p>
-        <p class="puzzle-text" style="opacity:0.85;font-size:0.85rem">
-          🔎 Los dos números están <strong>escondidos en el vestuario</strong>. Tocá los objetos para encontrarlos.
-        </p>
-        <input type="text" class="puzzle-input" id="puzzle-input" placeholder="00000" maxlength="6">
-        <div class="feedback" id="feedback"></div>
-      `;
-    },
-    check: (val) => {
-      // 1978 * 10 = 19780
-      return val.replace(/\D/g, '') === '19780';
-    },
-    hint: 'Buscá el AÑO en la vitrina de trofeos y el NÚMERO en la camiseta colgada. Después multiplicá uno por el otro.'
-  },
-  {
-    n: 2,
-    titulo: '🚩 Selección oculta',
-    setup: (cont) => {
-      cont.innerHTML = `
-        <p class="puzzle-text">
-          En la pared hay 4 banderas pintadas. Una pertenece a la <strong>única selección que ganó el primer Mundial de la historia, en 1930</strong>. Tap en la correcta.
-        </p>
-        <div class="puzzle-flags" id="flags-grid"></div>
-        <div class="feedback" id="feedback"></div>
-      `;
-      const FLAGS = [
-        { id:'BRA', label:'Brasil', bg: 'linear-gradient(to bottom, #009C3B 33%, #FFDF00 33% 66%, #002776 66%)' },
-        { id:'ARG', label:'Argentina', bg: 'linear-gradient(to bottom, #75AADB 33%, #FFFFFF 33% 66%, #75AADB 66%)' },
-        { id:'URU', label:'Uruguay', bg: 'linear-gradient(to bottom, #0038A8 33%, #FFFFFF 33% 66%, #FFFFFF 66%)' }, // Uruguay: campeón del primer Mundial (1930), jugando de local
-        { id:'CHI', label:'Chile', bg: 'linear-gradient(to bottom, #FFFFFF 50%, #D52B1E 50%)' }
-      ];
-      const grid = document.getElementById('flags-grid');
-      FLAGS.forEach(f => {
-        const d = document.createElement('div');
-        d.className = 'puzzle-flag';
-        d.style.background = f.bg;
-        d.dataset.id = f.id;
-        d.title = f.label;
-        d.onclick = () => {
-          document.querySelectorAll('.puzzle-flag').forEach(x => x.classList.remove('selected'));
-          d.classList.add('selected');
-          window.__currentFlag = f.id;
-        };
-        grid.appendChild(d);
-      });
-    },
-    check: () => window.__currentFlag === 'URU', // Uruguay fue campeón del primer Mundial, en 1930, jugando de local.
-    hint: 'El país que fue ANFITRIÓN y campeón en 1930 (mirá la foto y la copa de la sala). ¿De qué país es esa bandera?'
-  },
-  {
-    n: 3,
-    titulo: '🔐 Mensaje cifrado del DT',
-    setup: (cont) => {
-      cont.innerHTML = `
-        <p class="puzzle-text">
-          En el pizarrón del DT hay un mensaje cifrado. Cada letra está corrida <strong>1 posición</strong> en el abecedario (A→B, B→C...).
-        </p>
-        <div class="ciphered">DBNQFPO</div>
-        <p class="puzzle-text" style="font-size:0.85rem;opacity:0.85">
-          Descifrá la palabra y escribila acá:
-        </p>
-        <input type="text" class="puzzle-input" id="puzzle-input" placeholder="??????" maxlength="20">
-        <div class="feedback" id="feedback"></div>
-      `;
-    },
-    check: (val) => val.toUpperCase().replace(/\s/g, '') === 'CAMPEON',
-    hint: 'Corré cada letra UNA hacia atrás en el abecedario (la D pasa a ser C…). Fijate el ejemplo del pizarrón.'
-  },
-  {
-    n: 4,
-    titulo: '⚽ Formación táctica',
-    setup: (cont) => {
-      cont.innerHTML = `
-        <p class="puzzle-text">
-          La caja fuerte se abre con el código de formación que usó <strong>Argentina</strong> en la final del Mundial 2022 (1er tiempo).
-        </p>
-        <div class="puzzle-formation" id="form-grid">
-          <div class="form-card" data-f="4-3-3">4-3-3</div>
-          <div class="form-card" data-f="4-4-2">4-4-2</div>
-          <div class="form-card" data-f="4-2-3-1">4-2-3-1</div>
-          <div class="form-card" data-f="3-5-2">3-5-2</div>
-          <div class="form-card" data-f="3-4-3">3-4-3</div>
-          <div class="form-card" data-f="4-5-1">4-5-1</div>
-        </div>
-        <div class="feedback" id="feedback"></div>
-      `;
-      document.querySelectorAll('.form-card').forEach(c => {
-        c.onclick = () => {
-          document.querySelectorAll('.form-card').forEach(x => x.classList.remove('selected'));
-          c.classList.add('selected');
-          window.__currentForm = c.dataset.f;
-        };
-      });
-    },
-    check: () => window.__currentForm === '4-3-3',
-    hint: 'Contá en el pizarrón táctico: cuántos defensores van atrás y cuántas puntas arriba. Esa es la formación.'
-  },
-  {
-    n: 5,
-    titulo: '🏆 Pregunta final',
-    setup: (cont) => {
-      cont.innerHTML = `
-        <p class="puzzle-text">
-          La última puerta tiene una pregunta tallada. Para salir necesitás escribir el <strong>nombre del estadio</strong> donde se va a jugar la <strong>final del Mundial 2026</strong>:
-        </p>
-        <input type="text" class="puzzle-input" id="puzzle-input" placeholder="ESTADIO ?????" maxlength="20">
-        <div class="feedback" id="feedback"></div>
-      `;
-    },
-    check: (val) => {
-      const v = val.toUpperCase().replace(/\s/g, '');
-      return v === 'METLIFE' || v === 'METLIFESTADIUM' || v === 'METLAIFE';
-    },
-    hint: 'Mirá la entrada y el banderín de la sala: es el estadio de los Giants y los Jets, en New Jersey. ¿Cómo se llama?'
-  }
+let inv = { llave:false };     // objetos en la mochila
+let gotDigits = {};            // dígitos conseguidos por zona  {vitrina:'3',...}
+let solvedZones = {};          // zonas resueltas
+let curZone = 'vitrina';
+
+const ZONES = [
+  { id:'vitrina', icon:'🏆', label:'VITRINA DE TROFEOS',
+    wall:'linear-gradient(180deg,#322a18,#14110a),repeating-linear-gradient(0deg,rgba(0,0,0,0.18) 0 2px,transparent 2px 22px)',
+    floor:'linear-gradient(180deg,#1f1a10,#0e0b06)',
+    spots:[
+      { e:'🏆', x:'15%', y:'30%', clue:true, t:'Las copas en fila', d:'Tres Copas del Mundo con el año grabado: <strong>1978</strong>, <strong>1986</strong> y <strong>2022</strong>.' },
+      { e:'🧳', x:'37%', y:'58%', box:true, gives:'llave', t:'Baúl viejo', d:'Forzás la tapa… ¡adentro hay una <strong>LLAVE 🔑</strong>! Te la guardás en la mochila.', got:'El baúl ya está vacío: la llave la tenés vos.' },
+      { e:'🖼️', x:'66%', y:'33%', t:'Cuadro del plantel', d:'Una foto enmarcada del plantel campeón. Lindo recuerdo, nada más.' },
+      { e:'🧹', x:'88%', y:'60%', t:'Escoba', d:'Para barrer el vestuario. No sirve para el código.' }
+    ],
+    ask:'¿Cuántas Copas del Mundo ganó Argentina? (1 dígito)', answer:'3',
+    hint:'Contá los trofeos de la vitrina: 1978, 1986 y…' },
+
+  { id:'pizarron', icon:'📋', label:'PIZARRÓN DEL DT',
+    wall:'linear-gradient(180deg,#143026,#08130d)',
+    floor:'linear-gradient(180deg,#241a10,#120a05)',
+    spots:[
+      { e:'📋', x:'16%', y:'32%', clue:true, t:'El dibujo táctico', d:'El 11 de la final 2022 dibujado: una línea de <strong>4</strong> defensores atrás y <strong>3</strong> puntas bien arriba (un 4-3-3).' },
+      { e:'📰', x:'40%', y:'58%', clue:true, t:'Recorte de diario', d:'«El <strong>tridente</strong> Messi–Di María–Julián de arranque desniveló la final». Tres delanteros.' },
+      { e:'✏️', x:'66%', y:'40%', t:'Tiza', d:'Una tiza gastada. Sirve para escribir, no para resolver.' },
+      { e:'🧤', x:'88%', y:'58%', t:'Guantes', d:'Los guantes del arquero, colgados a secar.' }
+    ],
+    ask:'En ese 4-3-3, ¿cuántos delanteros hay arriba? (1 dígito)', answer:'3',
+    hint:'Contá las puntas de arriba en el dibujo del pizarrón.' },
+
+  { id:'perchero', icon:'👕', label:'PERCHERO DE CAMISETAS',
+    wall:'linear-gradient(180deg,#21323f 0%,#16252f 55%,#0e171f 100%)',
+    floor:'repeating-linear-gradient(90deg,#2a1a10,#2a1a10 18px,#241409 18px,#241409 36px)',
+    spots:[
+      { e:'👕', x:'18%', y:'34%', clue:true, t:'La 10 de Messi', d:'La camiseta de Messi, con una nota pegada: «En la <strong>final de Qatar 2022</strong> metió <strong>2 goles</strong>».' },
+      { e:'🧦', x:'44%', y:'60%', t:'Medias', d:'Un par de medias dobladas. Nada escrito.' },
+      { e:'🧴', x:'68%', y:'40%', t:'Desodorante', d:'Aerosol de vestuario. Puro perfume.' },
+      { e:'🎽', x:'88%', y:'56%', t:'Pechera', d:'Pechera de entrenamiento. No dice nada.' }
+    ],
+    ask:'¿Cuántos goles metió Messi en la final de Qatar 2022? (1 dígito)', answer:'2',
+    hint:'Mirá la nota pegada en la camiseta de Messi.' },
+
+  { id:'botiquin', icon:'🧰', label:'BOTIQUÍN', lockedBy:'llave',
+    lockMsg:'El botiquín está <strong>cerrado con llave 🔑</strong>. Buscá la llave en otra parte del vestuario (probá los baúles).',
+    wall:'linear-gradient(180deg,#2a1f3a,#150c20),repeating-linear-gradient(90deg,rgba(255,255,255,0.03) 0 1px,transparent 1px 30px)',
+    floor:'linear-gradient(180deg,#2a1f12,#150d06)',
+    spots:[
+      { e:'🏅', x:'18%', y:'34%', clue:true, t:'La medalla', d:'Una medalla dorada grabada: «<strong>Qatar 2022 — ARGENTINA · 1°</strong> · Campeón del Mundo».' },
+      { e:'💊', x:'44%', y:'58%', t:'Pastillas', d:'Analgésicos y vendas. Cosas de utilería médica.' },
+      { e:'🩹', x:'68%', y:'40%', t:'Curitas', d:'Una caja de curitas. No ayuda con el código.' },
+      { e:'🧊', x:'88%', y:'58%', t:'Hielo', d:'Una bolsa de hielo para los golpes.' }
+    ],
+    ask:'¿En qué puesto terminó Argentina en Qatar 2022? (1 dígito)', answer:'1',
+    hint:'La medalla del botiquín lo dice: salió 1°.' }
 ];
+const DOOR_ORDER = ['vitrina','pizarron','perchero','botiquin'];
+function zoneById(id){ return ZONES.find(z=>z.id===id); }
+function doorCode(){ return DOOR_ORDER.map(id=>zoneById(id).answer).join(''); } // '3321'
+function isLocked(z){ return z.lockedBy && !inv[z.lockedBy]; }
+function allSolved(){ return ZONES.every(z=>solvedZones[z.id]); }
 
 // ========================================================================
 // AUDIO + ESCENA
@@ -577,116 +547,96 @@ function stopCrowd(){
   try{ n.g.gain.setTargetAtTime(0.0001, actx().currentTime, 0.4); setTimeout(()=>{ try{ n.src.stop(); n.lfo.stop(); }catch(e){} }, 700); }catch(e){}
 }
 
-// Pistas ESCONDIDAS en la sala: tocás los objetos y descubrís FRAGMENTOS.
-// Ninguno regala la respuesta: la armás juntando lo que encontrás. {clue:true} = sirve; el resto son señuelos.
-const FINDS = [
-  // 1 · Combinación numérica  (año del 1er título mundial de Argentina × nº de Maradona)
-  [
-    { e:'🏆', x:'13%', y:'30%', clue:true, t:'Vitrina de trofeos', d:'Una placa dorada: «ARGENTINA · su <strong>PRIMERA</strong> Copa del Mundo». Al lado, un almanaque viejo abierto en <strong>1978</strong>.' },
-    { e:'👕', x:'31%', y:'40%', clue:true, t:'Camiseta colgada', d:'De espaldas se ve el número bien gastado: la <strong>10</strong>. «La que hizo eterno a Diego».' },
-    { e:'🪑', x:'67%', y:'60%', t:'Banco de madera', d:'Una toalla mojada y un par de canilleras. Nada para anotar acá.' },
-    { e:'🧦', x:'87%', y:'58%', t:'Botines y medias', d:'Embarrados de la cancha. Solo huelen a final.' }
-  ],
-  // 2 · Selección oculta  (única campeona del 1er Mundial, 1930 = Uruguay)
-  [
-    { e:'🖼️', x:'12%', y:'34%', clue:true, t:'Foto sepia, 1930', d:'Un equipo levanta la <strong>primera Copa del Mundo</strong> en su propio estadio. El cartel del fondo dice «<strong>Montevideo</strong>».' },
-    { e:'🏅', x:'30%', y:'30%', clue:true, t:'Réplica de la copa', d:'Grabado en la base: «<strong>1ª edición · 1930</strong> — el país <strong>anfitrión</strong> se quedó con todo».' },
-    { e:'🎽', x:'70%', y:'56%', t:'Pechera de árbitro', d:'Silbato y tarjetas. No dice nada del 30.' },
-    { e:'📻', x:'89%', y:'40%', t:'Radio antigua', d:'Transmite estática y un relato viejo. No se entiende nada.' }
-  ],
-  // 3 · Mensaje cifrado  (corrido 1 atrás: DBNQFPO → CAMPEON)
-  [
-    { e:'📋', x:'15%', y:'32%', clue:true, t:'Esquina del pizarrón', d:'Un ejemplo resuelto en tiza: «<strong>MFP → LEO</strong>». Cada letra está corrida <strong>una hacia adelante</strong>; para leerla, volvé una para atrás.' },
-    { e:'🔤', x:'33%', y:'42%', clue:true, t:'Abecedario pegado', d:'Una tira con el abecedario y una flecha marcada: «<strong>D ← C</strong>, <strong>B ← A</strong>...».' },
-    { e:'✏️', x:'66%', y:'56%', t:'Tiza partida', d:'Polvo blanco en el piso. Sirve para escribir, no para resolver.' },
-    { e:'🧤', x:'88%', y:'48%', t:'Guantes del arquero', d:'Colgados a secar. Nada escrito en ellos.' }
-  ],
-  // 4 · Formación táctica  (Argentina, final 2022, 1er tiempo = 4-3-3)
-  [
-    { e:'📋', x:'15%', y:'34%', clue:true, t:'Pizarrón táctico', d:'El dibujo de la final 2022: una línea de <strong>CUATRO</strong> defensores atrás… y <strong>TRES</strong> puntas marcadas bien arriba.' },
-    { e:'📰', x:'33%', y:'44%', clue:true, t:'Recorte de diario', d:'«El <strong>tridente</strong> Messi–Di María–Julián de arranque desniveló la final». Tres de arriba.' },
-    { e:'📦', x:'67%', y:'58%', t:'Caja de pecheras', d:'Pecheras naranjas de entrenamiento. Para los picaditos.' },
-    { e:'🥤', x:'88%', y:'56%', t:'Bidones', d:'Agua y bebida isotónica. Nada táctico por acá.' }
-  ],
-  // 5 · Pregunta final  (estadio de la final del Mundial 2026 = MetLife)
-  [
-    { e:'🎫', x:'13%', y:'40%', clue:true, t:'Entrada plastificada', d:'«<strong>FINAL · 19 JUL 2026</strong> · East Rutherford, <strong>New Jersey</strong>». El número de asiento está borrado.' },
-    { e:'📣', x:'30%', y:'34%', clue:true, t:'Banderín de la NFL', d:'«Home of the <strong>Giants</strong> &amp; the <strong>Jets</strong>». El estadio que comparten los dos equipos de Nueva York.' },
-    { e:'⚽', x:'70%', y:'62%', t:'Pelota oficial', d:'Inflada y lista para la final. Te dan ganas de salir ya.' },
-    { e:'🧢', x:'88%', y:'44%', t:'Gorra olvidada', d:'Una gorra del campeón anterior. No ayuda.' }
-  ]
-];
-// cuántas pistas reales hay por sala
-function clueCount(idx){ return (FINDS[idx]||[]).filter(s=>s.clue).length; }
-// salas por acertijo: panorama ancho explorable. Lo estructural (lockers, puerta) va acá;
-// los objetos inspeccionables (las pistas) los pone renderScene desde FINDS.
-const ROOMS = [
-  { label:'VESTUARIO',
-    wall:'linear-gradient(180deg,#21323f 0%,#16252f 55%,#0e171f 100%)',
-    floor:'repeating-linear-gradient(90deg,#2a1a10,#2a1a10 18px,#241409 18px,#241409 36px)',
-    build: p => { [4,12,20,80,88,96].forEach(x=>{ const l=document.createElement('div'); l.className='locker'; l.style.left=x+'%'; p.appendChild(l); }); } },
-  { label:'PARED DE BANDERAS',
-    wall:'linear-gradient(180deg,#2a1f3a,#150c20),repeating-linear-gradient(90deg,rgba(255,255,255,0.03) 0 1px,transparent 1px 30px)',
-    floor:'linear-gradient(180deg,#2a1f12,#150d06)',
-    build: p => {} },
-  { label:'PIZARRÓN DEL DT',
-    wall:'linear-gradient(180deg,#143026,#08130d)',
-    floor:'linear-gradient(180deg,#241a10,#120a05)',
-    build: p => {} },
-  { label:'CAJA FUERTE',
-    wall:'linear-gradient(180deg,#322a18,#14110a),repeating-linear-gradient(0deg,rgba(0,0,0,0.18) 0 2px,transparent 2px 22px)',
-    floor:'linear-gradient(180deg,#1f1a10,#0e0b06)',
-    build: p => {} },
-  { label:'TÚNEL A LA CANCHA',
-    wall:'linear-gradient(180deg,#0a1410 0%,#102a1a 60%,#1c8f4c 100%)',
-    floor:'linear-gradient(180deg,#0c6e36,#0a4f27)',
-    build: p => { const d=document.createElement('div'); d.className='door'; d.id='final-door'; d.style.left='50%'; p.appendChild(d); } }
-];
-// objeto inspeccionable: al tocarlo abre una "lupa" con lo que hay escrito/pintado.
+// objeto inspeccionable: al tocarlo abre una "lupa" con lo que hay escrito/pintado o una caja.
 function addSpot(p, spot){
   const o=document.createElement('div');
-  o.className='sObj'+(spot.clue?' clue':'')+((spot.clue && dificultad==='facil')?' glow':'');
+  const interactivo = spot.clue || spot.box;
+  o.className='sObj'+(interactivo?' clue':'')+((interactivo && dificultad==='facil')?' glow':'');
+  if(spot.box && inv[spot.gives]) o.classList.add('found'); // baúl ya vaciado
   o.textContent=spot.e; o.style.left=spot.x; o.style.top=spot.y;
   o.addEventListener('pointerup', ev=>{ ev.stopPropagation(); if(dragMoved) return; inspect(spot, o); });
   p.appendChild(o);
 }
-let foundClues = [];
 function inspect(spot, el){
   sndClick();
-  if(spot.clue){
-    if(el) el.classList.add('found');
-    if(!foundClues.some(f=>f.t===spot.t)){ foundClues.push({e:spot.e,t:spot.t,d:spot.d}); renderClueLog(); }
+  let kind='nada', tagTxt='Nada útil acá', text=spot.d;
+  if(spot.box){
+    if(inv[spot.gives]){ kind='nada'; tagTxt='Ya lo agarraste'; text=spot.got||spot.d; }
+    else { inv[spot.gives]=true; if(el) el.classList.add('found'); kind='item'; tagTxt='🎒 ¡Conseguiste un objeto!'; sndRight(); renderBag(); renderZoneBar(); }
+  } else if(spot.clue){
+    kind='pista'; tagTxt='🔎 Pista'; if(el) el.classList.add('found');
   }
   const pop=document.getElementById('inspect-pop'), bd=document.getElementById('ip-backdrop');
   pop.querySelector('.ip-emoji').textContent=spot.e;
   pop.querySelector('.ip-title').textContent=spot.t;
-  pop.querySelector('.ip-text').innerHTML=spot.d;
-  const tag=pop.querySelector('.ip-tag');
-  tag.className='ip-tag '+(spot.clue?'pista':'nada');
-  tag.textContent=spot.clue?'🔎 ¡Pista encontrada! Quedó anotada abajo':'Nada útil acá';
+  pop.querySelector('.ip-text').innerHTML=text;
+  const tag=pop.querySelector('.ip-tag'); tag.className='ip-tag '+kind; tag.textContent=tagTxt;
   bd.classList.add('on'); pop.classList.add('on');
 }
 function closeInspect(){ const p=document.getElementById('inspect-pop'),b=document.getElementById('ip-backdrop'); if(p)p.classList.remove('on'); if(b)b.classList.remove('on'); }
-function renderClueLog(){
-  const box=document.getElementById('clue-log'); if(!box) return;
-  const list=box.querySelector('.cl-list'), empty=box.querySelector('.cl-empty'), cnt=box.querySelector('.cl-count');
-  if(cnt) cnt.textContent=foundClues.length;
-  if(!foundClues.length){ if(empty) empty.style.display='block'; list.innerHTML=''; return; }
-  if(empty) empty.style.display='none';
-  list.innerHTML=foundClues.map(f=>'<li>'+f.e+' <b>'+f.t+':</b> '+f.d+'</li>').join('');
+
+// ===== mochila: código de la puerta + llave =====
+function renderBag(){
+  const bag=document.getElementById('bag'); if(!bag) return;
+  const slots=DOOR_ORDER.map(id=>{ const z=zoneById(id), d=gotDigits[id];
+    return `<span class="bag-slot${d?' has':''}">${z.icon}<b>${d||'?'}</b></span>`; }).join('');
+  bag.innerHTML=`<span class="bag-lb">Código</span><span class="bag-slots">${slots}</span><span class="bag-key${inv.llave?' has':''}">🔑 ${inv.llave?'llave':'sin llave'}</span>`;
 }
-function renderScene(idx){
-  const r = ROOMS[idx] || ROOMS[0];
-  const p = document.getElementById('pano');
+
+// ===== barra de zonas (elegís a dónde ir, en cualquier orden) =====
+function renderZoneBar(){
+  const bar=document.getElementById('zone-bar'); if(!bar) return;
+  let h='';
+  ZONES.forEach(z=>{
+    const done=solvedZones[z.id], lock=isLocked(z), cur=(curZone===z.id);
+    h+=`<button class="zone-btn${cur?' cur':''}${done?' done':''}${lock?' locked':''}" data-zone="${z.id}">`
+      +`<span class="zb-ic">${lock?'🔒':z.icon}</span><span class="zb-lb">${z.label.split(' ')[0]}</span>`
+      +`${done?'<span class="zb-ok">✓</span>':''}</button>`;
+  });
+  h+=`<button class="zone-btn door${curZone==='puerta'?' cur':''}${allSolved()?' ready':''}" data-zone="puerta">`
+    +`<span class="zb-ic">🚪</span><span class="zb-lb">PUERTA</span></button>`;
+  bar.innerHTML=h;
+  bar.querySelectorAll('.zone-btn').forEach(b=>b.onclick=()=>goZone(b.dataset.zone));
+}
+
+// dibuja la escena de la zona actual (o la puerta)
+function renderZone(){
+  const p=document.getElementById('pano');
   p.className='pano'; p.style.opacity='1'; pan=0;
-  p.style.background = r.wall;
-  p.innerHTML = `<div class="pano-ceil"></div><div class="pano-floor" style="background:${r.floor}"></div>`;
-  r.build(p);
-  // las pistas viven EN la sala: objetos repartidos que se inspeccionan
-  (FINDS[idx]||[]).forEach(spot => addSpot(p, spot));
+  if(curZone==='puerta'){
+    p.style.background='linear-gradient(180deg,#0a1410 0%,#102a1a 60%,#1c8f4c 100%)';
+    p.innerHTML='<div class="pano-ceil"></div><div class="pano-floor" style="background:linear-gradient(180deg,#0c6e36,#0a4f27)"></div>';
+    const d=document.createElement('div'); d.className='door'; d.id='final-door'; d.style.left='50%'; p.appendChild(d);
+    document.getElementById('scene-label').textContent='PUERTA AL TÚNEL';
+  } else {
+    const z=zoneById(curZone);
+    p.style.background=z.wall;
+    p.innerHTML=`<div class="pano-ceil"></div><div class="pano-floor" style="background:${z.floor}"></div>`;
+    z.spots.forEach(s=>addSpot(p,s));
+    document.getElementById('scene-label').textContent=z.label;
+  }
   applyPan(false);
-  document.getElementById('scene-label').textContent = r.label;
 }
+
+// ir a una zona (no lineal). Si está bajo llave, muestra el aviso en la lupa.
+function goZone(id){
+  if(id!=='puerta'){
+    const z=zoneById(id);
+    if(isLocked(z)){
+      sndWrong(); shakeScene();
+      const pop=document.getElementById('inspect-pop'), bd=document.getElementById('ip-backdrop');
+      pop.querySelector('.ip-emoji').textContent='🔒';
+      pop.querySelector('.ip-title').textContent=z.label;
+      pop.querySelector('.ip-text').innerHTML=z.lockMsg;
+      const tag=pop.querySelector('.ip-tag'); tag.className='ip-tag nada'; tag.textContent='Cerrado';
+      bd.classList.add('on'); pop.classList.add('on');
+      return;
+    }
+  }
+  curZone=id; closeInspect();
+  renderZoneBar(); renderZone(); renderPanel(); renderBag();
+}
+function shakeScene(){ const sc=document.getElementById('screen-game'); if(!sc) return; sc.classList.remove('shake'); void sc.offsetWidth; sc.classList.add('shake'); }
 // ===== mirar alrededor (pan) =====
 let pan=0, dragging=false, dragStartX=0, dragStartPan=0, dragMoved=false;
 const PAN_MAX=18; // % del ancho del panorama
@@ -713,16 +663,19 @@ function doorWalk(cb){
 // ESTADO
 // ========================================================================
 let state = {
-  name: '', currentPuzzle: 0, tries: 0, startTime: 0, timeLeft: 600, timerInterval: null
+  name: '', tries: 0, totalTime: 720, timeLeft: 720, timerInterval: null
 };
 
 document.getElementById('start').onclick = () => {
   const name = document.getElementById('player-name').value.trim();
   if (!name) { alert('Ingresá tu nombre'); return; }
-  state.name = name; state.currentPuzzle = 0; state.tries = 0;
-  state.startTime = Date.now(); state.timeLeft = (dificultad==='facil' ? 720 : 420);
+  state.name = name; state.tries = 0;
+  state.totalTime = (dificultad==='facil' ? 720 : 420); state.timeLeft = state.totalTime;
+  inv = { llave:false }; gotDigits = {}; solvedZones = {}; curZone = 'vitrina';
+  document.getElementById('hud-puzzle').textContent = '0';
+  document.getElementById('hud-tries').textContent = '0';
   show('game');
-  renderPuzzle();
+  goZone('vitrina');
   startTimer();
   startCrowd();
 };
@@ -748,77 +701,98 @@ function updateTimer() {
   el.classList.toggle('danger', state.timeLeft <= 60);
 }
 
-function renderPuzzle() {
-  const p = PUZZLES[state.currentPuzzle];
-  document.getElementById('hud-puzzle').textContent = (state.currentPuzzle + 1);
+// panel inferior: la pregunta de la zona actual, o el teclado de la puerta
+function renderPanel() {
+  document.getElementById('hud-puzzle').textContent = Object.keys(solvedZones).length;
   document.getElementById('hud-tries').textContent = state.tries;
-  foundClues = [];              // las pistas se descubren de nuevo en cada sala
-  closeInspect();
-  renderScene(state.currentPuzzle);
-  const nClues = clueCount(state.currentPuzzle);
   const cont = document.getElementById('puzzle-container');
+
+  if (curZone === 'puerta') {
+    const ready = allSolved();
+    const slots = DOOR_ORDER.map(id=>{ const z=zoneById(id), d=gotDigits[id];
+      return `<div class="kp-slot"><span>${z.icon}</span><b>${d||'·'}</b></div>`; }).join('');
+    cont.innerHTML = `
+      <div class="puzzle">
+        <div class="puzzle-num">🚪 LA SALIDA</div>
+        <div class="puzzle-title">Puerta al túnel</div>
+        <p class="puzzle-text">Candado de <strong>4 dígitos</strong>. Poné el código en el orden de la mochila: ${DOOR_ORDER.map(id=>zoneById(id).icon).join(' ')}</p>
+        <div class="keypad-slots">${slots}</div>
+        <input type="text" inputmode="numeric" class="puzzle-input" id="door-input" placeholder="• • • •" maxlength="4">
+        <div class="feedback ${ready?'':'wrong'}" id="feedback">${ready?'':'Te faltan dígitos: resolvé las 4 zonas primero.'}</div>
+      </div>
+      <button class="btn" id="door-open">🔓 ABRIR LA PUERTA</button>`;
+    document.getElementById('door-open').onclick = tryDoor;
+    const di = document.getElementById('door-input'); di.addEventListener('keypress', e=>{ if(e.key==='Enter') tryDoor(); });
+    return;
+  }
+
+  const z = zoneById(curZone), done = solvedZones[z.id];
   cont.innerHTML = `
-    <div class="clue-log" id="clue-log">
-      <div class="cl-head"><span>🔎 Pistas que encontraste · <span class="cl-count">0</span>/${nClues}</span><span style="opacity:.7">tocá los objetos</span></div>
-      <div class="cl-empty">Arrastrá para mirar la sala y <b>tocá los objetos</b>: algunos esconden la pista, otros no. Juntá las pistas y resolvé.</div>
-      <ul class="cl-list"></ul>
-    </div>
     <div class="puzzle">
-      <div class="puzzle-num">ACERTIJO ${p.n}/5</div>
-      <div class="puzzle-title">${p.titulo}</div>
-      <div id="puzzle-body"></div>
+      <div class="puzzle-num">${z.icon} ${z.label}${done?' · ✓ RESUELTA':''}</div>
+      <div class="puzzle-title">Conseguí el dígito</div>
+      <p class="puzzle-text">${z.ask}</p>
+      ${done
+        ? `<div class="feedback right">✓ Dígito conseguido: <b>${gotDigits[z.id]}</b> · va en ${z.icon}. Seguí con otra zona o la 🚪 puerta.</div>`
+        : `<input type="text" inputmode="numeric" class="puzzle-input" id="zone-input" placeholder="?" maxlength="1">
+           <div class="feedback" id="feedback"></div>`}
     </div>
-    <button class="btn" id="check-btn">▶ DALE, PROBÁ</button>
-    <button class="btn btn-secondary" style="margin-top:0.5rem" id="hint-btn">💡 PISTA (-${dificultad==='facil'?20:45}s)</button>
-  `;
-  renderClueLog();
-  const body = document.getElementById('puzzle-body');
-  p.setup(body);
-  document.getElementById('check-btn').onclick = () => check();
-  document.getElementById('hint-btn').onclick = () => {
-    state.timeLeft = Math.max(0, state.timeLeft - (dificultad==='facil'?20:45));
-    updateTimer();
-    // la pista NO da la respuesta: te orienta y resalta los objetos clave de la sala
-    document.querySelectorAll('#pano .sObj.clue').forEach(o=>{ o.classList.add('glow'); o.classList.add('flash'); setTimeout(()=>o.classList.remove('flash'),1400); });
-    const fb=document.getElementById('feedback'); if(fb){ fb.textContent = '💡 ' + p.hint; fb.className = 'feedback wrong'; }
-  };
-  // Allow enter to check
-  const input = document.querySelector('.puzzle-input');
-  if (input) input.addEventListener('keypress', e => { if (e.key === 'Enter') check(); });
+    ${done ? '' : `<button class="btn" id="zone-check">▶ DALE, PROBÁ</button>
+    <button class="btn btn-secondary" style="margin-top:0.5rem" id="hint-btn">💡 PISTA (-${dificultad==='facil'?20:45}s)</button>`}`;
+  if (!done) {
+    document.getElementById('zone-check').onclick = () => checkZone();
+    const inp = document.getElementById('zone-input');
+    if (inp) inp.addEventListener('keypress', e=>{ if(e.key==='Enter') checkZone(); });
+    document.getElementById('hint-btn').onclick = () => {
+      state.timeLeft = Math.max(0, state.timeLeft - (dificultad==='facil'?20:45));
+      updateTimer();
+      document.querySelectorAll('#pano .sObj.clue').forEach(o=>{ o.classList.add('glow'); o.classList.add('flash'); setTimeout(()=>o.classList.remove('flash'),1400); });
+      const fb=document.getElementById('feedback'); if(fb){ fb.textContent='💡 '+z.hint; fb.className='feedback wrong'; }
+    };
+  }
 }
 
-function check() {
-  const p = PUZZLES[state.currentPuzzle];
-  const input = document.querySelector('.puzzle-input');
-  const val = input ? input.value : '';
-  if (p.check(val)) {
-    document.getElementById('feedback').textContent = '✓ ¡CORRECTO! Puerta desbloqueada';
-    document.getElementById('feedback').className = 'feedback right';
+function checkZone() {
+  const z = zoneById(curZone);
+  const inp = document.getElementById('zone-input');
+  const val = (inp ? inp.value : '').replace(/\D/g,'');
+  if (val === z.answer) {
+    solvedZones[z.id] = true; gotDigits[z.id] = z.answer;
     sndRight(); sndOle(); vibe(40);
-    // abrir la puerta final si es el último
-    const fd = document.getElementById('final-door'); if (fd) fd.classList.add('open');
-    setTimeout(() => {
-      state.currentPuzzle++;
-      if (state.currentPuzzle >= PUZZLES.length) finish();
-      else doorWalk(renderPuzzle);
-    }, 800);
+    renderZoneBar(); renderBag(); renderPanel();
+    const fb=document.getElementById('feedback'); if(fb){ fb.textContent = allSolved() ? '✓ ¡Tenés los 4 dígitos! Andá a la 🚪 puerta.' : '✓ ¡Dígito conseguido!'; fb.className='feedback right'; }
   } else {
-    // sólo los errores suman al contador
-    state.tries++;
-    document.getElementById('hud-tries').textContent = state.tries;
-    document.getElementById('feedback').textContent = '✗ Esa no es. Probá de nuevo.';
-    document.getElementById('feedback').className = 'feedback wrong';
-    sndWrong(); vibe([30,40,30]);
-    const sc = document.getElementById('screen-game'); sc.classList.remove('shake'); void sc.offsetWidth; sc.classList.add('shake');
-    // Penalización por error
-    state.timeLeft = Math.max(0, state.timeLeft - (dificultad==='facil'?8:15));
-    updateTimer();
+    state.tries++; document.getElementById('hud-tries').textContent = state.tries;
+    const fb=document.getElementById('feedback'); if(fb){ fb.textContent='✗ Ese no es. Mirá bien las pistas de la zona.'; fb.className='feedback wrong'; }
+    sndWrong(); vibe([30,40,30]); shakeScene();
+    state.timeLeft = Math.max(0, state.timeLeft - (dificultad==='facil'?8:15)); updateTimer();
+  }
+}
+
+function tryDoor() {
+  const inp = document.getElementById('door-input');
+  const val = (inp ? inp.value : '').replace(/\D/g,'');
+  if (!allSolved()) {
+    const fb=document.getElementById('feedback'); if(fb){ fb.textContent='Te faltan zonas: conseguí los 4 dígitos primero.'; fb.className='feedback wrong'; }
+    sndWrong(); shakeScene(); return;
+  }
+  if (val === doorCode()) {
+    const fd=document.getElementById('final-door'); if(fd) fd.classList.add('open');
+    sndDoor();
+    const fb=document.getElementById('feedback'); if(fb){ fb.textContent='✓ ¡Código correcto! La puerta se abre…'; fb.className='feedback right'; }
+    setTimeout(finish, 750);
+  } else {
+    state.tries++; document.getElementById('hud-tries').textContent = state.tries;
+    const fb=document.getElementById('feedback'); if(fb){ fb.textContent='✗ Código incorrecto. Fijate los dígitos de la mochila.'; fb.className='feedback wrong'; }
+    sndWrong(); vibe([30,40,30]); shakeScene();
+    state.timeLeft = Math.max(0, state.timeLeft - (dificultad==='facil'?8:15)); updateTimer();
   }
 }
 
 function failTimeOut() {
   stopCrowd();
-  document.getElementById('fail-detail').textContent = `Te faltaron ${5 - state.currentPuzzle} acertijo(s). Errores: ${state.tries}`;
+  const left = ZONES.filter(z=>!solvedZones[z.id]).length;
+  document.getElementById('fail-detail').textContent = `Te quedaron ${left} zona(s) sin resolver. Errores: ${state.tries}`;
   show('fail');
 }
 
@@ -826,7 +800,7 @@ function finish() {
   clearInterval(state.timerInterval);
   stopCrowd();
   sndEscape(); vibe([40,60,40,60,80]);
-  const elapsed = 600 - state.timeLeft;
+  const elapsed = Math.max(0, (state.totalTime || 720) - state.timeLeft);
   const m = Math.floor(elapsed / 60);
   const s = elapsed % 60;
   const timeStr = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
