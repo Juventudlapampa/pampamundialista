@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Creá tu Crack · Mundial 2026</title>
 <meta name="description" content="Jugá los juegos del Mundial 2026 de Juventudes La Pampa. Gratis, desde el celu.">
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
@@ -103,6 +103,7 @@
 </style>
 </head>
 <body>
+<a href="../index.html" style="display:inline-block;margin:0.6rem 0 0 0.8rem;color:#d4a82e;font-size:0.8rem;font-family:system-ui,sans-serif;text-decoration:none;opacity:0.85;">← Volver a Pampa Juega</a>
 <div class="container">
   <header>
     <div class="header-tag">Creá tu Crack · Mundial 2026</div>
@@ -249,7 +250,7 @@ const KITS = [
   {n:'Japón',     main:'#10204B', accent:'#FFFFFF', shorts:'#10204B'},
   {n:'Bélgica',   main:'#E30613', accent:'#111111', shorts:'#111111'},
   {n:'Senegal',   main:'#00853F', accent:'#FFFFFF', shorts:'#00853F'},
-  {n:'Corea',     main:'#E30613', accent:'#10204B', shorts:'#10204B'},
+  {n:'Corea del Sur', main:'#E30613', accent:'#10204B', shorts:'#10204B'},
   {n:'Noruega',   main:'#C8102E', accent:'#FFFFFF', shorts:'#00205B'},
   {n:'Canadá',    main:'#FF0000', accent:'#FFFFFF', shorts:'#FF0000'},
   {n:'Ecuador',   main:'#FFD100', accent:'#0A1F44', shorts:'#0A1F44'},
@@ -482,7 +483,7 @@ function startGame(){ gameType==='penales' ? startPenales() : startDominio(); }
 cv.addEventListener('pointerdown',e=>{ if(gameType!=='dominio'||!game||game.over) return; const rect=cv.getBoundingClientRect(); const x=(e.clientX-rect.left)*(CW/rect.width), y=(e.clientY-rect.top)*(CH/rect.height); const b=game.ball; if(Math.hypot(x-b.x,y-b.y)<b.r+42){ b.vy=-9.3-Math.min(game.score*0.06,3.5); b.vx+=(b.x-x)*0.09+(Math.random()*1.6-0.8); b.vx=Math.max(-7,Math.min(7,b.vx)); game.score++; $('g-score').textContent=game.score; game.flash=8; vibrate(15); if(game.score%10===0) confettiBurst(); } });
 function loop(){ const b=game.ball; b.vy+=game.g; b.x+=b.vx; b.y+=b.vy; if(b.x<b.r){b.x=b.r;b.vx=Math.abs(b.vx);} if(b.x>CW-b.r){b.x=CW-b.r;b.vx=-Math.abs(b.vx);} if(b.y<b.r){b.y=b.r;b.vy=Math.abs(b.vy)*0.6;} if(b.y+b.r>=CH-18&&!game.over){game.over=true;endGame();} if(game.flash>0)game.flash--; drawGame(); if(!game.over)raf=requestAnimationFrame(loop); }
 function drawGame(){ for(let i=0;i<8;i++){ctx.fillStyle=i%2?'#0e2a40':'#0c2236';ctx.fillRect(0,i*CH/8,CW,CH/8);} ctx.strokeStyle='rgba(56,189,248,0.25)';ctx.lineWidth=2;ctx.strokeRect(8,8,CW-16,CH-16); ctx.fillStyle='rgba(56,189,248,0.18)';ctx.fillRect(0,CH-16,CW,16); if(avatarImg){const w=92,h=w*252/200;ctx.drawImage(avatarImg,CW/2-w/2,CH-h-6,w,h);} const b=game.ball; ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,7);ctx.fillStyle=game.flash>0?'#fff7cc':'#fff';ctx.fill();ctx.lineWidth=2;ctx.strokeStyle='#111';ctx.stroke(); ctx.beginPath();ctx.arc(b.x,b.y,b.r*0.45,0,7);ctx.fillStyle='#111';ctx.fill(); }
-function endGame(){ vibrate([20,40,20]); if(game.score>best){best=game.score;saveAll();} setTimeout(showResult,500); }
+function endGame(){ vibrate([20,40,20]); const prevBest=best; game.esRecord = game.score>prevBest && game.score>0; if(game.score>best){best=game.score;saveAll();} setTimeout(showResult,500); }
 
 /* ===================== JUEGO 2: PENALES ===================== */
 const PGX1=100, PGX2=260, PGY=44, PKY=60;
@@ -532,7 +533,7 @@ function resolvePen(){
   pg.flashT=45; updatePenHud(); pg.phase='reset';
   setTimeout(()=>{ if(pg.shot>=pg.total){ endPenales(); } else { pg.ball={x:CW/2,y:CH-58,r:13}; pg.keeper={x:CW/2,diveTo:CW/2}; pg.phase='aim'; } }, 900);
 }
-function endPenales(){ pg.ended=true; if(penRaf)cancelAnimationFrame(penRaf); if(pg.goals>bestPen){bestPen=pg.goals;saveAll();} vibrate([20,40,20]); setTimeout(showResult,400); }
+function endPenales(){ pg.ended=true; if(penRaf)cancelAnimationFrame(penRaf); const prevBest=bestPen; pg.esRecord = pg.goals>prevBest && pg.goals>0; if(pg.goals>bestPen){bestPen=pg.goals;saveAll();} vibrate([20,40,20]); setTimeout(showResult,400); }
 function drawPenDude(x,y,color){ ctx.beginPath(); ctx.arc(x,y,13,0,7); ctx.fillStyle=color; ctx.fill(); ctx.lineWidth=2.5; ctx.strokeStyle='#000'; ctx.stroke(); ctx.fillStyle=color; ctx.fillRect(x-10,y+10,20,22); }
 function drawPen(){
   for(let i=0;i<10;i++){ ctx.fillStyle=i%2?'#0d4a2c':'#11572f'; ctx.fillRect(0,i*CH/10,CW,CH/10); }
@@ -565,15 +566,15 @@ function showResult(){
   if(gameType==='penales'){
     $('r-score').textContent = pg ? pg.goals : 0;
     $('r-score-lbl').textContent = `GOLES DE ${pg?pg.total:5} PENALES`;
-    $('r-pre').textContent = (pg && pg.goals>=bestPen && pg.goals>0) ? '★ ¡NUEVO RÉCORD! ★' : '★ Mi Crack ★';
+    $('r-pre').textContent = (pg && pg.esRecord) ? '★ ¡NUEVO RÉCORD! ★' : '★ Mi Crack ★';
     showScreen('result');
-    if(pg && pg.goals>=4) confettiBurst();
+    if(pg && (pg.esRecord || pg.goals>=4)) confettiBurst();
   } else {
     $('r-score').textContent = game ? game.score : 0;
     $('r-score-lbl').textContent = 'TOQUES SEGUIDOS · DOMINIO';
-    $('r-pre').textContent = (game && game.score>=best && game.score>0) ? '★ ¡NUEVO RÉCORD! ★' : '★ Mi Crack ★';
+    $('r-pre').textContent = (game && game.esRecord) ? '★ ¡NUEVO RÉCORD! ★' : '★ Mi Crack ★';
     showScreen('result');
-    if(game && game.score>=best && game.score>0) confettiBurst();
+    if(game && game.esRecord) confettiBurst();
   }
 }
 

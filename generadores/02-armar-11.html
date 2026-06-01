@@ -419,10 +419,22 @@
     letter-spacing: 0.1em;
   }
   @media (max-width: 340px) { .modo-desc { padding: 0.8rem 0.6rem; } }
+  .volver-link {
+    display: inline-block;
+    margin-bottom: 0.8rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--dorado);
+    text-decoration: none;
+    opacity: 0.8;
+  }
+  .volver-link:hover { opacity: 1; color: var(--dorado-2); }
 </style>
 </head>
 <body>
 <div class="container">
+  <a href="../index.html" class="volver-link">← Volver a Pampa Juega</a>
   <header>
     <div class="header-tag">Armá tu 11 · Mundial 2026</div>
     <h1>ARMÁ TU <span>11</span></h1>
@@ -436,7 +448,7 @@
   <!-- MODO ARGENTINA -->
   <div class="modo active" id="modo-arg">
     <div class="modo-desc">
-      Armá tu <strong>11 titular argentino</strong> con la <strong>lista oficial de 26</strong> de Scaloni para el Mundial 2026. Elegí formación, asigná posiciones y elegí tu DT.
+      Armá tu <strong>11 titular argentino</strong> con la <strong>lista proyectada de 26</strong> para el Mundial 2026. Elegí formación, asigná posiciones y elegí tu DT.
     </div>
     <div class="dt-row">
       <div>
@@ -519,7 +531,7 @@
   <!-- MODO IDEAL -->
   <div class="modo" id="modo-ideal">
     <div class="modo-desc">
-      Armá tu <strong>11 ideal</strong> con los mejores 50 jugadores del mundo (de las 48 selecciones del Mundial 2026). Cualquier combinación: vos elegís.
+      Armá tu <strong>11 ideal</strong> con los mejores 52 jugadores del mundo (de las 48 selecciones del Mundial 2026). Cualquier combinación: vos elegís.
     </div>
     <div class="dt-row">
       <div>
@@ -588,7 +600,7 @@
         <button class="btn" id="share-ideal" style="margin-top:0.5rem;background:linear-gradient(135deg,#22c55e,#16a34a);color:#04210f;width:100%">🔗 Compartir</button>
       </div>
       <div class="panel-players">
-        <div class="panel-title">Top 50 del mundo</div>
+        <div class="panel-title">Top 52 del mundo</div>
         <input type="text" class="search" id="search-ideal" placeholder="🔍 Buscar jugador o país...">
         <div class="pos-filters" id="filter-ideal"></div>
         <div id="players-list-ideal"></div>
@@ -689,7 +701,7 @@
     { n:'William Saliba', pos:'DEF', club:'Arsenal', flag:'FRA' },
     { n:'Antonio Rüdiger', pos:'DEF', club:'Real Madrid', flag:'ALE' },
     { n:'Achraf Hakimi', pos:'DEF', club:'PSG', flag:'MAR' },
-    { n:'Théo Hernández', pos:'DEF', club:'Al-Hilal', flag:'FRA' },
+    { n:'Théo Hernández', pos:'DEF', club:'Milan', flag:'FRA' },
     { n:'Alphonso Davies', pos:'DEF', club:'Bayern', flag:'CAN' },
     { n:'Trent Alexander-Arnold', pos:'DEF', club:'Real Madrid', flag:'ING' },
     // MED
@@ -707,7 +719,7 @@
     { n:'Cole Palmer', pos:'MED', club:'Chelsea', flag:'ING' },
     { n:'Eduardo Camavinga', pos:'MED', club:'Real Madrid', flag:'FRA' },
     { n:'Phil Foden', pos:'MED', club:'Man City', flag:'ING' },
-    { n:'Khvicha Kvaratskhelia', pos:'MED', club:'PSG', flag:'GEO' },
+    { n:'Frenkie de Jong', pos:'MED', club:'Barcelona', flag:'NED' },
     { n:'Alexis Mac Allister', pos:'MED', club:'Liverpool', flag:'ARG' },
     { n:'Martin Ødegaard', pos:'MED', club:'Arsenal', flag:'NOR' },
     // DEL
@@ -728,7 +740,7 @@
     { n:'Ousmane Dembélé', pos:'DEL', club:'PSG', flag:'FRA' },
     { n:'Antoine Griezmann', pos:'DEL', club:'Atlético', flag:'FRA' },
     { n:'Son Heung-Min', pos:'DEL', club:'LAFC', flag:'KOR' },
-    { n:'Victor Osimhen', pos:'DEL', club:'Galatasaray', flag:'NIG' },
+    { n:'Marcus Thuram', pos:'DEL', club:'Inter', flag:'FRA' },
     { n:'Darwin Núñez', pos:'DEL', club:'Al-Hilal', flag:'URU' },
     { n:'Jhon Durán', pos:'DEL', club:'Fenerbahçe', flag:'COL' }
   ];

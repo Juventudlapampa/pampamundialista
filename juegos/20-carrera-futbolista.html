@@ -468,7 +468,7 @@ const STORY = {
       { t:'⚖ Prepararme un año más antes de probar', s:{ talento:+6, fisico:+5 }, next:'e15_local' },
       { t:'💪 Entrenar doble turno aunque baje el cole', s:{ fisico:+12, estudio:-8 }, branch:{ good:'e15_proyecto', bad:'e15_bajon' }, check:'fisico' },
       { t:'📱 Grabar mis goles y subirlos a redes', s:{ fama:+10 }, branch:{ good:'e15_viral', bad:'e15_local' }, check:'fama' },
-      { t:'📚 Equilibrar club y estudio sin volverme loco', s:{ estudio:+10, talento:+4 }, next:'e15_estudio' }
+      { t:()=>'📚 Equilibrar club y estudio sin '+gen('volverme loco','volverme loca','marearme'), s:{ estudio:+10, talento:+4 }, next:'e15_estudio' }
     ] },
   e12_arquero: { edad: 12, tag: () => 'EDAD 12 · BAJO LOS TRES PALOS',
     text: () => `Te pusieron al arco y la rompés: tenés reflejos. El entrenador de arqueros del club te quiere tomar en serio, pero tus amigos te cargan con que "el arquero no la toca".`,
@@ -567,10 +567,10 @@ const STORY = {
   e18_grande: { edad: 18, tag: () => 'EDAD 18 · DEBUT EN PRIMERA',
     text: () => `¡Debutaste en <strong>Primera División</strong> de un club grande! Del potrero de ${ORI()} a la elite. Ahora tenés que afianzarte y elegir qué clase de futbolista sos.`,
     opciones: [
-      { t:'⚽ Ser el 9 goleador, que Europa me mire', s:{ talento:+12, fama:+15, estudio:-5 }, branch:{ good:'e22_elite', bad:'e22_pro' }, check:'talento' },
+      { t:()=>'⚽ Ser '+gen('el 9 goleador','la 9 goleadora','la número 9')+', que Europa me mire', s:{ talento:+12, fama:+15, estudio:-5 }, branch:{ good:'e22_elite', bad:'e22_pro' }, check:'talento' },
       { t:'🎯 Enganche creativo, la pelota es mía', s:{ talento:+15, fama:+10 }, branch:{ good:'e22_elite', bad:'e22_pro' }, check:'talento' },
-      { t:'🛡 Defensor/capitán, ordeno al equipo', s:{ fisico:+12, talento:+6 }, branch:{ good:'e22_elite', bad:'e22_pro' }, check:'fisico' },
-      { t:'🇦🇷 Quedarme de ídolo en mi club argentino', s:{ fama:+15 }, next:'e22_pro' },
+      { t:()=>'🛡 '+gen('Defensor y capitán','Defensora y capitana','En la última línea y con la cinta')+', ordeno al equipo', s:{ fisico:+12, talento:+6 }, branch:{ good:'e22_elite', bad:'e22_pro' }, check:'fisico' },
+      { t:()=>'🇦🇷 Quedarme de '+gen('ídolo','ídola','leyenda')+' en mi club argentino', s:{ fama:+15 }, next:'e22_pro' },
       { t:'🤕 Una lesión me frena, recalcular', s:{ fisico:-5, estudio:+6 }, branch:{ good:'e22_pro', bad:'e22_vida' }, check:'fisico' }
     ] },
   e18_exterior: { edad: 18, tag: () => 'EDAD 18 · AFUERA',
@@ -614,7 +614,7 @@ const STORY = {
     opciones: [
       { t:'🧤 Ser arquero titular en Primera', s:{ fisico:+10, talento:+8 }, branch:{ good:'e22_elite', bad:'e22_pro' }, check:'fisico' },
       { t:'🛡 Arquero sólido del ascenso', s:{ fisico:+8 }, next:'e22_pro' },
-      { t:'🇦🇷 Ídolo bajo los tres palos del pueblo', s:{ fama:+10 }, next:'fin_idolo' },
+      { t:()=>'🇦🇷 '+gen('Ídolo','Ídola','Leyenda')+' bajo los tres palos del pueblo', s:{ fama:+10 }, next:'fin_idolo' },
       { t:'📚 Estudiar y atajar amateur', s:{ estudio:+12 }, next:'e22_vida' },
       { t:'📱 Especialista en contenido de arqueros', s:{ fama:+14 }, next:'fin_creator' }
     ] },
@@ -634,16 +634,16 @@ const STORY = {
     opciones: [
       { t:'🏆 Jugármela toda por ser campeón del Mundo', s:{ talento:+10, fama:+15 }, branch:{ good:'fin_estrella', bad:'fin_pro' }, check:'talento' },
       { t:'💰 Priorizar contratos millonarios en Europa', s:{ fama:+15 }, next:'fin_pro' },
-      { t:'🎯 Ser el especialista decisivo (penales, tiros libres)', s:{ talento:+8, fama:+8 }, branch:{ good:'fin_estrella', bad:'fin_arquero' }, check:'talento' },
-      { t:'🇦🇷 Volver de ídolo a mi club tras brillar afuera', s:{ fama:+12 }, next:'fin_idolo' },
-      { t:'🌍 Ser embajador del deporte en una ONG', s:{ fama:+8, estudio:+8 }, next:'fin_embajador' }
+      { t:()=>'🎯 Ser '+gen('el especialista decisivo','la especialista decisiva','quien define')+' (penales, tiros libres)', s:{ talento:+8, fama:+8 }, branch:{ good:'fin_estrella', bad:'fin_arquero' }, check:'talento' },
+      { t:()=>'🇦🇷 Volver de '+gen('ídolo','ídola','leyenda')+' a mi club tras brillar afuera', s:{ fama:+12 }, next:'fin_idolo' },
+      { t:()=>'🌍 Ser '+gen('embajador','embajadora','referente')+' del deporte en una ONG', s:{ fama:+8, estudio:+8 }, next:'fin_embajador' }
     ] },
   e22_pro: { edad: 22, tag: () => 'EDAD 22 · PROFESIONAL SÓLIDO',
     text: () => `Tenés una carrera profesional sólida. No sos la estrella mundial, pero vivís del fútbol y estás bien. ¿Cómo seguís?`,
     opciones: [
       { t:'⚽ Carrera larga y estable en buenos clubes', s:{ fama:+8 }, next:'fin_pro' },
       { t:'🏆 Un golpe de suerte me lleva a la Selección', s:{ talento:+8, fama:+10 }, branch:{ good:'fin_estrella', bad:'fin_pro' }, check:'talento' },
-      { t:'🇦🇷 Volver al pueblo de ídolo', s:{ fama:+12 }, next:'fin_idolo' },
+      { t:()=>'🇦🇷 Volver al pueblo de '+gen('ídolo','ídola','leyenda'), s:{ fama:+12 }, next:'fin_idolo' },
       { t:'📋 Prepararme como DT para el retiro', s:{ estudio:+10 }, next:'fin_dt' },
       { t:'🏫 Abrir mi propia escuelita de fútbol', s:{ estudio:+8, fama:+6 }, next:'fin_emprendedor' }
     ] },
@@ -679,7 +679,7 @@ const FINALES = {
     text: () => gen(
       `${NAME()} llegó a lo más alto: campeón del mundo con Argentina. La pelota que pateabas en el potrero de ${ORI()} hoy la levantan millones. De pibe de pueblo a leyenda mundial.`,
       `${NAME()} hizo historia: campeona del mundo y referente del fútbol femenino. Desde ${ORI()} hasta la cima, le abriste la cancha a miles de pibas. Tu nombre ya es bandera.`,
-      `${NAME()} tocó el cielo: campeón del mundo. Tu historia, de ${ORI()} a la gloria, la cuentan en todas las escuelas.`) },
+      `${NAME()} tocó el cielo y dio la vuelta con Argentina en lo más alto del mundo. Tu historia, de ${ORI()} a la gloria, la cuentan en todas las escuelas.`) },
   pro: { trofeo:'⚽', t: () => 'PROFESIONAL DE ELITE',
     sub: () => gen('JUGADOR DE PRIMERA EN EUROPA','JUGADORA DE PRIMERA EN EUROPA','PRIMERA EN EUROPA'),
     text: () => `${NAME()} hizo una gran carrera profesional en Europa. No ganaste el Mundial, pero viviste del fútbol al máximo nivel, conociste el mundo y te ganaste el respeto de todos. ${gen('Un crack','Una crack','Una máquina')} de verdad.` },
@@ -702,7 +702,7 @@ const FINALES = {
   emprendedor: { trofeo:'🏟', t: () => gen('DUEÑO DE ESCUELITA','DUEÑA DE ESCUELITA','ESCUELITA PROPIA'), sub: () => 'EL SUEÑO HECHO CLUB',
     text: () => `${NAME()} abrió su propia escuelita de fútbol en ${ORI()}. Cientos de chicos y chicas entrenan con tu método. Tu sueño se transformó en el sueño de muchos.` },
   normal: { trofeo:'🍞', t: () => 'VIDA DE BARRIO', sub: () => 'Y NO ESTÁ NADA MAL',
-    text: () => `${NAME()} vive tranquilo en ${ORI()}, labura y juega al fútbol los sábados con los amigos. ${gen('Sos feliz','Sos feliz','Sos feliz')}. No todos los caminos terminan en un estadio: algunos terminan en un asado el domingo, y eso también es ganar.` }
+    text: () => `${NAME()} ${gen('vive tranquilo','vive tranquila','vive en paz')} en ${ORI()}, labura y juega al fútbol los sábados con los amigos. Sos feliz. No todos los caminos terminan en un estadio: algunos terminan en un asado el domingo, y eso también es ganar.` }
 };
 
 // ========================================================================

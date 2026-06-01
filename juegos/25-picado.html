@@ -245,7 +245,7 @@ function computeStats(players){
 const STOPS=[15,30,45,60,75,90];
 function startMatch(){
   teamA=readTeam('A','Tu equipo'); teamB=readTeam('B','El rival');
-  M={ min:0, idx:0, mom:0, log:[], tacticA:{atk:0,def:0}, tacticB:{atk:0,def:0}, usedDec:[], ended:false, extra:0 };
+  M={ min:0, idx:0, mom:0, tacticA:{atk:0,def:0}, tacticB:{atk:0,def:0}, usedDec:[], ended:false };
   // aplicar estilo elegido al equipo A
   const est=ESTILOS.find(e=>e.id===cfg.estilo)||{m:{}}; M.tacticA={atk:est.m.atk||0, def:est.m.def||0};
   $('m-a').textContent=teamA.name; $('m-b').textContent=teamB.name;
@@ -368,8 +368,8 @@ function showDescuento(){
   M.min=90;
   const f=friend(teamA,true);
   const dec={ q:`⏱️ <b>¡Tiempo de descuento!</b> Última jugada y van ${teamA.goles}-${teamB.goles}. ¿Cómo la encarás?`, ops:[
-    {t:`🎩 La cuelga ${f.name} en el ángulo`, s:'arriesgado pero mágico', fx:()=>{ M.extra=1; maybeGoal(teamA,0.42,`${f.name} la cuelga en el descuento,`); }},
-    {t:'🚀 Pelotazo al área y a rezar', s:'puro azar', fx:()=>{ M.extra=1; maybeGoal(teamA,0.30,`pelotazo y peleada en el área,`); }},
+    {t:`🎩 La cuelga ${f.name} en el ángulo`, s:'arriesgado pero mágico', fx:()=>{ maybeGoal(teamA,0.42,`${f.name} la cuelga en el descuento,`); }},
+    {t:'🚀 Pelotazo al área y a rezar', s:'puro azar', fx:()=>{ maybeGoal(teamA,0.30,`pelotazo y peleada en el área,`); }},
     {t:'🧊 La aguantamos en el banderín', s:'sin riesgo', fx:()=>{ logLine(`${M.min}'+ La aguantaron en la esquina. ¡Pitazo final!`,'mom'); }}
   ]};
   renderDecision(dec, ()=>{ M.min=92; updateBoard(); finishOrPenales(); });
@@ -429,7 +429,7 @@ function show(s){ document.querySelectorAll('.screen').forEach(el=>el.classList.
 $('start').onclick=startMatch;
 $('replay').onclick=()=>{ // mismos equipos, re-leer inputs
   teamA.goles=0; teamB.goles=0; teamA.players.forEach(p=>p.goles=0); teamB.players.forEach(p=>p.goles=0);
-  M={ min:0, idx:0, mom:0, log:[], tacticA:{atk:0,def:0}, tacticB:{atk:0,def:0}, usedDec:[], ended:false, extra:0 };
+  M={ min:0, idx:0, mom:0, tacticA:{atk:0,def:0}, tacticB:{atk:0,def:0}, usedDec:[], ended:false };
   const est=ESTILOS.find(e=>e.id===cfg.estilo)||{m:{}}; M.tacticA={atk:est.m.atk||0, def:est.m.def||0};
   teamA._penWin=undefined; $('m-a').textContent=teamA.name; $('m-b').textContent=teamB.name; $('log').innerHTML=''; updateBoard();
   logLine(`📢 Revancha en ${cfg.cancha}: <b>${teamA.name}</b> vs <b>${teamB.name}</b>.`,'mom');

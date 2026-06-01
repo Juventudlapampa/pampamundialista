@@ -578,18 +578,18 @@
   // GRUPOS - SETUP
   // ========================================================================
   const grupos = {
-    A: [{n:'México', flag:'🇲🇽'}, {n:'Italia', flag:'🇮🇹'}, {n:'Egipto', flag:'🇪🇬'}, {n:'Nueva Zelanda', flag:'🇳🇿'}],
-    B: [{n:'Canadá', flag:'🇨🇦'}, {n:'Bélgica', flag:'🇧🇪'}, {n:'Senegal', flag:'🇸🇳'}, {n:'Cabo Verde', flag:'🇨🇻'}],
-    C: [{n:'EE.UU.', flag:'🇺🇸'}, {n:'Países Bajos', flag:'🇳🇱'}, {n:'Marruecos', flag:'🇲🇦'}, {n:'Catar', flag:'🇶🇦'}],
-    D: [{n:'Argentina', flag:'🇦🇷'}, {n:'Croacia', flag:'🇭🇷'}, {n:'Ecuador', flag:'🇪🇨'}, {n:'Costa Rica', flag:'🇨🇷'}],
-    E: [{n:'Francia', flag:'🇫🇷'}, {n:'Suiza', flag:'🇨🇭'}, {n:'Costa de Marfil', flag:'🇨🇮'}, {n:'Iraq', flag:'🇮🇶'}],
-    F: [{n:'Alemania', flag:'🇩🇪'}, {n:'Polonia', flag:'🇵🇱'}, {n:'Japón', flag:'🇯🇵'}, {n:'Panamá', flag:'🇵🇦'}],
-    G: [{n:'España', flag:'🇪🇸'}, {n:'Dinamarca', flag:'🇩🇰'}, {n:'Australia', flag:'🇦🇺'}, {n:'Camerún', flag:'🇨🇲'}],
-    H: [{n:'Inglaterra', flag:'🇬🇧'}, {n:'Uruguay', flag:'🇺🇾'}, {n:'Argelia', flag:'🇩🇿'}, {n:'Jamaica', flag:'🇯🇲'}],
-    I: [{n:'Portugal', flag:'🇵🇹'}, {n:'Austria', flag:'🇦🇹'}, {n:'Túnez', flag:'🇹🇳'}, {n:'Irán', flag:'🇮🇷'}],
-    J: [{n:'Brasil', flag:'🇧🇷'}, {n:'Hungría', flag:'🇭🇺'}, {n:'Nigeria', flag:'🇳🇬'}, {n:'Arabia Saudita', flag:'🇸🇦'}],
-    K: [{n:'Colombia', flag:'🇨🇴'}, {n:'Noruega', flag:'🇳🇴'}, {n:'Corea del Sur', flag:'🇰🇷'}, {n:'Uzbekistán', flag:'🇺🇿'}],
-    L: [{n:'Paraguay', flag:'🇵🇾'}, {n:'Turquía', flag:'🇹🇷'}, {n:'Sudáfrica', flag:'🇿🇦'}, {n:'Bolivia', flag:'🇧🇴'}]
+    A: [{n:'México'}, {n:'Sudáfrica'}, {n:'Corea del Sur'}, {n:'Chequia'}],
+    B: [{n:'Canadá'}, {n:'Bosnia y Herzegovina'}, {n:'Catar'}, {n:'Suiza'}],
+    C: [{n:'Brasil'}, {n:'Marruecos'}, {n:'Haití'}, {n:'Escocia'}],
+    D: [{n:'EE.UU.'}, {n:'Paraguay'}, {n:'Australia'}, {n:'Turquía'}],
+    E: [{n:'Alemania'}, {n:'Curazao'}, {n:'Costa de Marfil'}, {n:'Ecuador'}],
+    F: [{n:'Países Bajos'}, {n:'Japón'}, {n:'Suecia'}, {n:'Túnez'}],
+    G: [{n:'Bélgica'}, {n:'Egipto'}, {n:'Irán'}, {n:'Nueva Zelanda'}],
+    H: [{n:'España'}, {n:'Cabo Verde'}, {n:'Arabia Saudita'}, {n:'Uruguay'}],
+    I: [{n:'Francia'}, {n:'Senegal'}, {n:'Iraq'}, {n:'Noruega'}],
+    J: [{n:'Argentina'}, {n:'Argelia'}, {n:'Austria'}, {n:'Jordania'}],
+    K: [{n:'Portugal'}, {n:'RD Congo'}, {n:'Uzbekistán'}, {n:'Colombia'}],
+    L: [{n:'Inglaterra'}, {n:'Croacia'}, {n:'Ghana'}, {n:'Panamá'}]
   };
   const combos = [[0,1],[2,3],[0,2],[1,3],[0,3],[1,2]];
 
@@ -606,7 +606,10 @@
     'Portugal':['#006600','#006600','#FF0000','v'],'Austria':['#ED2939','#FFFFFF','#ED2939','h'],'Túnez':['#E70013','#E70013','#FFFFFF','h'],'Irán':['#239F40','#FFFFFF','#DA0000','h'],
     'Brasil':['#009C3B','#FFDF00','#002776','h'],'Hungría':['#CE2939','#FFFFFF','#477050','h'],'Nigeria':['#008751','#FFFFFF','#008751','v'],'Arabia Saudita':['#006C35','#006C35','#FFFFFF','h'],
     'Colombia':['#FCD116','#003893','#CE1126','h'],'Noruega':['#EF2B2D','#FFFFFF','#002868','h'],'Corea del Sur':['#FFFFFF','#003478','#C60C30','h'],'Uzbekistán':['#1EB53A','#FFFFFF','#0099B5','h'],
-    'Paraguay':['#D52B1E','#FFFFFF','#0038A8','h'],'Turquía':['#E30A17','#E30A17','#FFFFFF','h'],'Sudáfrica':['#007A4D','#FFB81C','#000000','h'],'Bolivia':['#D52B1E','#F9E300','#007934','h']
+    'Paraguay':['#D52B1E','#FFFFFF','#0038A8','h'],'Turquía':['#E30A17','#FFFFFF','#E30A17','h'],'Sudáfrica':['#007749','#FFB81C','#000000','h'],'Bolivia':['#D52B1E','#F9E300','#007934','h'],
+    'Chequia':['#11457E','#FFFFFF','#D7141A','h'],'Bosnia y Herzegovina':['#002395','#FECB00','#002395','h'],'Haití':['#00209F','#D21034','#00209F','h'],'Escocia':['#005EB8','#FFFFFF','#005EB8','h'],
+    'Curazao':['#002B7F','#F9E814','#002B7F','h'],'Suecia':['#006AA7','#FECC00','#006AA7','h'],'Jordania':['#000000','#FFFFFF','#007A3D','h'],'RD Congo':['#007FFF','#F7D618','#CE1021','h'],
+    'Ghana':['#CE1126','#FCD116','#006B3F','h']
   };
   function flagSpan(name) {
     const c = FLAGCOLORS[name];
@@ -753,7 +756,6 @@
     // 32 clasificados seedeados por puntos (luego diferencia, luego goles a favor)
     const { primeros, segundos, mejoresTerceros } = getClasificados();
     if (primeros.length < 12 || segundos.length < 12 || mejoresTerceros.length < 8) return null;
-    const all = [...primeros, ...segundos, ...mejoresTerceros];
     // Seedeo: primero los 1°s (mejores), después 2°s, después 3°s
     // Dentro de cada grupo, ordenamos por puntos
     primeros.sort((a, b) => b.pts - a.pts || b.dif - a.dif || b.gf - a.gf);

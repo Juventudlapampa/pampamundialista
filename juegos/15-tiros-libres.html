@@ -533,7 +533,7 @@ const PATEADORES = [
   { team:'Uruguay', flag:'🇺🇾', star:'Federico Valverde' },
   { team:'Croacia', flag:'🇭🇷', star:'Luka Modrić' },
   { team:'Colombia', flag:'🇨🇴', star:'James Rodríguez' },
-  { team:'Marruecos', flag:'🇲🇦', star:'Hakim Ziyech' },
+  { team:'Marruecos', flag:'🇲🇦', star:'Achraf Hakimi' },
   { team:'México', flag:'🇲🇽', star:'Hirving Lozano' },
   { team:'Bélgica', flag:'🇧🇪', star:'Kevin De Bruyne' },
   { team:'Polonia', flag:'🇵🇱', star:'Robert Lewandowski' },
@@ -775,7 +775,6 @@ function animateBall(result) {
   } else {
     // Llega al arco
     const cols = ['22%', '50%', '78%'];
-    const rows = ['25%', '12%']; // top desde abajo (más arriba = mayor número en bottom)
     const bottoms = ['58%', '70%']; // bottom para zonas top y bottom
     const r = Math.floor(result.zone / 3);
     p.style.bottom = bottoms[1 - r]; // invertir porque arriba en pantalla = abajo en bottom

@@ -228,29 +228,42 @@
   .rank-n { font-family: 'Anton', sans-serif; color: var(--gold); }
   .rank-time { font-family: 'JetBrains Mono', monospace; color: var(--verde); font-weight: 700; }
 
-  /* ===== ESCENA INMERSIVA ===== */
+  /* ===== ESCENA INMERSIVA (panorama explorable) ===== */
   #screen-game.shake { animation: shk 0.3s; }
   @keyframes shk { 0%,100%{transform:translate(0,0)} 20%{transform:translate(-6px,2px)} 40%{transform:translate(6px,-2px)} 60%{transform:translate(-4px,1px)} 80%{transform:translate(4px,-1px)} }
-  .scene { position:relative; height:170px; border-radius:14px; overflow:hidden; margin-bottom:1rem; border:2px solid rgba(212,168,46,0.3); box-shadow: inset 0 0 50px rgba(0,0,0,0.6); }
-  .scene-room { position:absolute; inset:0; }
-  .scene-floor { position:absolute; left:0; right:0; bottom:0; height:38%; }
-  .scene-label { position:absolute; left:10px; bottom:8px; font-family:'JetBrains Mono',monospace; font-size:0.62rem; letter-spacing:0.18em; color:rgba(244,236,216,0.85); text-shadow:0 1px 3px #000; text-transform:uppercase; z-index:3; }
-  .scene-obj { position:absolute; font-size:2.4rem; filter:drop-shadow(0 3px 5px rgba(0,0,0,0.6)); z-index:2; }
-  .scene-glow { position:absolute; inset:0; background:radial-gradient(circle at 50% 35%, rgba(212,168,46,0.18), transparent 60%); z-index:1; pointer-events:none; animation:flick 4s infinite; }
-  @keyframes flick { 0%,100%{opacity:0.7} 45%{opacity:1} 70%{opacity:0.55} }
-  .locker { position:absolute; top:14px; width:34px; height:80px; border-radius:4px 4px 0 0; background:linear-gradient(180deg,#243a4d,#16252f); border:1px solid rgba(0,0,0,0.4); }
-  .locker::after { content:''; position:absolute; top:30px; left:50%; transform:translateX(-50%); width:4px; height:4px; border-radius:50%; background:#d4a82e; }
-  .door { position:absolute; top:18px; left:50%; transform:translateX(-50%); width:64px; height:118px; border-radius:8px 8px 0 0; background:linear-gradient(180deg,#3a2417,#241308); border:3px solid #1a0d04; z-index:2; transition:transform 0.9s cubic-bezier(.6,0,.2,1); transform-origin:left center; }
-  .door.open { transform:translateX(-50%) perspective(400px) rotateY(-78deg); }
-  .door::after { content:'🔒'; position:absolute; top:52px; right:8px; font-size:1rem; }
+  .scene { position:relative; height:240px; border-radius:14px; overflow:hidden; margin-bottom:1rem; border:2px solid rgba(212,168,46,0.35); box-shadow: inset 0 0 60px rgba(0,0,0,0.75); cursor:grab; touch-action:pan-y; user-select:none; }
+  .scene:active { cursor:grabbing; }
+  .pano { position:absolute; top:0; bottom:0; left:-32%; width:164%; transform:translateX(0); }
+  .pano.smooth { transition:transform 0.18s ease-out; }
+  .pano.walk { transition:transform 0.55s ease-in, opacity 0.55s ease-in; }
+  .pano-ceil { position:absolute; top:0; left:0; right:0; height:24%; background:linear-gradient(180deg, rgba(0,0,0,0.6), transparent); }
+  .pano-floor { position:absolute; left:0; right:0; bottom:0; height:34%; overflow:hidden; }
+  .pano-floor::before { content:''; position:absolute; left:-25%; right:-25%; top:0; bottom:-50%; background-image:repeating-linear-gradient(90deg, rgba(255,255,255,0.09) 0 2px, transparent 2px 46px); transform:perspective(140px) rotateX(60deg); transform-origin:top; }
+  .scene-label { position:absolute; left:10px; bottom:8px; font-family:'JetBrains Mono',monospace; font-size:0.62rem; letter-spacing:0.18em; color:rgba(244,236,216,0.9); text-shadow:0 1px 3px #000; text-transform:uppercase; z-index:6; }
+  .vignette { position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse at 50% 42%, transparent 42%, rgba(0,0,0,0.6)); z-index:5; }
+  .sObj { position:absolute; font-size:2.4rem; line-height:1; filter:drop-shadow(0 4px 6px rgba(0,0,0,0.6)); cursor:pointer; z-index:3; transition:transform 0.15s; }
+  .sObj:hover, .sObj:active { transform:scale(1.16); }
+  .sObj.key { animation:keyPulse 1.7s infinite; z-index:4; }
+  @keyframes keyPulse { 0%,100%{filter:drop-shadow(0 0 2px rgba(212,168,46,0.25))} 50%{filter:drop-shadow(0 0 16px rgba(244,205,96,0.95))} }
+  .locker { position:absolute; top:18%; width:30px; height:54%; border-radius:4px 4px 0 0; background:linear-gradient(180deg,#2c4254,#16252f); border:1px solid rgba(0,0,0,0.5); box-shadow:inset 0 0 8px rgba(0,0,0,0.5); z-index:2; }
+  .locker::after { content:''; position:absolute; top:42%; left:50%; transform:translateX(-50%); width:4px; height:4px; border-radius:50%; background:#d4a82e; }
+  .locker::before { content:''; position:absolute; top:8%; left:20%; right:20%; height:7px; background:rgba(0,0,0,0.3); border-radius:2px; }
+  .door { position:absolute; top:14%; left:50%; transform:translateX(-50%); width:70px; height:76%; border-radius:8px 8px 0 0; background:linear-gradient(180deg,#3a2417,#241308); border:3px solid #1a0d04; z-index:3; transition:transform 0.9s cubic-bezier(.6,0,.2,1); transform-origin:left center; box-shadow:inset 0 0 14px rgba(0,0,0,0.6); }
+  .door.open { transform:translateX(-50%) perspective(420px) rotateY(-80deg); }
+  .door::after { content:'🔒'; position:absolute; top:46%; right:8px; font-size:1rem; }
   .door.open::after { content:'🔓'; }
+  .look { position:absolute; top:50%; transform:translateY(-50%); width:36px; height:64px; display:flex; align-items:center; justify-content:center; font-family:'Anton',sans-serif; font-size:1.7rem; color:var(--gold-2); border:none; cursor:pointer; z-index:7; opacity:0.6; }
+  .look:hover { opacity:1; }
+  .look-l { left:0; background:linear-gradient(90deg, rgba(0,0,0,0.7), transparent); }
+  .look-r { right:0; background:linear-gradient(270deg, rgba(0,0,0,0.7), transparent); }
+  .look-hint { position:absolute; bottom:7px; left:50%; transform:translateX(-50%); font-family:'JetBrains Mono',monospace; font-size:0.55rem; letter-spacing:0.12em; color:rgba(244,236,216,0.5); z-index:6; pointer-events:none; }
 
-  /* transición de puerta entre acertijos */
-  #door-wipe { position:fixed; inset:0; background:linear-gradient(180deg,#1a0d04,#3a2417); z-index:999; transform:scaleY(0); transform-origin:top; transition:transform 0.35s ease; display:flex; align-items:center; justify-content:center; pointer-events:none; }
-  #door-wipe.on { transform:scaleY(1); }
-  #door-wipe span { font-size:3rem; opacity:0; transition:opacity 0.2s 0.1s; }
-  #door-wipe.on span { opacity:1; }
-  .snd-btn { position:absolute; top:8px; right:10px; z-index:4; background:rgba(0,0,0,0.5); border:1px solid var(--gold); color:var(--gold-2); border-radius:8px; font-size:1rem; cursor:pointer; padding:2px 7px; }
+  /* transición: caminar a la próxima sala */
+  #door-wipe { position:fixed; inset:0; background:radial-gradient(circle at 50% 50%, #3a2417, #1a0d04 70%); z-index:999; opacity:0; transition:opacity 0.3s ease; display:flex; align-items:center; justify-content:center; pointer-events:none; }
+  #door-wipe.on { opacity:1; }
+  #door-wipe span { font-size:3.4rem; transform:scale(0.5); transition:transform 0.45s ease; }
+  #door-wipe.on span { transform:scale(1.3); }
+  .snd-btn { position:absolute; top:8px; right:10px; z-index:7; background:rgba(0,0,0,0.55); border:1px solid var(--gold); color:var(--gold-2); border-radius:8px; font-size:1rem; cursor:pointer; padding:2px 7px; }
 </style>
 </head>
 <body>
@@ -279,13 +292,18 @@
   <!-- GAME -->
   <div class="screen" id="screen-game">
     <div class="scene" id="scene">
+      <div class="pano" id="pano"></div>
+      <div class="vignette"></div>
+      <button class="look look-l" id="look-l">‹</button>
+      <button class="look look-r" id="look-r">›</button>
+      <div class="look-hint" id="look-hint">↔ arrastrá para mirar la sala</div>
       <button class="snd-btn" id="snd-btn">🔊</button>
       <div class="scene-label" id="scene-label">VESTUARIO</div>
     </div>
     <div class="hud">
       <div class="hud-block"><div class="hud-num" id="hud-puzzle">1</div><div class="hud-lab">Acertijo / 5</div></div>
       <div class="hud-block"><div class="hud-num timer" id="hud-timer">10:00</div><div class="hud-lab">Tiempo</div></div>
-      <div class="hud-block"><div class="hud-num" id="hud-tries">0</div><div class="hud-lab">Intentos</div></div>
+      <div class="hud-block"><div class="hud-num" id="hud-tries">0</div><div class="hud-lab">Errores</div></div>
     </div>
     <div id="puzzle-container"></div>
   </div>
@@ -469,38 +487,95 @@ function tone(freqs, dur, type='sine', vol=0.16){
     const t0=c.currentTime+i*0.08; g.gain.setValueAtTime(vol,t0); g.gain.exponentialRampToValueAtTime(0.001,t0+dur);
     o.connect(g); g.connect(c.destination); o.start(t0); o.stop(t0+dur); });
 }
-const sndRight = () => tone([523,659,880],0.18,'sine',0.15);
-const sndWrong = () => tone([200,120],0.22,'sawtooth',0.16);
-const sndClick = () => tone([440],0.04,'square',0.1);
-const sndDoor  = () => tone([90,70,55],0.5,'sawtooth',0.13);
-const sndEscape= () => tone([523,659,784,1047,1319],0.3,'sawtooth',0.16);
+const sndRight = () => tone([523,659,880,1047],0.16,'sine',0.16);   // acierto: arpegio brillante
+const sndOle   = () => tone([392,494,587],0.45,'triangle',0.07);    // coro suave de "olé"
+const sndWrong = () => tone([392,330],0.16,'sine',0.11);            // "probá de nuevo", suave (NO buzzer)
+const sndClick = () => tone([660],0.05,'triangle',0.10);            // selección
+const sndDoor  = () => tone([392,523,659],0.30,'triangle',0.14);    // puerta que se abre (ascendente)
+const sndEscape= () => tone([523,659,784,1047,1319],0.3,'triangle',0.18);
 function vibe(ms){ try{ if(navigator.vibrate) navigator.vibrate(ms); }catch(e){} }
 
-// escenas por acertijo (ambiente que cambia de sala)
+// ===== AMBIENTE DE HINCHADA (ruido filtrado en loop, con oleaje) =====
+let crowdNodes = null;
+function startCrowd(){
+  if(!soundOn) return; const c = actx(); if(!c || crowdNodes) return;
+  try{
+    const len = 2*c.sampleRate, buf = c.createBuffer(1,len,c.sampleRate), d = buf.getChannelData(0);
+    for(let i=0;i<len;i++) d[i] = Math.random()*2-1;
+    const src = c.createBufferSource(); src.buffer = buf; src.loop = true;
+    const bp = c.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=440; bp.Q.value=0.7;
+    const lp = c.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=950;
+    const g = c.createGain(); g.gain.value=0.0001;
+    src.connect(bp); bp.connect(lp); lp.connect(g); g.connect(c.destination);
+    const lfo = c.createOscillator(), lfoG = c.createGain(); lfo.frequency.value=0.13; lfoG.gain.value=0.03;
+    lfo.connect(lfoG); lfoG.connect(g.gain); lfo.start();
+    src.start(); g.gain.setTargetAtTime(0.07, c.currentTime, 1.6);
+    crowdNodes = { src, g, lfo };
+  }catch(e){}
+}
+function stopCrowd(){
+  if(!crowdNodes) return; const n = crowdNodes; crowdNodes = null;
+  try{ n.g.gain.setTargetAtTime(0.0001, actx().currentTime, 0.4); setTimeout(()=>{ try{ n.src.stop(); n.lfo.stop(); }catch(e){} }, 700); }catch(e){}
+}
+
+// salas por acertijo: panorama ancho explorable, con textura y objetos repartidos
 const ROOMS = [
-  { label:'VESTUARIO', wall:'linear-gradient(180deg,#1c2a36,#0e171f)', floor:'repeating-linear-gradient(90deg,#2a1a10,#2a1a10 18px,#241409 18px,#241409 36px)', build: s => {
-      [16,54,92,130,168,206].forEach((x,i)=>{ const l=document.createElement('div'); l.className='locker'; l.style.left=(x*1.5)+'px'; s.appendChild(l); });
-      addObj(s,'🔢','45%','40%'); addObj(s,'🧦','78%','60%'); } },
-  { label:'PARED DE BANDERAS', wall:'linear-gradient(180deg,#241a2e,#120a18)', floor:'linear-gradient(180deg,#2a1f12,#1a130a)', build: s => { addObj(s,'🚩','25%','30%'); addObj(s,'🚩','55%','25%'); addObj(s,'🚩','75%','35%'); } },
-  { label:'PIZARRÓN DEL DT', wall:'linear-gradient(180deg,#12231a,#08130d)', floor:'linear-gradient(180deg,#241a10,#150d06)', build: s => { addObj(s,'📋','50%','30%'); addObj(s,'✏️','72%','58%'); addObj(s,'⚽','22%','62%'); } },
-  { label:'CAJA FUERTE', wall:'linear-gradient(180deg,#2a2418,#14110a)', floor:'linear-gradient(180deg,#1f1a10,#100c06)', build: s => { addObj(s,'🔐','50%','34%'); addObj(s,'💰','75%','60%'); } },
-  { label:'PUERTA FINAL', wall:'linear-gradient(180deg,#1a1410,#0a0805)', floor:'linear-gradient(180deg,#15100a,#080604)', build: s => { const d=document.createElement('div'); d.className='door'; d.id='final-door'; s.appendChild(d); addObj(s,'🏆','20%','55%'); } }
+  { label:'VESTUARIO',
+    wall:'linear-gradient(180deg,#21323f 0%,#16252f 55%,#0e171f 100%)',
+    floor:'repeating-linear-gradient(90deg,#2a1a10,#2a1a10 18px,#241409 18px,#241409 36px)',
+    build: p => {
+      [4,12,20,80,88,96].forEach(x=>{ const l=document.createElement('div'); l.className='locker'; l.style.left=x+'%'; p.appendChild(l); });
+      addObj(p,'👕','9%','30%'); addObj(p,'🪑','30%','62%'); addObj(p,'🔢','49%','38%',true); addObj(p,'🧦','86%','58%'); } },
+  { label:'PARED DE BANDERAS',
+    wall:'linear-gradient(180deg,#2a1f3a,#150c20),repeating-linear-gradient(90deg,rgba(255,255,255,0.03) 0 1px,transparent 1px 30px)',
+    floor:'linear-gradient(180deg,#2a1f12,#150d06)',
+    build: p => { addObj(p,'🖼️','11%','34%'); addObj(p,'🚩','30%','30%'); addObj(p,'🚩','50%','26%',true); addObj(p,'🚩','70%','32%'); addObj(p,'🎽','90%','60%'); } },
+  { label:'PIZARRÓN DEL DT',
+    wall:'linear-gradient(180deg,#143026,#08130d)',
+    floor:'linear-gradient(180deg,#241a10,#120a05)',
+    build: p => { addObj(p,'⚽','10%','62%'); addObj(p,'🧤','30%','66%'); addObj(p,'📋','50%','30%',true); addObj(p,'✏️','64%','56%'); addObj(p,'🥅','89%','46%'); } },
+  { label:'CAJA FUERTE',
+    wall:'linear-gradient(180deg,#322a18,#14110a),repeating-linear-gradient(0deg,rgba(0,0,0,0.18) 0 2px,transparent 2px 22px)',
+    floor:'linear-gradient(180deg,#1f1a10,#0e0b06)',
+    build: p => { addObj(p,'💰','13%','60%'); addObj(p,'📦','30%','66%'); addObj(p,'🔐','50%','36%',true); addObj(p,'🏅','87%','58%'); } },
+  { label:'TÚNEL A LA CANCHA',
+    wall:'linear-gradient(180deg,#0a1410 0%,#102a1a 60%,#1c8f4c 100%)',
+    floor:'linear-gradient(180deg,#0c6e36,#0a4f27)',
+    build: p => { const d=document.createElement('div'); d.className='door'; d.id='final-door'; d.style.left='50%'; p.appendChild(d); addObj(p,'🏆','13%','56%',true); addObj(p,'⚽','30%','66%'); addObj(p,'📣','88%','40%'); } }
 ];
-function addObj(s,emoji,left,top){ const o=document.createElement('div'); o.className='scene-obj'; o.textContent=emoji; o.style.left=left; o.style.top=top; s.appendChild(o); }
+function addObj(p,emoji,left,top,key){
+  const o=document.createElement('div'); o.className='sObj'+(key?' key':''); o.textContent=emoji; o.style.left=left; o.style.top=top;
+  o.addEventListener('pointerup', ev=>{ ev.stopPropagation(); if(!dragMoved) sndClick(); });
+  p.appendChild(o);
+}
 function renderScene(idx){
-  const s = document.getElementById('scene');
-  // limpiar todo menos botón sonido y label
-  Array.from(s.querySelectorAll('.scene-room,.scene-floor,.scene-glow,.locker,.scene-obj,.door')).forEach(e=>e.remove());
   const r = ROOMS[idx] || ROOMS[0];
-  const wall = document.createElement('div'); wall.className='scene-room'; wall.style.background=r.wall; s.insertBefore(wall, s.firstChild);
-  const floor = document.createElement('div'); floor.className='scene-floor'; floor.style.background=r.floor; s.appendChild(floor);
-  const glow = document.createElement('div'); glow.className='scene-glow'; s.appendChild(glow);
-  r.build(s);
+  const p = document.getElementById('pano');
+  p.className='pano'; p.style.opacity='1'; pan=0;
+  p.style.background = r.wall;
+  p.innerHTML = `<div class="pano-ceil"></div><div class="pano-floor" style="background:${r.floor}"></div>`;
+  r.build(p);
+  applyPan(false);
   document.getElementById('scene-label').textContent = r.label;
 }
-function doorWipe(cb){
-  const w = document.getElementById('door-wipe'); w.classList.add('on'); sndDoor();
-  setTimeout(()=>{ cb&&cb(); setTimeout(()=>w.classList.remove('on'), 250); }, 400);
+// ===== mirar alrededor (pan) =====
+let pan=0, dragging=false, dragStartX=0, dragStartPan=0, dragMoved=false;
+const PAN_MAX=18; // % del ancho del panorama
+function applyPan(animate){ const p=document.getElementById('pano'); if(!p) return; p.classList.toggle('smooth', !!animate); p.style.transform='translateX('+(-pan*PAN_MAX)+'%)'; }
+function setupPan(){
+  const sc=document.getElementById('scene'); if(!sc) return;
+  sc.addEventListener('pointerdown', e=>{ if(e.target.closest('.look,.snd-btn')) return; dragging=true; dragMoved=false; dragStartX=e.clientX; dragStartPan=pan; });
+  window.addEventListener('pointermove', e=>{ if(!dragging) return; const dx=e.clientX-dragStartX; if(Math.abs(dx)>4) dragMoved=true; pan=Math.max(-1,Math.min(1, dragStartPan - dx/sc.offsetWidth*2)); applyPan(false); });
+  window.addEventListener('pointerup', ()=>{ dragging=false; });
+  document.getElementById('look-l').onclick=()=>{ pan=Math.max(-1,pan-0.6); applyPan(true); sndClick(); };
+  document.getElementById('look-r').onclick=()=>{ pan=Math.min(1,pan+0.6); applyPan(true); sndClick(); };
+}
+function doorWalk(cb){
+  const p=document.getElementById('pano'); const w=document.getElementById('door-wipe');
+  p.classList.add('walk'); p.style.transform='translateX('+(-pan*PAN_MAX)+'%) scale(1.6)'; p.style.opacity='0';
+  sndDoor();
+  w.classList.add('on');
+  setTimeout(()=>{ cb&&cb(); setTimeout(()=>w.classList.remove('on'), 320); }, 470);
 }
 
 // ========================================================================
@@ -518,6 +593,7 @@ document.getElementById('start').onclick = () => {
   show('game');
   renderPuzzle();
   startTimer();
+  startCrowd();
 };
 
 function startTimer() {
@@ -573,21 +649,22 @@ function check() {
   const p = PUZZLES[state.currentPuzzle];
   const input = document.querySelector('.puzzle-input');
   const val = input ? input.value : '';
-  state.tries++;
-  document.getElementById('hud-tries').textContent = state.tries;
   if (p.check(val)) {
     document.getElementById('feedback').textContent = '✓ ¡CORRECTO! Puerta desbloqueada';
     document.getElementById('feedback').className = 'feedback right';
-    sndRight(); vibe(40);
+    sndRight(); sndOle(); vibe(40);
     // abrir la puerta final si es el último
     const fd = document.getElementById('final-door'); if (fd) fd.classList.add('open');
     setTimeout(() => {
       state.currentPuzzle++;
       if (state.currentPuzzle >= PUZZLES.length) finish();
-      else doorWipe(renderPuzzle);
+      else doorWalk(renderPuzzle);
     }, 800);
   } else {
-    document.getElementById('feedback').textContent = '✗ INCORRECTO. SEGUÍ INTENTANDO.';
+    // sólo los errores suman al contador
+    state.tries++;
+    document.getElementById('hud-tries').textContent = state.tries;
+    document.getElementById('feedback').textContent = '✗ Esa no es. Probá de nuevo.';
     document.getElementById('feedback').className = 'feedback wrong';
     sndWrong(); vibe([30,40,30]);
     const sc = document.getElementById('screen-game'); sc.classList.remove('shake'); void sc.offsetWidth; sc.classList.add('shake');
@@ -598,12 +675,14 @@ function check() {
 }
 
 function failTimeOut() {
-  document.getElementById('fail-detail').textContent = `Te faltaron ${5 - state.currentPuzzle} acertijo(s). Intentos: ${state.tries}`;
+  stopCrowd();
+  document.getElementById('fail-detail').textContent = `Te faltaron ${5 - state.currentPuzzle} acertijo(s). Errores: ${state.tries}`;
   show('fail');
 }
 
 function finish() {
   clearInterval(state.timerInterval);
+  stopCrowd();
   sndEscape(); vibe([40,60,40,60,80]);
   const elapsed = 600 - state.timeLeft;
   const m = Math.floor(elapsed / 60);
@@ -631,16 +710,16 @@ function goRanking() {
     const m = Math.floor(x.secs / 60), s = x.secs % 60;
     return `<div class="ranking-item">
       <div class="rank-n">${i+1}</div>
-      <div><strong>${x.name}</strong> <span style="font-size:0.7rem;opacity:0.6">· ${x.tries} intentos</span></div>
+      <div><strong>${x.name}</strong> <span style="font-size:0.7rem;opacity:0.6">· ${x.tries} errores</span></div>
       <div class="rank-time">${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}</div>
     </div>`;
   }).join('');
 }
 window.goRanking = goRanking;
 document.getElementById('ver-ranking').onclick = goRanking;
-document.getElementById('snd-btn').onclick = (e) => { e.stopPropagation(); soundOn = !soundOn; document.getElementById('snd-btn').textContent = soundOn ? '🔊' : '🔇'; };
-// click en objetos de la escena = sonidito (inmersión)
-document.getElementById('scene').addEventListener('click', e => { if (e.target.classList.contains('scene-obj') || e.target.classList.contains('locker') || e.target.classList.contains('door')) sndClick(); });
+document.getElementById('snd-btn').onclick = (e) => { e.stopPropagation(); soundOn = !soundOn; document.getElementById('snd-btn').textContent = soundOn ? '🔊' : '🔇'; if (soundOn) startCrowd(); else stopCrowd(); };
+// explorar la sala: mirar a los costados (arrastrar / flechas)
+setupPan();
 
 document.getElementById('r-download').onclick = () => {
   const node = document.querySelector('.escape-banner');
@@ -662,6 +741,7 @@ function show(s) {
 }
 function restart() {
   if (state.timerInterval) clearInterval(state.timerInterval);
+  stopCrowd();
   show('intro');
 }
 window.restart = restart;

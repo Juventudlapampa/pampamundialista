@@ -270,6 +270,15 @@
     transition: all 0.15s;
   }
   .zone:hover, .zone:active { background: rgba(212,168,46,0.4); border-color: var(--gold); }
+  .zone.hint {
+    background: rgba(96,165,250,0.35);
+    border-color: var(--azul);
+    border-style: solid;
+    box-shadow: 0 0 16px rgba(37,99,235,0.7);
+    animation: zoneHint 0.45s ease-in-out infinite alternate;
+  }
+  @keyframes zoneHint { from { box-shadow: 0 0 8px rgba(37,99,235,0.5); } to { box-shadow: 0 0 22px rgba(37,99,235,0.9); } }
+  .zone.locked { pointer-events: none; opacity: 0.85; }
   .turn-label {
     text-align: center;
     font-family: 'Anton', sans-serif;
@@ -648,7 +657,8 @@ function startMatch() {
   const rival = match.a.id === state.myTeam.id ? match.b : match.a;
   state.matchState = {
     rival, golesYo: [], golesRival: [], turno: 0, // 0..9; 0,2,4,6,8 pateás; impar atajás
-    sudden: false
+    sudden: false,
+    rivalZone: null
   };
   document.getElementById('ronda-info').textContent = RONDA_NAMES[state.currentRound];
   // Mostrar nombres
@@ -713,11 +723,38 @@ function nextTurn() {
   }
   const isPatea = ms.turno % 2 === 0;
   const label = document.getElementById('turn-label');
-  label.textContent = isPatea ? '⚽ VOS PATEÁS · Tap en una zona' : '🧤 VOS ATAJÁS · Tap donde se tira el rival';
   label.className = 'turn-label ' + (isPatea ? 'tu-vez' : 'atajar');
-  document.querySelectorAll('.zone').forEach(z => {
-    z.onclick = () => zoneClick(parseInt(z.dataset.z), isPatea);
-  });
+  const zones = document.querySelectorAll('.zone');
+  zones.forEach(z => { z.onclick = null; z.classList.remove('hint', 'locked'); });
+
+  if (isPatea) {
+    label.textContent = '⚽ VOS PATEÁS · Tap en una zona';
+    zones.forEach(z => {
+      z.onclick = () => zoneClick(parseInt(z.dataset.z), true);
+    });
+    return;
+  }
+
+  // VOS ATAJÁS: elegimos la zona del rival ANTES del tap y la telegrafiamos
+  ms.rivalZone = Math.floor(Math.random() * 6);
+  // 65% telegrafiamos la zona real; 35% amago a otra zona
+  const honesto = Math.random() < 0.65;
+  let pistaZone = ms.rivalZone;
+  if (!honesto) {
+    do { pistaZone = Math.floor(Math.random() * 6); } while (pistaZone === ms.rivalZone);
+  }
+  label.textContent = '🧤 VOS ATAJÁS · Leé el amago del pateador';
+  // Mostrar la pista ~1s con tap bloqueado, después habilitar
+  zones.forEach(z => z.classList.add('locked'));
+  const pistaEl = document.querySelector(`.zone[data-z="${pistaZone}"]`);
+  if (pistaEl) pistaEl.classList.add('hint');
+  setTimeout(() => {
+    zones.forEach(z => {
+      z.classList.remove('hint', 'locked');
+      z.onclick = () => zoneClick(parseInt(z.dataset.z), false);
+    });
+    label.textContent = '🧤 ¡AHORA! · Tap a dónde te tirás';
+  }, 1000);
 }
 
 function zoneClick(zone, isPatea) {
@@ -738,16 +775,9 @@ function zoneClick(zone, isPatea) {
       showBigMsg('¡ATAJÓ!', 'atajada'); sfx.ataj();
     }
   } else {
-    // Vos atajás: el rival tira a una zona random pero con tendencia (favor de IA según nivel)
-    const rivalLevel = ms.rival.level;
-    // El rival sabe a qué zona vas: aprieta tu predicción
-    const rivalZone = Math.floor(Math.random() * 6);
-    const acertaste = rivalZone === zone;
-    const atajada = acertaste && Math.random() < 0.65;
-    // Pero si el rival tiene mucho nivel, a veces tira al ángulo imparable
-    const imparable = !acertaste && Math.random() < 0.05 + (rivalLevel - 80) * 0.005;
-    const gol = !atajada && !imparable ? false : !atajada;
-    // Simplificamos: gol si NO atajaste
+    // Vos atajás: el rival ya eligió su zona (telegrafiada con la pista previa)
+    const acertaste = ms.rivalZone === zone;
+    const atajada = acertaste; // gol si NO atajaste la zona correcta
     ms.golesRival.push(!atajada);
     if (atajada) {
       showBigMsg('¡LA ATAJASTE!', 'atajada'); sfx.ataj(); confeti(); vibe(50);

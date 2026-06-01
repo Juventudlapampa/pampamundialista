@@ -80,7 +80,13 @@
     <div class="panel">
       <p class="intro-text">El fútbol también se juega <strong>afuera</strong> de la cancha: en cómo tratamos a los demás. Te vamos a presentar <strong>11 situaciones reales</strong> de cancha, vestuario y grupo.</p>
       <p class="intro-text">No hay trampa: elegí lo que de verdad harías. Vas a sumar puntos por las jugadas más <strong>limpias</strong> —las que cuidan a los demás— y al final te llevás tu tarjeta de <strong>Juego Limpio</strong>.</p>
-      <p class="intro-text" style="font-size:0.85rem;opacity:0.8">Hablamos de igualdad, respeto a la diversidad, frenar la violencia y la discriminación, cuidar la imagen y el cuerpo del otro, y pedir ayuda cuando hace falta.</p>
+      <p class="intro-text" style="font-size:0.85rem;opacity:0.8">Hablamos de igualdad, respeto a la diversidad, frenar la violencia y la discriminación, cuidar la imagen y el cuerpo de cada quien, y pedir ayuda cuando hace falta.</p>
+      <label style="display:block;font-family:'JetBrains Mono',monospace;font-size:0.7rem;letter-spacing:0.15em;color:var(--purple);text-transform:uppercase;margin-bottom:0.4rem">¿Cómo te identificás?</label>
+      <select id="genero" style="width:100%;background:rgba(0,0,0,0.5);border:1px solid rgba(167,139,250,0.5);color:var(--crema);padding:0.75rem;border-radius:8px;font-family:inherit;font-size:1rem;margin-bottom:0.9rem">
+        <option value="f">Mujer</option>
+        <option value="m" selected>Varón</option>
+        <option value="x">Prefiero no decir</option>
+      </select>
       <button class="btn" id="start">▶ EMPEZAR</button>
     </div>
   </div>
@@ -88,7 +94,7 @@
   <!-- JUEGO -->
   <div class="screen" id="screen-game">
     <div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
-    <div class="q-meta"><span id="q-count">Situación 1 / 8</span><span id="q-score">0 pts</span></div>
+    <div class="q-meta"><span id="q-count">Situación 1 / 11</span><span id="q-score">0 pts</span></div>
     <div class="panel">
       <div class="q-context" id="q-context">EN LA CANCHA</div>
       <div class="q-text" id="q-text"></div>
@@ -150,7 +156,7 @@ const SITUACIONES = [
   },
   {
     ctx: 'EN EL CELULAR · IMAGEN Y CONSENTIMIENTO',
-    q: 'Un compañero se cae feo y queda en ridículo. Alguien lo filma para subirlo a las redes. ¿Qué hacés?',
+    q: 'Alguien del grupo se cae feo y queda en ridículo. Otra persona lo filma para subirlo a las redes. ¿Qué hacés?',
     opts: [
       { t:'Le pido que no lo suba: la imagen de cada uno es suya.', p:10 },
       { t:'No lo comparto yo, pero no me meto en lo que hagan.', p:5 },
@@ -160,7 +166,7 @@ const SITUACIONES = [
   },
   {
     ctx: 'EN EL VESTUARIO · RESPETO A LOS CUERPOS',
-    q: 'En el vestuario empiezan a cargar a un pibe por su cuerpo. Se lo ve incómodo. ¿Qué hacés?',
+    q: 'En el vestuario empiezan a cargar a alguien del equipo por su cuerpo. Se nota que la está pasando mal. ¿Qué hacés?',
     opts: [
       { t:'Corto la joda: nadie tiene que sentirse mal por su cuerpo.', p:10 },
       { t:'No me río, pero tampoco digo nada.', p:5 },
@@ -170,7 +176,7 @@ const SITUACIONES = [
   },
   {
     ctx: 'EN EL GRUPO · PEDIR AYUDA',
-    q: 'Un compañero te cuenta en privado que en el grupo lo molestan todo el tiempo y la está pasando mal. ¿Qué hacés?',
+    q: 'Alguien del grupo te cuenta en privado que le hacen bullying todo el tiempo y la está pasando mal. ¿Qué hacés?',
     opts: [
       { t:'Lo escucho y lo acompaño a hablar con un adulto de confianza.', p:10 },
       { t:'Le digo que no le dé bola y que se le va a pasar.', p:5 },
@@ -180,7 +186,7 @@ const SITUACIONES = [
   },
   {
     ctx: 'EN UNA JODITA · CONSENTIMIENTO',
-    q: 'Un compañero dice claro que no quiere que lo abracen ni lo toqueteen de joda. Algunos insisten igual. ¿Qué hacés?',
+    q: 'Alguien del grupo deja claro que no quiere abrazos ni que le toqueteen de joda. Algunos insisten igual. ¿Qué hacés?',
     opts: [
       { t:'Banco su "no": cada uno decide sobre su propio cuerpo.', p:10 },
       { t:'No insisto yo, pero no le digo nada a los demás.', p:5 },
@@ -190,7 +196,7 @@ const SITUACIONES = [
   },
   {
     ctx: 'LLEGA ALGUIEN NUEVO · INCLUSIÓN',
-    q: 'Aparece un pibe nuevo, no conoce a nadie y va quedando afuera de todos los equipos. ¿Qué hacés?',
+    q: 'Aparece alguien nuevo, no conoce a nadie y va quedando afuera de todos los equipos. ¿Qué hacés?',
     opts: [
       { t:'Lo invito a mi equipo y lo presento al resto del grupo.', p:10 },
       { t:'Lo dejo jugar solo si sobra un lugar.', p:5 },
@@ -200,7 +206,7 @@ const SITUACIONES = [
   },
   {
     ctx: 'EN LA CANCHA · ESTEREOTIPOS',
-    q: 'Una compañera mete un golazo y alguien dice "para ser mujer, juega bien". ¿Qué hacés?',
+    q: () => gen('Una compañera mete un golazo y alguien dice "para ser mujer, juega bien". ¿Qué hacés?','Metés un golazo y alguien suelta "para ser mujer, jugás bien". ¿Qué hacés?','Una compañera mete un golazo y alguien dice "para ser mujer, juega bien". ¿Qué hacés?'),
     opts: [
       { t:'Marco que juega bien y punto: el "para ser mujer" sobra.', p:10 },
       { t:'Me río incómodo y sigo jugando.', p:5 },
@@ -220,7 +226,7 @@ const SITUACIONES = [
   },
   {
     ctx: 'ARMANDO EL EQUIPO · ESTEREOTIPOS',
-    q: 'Van a armar el equipo del curso y proponen que las chicas "miren y alcancen el agua" en vez de jugar. ¿Qué hacés?',
+    q: () => 'Van a armar el equipo del curso y proponen que '+gen('las chicas','vos y las chicas','las chicas')+' "miren y alcancen el agua" en vez de jugar. ¿Qué hacés?',
     opts: [
       { t:'Propongo equipo mixto: todas y todos adentro de la cancha.', p:10 },
       { t:'Dejo que jueguen las que se animen, sin insistir.', p:5 },
@@ -231,8 +237,10 @@ const SITUACIONES = [
 ];
 
 let estado = { i: 0, score: 0, answered: false };
+let genero = 'm';
+function gen(m,f,x){ return genero==='f'?f:(genero==='x'?(x!==undefined?x:m):m); }
 
-$('start').onclick = () => { estado = { i:0, score:0, answered:false }; show('game'); render(); };
+$('start').onclick = () => { genero = $('genero').value; estado = { i:0, score:0, answered:false }; show('game'); render(); };
 $('replay').onclick = () => { estado = { i:0, score:0, answered:false }; show('game'); render(); };
 
 function render() {
@@ -242,7 +250,7 @@ function render() {
   $('q-score').textContent = `${estado.score} pts`;
   $('prog').style.width = (estado.i / SITUACIONES.length * 100) + '%';
   $('q-context').textContent = s.ctx;
-  $('q-text').textContent = s.q;
+  $('q-text').textContent = (typeof s.q === 'function') ? s.q() : s.q;
   const cont = $('q-options');
   cont.innerHTML = '';
   // mezclar el orden de las opciones para que la "correcta" no esté siempre primera
@@ -279,7 +287,8 @@ function answer(o, btn, cont) {
   });
   const fb = $('feedback');
   const tag = o.p === 10 ? '✅ <span class="fb-pts">+10</span> · Jugada limpia.' : o.p === 5 ? '🟡 <span class="fb-pts">+5</span> · Se puede mejorar.' : '🔴 <span class="fb-pts">+0</span> · Repensemos la jugada.';
-  fb.innerHTML = `<div style="margin-bottom:0.4rem">${tag}</div>${s.fb}`;
+  const fbText = (typeof s.fb === 'function') ? s.fb() : s.fb;
+  fb.innerHTML = `<div style="margin-bottom:0.4rem">${tag}</div>${fbText}`;
   fb.className = 'feedback show';
   $('next').style.display = 'block';
 }
@@ -294,8 +303,8 @@ function showResult() {
   const sc = estado.score;
   $('res-pts').textContent = sc;
   let emoji, level, msg;
-  if (sc >= 96) { emoji='💚'; level='CAPITÁN/A DEL JUEGO LIMPIO'; msg='La rompés dentro y fuera de la cancha. Tu grupo es mejor cuando estás vos.'; }
-  else if (sc >= 68) { emoji='🟢'; level='GRAN COMPAÑERO/A'; msg='Tenés bien claro lo que importa: cuidar al otro. Vas por buen camino.'; }
+  if (sc >= 96) { emoji='💚'; level=gen('CAPITÁN DEL JUEGO LIMPIO','CAPITANA DEL JUEGO LIMPIO','CRACK DEL JUEGO LIMPIO'); msg='La rompés dentro y fuera de la cancha. Tu grupo es mejor cuando estás vos.'; }
+  else if (sc >= 68) { emoji='🟢'; level=gen('GRAN COMPAÑERO','GRAN COMPAÑERA','GRAN COMPAÑERISMO'); msg='Tenés bien claro lo que importa: cuidar a los demás. Vas por buen camino.'; }
   else if (sc >= 42) { emoji='🟡'; level='VAS APRENDIENDO'; msg='Hay buena intención. Animate a dar el paso y bancar al que la está pasando mal.'; }
   else { emoji='🔴'; level='A REPENSAR LA JUGADA'; msg='Pará la pelota un segundo: tus decisiones también juegan. Siempre se puede empezar de nuevo.'; }
   $('res-emoji').textContent = emoji;

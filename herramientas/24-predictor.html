@@ -270,18 +270,18 @@ const TEAMS = {
 };
 
 const GRUPOS = {
-  A:['México','Croacia','Egipto','Nueva Zelanda'],
-  B:['Canadá','Bélgica','Ecuador','Arabia Saudita'],
-  C:['Estados Unidos','Países Bajos','Senegal','Catar'],
-  D:['Argentina','Noruega','Túnez','Curazao'],
-  E:['Francia','Uruguay','Costa de Marfil','Uzbekistán'],
-  F:['España','Colombia','Japón','Sudáfrica'],
-  G:['Brasil','Suiza','Argelia','Jordania'],
-  H:['Inglaterra','Paraguay','Corea del Sur','Haití'],
-  I:['Portugal','Austria','Ghana','Irán'],
-  J:['Alemania','Escocia','Marruecos','Panamá'],
-  K:['Suecia','Australia','Cabo Verde','Irak'],
-  L:['Turquía','República Checa','Congo RD','Bosnia y Herzegovina']
+  A:['México','Sudáfrica','Corea del Sur','República Checa'],
+  B:['Canadá','Bosnia y Herzegovina','Catar','Suiza'],
+  C:['Brasil','Marruecos','Haití','Escocia'],
+  D:['Estados Unidos','Paraguay','Australia','Turquía'],
+  E:['Alemania','Curazao','Costa de Marfil','Ecuador'],
+  F:['Países Bajos','Japón','Suecia','Túnez'],
+  G:['Bélgica','Egipto','Irán','Nueva Zelanda'],
+  H:['España','Cabo Verde','Arabia Saudita','Uruguay'],
+  I:['Francia','Senegal','Irak','Noruega'],
+  J:['Argentina','Argelia','Austria','Jordania'],
+  K:['Portugal','Congo RD','Uzbekistán','Colombia'],
+  L:['Inglaterra','Croacia','Ghana','Panamá']
 };
 
 let pred = { orden:{}, thirds:[], rounds:[], awards:{bota:'',balon:'',guante:'',fairplay:''} };
@@ -334,7 +334,7 @@ function renderGrupos() {
 function rankTeam(g, team) {
   const orden = pred.orden[g];
   const idx = orden.indexOf(team);
-  if (idx >= 0) { orden.splice(idx); }       // tocar un equipo ya rankeado: lo desordena (y a los de abajo)
+  if (idx >= 0) { orden.splice(idx, 1); }    // tocar un equipo ya rankeado: lo quita solo a él (los demás reacomodan su posición)
   else if (orden.length < 4) { orden.push(team); }
   renderGrupos();
 }

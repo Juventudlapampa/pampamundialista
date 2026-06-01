@@ -571,7 +571,7 @@
     FRA: ['Mbappé', 'Dembélé', 'Griezmann', 'Tchouaméni', 'Camavinga', 'Théo Hernández', 'Saliba', 'Koundé', 'Maignan', 'Konaté', 'Thuram', 'Coman', 'Olise', 'Doué', 'Rabiot'],
     ESP: ['Lamine Yamal', 'Nico Williams', 'Pedri', 'Rodri', 'Olmo', 'Cubarsí', 'Carvajal', 'Le Normand', 'Laporte', 'Unai Simón', 'Mikel Merino', 'Fabián Ruiz', 'Oyarzabal', 'Morata', 'Joselu'],
     ING: ['Kane', 'Saka', 'Bellingham', 'Foden', 'Trent', 'Rice', 'Stones', 'Pickford', 'Walker', 'Maguire', 'Palmer', 'Eze', 'Watkins', 'Toney', 'Gordon'],
-    ALE: ['Wirtz', 'Musiala', 'Havertz', 'Kroos', 'Goretzka', 'Kimmich', 'Rüdiger', 'Tah', 'Neuer', 'Ter Stegen', 'Sané', 'Gnabry', 'Füllkrug', 'Adeyemi', 'Andrich'],
+    ALE: ['Wirtz', 'Musiala', 'Havertz', 'Gündoğan', 'Goretzka', 'Kimmich', 'Rüdiger', 'Tah', 'Neuer', 'Ter Stegen', 'Sané', 'Gnabry', 'Füllkrug', 'Adeyemi', 'Andrich'],
     POR: ['CR7', 'Leão', 'Bruno Fernandes', 'Bernardo Silva', 'João Félix', 'Cancelo', 'Pepe', 'Diogo Costa', 'João Neves', 'Vitinha', 'Diogo Jota', 'Pote', 'Conceição', 'Nuno Mendes', 'Otávio'],
     NED: ['Memphis', 'Gakpo', 'Reijnders', 'De Jong', 'Van Dijk', 'De Ligt', 'Dumfries', 'Verbruggen', 'Wijnaldum', 'Xavi Simons', 'Bergwijn', 'Brobbey', 'Geertruida', 'Aké', 'Veerman'],
     URU: ['Suárez', 'Darwin Núñez', 'Pellistri', 'Valverde', 'Bentancur', 'De Arrascaeta', 'Olivera', 'Giménez', 'Coates', 'Rochet', 'Ugarte', 'Vecino', 'Maxi Gómez', 'Ronald Araújo', 'Caceres'],
@@ -815,12 +815,8 @@
     log(estado.min, `🔥 ORDEN ESPECIAL: ${o.n} — ${o.desc}`, 'penal');
     document.getElementById('orden-activa').textContent = `▶ ${o.n} activa hasta min ${estado.min + o.dur}`;
     renderOrdenes();
-    setTimeout(() => {
-      if (estado.min >= estado.ordenExpire) {
-        document.getElementById('orden-activa').textContent = '';
-        estado.ordenActiva = null;
-      }
-    }, o.dur * 800);
+    // La orden expira por MINUTO SIMULADO (se limpia en tickMinute), no por tiempo real,
+    // para que acelerar el partido no alargue ni acorte su duración.
   }
 
   function runMatch() {
@@ -835,6 +831,12 @@
     estado.min++;
     document.getElementById('m-min').textContent = estado.min;
 
+    // Expirar orden osada por minuto simulado
+    if (estado.ordenActiva && estado.min >= estado.ordenExpire) {
+      estado.ordenActiva = null;
+      document.getElementById('orden-activa').textContent = '';
+    }
+
     // IA del rival adapta táctica
     updateRivalTactica();
 
@@ -848,7 +850,6 @@
 
     // Animar pelota según posesión
     const ball = document.getElementById('sim-ball');
-    const x = estado.pos_l > 60 ? '15%' : estado.pos_l < 40 ? '85%' : (15 + (1 - (estado.pos_l - 40) / 20) * 70) + '%';
     ball.style.left = (10 + (1 - estado.pos_l / 100) * 80) + '%';
 
     // Probabilidad de evento en este minuto (~5-8% para gol, etc)
