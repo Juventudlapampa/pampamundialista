@@ -12,6 +12,13 @@
   var COLS = ['#9B3DAA','#2B3A8F','#00968A','#5CB83A','#F5C400','#F58220','#E03A2F','#E8317A','#5CB83A','#2BAADC'];
   var WORD = 'JUVENTUDES';
 
+  // Base = carpeta donde vive este script (la raíz del sitio). Así el logo oficial
+  // resuelve bien desde cualquier subcarpeta (juegos/, generadores/...) y en GitHub Pages.
+  var SELF = document.currentScript;
+  var BASE = (SELF && SELF.src) ? SELF.src.replace(/[^/]*$/, '') : '';
+  var LOGO = BASE + 'assets/logo-subse-blanco.png';
+  var LOGO_ALT = 'Subsecretaría de Juventud · Ministerio de Desarrollo Social y Derechos Humanos · La Pampa';
+
   // Tipografía del wordmark (Archivo Black) si la página no la cargó
   function ensureFont(){
     if(document.querySelector('link[data-pm-font]')) return;
@@ -43,11 +50,12 @@
     '.pm-word{font-family:"Archivo Black",sans-serif;font-weight:400;letter-spacing:.005em;line-height:1;white-space:nowrap;display:inline-block}'+
     '.pm-foot{position:relative;z-index:5;margin-top:2.2rem;padding:1.25rem 1rem calc(1.4rem + env(safe-area-inset-bottom,0px));text-align:center;background:#0e0e12;color:#cfcfd6;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}'+
     '.pm-foot .pm-rule{position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,'+COLS.join(',')+')}'+
-    '.pm-foot .pm-sig{max-width:680px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:.5rem}'+
+    '.pm-foot .pm-sig{max-width:680px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:.7rem}'+
     '.pm-foot .pm-word{font-size:1.4rem}'+
+    '.pm-foot .pm-logo{height:48px;width:auto;max-width:94%;object-fit:contain;opacity:.96}'+
     '.pm-foot .pm-line{font-size:.72rem;letter-spacing:.04em;color:#9a9aa4;line-height:1.5}'+
     '.pm-foot .pm-line b{color:#e7e7ee;font-weight:600}'+
-    '@media(max-width:480px){.pm-foot .pm-word{font-size:1.15rem}.pm-foot .pm-line{font-size:.66rem}}';
+    '@media(max-width:480px){.pm-foot .pm-word{font-size:1.15rem}.pm-foot .pm-logo{height:38px}.pm-foot .pm-line{font-size:.66rem}}';
   document.head.appendChild(css);
 
   function build(){
@@ -58,7 +66,7 @@
       '<div class="pm-rule"></div>'+
       '<div class="pm-sig">'+
         wordmark({size:'1.4rem'})+
-        '<div class="pm-line"><b>Subsecretaría de Juventud</b> · Ministerio de Desarrollo Social y Derechos Humanos · La Pampa</div>'+
+        '<img class="pm-logo" src="'+LOGO+'" alt="'+LOGO_ALT+'" loading="lazy">'+
       '</div>';
     document.body.appendChild(f);
   }
