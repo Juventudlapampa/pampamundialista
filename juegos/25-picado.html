@@ -159,9 +159,9 @@ const TEAMS = [
 let myTeamIdx = 0, rivalTeamIdx = 2, diff = 'facil';
 // dificultad: velocidad rivales, frecuencia, homing, pericia arquero
 const DIFF = {
-  facil:  { defSpeed:0.55, spawn:1.5, homing:0.18, gk:0.42, gkSpeed:0.9 },
-  normal: { defSpeed:0.72, spawn:1.15, homing:0.30, gk:0.60, gkSpeed:1.3 },
-  dificil:{ defSpeed:0.92, spawn:0.85, homing:0.42, gk:0.74, gkSpeed:1.8 }
+  facil:  { defSpeed:0.92, spawn:1.05, homing:0.16, gk:0.40, gkSpeed:1.2 },
+  normal: { defSpeed:1.18, spawn:0.85, homing:0.28, gk:0.58, gkSpeed:1.6 },
+  dificil:{ defSpeed:1.5,  spawn:0.6,  homing:0.40, gk:0.72, gkSpeed:2.1 }
 };
 function rivalOf(i){ return (i+2)%TEAMS.length; }
 function flagCss(f){ return `linear-gradient(to bottom, ${f[0]} 33%, ${f[1]} 33% 66%, ${f[2]} 66%)`; }
@@ -265,12 +265,12 @@ function update(dt){
   // mover jugador
   let dir=0;
   if(keys._l) dir-=1; if(keys._r) dir+=1;
-  if(dir!==0){ G.targetLane = Math.max(-1, Math.min(1, G.targetLane + dir*dt*2.6)); }
-  G.playerLane += (G.targetLane - G.playerLane) * Math.min(1, dt*12);
+  if(dir!==0){ G.targetLane = Math.max(-1, Math.min(1, G.targetLane + dir*dt*3.6)); }
+  G.playerLane += (G.targetLane - G.playerLane) * Math.min(1, dt*16);
 
   if(G.phase==='run'){
-    G.scroll += dt*1.4;
-    G.progress = Math.min(1, G.progress + dt*0.018);
+    G.scroll += dt*2.4;
+    G.progress = Math.min(1, G.progress + dt*0.032);
     // spawn rivales
     G.spawnT -= dt;
     if(G.spawnT<=0){ G.spawnT = d.spawn*(0.7+Math.random()*0.6); G.defs.push({ z:0.02, lane:(Math.random()*1.7-0.85), passed:false }); }
@@ -286,7 +286,7 @@ function update(dt){
           flash('¡Te la robaron! 🔴','#f87171',40); shake=8; vibe(50); sTackle();
           burst(laneX(df.z,df.lane), proj(df.z).y, 14);
         } else if(df.z>0.96){
-          df.passed='dodge'; G.racha++; G.progress=Math.min(1,G.progress+0.16);
+          df.passed='dodge'; G.racha++; G.progress=Math.min(1,G.progress+0.2);
           if(G.racha>G.mejorRacha) G.mejorRacha=G.racha;
           sDodge();
           if(G.racha>0 && G.racha%5===0) flash('¡Racha x'+G.racha+'! 🔥','#4ade80',35);
