@@ -22,11 +22,12 @@
     --bg: #050d08; --verde: #0d3b26; --verde-fluo: #4ade80;
     --gold: #d4a82e; --gold-2: #f4cd60; --crema: #f4ecd8;
     --rojo: #dc2626; --azul: #38bdf8; --purple: #a78bfa;
+    --celeste: #75AADB; --celeste-2: #9ec9ed;
   }
   body {
     font-family: 'DM Sans', sans-serif;
     background: var(--bg);
-    background-image: radial-gradient(circle at 10% 10%, rgba(212,168,46,0.15), transparent 50%), radial-gradient(circle at 90% 90%, rgba(74,222,128,0.1), transparent 50%);
+    background-image: radial-gradient(circle at 50% -5%, rgba(117,170,219,0.22), transparent 45%), radial-gradient(circle at 10% 10%, rgba(212,168,46,0.15), transparent 50%), radial-gradient(circle at 90% 90%, rgba(74,222,128,0.1), transparent 50%);
     background-attachment: fixed; min-height: 100vh; color: var(--crema); padding: 1.5rem 1rem;
   }
   .container { max-width: 1000px; margin: 0 auto; }
@@ -37,6 +38,21 @@
   .subtitle { font-size: 1rem; opacity: 0.9; max-width: 640px; margin: 0.8rem auto 0; line-height: 1.5; }
   .stat-strip { display: flex; justify-content: center; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap; }
   .stat-pill { background: rgba(212,168,46,0.15); border: 1px solid rgba(212,168,46,0.3); padding: 0.35rem 0.8rem; border-radius: 20px; font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em; }
+
+  /* ===== CLIMA MUNDIALISTA ===== */
+  .bunting { display:flex; justify-content:center; flex-wrap:nowrap; overflow:hidden; height:20px; margin:0 0 0.5rem; }
+  .bunting i { width:0; height:0; border-left:10px solid transparent; border-right:10px solid transparent; border-top:17px solid var(--c); margin:0 1px; animation:sway 2.6s ease-in-out infinite; transform-origin:top center; }
+  @keyframes sway { 0%,100%{transform:rotate(-4deg)} 50%{transform:rotate(4deg)} }
+  .flag-marquee { overflow:hidden; white-space:nowrap; border-top:1px solid rgba(117,170,219,0.3); border-bottom:1px solid rgba(117,170,219,0.3); background:linear-gradient(90deg, rgba(117,170,219,0.10), rgba(244,236,216,0.05), rgba(117,170,219,0.10)); padding:0.35rem 0; margin-bottom:1.2rem; }
+  .flag-marquee span { display:inline-block; font-size:1.25rem; letter-spacing:0.4rem; animation:scrollx 32s linear infinite; will-change:transform; }
+  @keyframes scrollx { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+  h1 span { text-shadow: 0 0 26px rgba(117,170,219,0.45) !important; }
+  .header-tag { color: var(--celeste-2) !important; }
+  .snd-fab { position:fixed; right:14px; bottom:14px; z-index:80; background:linear-gradient(135deg, var(--celeste), #4d8fc7); color:#04212e; border:2px solid var(--crema); border-radius:50%; width:52px; height:52px; font-size:1.35rem; cursor:pointer; box-shadow:0 6px 18px rgba(0,0,0,0.55); display:flex; align-items:center; justify-content:center; }
+  .snd-fab.off { filter:grayscale(0.75); opacity:0.8; }
+  .snd-fab .pulse { position:absolute; inset:-2px; border-radius:50%; border:2px solid var(--celeste); animation:pulsefab 1.7s ease-out infinite; pointer-events:none; }
+  .snd-fab.on .pulse { display:none; }
+  @keyframes pulsefab { 0%{transform:scale(1);opacity:0.55} 100%{transform:scale(1.55);opacity:0} }
 
   /* PASAPORTE */
   .pass { background: rgba(0,0,0,0.45); border: 1px solid rgba(212,168,46,0.3); border-radius: 14px; padding: 0.9rem 1.1rem; margin: 1.2rem 0; display: flex; align-items: center; gap: 0.9rem; }
@@ -131,8 +147,9 @@
 </head>
 <body>
 <div class="container">
+  <div class="bunting" id="bunting"></div>
   <header>
-    <div class="header-tag">Subsecretaría de Juventudes · La Pampa</div>
+    <div class="header-tag">🇦🇷 Subsecretaría de Juventudes · La Pampa</div>
     <h1>PAMPA <span>JUEGA</span></h1>
     <p class="subtitle">Jugá, armá tu carta y viví el <b>Mundial 2026</b> a lo pampeano. Entrá, divertite y sumate al concurso. Gratis, sin registro para jugar.</p>
     <div class="stat-strip">
@@ -142,6 +159,8 @@
       <div class="stat-pill">14 a 30 años</div>
     </div>
   </header>
+
+  <div class="flag-marquee"><span id="flag-mq"></span></div>
 
   <!-- PASAPORTE -->
   <div class="pass">
@@ -318,6 +337,8 @@
   </footer>
 </div>
 
+<button class="snd-fab off" id="snd-fab" aria-label="Sonido de hinchada"><span class="pulse"></span><span class="ico">🔇</span></button>
+
 <script>
   // ===== CONFIG (cambiá en un solo lugar) =====
   const CUENTA = "@pampajuega";            // cuenta del Desafío (placeholder, cambiá cuando la definas)
@@ -412,6 +433,36 @@
     ch.classList.add('on');
     document.getElementById('part-out').textContent = OUT[ch.dataset.c];
   });
+
+  // ===== CLIMA MUNDIALISTA: banderines, banderas y ruido de hinchada =====
+  (function(){
+    const bunting = document.getElementById('bunting');
+    if (bunting) { const cols=['var(--celeste)','#f4ecd8','var(--gold)']; let h=''; for(let i=0;i<30;i++) h+=`<i style="--c:${cols[i%3]};animation-delay:${(i%5)*0.12}s"></i>`; bunting.innerHTML=h; }
+    const flags='🇦🇷 🇧🇷 🇫🇷 🇪🇸 🏴󠁧󠁢󠁥󠁮󠁧󠁿 🇵🇹 🇩🇪 🇮🇹 🇳🇱 🇺🇾 🇲🇽 🇭🇷 🇨🇴 🇲🇦 🇯🇵 🇧🇪 🇸🇳 🇨🇭 🇺🇸 🇨🇦 🇪🇨 🇦🇺 🇳🇴 🇸🇦 ';
+    const mq=document.getElementById('flag-mq'); if(mq) mq.textContent=flags+flags;
+
+    // hinchada de fondo (ruido filtrado en loop, con oleaje)
+    let actx=null, crowd=null, soundOn=false;
+    function ctx(){ if(!actx){ try{ actx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return actx; }
+    function startCrowd(){ const c=ctx(); if(!c||crowd) return; try{
+      const len=2*c.sampleRate, buf=c.createBuffer(1,len,c.sampleRate), d=buf.getChannelData(0);
+      for(let i=0;i<len;i++) d[i]=Math.random()*2-1;
+      const src=c.createBufferSource(); src.buffer=buf; src.loop=true;
+      const bp=c.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=440; bp.Q.value=0.7;
+      const lp=c.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=950;
+      const g=c.createGain(); g.gain.value=0.0001;
+      src.connect(bp); bp.connect(lp); lp.connect(g); g.connect(c.destination);
+      const lfo=c.createOscillator(), lg=c.createGain(); lfo.frequency.value=0.13; lg.gain.value=0.03; lfo.connect(lg); lg.connect(g.gain); lfo.start();
+      src.start(); g.gain.setTargetAtTime(0.06,c.currentTime,1.6); crowd={src,g,lfo};
+    }catch(e){} }
+    function stopCrowd(){ if(!crowd)return; const n=crowd; crowd=null; try{ n.g.gain.setTargetAtTime(0.0001,ctx().currentTime,0.4); setTimeout(()=>{try{n.src.stop();n.lfo.stop();}catch(e){}},700);}catch(e){} }
+    const fab=document.getElementById('snd-fab');
+    function setOn(on){ soundOn=on; if(fab){ fab.classList.toggle('off',!on); fab.classList.toggle('on',on); const ic=fab.querySelector('.ico'); if(ic) ic.textContent=on?'🔊':'🔇'; } if(on) startCrowd(); else stopCrowd(); }
+    if(fab) fab.onclick=()=>setOn(!soundOn);
+    // arranca la hinchada en la primera interacción (las políticas del navegador no permiten audio sin un toque)
+    function kickoff(){ if(!soundOn) setOn(true); window.removeEventListener('pointerdown',kickoff); window.removeEventListener('keydown',kickoff); }
+    window.addEventListener('pointerdown',kickoff); window.addEventListener('keydown',kickoff);
+  })();
 </script>
 </body>
 </html>

@@ -128,6 +128,7 @@
       <button class="dice" id="rnd-frase" title="Frase al azar">🎲</button>
     </div>
 
+    <div class="sect"><div class="sect-title">🧑 ¿Cómo te identificás?</div><div class="chips" id="c-genero"></div></div>
     <div class="sect"><div class="sect-title">👕 Camiseta</div><div class="chips" id="c-kit"></div></div>
     <div class="sect"><div class="sect-title">🎨 Tono de piel</div><div class="chips wrap" id="c-skin"></div></div>
     <div class="sect"><div class="sect-title">💇 Corte de pelo</div><div class="chips" id="c-hair"></div></div>
@@ -257,10 +258,16 @@ const KITS = [
   {n:'Australia', main:'#FFD100', accent:'#006847', shorts:'#006847'},
   {n:'Suiza',     main:'#FF0000', accent:'#FFFFFF', shorts:'#FF0000'}
 ];
-const MOTES = ['El Fantasma','La Joya','El Zurdo','El Toro','El Pampa','La Pulguita','El Mago','El Cabezón','El Loco','El Pibe','La Bestia','El Pirulo','El Tanque','El Brujo','El Demonio','El Killer','El Chueco','El Negro','El Rusito','El Polaco','El Crack','La Pantera','El Rayo','El Maestro','El Tigre'];
+const GENEROS = [ {id:'f', ic:'👩', lb:'Mujer'}, {id:'m', ic:'👨', lb:'Varón'}, {id:'x', ic:'🧑', lb:'Prefiero no decir'} ];
+const MOTES_BY = {
+  m: ['El Zurdo','El Toro','El Pampa','El Mago','El Cabezón','El Pibe','El Tanque','El Brujo','El Crack','El Rayo','El Maestro','El Tigre','El Fideo','El Pulpo','El Cacique','El Fantasma','El Pirulo','El Pelado'],
+  f: ['La Joya','La Pulga','La Maga','La Reina','La Tigresa','La Pantera','La Bestia','La Crack','La Zurda','La Fiera','La Capitana','La Pampa','La Diabla','La Gambeta','La Leona','La Pulguita','La Rayo','La Maestra'],
+  x: ['Crack','Genio','Fenómeno','Tornado','Relámpago','La 10','Pura Magia','Gambeta','La Pampa','Zurda Mágica','Pólvora','Crack del Potrero','Magia Pura','Distinto']
+};
+function motesActuales(){ return MOTES_BY[av.genero] || MOTES_BY.x; }
 const FRASES = ['Su zurda incomoda a cualquier defensa','Nadie le saca la pelota en el área','Lo enganchó y se fue solo','El terror de los centrales','Aguanta como nadie en el medio','Le pega cruzado al palo más lejano','Cuando tira un caño no perdona','Sale del fondo gambeteando','El que mete los goles que valen','Capitán por derecho propio','Le pone huevo donde otros aflojan','El que aparece cuando hace falta','Su pierna izquierda es marca registrada','Cabeza fría, pies calientes','El que rompe la línea con un pase'];
 
-let av = { skin:1, hair:0, hairColor:0, beard:0, kit:0, acc:[], meme:[], memeMode:false, pose:0, bg:0, captain:false, tattoo:0, number:10, mote:'', frase:'' };
+let av = { genero:'m', skin:1, hair:0, hairColor:0, beard:0, kit:0, acc:[], meme:[], memeMode:false, pose:0, bg:0, captain:false, tattoo:0, number:10, mote:'', frase:'' };
 let best = 0;
 const has = id => av.acc.includes(id);
 const hasMeme = id => av.memeMode && av.meme.includes(id);
@@ -373,6 +380,7 @@ function buildAvatarSVG(a, opt={}){
   const skin = SKINS[a.skin], hc = HAIR_COLORS[a.hairColor], kit = KITS[a.kit];
   const main = kit.main, accent = kit.accent, shorts = kit.shorts;
   const numColor = isLight(main) ? '#15233a' : '#ffffff';
+  const si = a.genero==='f' ? 6 : (a.genero==='x' ? 3 : 0);   // hombros mas estilizados segun genero
   const bc = darken(hc, 0.9);
   const uid = 'u'+(_gid++);
   const sk='url(#skinG'+uid+')', jer='url(#jerG'+uid+')', slv='url(#slvG'+uid+')', sht='url(#shtG'+uid+')', hg='url(#hairG'+uid+')';
@@ -402,7 +410,7 @@ function buildAvatarSVG(a, opt={}){
     ${hairBack}
     ${legsSVG(pose, sk)}
     <path d="M66,190 L134,190 L132,220 L104,220 L100,198 L96,220 L68,220 Z" fill="${sht}"/>
-    <path d="M63,138 Q72,125 86,128 Q100,139 114,128 Q128,125 137,138 L139,198 L61,198 Z" fill="${jer}"/>
+    <path d="M${63+si},138 Q${72+si},125 86,128 Q100,139 114,128 Q${128-si},125 ${137-si},138 L139,198 L61,198 Z" fill="${jer}"/>
     <ellipse cx="90" cy="152" rx="19" ry="27" fill="#fff" opacity="0.07"/>
     <path d="M86,128 Q100,150 114,128 Q100,140 86,128 Z" fill="#000" opacity="0.10"/>
     <path d="M86,128 Q100,142 114,128 L109,123 Q100,133 91,123 Z" fill="${accent}"/>
@@ -438,7 +446,9 @@ function chipGrid(cid, items, isOn, onClick, thumb){
     c.appendChild(b);
   });
 }
+function setGenero(g){ av.genero=g; if(g==='f' && av.hair<=2) av.hair=5; if(g==='m' && (av.hair===5||av.hair===6)) av.hair=2; commit(); }
 function refreshChips(){
+  chipGrid('c-genero', GENEROS, i=>av.genero===GENEROS[i].id, i=>{setGenero(GENEROS[i].id);}, (it)=>`<span class="ic">${it.ic}</span><span class="lb">${it.lb}</span>`);
   chipGrid('c-kit', KITS, i=>av.kit===i, i=>{av.kit=i;commit();}, (it)=>`<span class="sw" style="background:linear-gradient(135deg,${it.main} 60%,${it.accent} 60%)"></span><span class="lb">${it.n}</span>`);
   chipGrid('c-skin', SKINS, i=>av.skin===i, i=>{av.skin=i;commit();}, (it)=>`<span class="sw" style="background:${it}"></span>`);
   chipGrid('c-hair', HAIRS, i=>av.hair===i, i=>{av.hair=i;commit();}, (it,i)=>`${miniHead({hair:i})}<span class="lb">${it}</span>`);
@@ -458,7 +468,7 @@ function commit(){ renderPreview(); refreshChips(); pop(); saveAll(); }
 $('f-mote').oninput=e=>{ av.mote=e.target.value; saveAll(); };
 $('f-frase').oninput=e=>{ av.frase=e.target.value; saveAll(); };
 $('f-number').oninput=e=>{ av.number=Math.max(1,Math.min(99,parseInt(e.target.value)||0)); renderPreview(); saveAll(); };
-$('rnd-mote').onclick=()=>{ av.mote=rnd(MOTES); $('f-mote').value=av.mote; vibrate(12); saveAll(); };
+$('rnd-mote').onclick=()=>{ av.mote=rnd(motesActuales()); $('f-mote').value=av.mote; vibrate(12); saveAll(); };
 $('rnd-frase').onclick=()=>{ av.frase=rnd(FRASES); $('f-frase').value=av.frase; vibrate(12); saveAll(); };
 $('tg-captain').onclick=()=>{ av.captain=!av.captain; $('cap-state').textContent=av.captain?'ON':'OFF'; $('tg-captain').classList.toggle('on',av.captain); commit(); };
 $('tg-meme').onclick=()=>{ av.memeMode=!av.memeMode; $('meme-state').textContent=av.memeMode?'ON':'OFF'; $('tg-meme').classList.toggle('on',av.memeMode); $('sect-meme').style.display=av.memeMode?'block':'none'; commit(); };
