@@ -449,7 +449,7 @@
   // ===== CLIMA MUNDIALISTA: banderines, banderas y ruido de hinchada =====
   (function(){
     const bunting = document.getElementById('bunting');
-    if (bunting) { const cols=['var(--celeste)','#f4ecd8','var(--gold)']; let h=''; for(let i=0;i<30;i++) h+=`<i style="--c:${cols[i%3]};animation-delay:${(i%5)*0.12}s"></i>`; bunting.innerHTML=h; }
+    if (bunting) { const cols=['#75AADB','#ffffff']; let h=''; for(let i=0;i<32;i++) h+=`<i style="--c:${cols[i%2]};animation-delay:${(i%5)*0.12}s"></i>`; bunting.innerHTML=h; }
     const flags='🇦🇷 🇧🇷 🇫🇷 🇪🇸 🏴󠁧󠁢󠁥󠁮󠁧󠁿 🇵🇹 🇩🇪 🇮🇹 🇳🇱 🇺🇾 🇲🇽 🇭🇷 🇨🇴 🇲🇦 🇯🇵 🇧🇪 🇸🇳 🇨🇭 🇺🇸 🇨🇦 🇪🇨 🇦🇺 🇳🇴 🇸🇦 ';
     const mq=document.getElementById('flag-mq'); if(mq) mq.textContent=flags+flags;
 

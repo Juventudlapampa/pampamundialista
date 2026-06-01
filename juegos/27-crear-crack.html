@@ -195,7 +195,7 @@ const rnd = arr => arr[Math.floor(Math.random()*arr.length)];
 
 /* ===================== DATA ===================== */
 const SKINS = ['#fce0bd','#f0c79a','#d8a679','#b07a4f','#8a5734','#5c3a1f'];
-const HAIRS = ['Rapado','Pelado','Taper','Mullet','Rulos','Colita','Trenzas','Despeinado','Mohawk','Jopo','Melena','Ondas','Coletas','Rodete','Bob'];
+const HAIRS = ['Rapado','Pelado','Taper','Mullet','Rulos','Colita','Trenzas','Despeinado','Mohawk','Jopo','Melena','Ondas','Coletas','Rodete','Bob','Pelo largo','Cola alta','Trenza','Flequillo','Dos rodetes'];
 const HAIR_COLORS = ['#1a1a1a','#4a2c1a','#d4a82e','#a83e0f','#f4ecd8'];
 const HAIR_COLOR_NAMES = ['Negro','Castaño','Rubio','Colorado','Decolorado'];
 const BEARDS = ['Lampiño','Candado','Perilla','3 días','Completa'];
@@ -303,6 +303,11 @@ function hairSVG(style, hc){
     case 'Coletas': return `<path d="M62,86 Q60,50 100,50 Q140,50 138,86 Q130,60 100,58 Q70,60 62,86 Z M97,52 L103,52 L101,72 L99,72 Z" fill="${hc}"/>`;
     case 'Rodete': return `<circle cx="100" cy="41" r="13" fill="${hc}"/><circle cx="100" cy="41" r="13" fill="#000" opacity="0.12"/><path d="M62,84 Q60,52 100,52 Q140,52 138,84 Q130,62 100,60 Q70,62 62,84 Z" fill="${hc}"/>`;
     case 'Bob': return `<path d="M57,98 Q55,50 100,50 Q145,50 143,98 Q141,72 129,67 Q131,88 125,98 L125,72 Q100,63 75,72 L75,98 Q69,88 71,67 Q59,72 57,98 Z" fill="${hc}"/>`;
+    case 'Pelo largo': return `<path d="M58,90 Q55,48 100,48 Q145,48 142,90 Q134,60 100,58 Q66,60 58,90 Z" fill="${hc}"/><path d="M100,52 L100,60" stroke="${darken(hc,0.8)}" stroke-width="1.4"/>`;
+    case 'Cola alta': return `<path d="M63,82 Q60,49 100,49 Q140,49 137,82 Q128,59 100,57 Q72,59 63,82 Z" fill="${hc}"/>`;
+    case 'Trenza': return `<path d="M61,84 Q57,50 100,50 Q141,50 139,84 Q130,60 100,58 Q70,60 61,84 Z" fill="${hc}"/>`;
+    case 'Flequillo': return `<path d="M59,88 Q57,50 100,50 Q143,50 141,88 L141,73 Q100,67 59,73 Z" fill="${hc}"/>`;
+    case 'Dos rodetes': return `<circle cx="73" cy="47" r="11" fill="${hc}"/><circle cx="127" cy="47" r="11" fill="${hc}"/><circle cx="73" cy="47" r="11" fill="#000" opacity="0.1"/><circle cx="127" cy="47" r="11" fill="#000" opacity="0.1"/><path d="M62,82 Q60,52 100,52 Q140,52 138,82 Q130,60 100,58 Q70,60 62,82 Z" fill="${hc}"/>`;
   }
   return '';
 }
@@ -315,6 +320,10 @@ function backHairSVG(style, hc){
     case 'Ondas': return `<path d="M58,74 Q40,118 56,176 Q64,150 58,122 Q70,150 64,178 L86,178 Q70,120 72,86 Z M142,74 Q160,118 144,176 Q136,150 142,122 Q130,150 136,178 L114,178 Q130,120 128,86 Z" fill="${hc}"/>`;
     case 'Coletas': return `<path d="M56,80 Q33,94 40,140 Q53,117 65,99 Z M144,80 Q167,94 160,140 Q147,117 135,99 Z" fill="${hc}"/>`;
     case 'Bob': return `<path d="M60,82 Q54,118 71,124 L81,117 Q70,100 72,86 Z M140,82 Q146,118 129,124 L119,117 Q130,100 128,86 Z" fill="${hc}"/>`;
+    case 'Pelo largo': return `<path d="M57,68 Q47,140 60,190 L86,190 Q70,120 73,80 Z M143,68 Q153,140 140,190 L114,190 Q130,120 127,80 Z" fill="${hc}"/>`;
+    case 'Cola alta': return `<path d="M112,50 Q150,42 152,80 Q153,118 138,150 Q138,112 126,86 Q118,64 110,56 Z" fill="${hc}"/><rect x="108" y="50" width="12" height="6" rx="3" fill="${darken(hc,0.85)}"/>`;
+    case 'Trenza': return `<g fill="${hc}"><ellipse cx="137" cy="84" rx="10" ry="8"/><ellipse cx="141" cy="102" rx="10" ry="8"/><ellipse cx="138" cy="120" rx="9" ry="8"/><ellipse cx="142" cy="138" rx="8" ry="7"/><ellipse cx="139" cy="154" rx="7" ry="6"/></g><path d="M139,159 l-5,9 10,0 z" fill="${hc}"/>`;
+    case 'Flequillo': return `<path d="M59,72 Q52,130 70,152 L86,146 Q70,112 73,82 Z M141,72 Q148,130 130,152 L114,146 Q130,112 127,82 Z" fill="${hc}"/>`;
     default: return '';
   }
 }
@@ -462,7 +471,7 @@ function chipGrid(cid, items, isOn, onClick, thumb){
     c.appendChild(b);
   });
 }
-function setGenero(g){ av.genero=g; const fem=[5,6,10,11,12,13,14]; if(g==='f' && !fem.includes(av.hair)) av.hair=10; if(g==='m' && fem.includes(av.hair)) av.hair=2; commit(); }
+function setGenero(g){ av.genero=g; const fem=[5,6,10,11,12,13,14,15,16,17,18,19]; if(g==='f' && !fem.includes(av.hair)) av.hair=15; if(g==='m' && fem.includes(av.hair)) av.hair=2; commit(); }
 function refreshChips(){
   chipGrid('c-genero', GENEROS, i=>av.genero===GENEROS[i].id, i=>{setGenero(GENEROS[i].id);}, (it)=>`<span class="ic">${it.ic}</span><span class="lb">${it.lb}</span>`);
   chipGrid('c-kit', KITS, i=>av.kit===i, i=>{av.kit=i;commit();}, (it)=>`<span class="sw" style="background:linear-gradient(135deg,${it.main} 60%,${it.accent} 60%)"></span><span class="lb">${it.n}</span>`);
@@ -470,11 +479,11 @@ function refreshChips(){
   chipGrid('c-hair', HAIRS, i=>av.hair===i, i=>{av.hair=i;commit();}, (it,i)=>`${miniHead({hair:i})}<span class="lb">${it}</span>`);
   chipGrid('c-haircolor', HAIR_COLORS, i=>av.hairColor===i, i=>{av.hairColor=i;commit();}, (it,i)=>`<span class="sw" style="background:${it}"></span><span class="lb">${HAIR_COLOR_NAMES[i]}</span>`);
   chipGrid('c-beard', BEARDS, i=>av.beard===i, i=>{av.beard=i;commit();}, (it,i)=>`${miniHead({beard:i})}<span class="lb">${it}</span>`);
-  chipGrid('c-acc', ACCS, it=>has(it.id), i=>{toggleAcc(ACCS[i].id);}, (it)=>`<span class="ic">${it.ic}</span><span class="lb">${it.lb}</span>`);
+  chipGrid('c-acc', ACCS, i=>has(ACCS[i].id), i=>{toggleAcc(ACCS[i].id);}, (it)=>`<span class="ic">${it.ic}</span><span class="lb">${it.lb}</span>`);
   chipGrid('c-pose', POSES, i=>av.pose===i, i=>{av.pose=i;commit();}, (it)=>`<span class="ic">${it.ic}</span><span class="lb">${it.lb}</span>`);
   chipGrid('c-bg', BGS, i=>av.bg===i, i=>{av.bg=i;commit();}, (it)=>`<span class="sw" style="background:${it.css}"></span><span class="lb">${it.lb}</span>`);
   chipGrid('c-tattoo', ['Ninguno','🇦🇷 Bandera','# Número','Tribal'], i=>av.tattoo===i, i=>{av.tattoo=i;commit();}, (it)=>`<span class="ic" style="font-size:0.95rem">${it}</span>`);
-  chipGrid('c-meme', MEMES, it=>av.meme.includes(it.id), i=>{toggleMeme(MEMES[i].id);}, (it)=>`<span class="ic">${it.ic}</span><span class="lb">${it.lb}</span>`);
+  chipGrid('c-meme', MEMES, i=>av.meme.includes(MEMES[i].id), i=>{toggleMeme(MEMES[i].id);}, (it)=>`<span class="ic">${it.ic}</span><span class="lb">${it.lb}</span>`);
 }
 function toggleAcc(id){ const i=av.acc.indexOf(id); if(i>=0) av.acc.splice(i,1); else av.acc.push(id); commit(); }
 function toggleMeme(id){ const i=av.meme.indexOf(id); if(i>=0) av.meme.splice(i,1); else av.meme.push(id); commit(); }
@@ -621,7 +630,15 @@ function dlSticker(){ // solo avatar, fondo transparente
   document.body.appendChild(box);
   setTimeout(()=>{ snap(box,`sticker-${(av.mote||'crack').toLowerCase().replace(/[^a-z0-9]+/g,'-')}.png`,null); setTimeout(()=>box.remove(),700); },60);
 }
-function shareReto(text){ if(navigator.share){navigator.share({title:'Creá tu Crack · Mundial 2026',text}).catch(()=>{});} else if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>alert('¡Desafío copiado! Pasáselo a un amigo 📲'),()=>prompt('Copiá tu desafío:',text));} else {prompt('Copiá tu desafío:',text);} }
+function shareReto(text){
+  const mobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  if(mobile && navigator.share){ navigator.share({title:'Creá tu Crack · Mundial 2026',text}).catch(()=>waShare(text)); return; }
+  waShare(text);
+}
+function waShare(text){
+  try { window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank'); }
+  catch(e){ if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>alert('¡Desafío copiado! Pasáselo a un amigo 📲'),()=>prompt('Copiá tu desafío:',text));} else prompt('Copiá tu desafío:',text); }
+}
 
 /* ===================== NAV ===================== */
 function showScreen(s){ if(s!=='game'){ if(raf){cancelAnimationFrame(raf);raf=null;} if(penRaf){cancelAnimationFrame(penRaf);penRaf=null;} } document.querySelectorAll('.screen').forEach(el=>el.classList.remove('active')); $('screen-'+s).classList.add('active'); window.scrollTo(0,0); }

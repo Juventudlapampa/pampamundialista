@@ -278,6 +278,14 @@
   }
   @keyframes zoneHint { from { box-shadow: 0 0 8px rgba(37,99,235,0.5); } to { box-shadow: 0 0 22px rgba(37,99,235,0.9); } }
   .zone.locked { pointer-events: none; opacity: 0.85; }
+  .zone.keeper { background: rgba(212,168,46,0.30); border-color: var(--gold); border-style: solid; box-shadow: 0 0 18px rgba(212,168,46,0.7); }
+  .zone.keeper::after { content:'🧤'; font-size: 1.7rem; }
+  /* medidor de potencia/precisión */
+  .power-wrap { max-width: 500px; margin: 0.7rem auto 0; }
+  .power-meter { position: relative; height: 28px; background: rgba(0,0,0,0.55); border: 2px solid var(--gold); border-radius: 14px; overflow: hidden; cursor: pointer; }
+  .power-target { position: absolute; top: 0; bottom: 0; background: rgba(74,222,128,0.40); border-left: 2px solid var(--verde-fluo); border-right: 2px solid var(--verde-fluo); }
+  .power-fill { position: absolute; top: 2px; bottom: 2px; left: 0; width: 5px; background: var(--gold-2); border-radius: 3px; box-shadow: 0 0 12px var(--gold-2); }
+  .power-hint { text-align: center; font-size: 0.8rem; opacity: 0.85; margin-top: 0.35rem; font-family: 'JetBrains Mono', monospace; }
   .turn-label {
     text-align: center;
     font-family: 'Anton', sans-serif;
@@ -386,8 +394,11 @@
   <div class="screen active" id="screen-setup">
     <div class="panel">
       <div class="panel-title">⚽ Cómo jugar</div>
-      <p style="line-height:1.5;font-size:0.9rem;margin-bottom:1rem">
-        Llave mata-mata con <strong>8 selecciones</strong>: cuartos → semis → final. Elegís tu camiseta y la IA te planta cara ronda tras ronda. Aguantá los nervios desde los doce pasos: si ganás la final, ¡levantás la copa y la gritás como loco!
+      <p style="line-height:1.5;font-size:0.9rem;margin-bottom:0.6rem">
+        Llave mata-mata con <strong>8 selecciones</strong>: cuartos → semis → final. Elegís tu camiseta y la IA te planta cara ronda tras ronda.
+      </p>
+      <p style="line-height:1.5;font-size:0.86rem;margin-bottom:1rem;opacity:0.9">
+        ⚽ <strong>Cuando pateás:</strong> leé para qué palo se perfila el arquero (🧤) y mandala lejos, después <strong>pegale justo</strong> con el medidor de potencia (zona verde). 🧤 <strong>Cuando atajás:</strong> leé el amague y volá al palo. ¡Aguantá los nervios desde los doce pasos!
       </p>
       <input type="text" class="input-name" id="player-name" placeholder="Tu nombre" maxlength="18">
       <div class="panel-title">🌍 ¿Con qué camiseta saltás a la cancha?</div>
@@ -432,6 +443,10 @@
       <div class="zone" data-z="3">←</div>
       <div class="zone" data-z="4">→</div>
       <div class="zone" data-z="5">↘</div>
+    </div>
+    <div class="power-wrap" id="power-wrap" style="display:none">
+      <div class="power-meter" id="power-meter"><div class="power-target" id="power-target"></div><div class="power-fill" id="power-fill"></div></div>
+      <div class="power-hint">⏱️ Tocá (o ESPACIO) para pegarle JUSTO en la zona verde</div>
     </div>
   </div>
 
@@ -725,13 +740,23 @@ function nextTurn() {
   const label = document.getElementById('turn-label');
   label.className = 'turn-label ' + (isPatea ? 'tu-vez' : 'atajar');
   const zones = document.querySelectorAll('.zone');
-  zones.forEach(z => { z.onclick = null; z.classList.remove('hint', 'locked'); });
+  zones.forEach(z => { z.onclick = null; z.classList.remove('hint', 'locked', 'keeper'); });
+  document.getElementById('power-wrap').style.display = 'none';
 
   if (isPatea) {
-    label.textContent = '⚽ DALE, CLAVALA · Elegí dónde la mandás';
-    zones.forEach(z => {
-      z.onclick = () => zoneClick(parseInt(z.dataset.z), true);
-    });
+    // El arquero ELIGE su palo y lo "amaga": leés dónde se va y la mandás lejos.
+    ms.keeperZone = Math.floor(Math.random() * 6);
+    const honesto = Math.random() < 0.70; // 70% muestra el palo real, 30% amaga
+    let tell = ms.keeperZone;
+    if (!honesto) { do { tell = Math.floor(Math.random() * 6); } while (tell === ms.keeperZone); }
+    label.textContent = '🧤 El arquero se perfila... leelo';
+    zones.forEach(z => z.classList.add('locked'));
+    const tellEl = document.querySelector(`.zone[data-z="${tell}"]`);
+    if (tellEl) tellEl.classList.add('keeper');
+    setTimeout(() => {
+      zones.forEach(z => { z.classList.remove('locked'); z.onclick = () => { document.querySelectorAll('.zone').forEach(x => x.onclick = null); sfx.kick(); startPower(parseInt(z.dataset.z)); }; });
+      label.textContent = '⚽ ¡Mandala LEJOS del 🧤!';
+    }, 950);
     return;
   }
 
@@ -750,45 +775,69 @@ function nextTurn() {
   if (pistaEl) pistaEl.classList.add('hint');
   setTimeout(() => {
     zones.forEach(z => {
-      z.classList.remove('hint', 'locked');
-      z.onclick = () => zoneClick(parseInt(z.dataset.z), false);
+      z.classList.remove('hint', 'locked', 'keeper');
+      z.onclick = () => zoneClick(parseInt(z.dataset.z));
     });
     label.textContent = '🧤 ¡AHORA! · Volá para donde la va a poner';
   }, 1000);
 }
 
-function zoneClick(zone, isPatea) {
+// ===== VOS ATAJÁS (defender) =====
+function zoneClick(zone) {
   document.querySelectorAll('.zone').forEach(z => z.onclick = null);
   sfx.kick();
   const ms = state.matchState;
-  if (isPatea) {
-    // Vos pateás: la IA "atajadora" del rival decide al azar ponderado por nivel
-    const rivalLevel = ms.rival.level;
-    const acertaProb = 0.20 + (rivalLevel - 80) * 0.015; // ~0.2 - 0.42
-    const arqueroZone = Math.random() < acertaProb ? zone : Math.floor(Math.random() * 6);
-    const atajada = arqueroZone === zone && Math.random() < 0.7;
-    const gol = !atajada;
-    ms.golesYo.push(gol);
-    if (gol) {
-      showBigMsg('¡GOLAZO!', 'gol'); sfx.gol(); confeti(); vibe(60);
-    } else {
-      showBigMsg('¡TE LA SACÓ!', 'atajada'); sfx.ataj();
-    }
-  } else {
-    // Vos atajás: el rival ya eligió su zona (telegrafiada con la pista previa)
-    const acertaste = ms.rivalZone === zone;
-    const atajada = acertaste; // gol si NO atajaste la zona correcta
-    ms.golesRival.push(!atajada);
-    if (atajada) {
-      showBigMsg('¡ATAJADÓN!', 'atajada'); sfx.ataj(); confeti(); vibe(50);
-    } else {
-      showBigMsg('TE LA CLAVÓ', 'gol'); sfx.gol(); vibe(40);
-    }
-  }
-  setTimeout(() => {
-    ms.turno++;
-    nextTurn();
-  }, 1500);
+  const atajada = ms.rivalZone === zone;
+  ms.golesRival.push(!atajada);
+  if (atajada) { showBigMsg('¡ATAJADÓN!', 'atajada'); sfx.ataj(); confeti(); vibe(50); }
+  else { showBigMsg('TE LA CLAVÓ', 'gol'); sfx.gol(); vibe(40); }
+  setTimeout(() => { ms.turno++; nextTurn(); }, 1500);
+}
+
+// ===== VOS PATEÁS: medidor de potencia/precisión =====
+let powerTimer = null;
+function startPower(zone) {
+  const ms = state.matchState;
+  ms.pendingZone = zone;
+  const sudden = ms.sudden;
+  const bandW = sudden ? 17 : 27;                 // ventana más chica en muerte súbita
+  const bandPos = 8 + Math.random() * (100 - bandW - 16);
+  ms.band = [bandPos, bandPos + bandW];
+  const tgt = document.getElementById('power-target');
+  tgt.style.left = bandPos + '%'; tgt.style.width = bandW + '%';
+  document.getElementById('power-wrap').style.display = 'block';
+  document.getElementById('turn-label').textContent = '⚡ ¡PEGALE JUSTO! (zona verde)';
+  let pos = 0, dir = 1; const speed = sudden ? 2.7 : 2.1;
+  ms.powerActive = true;
+  const fill = document.getElementById('power-fill');
+  if (powerTimer) clearInterval(powerTimer);
+  powerTimer = setInterval(() => { pos += dir * speed; if (pos >= 100) { pos = 100; dir = -1; } if (pos <= 0) { pos = 0; dir = 1; } fill.style.left = pos + '%'; ms.powerPos = pos; }, 16);
+  const lock = () => {
+    if (!ms.powerActive) return;
+    ms.powerActive = false;
+    if (powerTimer) clearInterval(powerTimer);
+    document.getElementById('power-meter').onclick = null;
+    document.onkeydown = null;
+    resolveShot();
+  };
+  document.getElementById('power-meter').onclick = lock;
+  document.onkeydown = (e) => { if (e.key === ' ') { e.preventDefault(); lock(); } };
+}
+function resolveShot() {
+  const ms = state.matchState;
+  const zone = ms.pendingZone;
+  const inBand = ms.powerPos >= ms.band[0] && ms.powerPos <= ms.band[1];
+  document.getElementById('power-wrap').style.display = 'none';
+  let gol, type, msg;
+  if (!inBand) { gol = false; type = 'miss'; msg = '¡AFUERA!'; }
+  else if (zone === ms.keeperZone) { gol = false; type = 'atajada'; msg = '¡TE LA SACÓ!'; }
+  else { gol = true; type = 'gol'; msg = '¡GOLAZO!'; }
+  ms.golesYo.push(gol);
+  showBigMsg(msg, type);
+  if (gol) { sfx.gol(); confeti(); vibe(60); }
+  else if (type === 'atajada') { sfx.ataj(); }
+  else { sfx.miss(); vibe([20, 40]); }
+  setTimeout(() => { ms.turno++; nextTurn(); }, 1500);
 }
 
 function showBigMsg(text, type) {
