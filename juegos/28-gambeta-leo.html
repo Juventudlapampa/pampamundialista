@@ -222,7 +222,7 @@ function burst(x,y,n=22,cols){ cols=cols||['#4ade80','#d4a82e','#f4cd60','#fff',
 // PERSPECTIVA
 function proj(z){ const zz=Math.pow(Math.max(0,Math.min(1,z)),1.5); const y=HORIZON+(GROUND-HORIZON)*zz; const scale=0.18+zz*1.0; const laneW=(W*0.42)*(0.12+zz*0.9); return {y,scale,laneW}; }
 function laneX(z,lane){ return CX+lane*proj(z).laneW; }
-function shade(hex,t){ const c=hex.replace('#',''); const m=i=>{const x=parseInt(c.substr(i,2),16);return Math.round(x*(1-t)).toString(16).padStart(2,'0');}; return '#'+m(0)+m(2)+m(4); }
+function shade(hex,t){ let c=(hex||'#888888').replace('#',''); if(c.length===3) c=c[0]+c[0]+c[1]+c[1]+c[2]+c[2]; const m=i=>{ let x=parseInt(c.substr(i,2),16); if(isNaN(x)) x=136; return Math.max(0,Math.min(255,Math.round(x*(1-t)))).toString(16).padStart(2,'0'); }; return '#'+m(0)+m(2)+m(4); }
 
 // ESTADO
 let G=null, raf=null, last=0, timerInt=null;
@@ -554,7 +554,7 @@ function draw(){
     ctx.fillText('AVANZÁ HASTA EL ÁREA', W/2, HORIZON+24);
     const d=DIFF[diff];
     const order=[...G.defs].sort((a,b)=>a.z-b.z);
-    for(const df of order){ const p=proj(df.z); const col=df.state==='tackled'?'#9aa':riT.main;
+    for(const df of order){ const p=proj(df.z); const col=df.state==='tackled'?'#99a3b0':riT.main;
       // viene corriendo y se planta en su postura recién al acercarse (para leerlo)
       let st='run'; const step=df.z*7+df.laneIdx;
       if(df.state==='incoming') st = df.z>=d.zHint ? df.type : 'run';
@@ -593,7 +593,7 @@ function draw(){
   if(G.msgT>0){ ctx.globalAlpha=Math.min(1,G.msgT/22); ctx.fillStyle=G.msgC; ctx.font='bold 27px Anton, sans-serif'; ctx.textAlign='center'; ctx.strokeStyle='rgba(0,0,0,0.6)'; ctx.lineWidth=4; ctx.strokeText(G.msg,CX,H*0.62); ctx.fillText(G.msg,CX,H*0.62); ctx.globalAlpha=1; }
   ctx.restore();
 }
-function frame(ts){ if(!last)last=ts; let dt=(ts-last)/1000; last=ts; if(dt>0.05)dt=0.05; try{ update(dt); draw(); }catch(e){ /* nunca frenar el loop */ } if(G && G.running!==false) raf=requestAnimationFrame(frame); }
+function frame(ts){ if(!last)last=ts; let dt=(ts-last)/1000; last=ts; if(dt>0.05)dt=0.05; try{ update(dt); draw(); }catch(e){ window.__gErr=(e&&e.message)||(''+e); /* nunca frenar el loop */ } if(G && G.running!==false) raf=requestAnimationFrame(frame); }
 
 // ====== FLOW ======
 function startMatch(){
