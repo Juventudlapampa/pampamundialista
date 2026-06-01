@@ -792,6 +792,33 @@ function chooseOption(op) {
   });
 }
 
+// ===================== SONIDOS (dado + reacciones de hinchada) =====================
+let cAudio=null, sndOn=true;
+function aCtx(){ if(!cAudio){ try{ cAudio=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return cAudio; }
+function bip(freqs,dur,type='sine',vol=0.13,delay=0){ if(!sndOn)return; const c=aCtx(); if(!c)return; (Array.isArray(freqs)?freqs:[freqs]).forEach((f,i)=>{ const o=c.createOscillator(),g=c.createGain(); o.type=type; o.frequency.value=f; const t0=c.currentTime+delay+i*0.085; g.gain.setValueAtTime(vol,t0); g.gain.exponentialRampToValueAtTime(0.001,t0+dur); o.connect(g); g.connect(c.destination); o.start(t0); o.stop(t0+dur); }); }
+function noiseBurst(dur,freq,q,vol,rise){ if(!sndOn)return; const c=aCtx(); if(!c)return; try{
+  const len=Math.max(1,Math.floor(dur*c.sampleRate)), buf=c.createBuffer(1,len,c.sampleRate), d=buf.getChannelData(0);
+  for(let i=0;i<len;i++) d[i]=Math.random()*2-1;
+  const src=c.createBufferSource(); src.buffer=buf;
+  const bp=c.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=freq||520; bp.Q.value=q||0.8;
+  const g=c.createGain(); const t=c.currentTime;
+  g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(vol||0.18, t+(rise||0.05)); g.gain.exponentialRampToValueAtTime(0.001, t+dur);
+  src.connect(bp); bp.connect(g); g.connect(c.destination); src.start(); src.stop(t+dur);
+}catch(e){} }
+function sDiceTick(){ bip([1100+Math.random()*400], 0.018,'square',0.05); }
+function cheer(big){ noiseBurst(big?1.2:0.6, 720, 0.6, big?0.22:0.15, big?0.13:0.06); bip(big?[523,659,784,1047]:[523,659,784],0.12,'triangle',0.1); }
+function boo(){ noiseBurst(0.7, 190, 0.8, 0.15, 0.06); bip([300,230,160],0.2,'sawtooth',0.1); }
+function fanfare(){ bip([523,659,784,1047,1319,1047,1568],0.22,'triangle',0.14); noiseBurst(1.5,820,0.5,0.24,0.18); if(window.__pampaBombo){ for(let i=0;i<4;i++) setTimeout(()=>{try{window.__pampaBombo();}catch(e){}}, i*210); } }
+// reacción según el dado: 1 abucheo · 2-3 tibio · 4-5 aliento · 6 ¡explota!
+const LUCK_SND = {
+  1: () => boo(),
+  2: () => bip([330,277],0.16,'sine',0.1),
+  3: () => bip([392,392],0.1,'sine',0.09),
+  4: () => cheer(false),
+  5: () => { cheer(false); if(window.__pampaBombo) setTimeout(()=>{try{window.__pampaBombo();}catch(e){}},90); },
+  6: () => { cheer(true); if(window.__pampaBombo){ setTimeout(()=>{try{window.__pampaBombo();}catch(e){}},80); setTimeout(()=>{try{window.__pampaBombo();}catch(e){}},260);} }
+};
+
 const DICE_FACES = ['⚀','⚁','⚂','⚃','⚄','⚅'];
 function rollDice(callback) {
   const cube = $('dice-cube');
@@ -802,14 +829,17 @@ function rollDice(callback) {
   $('dice-continue').style.display = 'none';
   cube.classList.add('dice-rolling');
   let ticks = 0;
+  sDiceTick();
   const iv = setInterval(() => {
     cube.textContent = DICE_FACES[Math.floor(Math.random() * 6)];
+    sDiceTick();                                   // rattle del dado girando
     ticks++;
     if (ticks > 14) {
       clearInterval(iv);
       const roll = 1 + Math.floor(Math.random() * 6);
       cube.classList.remove('dice-rolling');
       cube.textContent = DICE_FACES[roll - 1];
+      try { (LUCK_SND[roll]||function(){})(); } catch(e){}   // reacción de la hinchada
       setTimeout(() => callback(roll), 250);
     }
   }, 80);
@@ -839,6 +869,7 @@ function showFinal(key) {
     <div>😎 FAMA: <strong>${game.stats.fama}</strong></div>
     <div style="grid-column:span 2;border-top:1px dashed rgba(244,236,216,0.2);padding-top:0.4rem;margin-top:0.3rem">📍 ${NAME()} · ${ORI().toUpperCase()} · ${game.edad} AÑOS · 🎲 ${game.tiradas.length} TIRADAS</div>
   `;
+  try { if (key === 'estrella') fanfare(); else if (['pro','idolo','arquero','dt','embajador'].includes(key)) cheer(true); else cheer(false); } catch(e){}
   show('final');
 }
 
