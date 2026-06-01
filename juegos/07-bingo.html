@@ -20,7 +20,7 @@
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root { --bg:#0a1f1a; --verde:#0d3b26; --verde-fluo:#4ade80; --gold:#d4a82e; --gold-2:#f4cd60; --crema:#f4ecd8; --rojo:#dc2626; }
-  body { font-family:'DM Sans',sans-serif; background:var(--bg); background-image:radial-gradient(ellipse at top, rgba(13,59,38,0.6), transparent 70%); min-height:100vh; color:var(--crema); padding:1rem; }
+  body { font-family:'DM Sans',sans-serif; background:var(--bg); min-height:100vh; color:var(--crema); padding:1rem; }
   .container { max-width:600px; margin:0 auto; }
   header { text-align:center; margin-bottom:1rem; }
   .header-tag { font-family:'JetBrains Mono',monospace; font-size:0.7rem; letter-spacing:0.25em; color:var(--gold); text-transform:uppercase; }
@@ -42,6 +42,7 @@
   .juv-watermark { font-family:'JetBrains Mono',monospace; font-size:0.6rem; letter-spacing:0.2em; color:rgba(212,168,46,0.7); text-align:center; margin-top:0.8rem; }
   .juv-watermark span { color:var(--verde-fluo); }
   .hint { text-align:center; font-size:0.75rem; opacity:0.65; margin-top:0.6rem; line-height:1.4; }
+  .grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
 </style>
 </head>
 <body>
@@ -49,16 +50,16 @@
   <header>
     <div class="header-tag">Cartón Mundialista · Mundial 2026</div>
     <h1>CARTÓN <span>MUNDIALISTA</span></h1>
-    <p class="subtitle">Marcá las cosas locas que van a pasar en <strong>TODO el Mundial</strong>. Tu cartón <strong>se guarda solo</strong>: volvé cuando quieras y seguí tachando. ¿Llenás la línea antes de la final?</p>
+    <p class="subtitle">Acá vas tachando las locuras que sí o sí van a pasar en <strong>TODO el Mundial</strong>. El cartón <strong>se guarda solito</strong>: cerrá, volvé y seguí marcando tranqui. ¿Hacés línea antes de la final?</p>
   </header>
   <div class="controls">
-    <button class="btn btn-sec" id="nueva">🎲 Cartón nuevo</button>
-    <button class="btn" id="download">📸 Compartir mi cartón</button>
+    <button class="btn btn-sec" id="nueva">🎲 Dame otro cartón</button>
+    <button class="btn" id="download">📸 Mostrar mi cartón</button>
   </div>
   <div class="status" id="status"></div>
   <div class="progress"><div class="progress-fill" id="prog"></div></div>
   <div class="card-grid" id="grid"></div>
-  <div class="hint">Tocá un casillero cuando eso ya pasó en el Mundial. Línea (↔ ↕ ✕) = ¡grito! · Cartón lleno = leyenda 🏆</div>
+  <div class="hint">Cuando eso ya pasó en la cancha, tocá el casillero. Línea (↔ ↕ ✕) = ¡grito de gol! · Cartón lleno = sos leyenda 🏆</div>
   <div class="juv-watermark">Mi cartón del Mundial · <span>@juventud_lapampa</span></div>
 </div>
 <script>
@@ -115,12 +116,12 @@
     document.getElementById('prog').style.width = Math.round(marcadas/25*100)+'%';
     const L = lineas();
     const st = document.getElementById('status');
-    if(marcadas===25) st.textContent = '🏆 ¡CARTÓN LLENO! Sos una leyenda mundialista.';
-    else if(L>=1) st.textContent = `🎉 ¡${L} línea${L>1?'s':''} completa${L>1?'s':''}! · ${marcadas}/25 marcadas`;
-    else st.textContent = `${marcadas}/25 marcadas · ¡seguí atento al Mundial!`;
+    if(marcadas===25) st.textContent = '🏆 ¡CARTÓN LLENO! Bancá, que naciste para esto.';
+    else if(L>=1) st.textContent = `🎉 ¡${L} línea${L>1?'s':''} adentro! · ${marcadas}/25 tachadas`;
+    else st.textContent = `${marcadas}/25 tachadas · ¡ojo al partido que se viene!`;
   }
 
-  document.getElementById('nueva').onclick = () => { if(confirm('¿Empezar un cartón nuevo? Se borra el actual.')) nuevoCarton(); };
+  document.getElementById('nueva').onclick = () => { if(confirm('¿Arrancamos un cartón nuevo? Ojo que el de ahora se borra y no vuelve.')) nuevoCarton(); };
   document.getElementById('download').onclick = () => {
     const node = document.querySelector('.container');
     html2canvas(node, { backgroundColor:'#0a1f1a', scale:2, useCORS:true, allowTaint:true, logging:false, windowWidth:document.documentElement.clientWidth, windowHeight:document.documentElement.clientHeight })
@@ -129,5 +130,6 @@
 
   load(); if(!card) nuevoCarton(); else render();
 </script>
+<div class="grain"></div>
 </body>
 </html>

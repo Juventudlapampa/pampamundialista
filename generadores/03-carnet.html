@@ -32,9 +32,6 @@
   body {
     font-family: 'DM Sans', sans-serif;
     background: #060a14;
-    background-image:
-      radial-gradient(circle at 30% 20%, rgba(212,168,46,0.1), transparent 50%),
-      radial-gradient(circle at 70% 80%, rgba(196,30,58,0.08), transparent 50%);
     min-height: 100vh;
     color: var(--crema);
     padding: 2rem 1rem;
@@ -301,6 +298,7 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 0.5rem;
   }
+.grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
 </style>
 </head>
 <body>
@@ -318,7 +316,7 @@
       <label>Foto</label>
       <label class="file-upload" for="photo">
         <div style="font-size:1.5rem">📸</div>
-        <div style="font-size:0.85rem">Subí tu foto</div>
+        <div style="font-size:0.85rem">Tirá tu mejor foto acá</div>
         <input type="file" id="photo" accept="image/*">
       </label>
     </div>
@@ -341,10 +339,10 @@
     </div>
 
     <div class="countries-row">
-      <button class="btn btn-secondary" id="random-id">🎲 ID nuevo</button>
-      <button class="btn" id="download">⬇ Descargar</button>
-      <button class="btn" id="download-story" style="margin-top:0.5rem;background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff">📲 Descargar para HISTORIA (9:16)</button>
-      <button class="btn" id="share-card" style="margin-top:0.5rem;background:linear-gradient(135deg,#22c55e,#16a34a);color:#04210f">🔗 Compartir</button>
+      <button class="btn btn-secondary" id="random-id">🎲 Otro ID, dale</button>
+      <button class="btn" id="download">⬇ Bajá tu carnet</button>
+      <button class="btn" id="download-story" style="margin-top:0.5rem;background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff">📲 Para la HISTORIA (9:16)</button>
+      <button class="btn" id="share-card" style="margin-top:0.5rem;background:linear-gradient(135deg,#22c55e,#16a34a);color:#04210f">🔗 Subilo y bancá los colores</button>
     </div>
   </div>
 
@@ -544,12 +542,13 @@
       link.click();
     }).catch(err => {
       carnet.setAttribute('style', origCss);
-      alert('Error: ' + err.message);
+      alert('Uh, se nos escapó la pelota. Probá de nuevo: ' + err.message);
     });
   };
 
   $('download-story').onclick = () => pampaStory($('carnet'), 'MI CARNET DE HINCHA', 'historia-carnet');
   $('share-card').onclick = () => pampaShare($('carnet'), '🪪 Saqué mi carnet oficial de hincha del Mundial 2026 en Pampa Juega. Hacé el tuyo gratis 👉 juventudlapampa.github.io/pampa-juega · @pampajuega');
 </script>
+<div class="grain"></div>
 </body>
 </html>

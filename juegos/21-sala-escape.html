@@ -30,7 +30,6 @@
   body {
     font-family: 'DM Sans', sans-serif;
     background: var(--bg);
-    background-image: radial-gradient(circle at 30% 20%, rgba(220,38,38,0.2), transparent 50%);
     min-height: 100vh;
     color: var(--crema);
     padding: 1rem;
@@ -275,6 +274,7 @@
   .clue-board .cb-text { font-size:0.84rem; line-height:1.38; color:var(--crema); }
   .clue-board .cb-text strong { color:var(--gold-2); }
   .clue-board .cb-hint { font-size:0.74rem; color:var(--verde); margin-top:0.4rem; border-top:1px dashed rgba(212,168,46,0.3); padding-top:0.35rem; }
+.grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
 </style>
 </head>
 <body>
@@ -289,10 +289,10 @@
     <div class="panel">
       <div style="font-family:'Anton',sans-serif;color:var(--rojo);font-size:1.2rem;letter-spacing:0.1em;margin-bottom:0.7rem;text-transform:uppercase">🔒 ESTÁS ENCERRADO/A</div>
       <p style="line-height:1.5;font-size:0.9rem;margin-bottom:1rem">
-        Sos el/la <strong style="color:var(--gold-2)">utilero/a oficial</strong> del vestuario antes de la final del Mundial 2026. El equipo está calentando y vos te quedaste adentro. Las puertas se trabaron. Resolvé <strong>5 acertijos</strong> contrarreloj y salí a la cancha antes del pitazo. <strong style="color:var(--gold-2)">Las pistas están en la sala</strong> (movés la cámara para mirar alrededor).
+        Sos el/la <strong style="color:var(--gold-2)">utilero/a oficial</strong> del vestuario justo antes de la final del Mundial 2026. El equipo ya está calentando y vos quedaste adentro: las puertas se trabaron. Resolvé <strong>5 acertijos</strong> contrarreloj y salí a la cancha antes del pitazo. <strong style="color:var(--gold-2)">Las pistas están en la sala</strong> (movés la cámara para mirar alrededor).
       </p>
       <p style="line-height:1.5;font-size:0.85rem;color:var(--gold-2);margin-bottom:0.9rem">
-        Cada acertijo desbloquea el siguiente y te lleva a otra sala. Tu tiempo queda en el ranking. ¿Salís?
+        Cada acertijo te abre el siguiente y te manda a otra sala. Tu tiempo queda en el ranking. ¿La sacás barata o quedás adentro?
       </p>
       <input type="text" class="input-name" id="player-name" placeholder="Tu nombre" maxlength="18">
       <div style="font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:0.18em;color:var(--rojo);text-transform:uppercase;margin-bottom:0.3rem">Dificultad</div>
@@ -300,7 +300,7 @@
         <button class="diff-opt sel" data-d="facil">😎 FÁCIL<small>12 min · pista extra en la sala</small></button>
         <button class="diff-opt" data-d="dificil">🔥 DIFÍCIL<small>7 min · solo lo justo</small></button>
       </div>
-      <button class="btn" id="start">🔓 EMPEZAR ESCAPE</button>
+      <button class="btn" id="start">🔓 A GANAR LA PUERTA</button>
       <button class="btn btn-secondary" style="margin-top:0.5rem" id="ver-ranking">🏆 Ranking</button>
     </div>
   </div>
@@ -339,7 +339,7 @@
     </div>
     <button class="btn" style="margin-top:0.6rem" id="r-download">📸 COMPARTIR MI TIEMPO</button>
     <button class="btn btn-secondary" style="margin-top:0.5rem" onclick="goRanking()">🏆 Ver Ranking</button>
-    <button class="btn btn-secondary" style="margin-top:0.5rem" onclick="restart()">↻ Otro escape</button>
+    <button class="btn btn-secondary" style="margin-top:0.5rem" onclick="restart()">↻ Otra fuga</button>
   </div>
 
   <!-- TIMEOUT -->
@@ -347,7 +347,7 @@
     <div class="panel" style="text-align:center">
       <div style="font-size:4rem">😭</div>
       <div style="font-family:'Anton',sans-serif;color:var(--rojo);font-size:1.8rem;letter-spacing:0.1em;margin:0.5rem 0">SE ACABÓ EL TIEMPO</div>
-      <p style="margin:1rem 0">El partido empezó sin vos. Te quedaste atrapado/a en el vestuario.</p>
+      <p style="margin:1rem 0">El partido arrancó sin vos. Te comió el reloj y quedaste atrapado/a en el vestuario.</p>
       <p id="fail-detail" style="opacity:0.7;font-size:0.85rem"></p>
       <button class="btn btn-secondary" style="margin-top:1rem" onclick="restart()">↻ Reintentar</button>
     </div>
@@ -659,7 +659,7 @@ function renderPuzzle() {
       <div class="puzzle-title">${p.titulo}</div>
       <div id="puzzle-body"></div>
     </div>
-    <button class="btn" id="check-btn">▶ COMPROBAR RESPUESTA</button>
+    <button class="btn" id="check-btn">▶ DALE, PROBÁ</button>
     <button class="btn btn-secondary" style="margin-top:0.5rem" id="hint-btn">💡 PISTA (-${dificultad==='facil'?20:45}s)</button>
   `;
   const body = document.getElementById('puzzle-body');
@@ -778,5 +778,6 @@ function restart() {
 }
 window.restart = restart;
 </script>
+<div class="grain"></div>
 </body>
 </html>

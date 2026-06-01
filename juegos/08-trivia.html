@@ -31,9 +31,6 @@
   body {
     font-family: 'DM Sans', sans-serif;
     background: var(--bg);
-    background-image:
-      radial-gradient(circle at 20% 30%, rgba(255,0,60,0.15), transparent 50%),
-      radial-gradient(circle at 80% 70%, rgba(0,212,255,0.1), transparent 50%);
     min-height: 100vh;
     color: var(--crema);
     padding: 1rem;
@@ -384,6 +381,7 @@
     color: var(--gold);
     font-weight: 700;
   }
+  .grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
 </style>
 </head>
 <body>
@@ -396,16 +394,16 @@
   <!-- INTRO -->
   <div class="screen active" id="screen-intro">
     <div class="panel">
-      <div class="panel-title">⚡ Reglas del juego</div>
-      <p style="line-height:1.6;margin-bottom:0.5rem">20 preguntas tipo verdadero/falso sobre el Mundial. Tenés <strong style="color:var(--primary)">10 segundos por pregunta</strong>. Las rachas multiplican el puntaje.</p>
+      <div class="panel-title">⚡ Cómo se juega</div>
+      <p style="line-height:1.6;margin-bottom:0.5rem">20 preguntas de verdadero o falso sobre el Mundial, posta. Tenés <strong style="color:var(--primary)">10 segundos por pregunta</strong>, ni uno más. Y ojo: cuanto más larga la racha, más alto el puntaje. No te duermas.</p>
       <div class="intro-stats">
         <div class="stat-box"><div class="stat-box-num">10s</div><div class="stat-box-lab">Tiempo</div></div>
         <div class="stat-box"><div class="stat-box-num">×5</div><div class="stat-box-lab">Multiplicador</div></div>
         <div class="stat-box"><div class="stat-box-num">20</div><div class="stat-box-lab">Preguntas</div></div>
       </div>
-      <input type="text" class="input-name" id="player-name" placeholder="Tu nombre" maxlength="18">
-      <button class="btn" id="start">⚡ EMPEZAR</button>
-      <button class="btn btn-secondary" style="margin-top:0.6rem" id="ver-ranking">🏆 Ver ranking</button>
+      <input type="text" class="input-name" id="player-name" placeholder="¿Cómo te anotamos?" maxlength="18">
+      <button class="btn" id="start">⚡ ¡A LA CANCHA!</button>
+      <button class="btn btn-secondary" style="margin-top:0.6rem" id="ver-ranking">🏆 Ver la tabla</button>
     </div>
   </div>
 
@@ -450,18 +448,18 @@
         <div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;color:rgba(244,236,216,0.5);margin-top:0.6rem">⚡ TRIVIA RELÁMPAGO · MUNDIAL 2026 · @juventud_lapampa</div>
       </div>
     </div>
-    <button class="btn" style="margin-top:0.6rem" id="r-download">📸 DESCARGAR / COMPARTIR RESULTADO</button>
-    <button class="btn btn-secondary" style="margin-top:0.5rem" onclick="goRanking()">🏆 Ver Ranking</button>
-    <button class="btn btn-secondary" style="margin-top:0.5rem" onclick="restart()">⚡ Otra partida</button>
+    <button class="btn" style="margin-top:0.6rem" id="r-download">📸 BAJAR Y MOSTRAR EL PUNTAJE</button>
+    <button class="btn btn-secondary" style="margin-top:0.5rem" onclick="goRanking()">🏆 Ver la tabla</button>
+    <button class="btn btn-secondary" style="margin-top:0.5rem" onclick="restart()">⚡ Revancha, dale</button>
   </div>
 
   <!-- RANKING -->
   <div class="screen" id="screen-ranking">
     <div class="panel">
-      <div class="panel-title">🏆 Ranking Relámpago</div>
+      <div class="panel-title">🏆 La tabla de los cracks</div>
       <div class="ranking-list" id="ranking-list"></div>
-      <button class="btn btn-secondary" style="margin-top:1rem" onclick="restart()">← Inicio</button>
-      <button class="btn btn-secondary" style="margin-top:0.5rem;border-color:var(--primary);color:#fca5a5" onclick="clearRanking()">🗑 Borrar ranking</button>
+      <button class="btn btn-secondary" style="margin-top:1rem" onclick="restart()">← Al vestuario</button>
+      <button class="btn btn-secondary" style="margin-top:0.5rem;border-color:var(--primary);color:#fca5a5" onclick="clearRanking()">🗑 Borrar la tabla</button>
     </div>
   </div>
 </div>
@@ -698,7 +696,7 @@
 
   document.getElementById('start').onclick = () => {
     const name = document.getElementById('player-name').value.trim();
-    if (!name) { alert('Ingresá tu nombre'); return; }
+    if (!name) { alert('Eh, primero decinos cómo te llamás'); return; }
     initAudio();
     estado.name = name;
     estado.score = 0;
@@ -798,7 +796,7 @@
 
       // Pop racha
       if ([3, 5, 8, 12, 15, 20].includes(estado.racha)) {
-        const labels = {3:'¡EN LLAMAS!',5:'¡IMPARABLE!',8:'¡LEYENDA!',12:'¡FENÓMENO!',15:'¡INHUMANO!',20:'¡PERFECTO!'};
+        const labels = {3:'¡PRENDIDO FUEGO!',5:'¡NO LO PARA NADIE!',8:'¡FENÓMENO!',12:'¡DE OTRO PLANETA!',15:'¡ESTO ES IRREAL!',20:'¡PLENO, NO FALLÓ UNA!'};
         const pop = document.getElementById('racha-pop');
         pop.textContent = labels[estado.racha];
         pop.classList.remove('show');
@@ -813,7 +811,7 @@
       document.body.classList.add('shaking');
       setTimeout(() => document.body.classList.remove('shaking'), 400);
       estado.racha = 0;
-      document.getElementById('feedback').textContent = `Era ${p.v ? 'VERDADERO' : 'FALSO'}`;
+      document.getElementById('feedback').textContent = `Uh, era ${p.v ? 'VERDADERO' : 'FALSO'}`;
       document.getElementById('feedback').classList.add('wrong');
     }
 
@@ -835,7 +833,7 @@
     const btnCorrect = p.v ? 'btn-v' : 'btn-f';
     document.getElementById(btnCorrect).classList.add('correct');
     ['btn-v','btn-f'].forEach(id => document.getElementById(id).classList.add('disabled'));
-    document.getElementById('feedback').textContent = '⏱ Se acabó el tiempo';
+    document.getElementById('feedback').textContent = '⏱ ¡Sonó el silbato! Se te fue el tiempo';
     document.getElementById('feedback').classList.add('wrong');
     document.body.classList.add('shaking');
     setTimeout(() => document.body.classList.remove('shaking'), 400);
@@ -857,11 +855,11 @@
     document.getElementById('r-correct').textContent = estado.correctas + '/20';
     document.getElementById('r-streak').textContent = estado.mejorRacha;
     document.getElementById('r-time').textContent = estado.rapidas;
-    let trophy = '⚽', verdict = 'A practicar';
-    if (estado.score >= 8000) { trophy = '🏆'; verdict = 'CAMPEÓN MUNDIAL'; }
-    else if (estado.score >= 5000) { trophy = '🥇'; verdict = 'TREMENDO'; }
-    else if (estado.score >= 3000) { trophy = '🥈'; verdict = 'BIEN JUGADO'; }
-    else if (estado.score >= 1500) { trophy = '🥉'; verdict = 'NIVEL DECENTE'; }
+    let trophy = '⚽', verdict = 'A SEGUIR ENTRENANDO';
+    if (estado.score >= 8000) { trophy = '🏆'; verdict = 'CAMPEÓN DEL MUNDO'; }
+    else if (estado.score >= 5000) { trophy = '🥇'; verdict = 'CRACK TOTAL'; }
+    else if (estado.score >= 3000) { trophy = '🥈'; verdict = 'JUGASTE UN PARTIDAZO'; }
+    else if (estado.score >= 1500) { trophy = '🥉'; verdict = 'LA PELEASTE BIEN'; }
     document.getElementById('r-trophy').textContent = trophy;
     document.getElementById('r-verdict').textContent = verdict;
   }
@@ -914,7 +912,7 @@
     const ranking = JSON.parse(localStorage.getItem('trivia-mundial-ranking') || '[]');
     const div = document.getElementById('ranking-list');
     if (ranking.length === 0) {
-      div.innerHTML = '<div style="padding:2rem;text-align:center;opacity:0.6">Todavía no hay puntajes</div>';
+      div.innerHTML = '<div style="padding:2rem;text-align:center;opacity:0.6">Todavía no jugó nadie. Estrenala vos.</div>';
       return;
     }
     div.innerHTML = ranking.slice(0, 20).map((r, i) => {
@@ -931,7 +929,7 @@
   }
 
   function clearRanking() {
-    if (confirm('¿Borrar todo el ranking?')) {
+    if (confirm('¿Borramos toda la tabla? No queda nadie, ni el puntero.')) {
       localStorage.removeItem('trivia-mundial-ranking');
       goRanking();
     }
@@ -950,5 +948,6 @@
 
   document.getElementById('ver-ranking').onclick = goRanking;
 </script>
+<div class="grain"></div>
 </body>
 </html>

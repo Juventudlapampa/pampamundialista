@@ -34,9 +34,6 @@
   body {
     font-family: 'DM Sans', sans-serif;
     background: var(--bg);
-    background-image:
-      radial-gradient(circle at 20% 30%, rgba(74,26,107,0.4), transparent 50%),
-      radial-gradient(circle at 80% 70%, rgba(212,168,46,0.15), transparent 50%);
     min-height: 100vh;
     color: var(--crema);
     padding: 1.5rem 1rem;
@@ -364,6 +361,7 @@
     color: var(--gold-2);
     font-size: 0.85rem;
   }
+.grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
 </style>
 </head>
 <body>
@@ -378,8 +376,8 @@
   <div class="screen active" id="screen-intro">
     <div class="panel">
       <div class="intro-icon">⚽</div>
-      <p style="line-height:1.6;text-align:center;margin-bottom:1.5rem">12 preguntas para descubrir cuál de las selecciones del Mundial 2026 representa tu personalidad. Al final, recibís tu ficha completa con clase, habilidad especial y leyenda.</p>
-      <button class="btn" id="start">⚔ Empezar el ritual</button>
+      <p style="line-height:1.6;text-align:center;margin-bottom:1.5rem">12 preguntas y te decimos qué selección del Mundial 2026 sos vos de pies a cabeza. Al final te llevás tu ficha completa: clase, superpoder y leyenda. Vamos que esto pinta bien.</p>
+      <button class="btn" id="start">⚔ Arrancá el ritual</button>
     </div>
   </div>
 
@@ -400,7 +398,7 @@
   <div class="screen" id="screen-analyzing">
     <div class="panel">
       <div class="reveal-anim">
-        <div class="reveal-tag" id="anim-tag">ANALIZANDO RESPUESTAS</div>
+        <div class="reveal-tag" id="anim-tag">LEYENDO TUS JUGADAS</div>
         <div class="reveal-msg" id="anim-msg">⚔</div>
       </div>
     </div>
@@ -410,9 +408,9 @@
   <div class="screen" id="screen-result">
     <div id="result-card-container"></div>
     <div class="actions">
-      <button class="btn btn-secondary" id="download">⬇ Descargar</button>
-      <button class="btn" id="share" style="background:linear-gradient(135deg,#22c55e,#16a34a);color:#04210f">🔗 Desafiar a un amigo</button>
-      <button class="btn btn-gold" onclick="restart()">🔁 Volver a hacer</button>
+      <button class="btn btn-secondary" id="download">⬇ Bajá tu ficha</button>
+      <button class="btn" id="share" style="background:linear-gradient(135deg,#22c55e,#16a34a);color:#04210f">🔗 Picale a un amigo</button>
+      <button class="btn btn-gold" onclick="restart()">🔁 Dale de nuevo</button>
     </div>
   </div>
 </div>
@@ -797,7 +795,7 @@
 
   function analyze() {
     show('analyzing');
-    const tags = ['ANALIZANDO RESPUESTAS', 'CONSULTANDO EL CÓDICE', 'CALCULANDO ESTILO', 'INVOCANDO TU SELECCIÓN'];
+    const tags = ['LEYENDO TUS JUGADAS', 'MIRANDO LA REPETICIÓN', 'AFINANDO LA TÁCTICA', 'CANTANDO TU SELECCIÓN'];
     const emojis = ['⚔', '⚽', '🏆', '★'];
     let i = 0;
     const interval = setInterval(() => {
@@ -838,7 +836,7 @@
         <div class="rpg-corner tr"></div>
         <div class="rpg-corner bl"></div>
         <div class="rpg-corner br"></div>
-        <div class="rpg-pre">★ Tu selección es ★</div>
+        <div class="rpg-pre">★ Tu selección es nada menos que ★</div>
         <div class="rpg-flag">${data.flag}</div>
         <div class="rpg-name">${winner}</div>
         <div class="rpg-class">${data.clase}</div>
@@ -858,7 +856,7 @@
         <div class="juv-watermark">@juventud_lapampa</div>
       </div>
       <div class="top-matches">
-        <div class="matches-title">Tu top 3 de afinidad</div>
+        <div class="matches-title">Tu podio de afinidad</div>
         ${top3.map(t => `
           <div class="match-row">
             <span class="match-flag">${t.flag}</span>
@@ -928,5 +926,6 @@
     show('intro');
   }
 </script>
+<div class="grain"></div>
 </body>
 </html>

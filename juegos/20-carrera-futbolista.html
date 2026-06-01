@@ -279,6 +279,7 @@
     letter-spacing: 0.2em;
     color: rgba(244,236,216,0.6);
   }
+.grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
 </style>
 </head>
 <body>
@@ -293,13 +294,13 @@
     <div class="panel">
       <div style="font-family:'Anton',sans-serif;color:var(--gold);font-size:1.2rem;letter-spacing:0.1em;margin-bottom:0.7rem;text-transform:uppercase">⚽ Tu vida en el fútbol</div>
       <p style="line-height:1.5;font-size:0.9rem;margin-bottom:0.8rem">
-        Empezás a los <strong style="color:var(--gold-2)">8 años</strong> jugando en el potrero de tu pueblo en La Pampa. En cada decisión vas a <strong style="color:var(--gold-2)">tirar el dado de la vida</strong>: según lo que salga, te va a ir mejor o peor. Siempre tenés <strong style="color:var(--gold-2)">5 caminos</strong> para elegir.
+        Arrancás a los <strong style="color:var(--gold-2)">8 años</strong> en el potrero de tu pueblo en La Pampa. En cada cruce de camino tirás el <strong style="color:var(--gold-2)">dado de la vida</strong>: como en la cancha, a veces la pelota pica a favor y a veces en contra. Siempre tenés <strong style="color:var(--gold-2)">5 caminos</strong> para elegir.
       </p>
       <p style="line-height:1.5;font-size:0.85rem;margin-bottom:0.7rem;opacity:0.8">
         Hay <strong>12 finales</strong> posibles: estrella mundial, ídolo del pueblo, profe de educación física, relator, médico deportivo, creador de contenido… o algo que no te imaginás.
       </p>
       <p style="line-height:1.5;font-size:0.85rem;margin-bottom:1rem;opacity:0.8">
-        De La Pampa salió <strong style="color:var(--gold-2)">Alexis Mac Allister</strong>, nacido en Santa Rosa y campeón del mundo 🏆. Vas a subir escalones reales: el club de tu pueblo → <strong>Liga Pampeana</strong> → <strong>Torneo Regional</strong> → <strong>Federal A</strong> → <strong>Primera Nacional</strong> → <strong>Primera División</strong> → la <strong>Selección</strong>. ¿Hasta dónde llegás?
+        De La Pampa salió <strong style="color:var(--gold-2)">Alexis Mac Allister</strong>, nacido en Santa Rosa y campeón del mundo 🏆. Vas a ir subiendo escalones de verdad: el club de tu pueblo → <strong>Liga Pampeana</strong> → <strong>Torneo Regional</strong> → <strong>Federal A</strong> → <strong>Primera Nacional</strong> → <strong>Primera División</strong> → la <strong>Selección</strong>. ¿Hasta dónde la rompés?
       </p>
       <input type="text" class="input-name" id="player-name" placeholder="Tu nombre" maxlength="20">
       <select id="genero" style="margin-bottom:0.7rem">
@@ -428,12 +429,12 @@ const CLUB = () => (TOWNS[game.origen] || TOWNS.otro).club;
 // DADO DE LA VIDA
 // ========================================================================
 const LUCK = {
-  1: { label:'¡UF, TERRIBLE!',     txt:'Te salió todo mal. La vida también es esto: a veces toca perder.', mult:0.0, bonus:{}, penalty:{ fama:-6, fisico:-4 }, color:'#f87171' },
-  2: { label:'SALIÓ FLOJO',         txt:'No fue como esperabas, pero se sigue.',                            mult:0.4, bonus:{}, penalty:{ fama:-2 }, color:'#fbbf24' },
-  3: { label:'NORMAL',              txt:'Ni fu ni fa. Un día más en la cancha de la vida.',                 mult:0.7, bonus:{}, penalty:{}, color:'#d4a82e' },
-  4: { label:'SALIÓ BIEN',          txt:'Salió como lo planeaste. Bien ahí.',                               mult:1.0, bonus:{}, penalty:{}, color:'#4ade80' },
-  5: { label:'¡MUY BIEN!',          txt:'Te salió mejor de lo esperado. La estás rompiendo.',               mult:1.3, bonus:{ talento:4 }, penalty:{}, color:'#4ade80' },
-  6: { label:'¡LA ROMPISTE!',       txt:'¡Golazo de la vida! Todo salió perfecto.',                         mult:1.7, bonus:{ talento:6, fama:6 }, penalty:{}, color:'#4ade80' }
+  1: { label:'¡UF, TERRIBLE!',     txt:'La mandaste a la tribuna. A veces toca perder, así es el fútbol.',  mult:0.0, bonus:{}, penalty:{ fama:-6, fisico:-4 }, color:'#f87171' },
+  2: { label:'SALIÓ FLOJO',         txt:'No fue lo que buscabas, pero el partido sigue.',                   mult:0.4, bonus:{}, penalty:{ fama:-2 }, color:'#fbbf24' },
+  3: { label:'NORMAL',              txt:'Ni fu ni fa. Un día más de entrenamiento.',                        mult:0.7, bonus:{}, penalty:{}, color:'#d4a82e' },
+  4: { label:'SALIÓ BIEN',          txt:'La pisaste y salió redondo. Bien ahí.',                            mult:1.0, bonus:{}, penalty:{}, color:'#4ade80' },
+  5: { label:'¡MUY BIEN!',          txt:'Mejor de lo que esperabas. La estás rompiendo.',                   mult:1.3, bonus:{ talento:4 }, penalty:{}, color:'#4ade80' },
+  6: { label:'¡LA ROMPISTE!',       txt:'¡Golazo de mitad de cancha! Salió todo perfecto.',                 mult:1.7, bonus:{ talento:6, fama:6 }, penalty:{}, color:'#4ade80' }
 };
 function resolveLuck(roll, s) {
   const luck = LUCK[roll], out = {};
@@ -745,7 +746,7 @@ function buildHint(op) {
   const parts = [];
   for (const [k,v] of Object.entries(op.s||{})) parts.push(`${v>0?'↑':'↓'}${STAT_LABEL[k]}`);
   let h = parts.join(' ');
-  if (op.branch) h += ' · ⚡ camino que se bifurca';
+  if (op.branch) h += ' · ⚡ acá se abre la cancha';
   h += ' · 🎲';
   return h;
 }
@@ -768,8 +769,8 @@ function chooseOption(op) {
       const score = roll + Math.floor(stat / 25);
       const good = score >= 6;
       next = good ? op.branch.good : op.branch.bad;
-      const gm = op.goodMsg || ' 🚀 ¡Salió bien y diste un salto en tu carrera!';
-      const bm = op.badMsg  || ' 🚪 No se dio por ese lado… pero la vida sigue y hay otros caminos.';
+      const gm = op.goodMsg || ' 🚀 ¡Pegaste el salto y diste el batacazo en tu carrera!';
+      const bm = op.badMsg  || ' 🚪 No se dio por ese lado… pero el partido sigue y siempre hay revancha.';
       msg += good ? gm : bm;
     }
     $('dice-msg').textContent = msg;
@@ -857,8 +858,8 @@ $('r-download').onclick = () => {
   });
 };
 
-$('r-share').onclick = () => shareReto(`🎮 En "Tu Carrera de Futbolista" del Mundial 2026 terminé como: ${$('final-titulo').textContent}. ¿Qué carrera te toca a vos? 📲 @juventud_lapampa`);
-function shareReto(text){ if(navigator.share){navigator.share({title:'Tu Carrera · Mundial 2026',text}).catch(()=>{});} else if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>alert('¡Reto copiado! Mandáselo a un amigo 📲'),()=>prompt('Copiá tu reto:',text));} else {prompt('Copiá tu reto:',text);} }
+$('r-share').onclick = () => shareReto(`🎮 En "Tu Carrera de Futbolista" del Mundial 2026 la terminé como: ${$('final-titulo').textContent}. ¿Vos hasta dónde llegás? 📲 @juventud_lapampa`);
+function shareReto(text){ if(navigator.share){navigator.share({title:'Tu Carrera · Mundial 2026',text}).catch(()=>{});} else if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>alert('¡Desafío copiado! Pasáselo a un amigo 📲'),()=>prompt('Copiá tu desafío:',text));} else {prompt('Copiá tu desafío:',text);} }
 
 function show(s) {
   document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
@@ -867,5 +868,6 @@ function show(s) {
 function restart() { show('intro'); }
 window.restart = restart;
 </script>
+<div class="grain"></div>
 </body>
 </html>

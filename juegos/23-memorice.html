@@ -31,7 +31,6 @@
   body {
     font-family: 'DM Sans', sans-serif;
     background: var(--bg);
-    background-image: radial-gradient(ellipse at top, rgba(13,59,38,0.7), transparent 70%);
     color: var(--crema);
     padding: 1rem;
     min-height: 100vh;
@@ -155,6 +154,7 @@
   .result-stat { background: rgba(0,0,0,0.2); border-radius: 6px; padding: 0.5rem; font-family: 'JetBrains Mono', monospace; }
   .result-stat strong { font-family: 'Anton', sans-serif; font-size: 1.3rem; color: #000; display: block; }
   .result-wm { font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; letter-spacing: 0.2em; opacity: 0.7; margin-top: 0.8rem; }
+.grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
 </style>
 </head>
 <body>
@@ -170,7 +170,7 @@
     <div class="panel">
       <div style="font-family:'Anton',sans-serif;color:var(--gold);font-size:1.2rem;letter-spacing:0.1em;margin-bottom:0.7rem;text-transform:uppercase">🃏 Memorice de banderas</div>
       <p style="line-height:1.5;font-size:0.9rem;margin-bottom:1rem">
-        Encontrá los <strong>pares de banderas</strong> de las selecciones del Mundial en el menor tiempo posible. ¡Desafiá tu memoria en los 3 niveles!
+        Enganchá los <strong>pares de banderas</strong> de las selecciones del Mundial lo más rápido que puedas. A ver si la memoria te aguanta los 3 niveles. ¡A romperla!
       </p>
       <input type="text" class="input-name" id="player-name" placeholder="Tu nombre" maxlength="18">
       <div class="dificultades">
@@ -178,7 +178,7 @@
         <button class="diff-btn" data-d="medium">🟡 MEDIO (20)</button>
         <button class="diff-btn" data-d="hard">🔴 DIFÍCIL (30)</button>
       </div>
-      <button class="btn" id="start">▶ EMPEZAR</button>
+      <button class="btn" id="start">▶ A LA CANCHA</button>
     </div>
   </div>
 
@@ -207,7 +207,7 @@
       <div class="result-wm">MEMO MUNDIAL · MUNDIAL 2026 · @JUVENTUD_LAPAMPA</div>
     </div>
     <button class="btn" style="margin-top:0.6rem" id="r-download">📸 COMPARTIR</button>
-    <button class="btn btn-secondary" style="margin-top:0.5rem" onclick="restart()">🔁 Otra partida</button>
+    <button class="btn btn-secondary" style="margin-top:0.5rem" onclick="restart()">🔁 La revancha</button>
   </div>
 </div>
 
@@ -332,10 +332,10 @@ function finish() {
   document.getElementById('r-moves').textContent = state.moves;
   document.getElementById('r-pairs').textContent = `${state.matched}/${state.total}`;
   let v;
-  if (state.moves <= state.total + 4) v = '¡MEMORIA DE ELEFANTE!';
-  else if (state.moves <= state.total + 10) v = 'Excelente memoria';
-  else if (state.moves <= state.total + 20) v = 'Buena memoria';
-  else v = 'Practicar más';
+  if (state.moves <= state.total + 4) v = '¡MEMORIA DE CRACK!';
+  else if (state.moves <= state.total + 10) v = '¡La rompiste!';
+  else if (state.moves <= state.total + 20) v = 'Buen partido';
+  else v = 'A seguir entrenando';
   document.getElementById('r-verdict').textContent = v;
   show('result');
 }
@@ -361,5 +361,6 @@ function restart() {
 }
 window.restart = restart;
 </script>
+<div class="grain"></div>
 </body>
 </html>

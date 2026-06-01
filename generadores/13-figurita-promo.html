@@ -33,9 +33,6 @@
   body {
     font-family: 'DM Sans', sans-serif;
     background: var(--verde);
-    background-image:
-      radial-gradient(circle at 20% 10%, rgba(212,168,46,0.15), transparent 50%),
-      radial-gradient(circle at 80% 90%, rgba(74,222,128,0.1), transparent 50%);
     min-height: 100vh;
     color: var(--crema);
     padding: 1.5rem 1rem;
@@ -375,6 +372,7 @@
     margin-top: 1px;
     line-height: 1.3;
   }
+.grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
 </style>
 </head>
 <body>
@@ -383,7 +381,7 @@
   <header>
     <div class="header-tag">Tu Figurita Personal · Mundial 2026</div>
     <h1>FIGURITA DEL <span>GRUPO</span></h1>
-    <p class="subtitle">Armá la figurita de un compañero/a, hermano/a, amigo/a o vos mismo. Cualidades reales, foto estilo carnet, frase típica y "más probable que…". Para el curso, la familia, el equipo de fútbol 5.</p>
+    <p class="subtitle">Hacele la figurita a un compañero/a, hermano/a, amigo/a o a vos mismo/a. Cualidades reales, foto estilo carnet, frase típica y el "más probable que…". Para el curso, la familia o los pibes del fútbol 5. Dale, armala que se van a matar de risa.</p>
   </header>
 
   <div class="layout">
@@ -394,7 +392,7 @@
           <label>Foto</label>
           <label class="file-upload" for="photo">
             <div style="font-size:1.5rem;margin-bottom:0.3rem">📸</div>
-            <div>Subí una foto del personaje</div>
+            <div>Tirá la foto del crack del grupo</div>
             <input type="file" id="photo" accept="image/*">
           </label>
         </div>
@@ -419,7 +417,7 @@
 
       <div class="panel" style="margin-top:1rem">
         <div class="panel-title">🏷 3 tags personales</div>
-        <p style="font-size:0.85rem;opacity:0.8;margin-bottom:0.8rem">Tres frases cortas que lo describan. Tipo: "Llega siempre tarde", "Vive en el celular", "Sabe de música".</p>
+        <p style="font-size:0.85rem;opacity:0.8;margin-bottom:0.8rem">Tres frases cortas que lo pinten de cuerpo entero. Tipo: "Llega siempre tarde", "Vive pegado al celu", "Se las sabe todas de música".</p>
         <div class="tags-grid">
           <div class="tag-row">
             <label>Tag 1</label>
@@ -453,10 +451,10 @@
           <input type="text" id="prediccion" maxlength="55" placeholder="Ej: sea presidente o famoso/a en TikTok">
           <div class="quick-buttons" id="pred-quick"></div>
         </div>
-        <button class="btn" id="download" style="margin-top:1rem">⬇ DESCARGAR FIGURITA</button>
-        <button class="btn" id="download-story" style="margin-top:0.5rem;background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff">📲 DESCARGAR PARA HISTORIA (9:16)</button>
-        <button class="btn" id="share-promo" style="margin-top:0.5rem;background:linear-gradient(135deg,#22c55e,#16a34a);color:#04210f">🔗 COMPARTIR</button>
-        <button class="btn btn-secondary" id="random" style="margin-top:0.5rem">🎲 Cargar ejemplo aleatorio</button>
+        <button class="btn" id="download" style="margin-top:1rem">⬇ BAJÁ LA FIGURITA</button>
+        <button class="btn" id="download-story" style="margin-top:0.5rem;background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff">📲 PARA LA HISTORIA (9:16)</button>
+        <button class="btn" id="share-promo" style="margin-top:0.5rem;background:linear-gradient(135deg,#22c55e,#16a34a);color:#04210f">🔗 MANDALA AL GRUPO</button>
+        <button class="btn btn-secondary" id="random" style="margin-top:0.5rem">🎲 Tirame una al azar</button>
       </div>
     </div>
 
@@ -734,12 +732,13 @@
       link.click();
     }).catch(err => {
       node.setAttribute('style', origCss);
-      alert('Error al descargar: ' + err.message);
+      alert('Uh, se nos escapó la pelota. Probá de nuevo: ' + err.message);
     });
   };
 
   $('download-story').onclick = () => pampaStory($('figurita'), 'FIGURITA DEL GRUPO', 'historia-figurita-grupo');
   $('share-promo').onclick = () => pampaShare($('figurita'), '🎓 Le armé la figurita a un/a compañero/a en Pampa Juega. Armá la del grupo gratis 👉 juventudlapampa.github.io/pampa-juega · @pampajuega');
 </script>
+<div class="grain"></div>
 </body>
 </html>

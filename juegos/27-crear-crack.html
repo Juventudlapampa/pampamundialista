@@ -20,7 +20,7 @@
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   :root { --bg:#070d14; --verde-fluo:#4ade80; --gold:#d4a82e; --gold-2:#f4cd60; --crema:#f4ecd8; --azul:#38bdf8; --rojo:#f87171; --purple:#a78bfa; }
-  body { font-family:'DM Sans',sans-serif; background:var(--bg); background-image:radial-gradient(circle at 50% -10%, rgba(56,189,248,0.18), transparent 55%); min-height:100vh; color:var(--crema); padding:1rem; touch-action:manipulation; }
+  body { font-family:'DM Sans',sans-serif; background:var(--bg); background-image:radial-gradient(circle at 50% -10%, rgba(108,172,228,0.07), transparent 60%); min-height:100vh; color:var(--crema); padding:1rem; touch-action:manipulation; }
   .container { max-width:520px; margin:0 auto; }
   header { text-align:center; margin-bottom:0.6rem; }
   .header-tag { font-family:'JetBrains Mono',monospace; font-size:0.7rem; letter-spacing:0.3em; color:var(--azul); text-transform:uppercase; }
@@ -100,6 +100,7 @@
   @keyframes ec { 0%,95%,100%{opacity:0} 96%,99%{opacity:1} }
   .confetti { position:fixed; top:-10px; width:9px; height:14px; z-index:200; pointer-events:none; }
   @media (max-width: 360px) { body { padding:0.5rem; } .chip { min-width:46px; } }
+.grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
 </style>
 </head>
 <body>
@@ -114,7 +115,7 @@
   <div class="screen active" id="screen-editor">
     <div class="stage" id="stage">
       <div class="avatar-wrap" id="avatar-prev"></div>
-      <div class="swipe-hint">👈 deslizá para cambiar de camiseta 👉</div>
+      <div class="swipe-hint">👈 deslizá y cambiale la camiseta 👉</div>
     </div>
     <div class="kit-name" id="kit-name">—</div>
 
@@ -145,10 +146,10 @@
     </div>
     <div class="sect" id="sect-meme" style="display:none"><div class="sect-title" style="color:var(--purple)">🤡 Locuras (modo meme)</div><div class="chips wrap" id="c-meme"></div></div>
 
-    <button class="btn" id="play-dominio">⚽ Jugar: Dominio (jueguito)</button>
-    <button class="btn" id="play-penales" style="background:linear-gradient(135deg,#f59e0b,#d4a82e);color:#04212e">🥅 Jugar: Penales con tu Crack</button>
-    <button class="btn btn-gold" id="dl-editor">📸 Descargar mi carta</button>
-    <button class="btn btn-share" id="dl-sticker">🟢 Descargar sticker (sin fondo)</button>
+    <button class="btn" id="play-dominio">⚽ A jugar: Jueguito (dominá la pelota)</button>
+    <button class="btn" id="play-penales" style="background:linear-gradient(135deg,#f59e0b,#d4a82e);color:#04212e">🥅 A jugar: Penales con tu Crack</button>
+    <button class="btn btn-gold" id="dl-editor">📸 Bajá tu figurita</button>
+    <button class="btn btn-share" id="dl-sticker">🟢 Bajá el sticker (sin fondo)</button>
   </div>
 
   <!-- JUEGO -->
@@ -158,7 +159,7 @@
       <div class="hud-box" style="border-color:var(--gold)"><div class="hud-num" id="g-best" style="color:var(--gold)">0</div><div class="hud-lbl" id="hud-lbl-2">Récord</div></div>
     </div>
     <canvas id="cv" width="360" height="460"></canvas>
-    <div class="game-hint" id="game-hint">Tocá la pelota para mantenerla en el aire. ¡No la dejes caer!</div>
+    <div class="game-hint" id="game-hint">Tocá la pelota y mantenela arriba. ¡Que no toque el piso!</div>
     <button class="btn btn-sec" id="back-editor">← Volver al editor</button>
   </div>
 
@@ -177,13 +178,13 @@
       </div>
     </div>
     <div style="background:rgba(212,168,46,0.12);border:1px solid var(--gold);border-radius:12px;padding:0.9rem 1rem;margin-top:0.8rem;font-size:0.9rem;line-height:1.45">
-      🏅 <b style="color:var(--gold-2)">Misión del Desafío:</b> armá tu crack con tu mote, descargá la carta y subila a tu historia etiquetando a <b>@pampajuega</b>. ¡Sumás un sello! 🎟️
+      🏅 <b style="color:var(--gold-2)">Tu misión, crack:</b> armá tu jugador con tu mote, bajá la figurita y subila a tu historia etiquetando a <b>@pampajuega</b>. ¡Te sumás un sello! 🎟️
     </div>
-    <button class="btn btn-gold" id="dl-result">📸 Descargar mi carta</button>
-    <button class="btn btn-share" id="dl-sticker2">🟢 Descargar sticker (sin fondo)</button>
-    <button class="btn" id="share-result">🔗 Desafiar a un amigo</button>
-    <button class="btn" id="replay">🔁 Jugar de nuevo</button>
-    <button class="btn btn-sec" id="to-editor">✏️ Editar mi crack</button>
+    <button class="btn btn-gold" id="dl-result">📸 Bajá tu figurita</button>
+    <button class="btn btn-share" id="dl-sticker2">🟢 Bajá el sticker (sin fondo)</button>
+    <button class="btn" id="share-result">🔗 Desafiá a un amigo</button>
+    <button class="btn" id="replay">🔁 Una más</button>
+    <button class="btn btn-sec" id="to-editor">✏️ Retocá tu crack</button>
   </div>
 </div>
 
@@ -500,7 +501,7 @@ function avatarToImg(cb){ const svg=buildAvatarSVG(av,{pose:0}); const img=new I
 function startDominio(){
   gameType='dominio'; showScreen('game'); $('g-best').textContent=best;
   $('hud-lbl-1').textContent='Toques'; $('hud-lbl-2').textContent='Récord';
-  $('game-hint').textContent='Tocá la pelota para mantenerla en el aire. ¡No la dejes caer!';
+  $('game-hint').textContent='Tocá la pelota y mantenela arriba. ¡Que no toque el piso!';
   if(penRaf){cancelAnimationFrame(penRaf);penRaf=null;}
   avatarToImg(img=>{ avatarImg=img; game={ball:{x:CW/2,y:140,vx:(Math.random()*3-1.5),vy:0,r:17},score:0,over:false,g:0.30,flash:0}; $('g-score').textContent='0'; if(raf)cancelAnimationFrame(raf); loop(); });
 }
@@ -516,7 +517,7 @@ function cvPos(e){ const r=cv.getBoundingClientRect(); return { x:(e.clientX-r.l
 function startPenales(){
   gameType='penales'; showScreen('game');
   $('hud-lbl-1').textContent='Goles'; $('hud-lbl-2').textContent='Penal';
-  $('game-hint').textContent='Deslizá desde la pelota hacia el ángulo. ¡Tenés 5 penales!';
+  $('game-hint').textContent='Deslizá desde la pelota al ángulo y clavala. ¡Tenés 5 penales!';
   if(raf){cancelAnimationFrame(raf);raf=null;}
   avatarToImg(img=>{ avatarImg=img;
     pg={ goals:0, shot:0, total:5, ball:{x:CW/2,y:CH-58,r:13}, phase:'aim', aim:null, keeper:{x:CW/2,diveTo:CW/2}, t:0, from:null, target:null, flash:'', flashT:0, ended:false };
@@ -620,7 +621,7 @@ function dlSticker(){ // solo avatar, fondo transparente
   document.body.appendChild(box);
   setTimeout(()=>{ snap(box,`sticker-${(av.mote||'crack').toLowerCase().replace(/[^a-z0-9]+/g,'-')}.png`,null); setTimeout(()=>box.remove(),700); },60);
 }
-function shareReto(text){ if(navigator.share){navigator.share({title:'Creá tu Crack · Mundial 2026',text}).catch(()=>{});} else if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>alert('¡Reto copiado! Mandáselo a un amigo 📲'),()=>prompt('Copiá tu reto:',text));} else {prompt('Copiá tu reto:',text);} }
+function shareReto(text){ if(navigator.share){navigator.share({title:'Creá tu Crack · Mundial 2026',text}).catch(()=>{});} else if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>alert('¡Desafío copiado! Pasáselo a un amigo 📲'),()=>prompt('Copiá tu desafío:',text));} else {prompt('Copiá tu desafío:',text);} }
 
 /* ===================== NAV ===================== */
 function showScreen(s){ if(s!=='game'){ if(raf){cancelAnimationFrame(raf);raf=null;} if(penRaf){cancelAnimationFrame(penRaf);penRaf=null;} } document.querySelectorAll('.screen').forEach(el=>el.classList.remove('active')); $('screen-'+s).classList.add('active'); window.scrollTo(0,0); }
@@ -633,7 +634,7 @@ $('dl-result').onclick=dlCardFromState;
 $('dl-editor').onclick=dlCardFromState;
 $('dl-sticker').onclick=dlSticker;
 $('dl-sticker2').onclick=dlSticker;
-$('share-result').onclick=()=>{ const sc = gameType==='penales' ? `metí ${pg?pg.goals:0}/${pg?pg.total:5} penales` : `hice ${game?game.score:0} toques de dominio`; shareReto(`⚽ Me armé "${(av.mote||'Mi Crack')}" con la ${KITS[av.kit].n} y ${sc} en "Creá tu Crack" del Mundial 2026. ¿Me superás? 📲 @juventud_lapampa`); };
+$('share-result').onclick=()=>{ const sc = gameType==='penales' ? `metí ${pg?pg.goals:0}/${pg?pg.total:5} penales` : `hice ${game?game.score:0} toques de dominio`; shareReto(`⚽ Me armé "${(av.mote||'Mi Crack')}" con la ${KITS[av.kit].n} y ${sc} en "Creá tu Crack" del Mundial 2026. ¿Me la superás? 📲 @juventud_lapampa`); };
 
 /* ===================== INIT ===================== */
 loadSaved();
@@ -642,5 +643,6 @@ $('cap-state').textContent=av.captain?'ON':'OFF'; $('tg-captain').classList.togg
 $('meme-state').textContent=av.memeMode?'ON':'OFF'; $('tg-meme').classList.toggle('on',av.memeMode); $('sect-meme').style.display=av.memeMode?'block':'none';
 renderPreview(); refreshChips();
 </script>
+<div class="grain"></div>
 </body>
 </html>

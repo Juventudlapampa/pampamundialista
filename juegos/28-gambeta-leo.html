@@ -88,6 +88,7 @@
   .res-rank { font-family:'Anton',sans-serif; font-size:1.6rem; color:var(--gold); letter-spacing:0.04em; margin-top:0.7rem; text-transform:uppercase; }
   .res-msg { font-size:0.9rem; margin-top:0.45rem; line-height:1.4; }
   .res-wm { font-family:'JetBrains Mono',monospace; font-size:0.56rem; letter-spacing:0.2em; color:rgba(212,168,46,0.9); margin-top:0.9rem; }
+.grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
 </style>
 </head>
 <body>
@@ -101,11 +102,11 @@
   <!-- INTRO -->
   <div class="screen active" id="screen-intro">
     <div class="panel">
-      <div style="font-family:'Anton',sans-serif;color:var(--gold);font-size:1.1rem;letter-spacing:0.04em;margin-bottom:0.5rem;text-transform:uppercase">🪄 Vos decidís cómo pasar</div>
+      <div style="font-family:'Anton',sans-serif;color:var(--gold);font-size:1.1rem;letter-spacing:0.04em;margin-bottom:0.5rem;text-transform:uppercase">🪄 Vos decidís cómo gambetear</div>
       <ul class="instr">
-        <li><span class="em">🏃</span><span>Encarás al arco. <strong>Leé la postura</strong> de cada rival y vos elegís cómo superarlo. No hay una sola forma.</span></li>
-        <li><span class="em">↔️</span><span>Si vienen varios, <strong>buscá el hueco</strong>: corréte al carril libre para esquivarlos.</span></li>
-        <li><span class="em">🥅</span><span>Al llegar al área entrás al <strong>mano a mano</strong> con el arquero: apuntá, elegí el tiro y definí.</span></li>
+        <li><span class="em">🏃</span><span>Encarás derecho al arco. <strong>Leé la postura</strong> del rival y vos elegís cómo dejarlo pagando. Acá no hay una sola receta.</span></li>
+        <li><span class="em">↔️</span><span>Si te vienen varios encima, <strong>buscá el hueco</strong>: pisá el carril libre y pasá de largo.</span></li>
+        <li><span class="em">🥅</span><span>Llegás al área y es el <strong>mano a mano</strong>: apuntá, elegí el tiro y mandala a guardar.</span></li>
       </ul>
       <div class="lbl">Cómo leer al rival</div>
       <div class="reads">
@@ -123,7 +124,7 @@
         <div class="diff-btn" data-d="normal">⚽ Normal</div>
         <div class="diff-btn" data-d="dificil">🔥 Difícil</div>
       </div>
-      <button class="btn" id="start">▶ ¡A GAMBETEAR!</button>
+      <button class="btn" id="start">▶ ¡A ENCARAR!</button>
     </div>
   </div>
 
@@ -159,7 +160,7 @@
         </div>
       </div>
     </div>
-    <div class="ctrl-hint" id="ctrl-hint">Leé al rival y elegí cómo pasarlo</div>
+    <div class="ctrl-hint" id="ctrl-hint">Leé al rival y mandate la gambeta</div>
   </div>
 
   <!-- RESULT -->
@@ -172,9 +173,9 @@
       <div class="res-msg" id="res-msg"></div>
       <div class="res-wm">GAMBETEÁ COMO LEO · MUNDIAL 2026 · @JUVENTUD_LAPAMPA</div>
     </div>
-    <button class="btn" id="download">📸 DESCARGAR EL RESULTADO</button>
-    <button class="btn btn-share" id="share">🔗 DESAFIAR A UN AMIGO</button>
-    <button class="btn btn-sec" id="replay">🔁 Revancha</button>
+    <button class="btn" id="download">📸 BAJAR EL RESULTADO</button>
+    <button class="btn btn-share" id="share">🔗 DESAFIÁ A UN AMIGO</button>
+    <button class="btn btn-sec" id="replay">🔁 Quiero la revancha</button>
     <button class="btn btn-sec" id="to-intro">⚙️ Cambiar equipo / dificultad</button>
   </div>
 </div>
@@ -265,7 +266,7 @@ function pressDir(dir){ // dir: 'L','R','U','D'
 function chooseShot(type){
   if(!G||!G.running||G.phase!=='aim') return;
   G.shotType=type; G.phase='charge'; G.chargeT=0; sCharge();
-  $('ctrl-hint').textContent='¡Cargando…!';
+  $('ctrl-hint').textContent='¡Cargando el zapatazo…!';
 }
 window.addEventListener('keydown', e=>{
   if(!G) return;
@@ -343,7 +344,7 @@ function enterShoot(){
   G.keeperX=0; G.keeperGo=0;
   setControls('shoot');
   flash('¡MANO A MANO! 🥅','#f4cd60',42); sWhistle(); vibe([20,30,20]);
-  $('ctrl-hint').textContent='Apuntá con la cruceta y elegí el tiro (1·2·3)';
+  $('ctrl-hint').textContent='Apuntá con la cruceta y definí: tipo de tiro (1·2·3)';
 }
 function flash(t,c,dur){ G.msg=t; G.msgC=c||'#fff'; G.msgT=dur||40; }
 
@@ -398,7 +399,7 @@ function update(dt){
     G.celT-=dt;
     if(G.celT<=0){ // siguiente ataque
       G.phase='run'; G.progress=0; G.defs=[]; G.ball=null; G.laneIdx=1; G.playerX=0; G.spawnT=0.5;
-      setControls('run'); $('ctrl-hint').textContent='Leé al rival y elegí cómo pasarlo';
+      setControls('run'); $('ctrl-hint').textContent='Leé al rival y mandate la gambeta';
     }
   }
 
@@ -607,10 +608,10 @@ function endMatch(){ if(!G)return; G.running=false; clearInterval(timerInt); if(
   $('res-score').textContent=G.goles;
   $('res-vs').textContent=`${G.goles} GOL${G.goles===1?'':'ES'} · ${G.gambetas} GAMBETAS · ${G.jugadas} MANO A MANO`;
   let emoji,rank,msg;
-  if(G.goles>=7){ emoji='🐐'; rank='¡NIVEL LEO!'; msg='Leíste cada jugada y definiste como crack. De otro planeta.'; burst(W/2,H/2,40); }
-  else if(G.goles>=4){ emoji='🪄'; rank='¡CLASE MUNDIAL!'; msg='Gambeta, lectura y definición. Sos un fenómeno.'; }
-  else if(G.goles>=2){ emoji='👟'; rank='BIEN GAMBETEADO'; msg='Le agarrás la mano. Probá la revancha y superate.'; }
-  else { emoji='💪'; rank='A PRACTICAR'; msg='Leé la postura del rival y elegí tu jugada. ¡Dale de nuevo!'; }
+  if(G.goles>=7){ emoji='🐐'; rank='¡NIVEL LEO!'; msg='Leíste cada jugada y la clavaste como crack. Sos de otro planeta.'; burst(W/2,H/2,40); }
+  else if(G.goles>=4){ emoji='🪄'; rank='¡CLASE MUNDIAL!'; msg='Gambeta, lectura y zapatazo. Un fenómeno, papá.'; }
+  else if(G.goles>=2){ emoji='👟'; rank='BIEN GAMBETEADO'; msg='Ya le vas agarrando la mano. Dale la revancha y superate.'; }
+  else { emoji='💪'; rank='A SEGUIR ENTRENANDO'; msg='Leé la postura del rival y mandate la jugada. ¡Vamos de nuevo!'; }
   $('res-emoji').textContent=emoji; $('res-rank').textContent=rank; $('res-msg').textContent=msg+` · Mejor combo: ${G.mejorCombo}`;
   showScreen('result');
 }
@@ -618,8 +619,9 @@ function showScreen(s){ if(s!=='game'){ if(raf){cancelAnimationFrame(raf);raf=nu
 
 $('start').onclick=startMatch; $('replay').onclick=startMatch; $('to-intro').onclick=()=>showScreen('intro');
 $('download').onclick=()=>{ const node=$('res-card'); const w=node.offsetWidth,h=node.offsetHeight; html2canvas(node,{backgroundColor:'#050d08',scale:2,useCORS:true,allowTaint:true,logging:false,width:w,height:h,windowWidth:document.documentElement.clientWidth,windowHeight:document.documentElement.clientHeight}).then(c=>{ const l=document.createElement('a'); l.download='gambeta-como-leo-2026.png'; l.href=c.toDataURL('image/png'); l.click(); }); };
-$('share').onclick=()=>{ shareReto(`🪄 Metí ${G?G.goles:0} goles gambeteando como Leo (${G?G.gambetas:0} gambetas) en el Mundial 2026 con ${TEAMS[myTeamIdx].n}. ¿Me ganás? 📲 juventudlapampa.github.io/pampa-juega · @juventud_lapampa`); };
-function shareReto(text){ if(navigator.share){navigator.share({title:'Gambeteá como Leo · Pampa Juega',text}).catch(()=>{});} else if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>alert('¡Reto copiado! Mandáselo a un amigo 📲'),()=>prompt('Copiá tu reto:',text));} else {prompt('Copiá tu reto:',text);} }
+$('share').onclick=()=>{ shareReto(`🪄 Metí ${G?G.goles:0} goles gambeteando como Leo (${G?G.gambetas:0} gambetas) en el Mundial 2026 con ${TEAMS[myTeamIdx].n}. ¿Me la superás? 📲 juventudlapampa.github.io/pampa-juega · @juventud_lapampa`); };
+function shareReto(text){ if(navigator.share){navigator.share({title:'Gambeteá como Leo · Pampa Juega',text}).catch(()=>{});} else if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>alert('¡Desafío copiado! Pasáselo a un amigo 📲'),()=>prompt('Copiá tu desafío:',text));} else {prompt('Copiá tu desafío:',text);} }
 </script>
+<div class="grain"></div>
 </body>
 </html>

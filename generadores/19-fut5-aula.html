@@ -33,9 +33,6 @@
   body {
     font-family: 'DM Sans', sans-serif;
     background: var(--verde);
-    background-image:
-      radial-gradient(circle at 20% 10%, rgba(212,168,46,0.15), transparent 50%),
-      radial-gradient(circle at 80% 90%, rgba(74,222,128,0.1), transparent 50%);
     min-height: 100vh;
     color: var(--crema);
     padding: 1.5rem 1rem;
@@ -263,6 +260,7 @@
     margin-top: 0.6rem;
     text-transform: uppercase;
   }
+.grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
 </style>
 </head>
 <body>
@@ -270,7 +268,7 @@
   <header>
     <div class="header-tag">FUT5 del Aula · Mundial 2026</div>
     <h1>FUT5 DE <span>TU AULA</span></h1>
-    <p class="subtitle">Armá el equipo de fútbol 5 de tu curso con foto: 5 jugadores + 1 profe DT. Apodo, posición y descarga para compartir.</p>
+    <p class="subtitle">Armá el equipo de fútbol 5 de tu curso con foto y todo: 5 cracks + el/la profe de DT. Ponele apodo, posición, bajalo y mandalo al grupo del curso.</p>
   </header>
 
   <div class="layout">
@@ -294,9 +292,9 @@
         <div id="profe-form"></div>
       </div>
 
-      <button class="btn" id="download">⬇ DESCARGAR EQUIPO</button>
-      <button class="btn" id="download-story" style="margin-top:0.5rem;background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff">📲 DESCARGAR PARA HISTORIA (9:16)</button>
-      <button class="btn" id="share-fut5" style="margin-top:0.5rem;background:linear-gradient(135deg,#22c55e,#16a34a);color:#04210f">🔗 COMPARTIR</button>
+      <button class="btn" id="download">⬇ BAJÁ EL EQUIPO</button>
+      <button class="btn" id="download-story" style="margin-top:0.5rem;background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff">📲 PARA LA HISTORIA (9:16)</button>
+      <button class="btn" id="share-fut5" style="margin-top:0.5rem;background:linear-gradient(135deg,#22c55e,#16a34a);color:#04210f">🔗 MANDALO AL GRUPO DEL CURSO</button>
     </div>
 
     <!-- PREVIEW -->
@@ -462,12 +460,13 @@ document.getElementById('download').onclick = () => {
     link.click();
   }).catch(err => {
     node.setAttribute('style', origCss);
-    alert('Error: ' + err.message);
+    alert('Uh, se nos escapó la pelota. Probá de nuevo: ' + err.message);
   });
 };
 
 document.getElementById('download-story').onclick = () => pampaStory(document.getElementById('cancha-output'), 'EL FUT5 DE MI AULA', 'historia-fut5-aula');
 document.getElementById('share-fut5').onclick = () => pampaShare(document.getElementById('cancha-output'), '🏫 Armamos el FUT5 de nuestro curso en Pampa Juega. Armá el de tu aula 👉 juventudlapampa.github.io/pampa-juega · @pampajuega');
 </script>
+<div class="grain"></div>
 </body>
 </html>

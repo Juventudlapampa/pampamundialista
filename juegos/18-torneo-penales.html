@@ -33,7 +33,6 @@
   body {
     font-family: 'DM Sans', sans-serif;
     background: var(--bg);
-    background-image: radial-gradient(ellipse at top, rgba(13,59,38,0.7), transparent 70%);
     color: var(--crema);
     padding: 1rem;
     min-height: 100vh;
@@ -373,6 +372,7 @@
     letter-spacing: 0.2em;
     margin-top: 0.6rem;
   }
+.grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
 </style>
 </head>
 <body>
@@ -387,22 +387,22 @@
     <div class="panel">
       <div class="panel-title">⚽ Cómo jugar</div>
       <p style="line-height:1.5;font-size:0.9rem;margin-bottom:1rem">
-        Torneo de <strong>8 selecciones</strong> con bracket eliminatorio: cuartos → semis → final. Vos elegís tu selección y la IA juega contra vos en cada ronda. Si ganás la final, ¡campeón del mundo de penales!
+        Llave mata-mata con <strong>8 selecciones</strong>: cuartos → semis → final. Elegís tu camiseta y la IA te planta cara ronda tras ronda. Aguantá los nervios desde los doce pasos: si ganás la final, ¡levantás la copa y la gritás como loco!
       </p>
       <input type="text" class="input-name" id="player-name" placeholder="Tu nombre" maxlength="18">
-      <div class="panel-title">🌍 Elegí tu selección</div>
+      <div class="panel-title">🌍 ¿Con qué camiseta saltás a la cancha?</div>
       <div class="equipos-grid" id="equipos-grid"></div>
-      <button class="btn" id="start" disabled>⚽ EMPEZAR TORNEO</button>
+      <button class="btn" id="start" disabled>⚽ ARRANCA EL TORNEO</button>
     </div>
   </div>
 
   <!-- BRACKET -->
   <div class="screen" id="screen-bracket">
     <div class="panel">
-      <div class="panel-title">🏆 Bracket del torneo</div>
+      <div class="panel-title">🏆 La llave del torneo</div>
       <p style="text-align:center;font-size:0.85rem;margin-bottom:0.6rem;opacity:0.8" id="bracket-info">Tu próximo rival: ...</p>
       <div class="bracket" id="bracket-view"></div>
-      <button class="btn btn-gold" style="margin-top:1rem" id="play-next">⚽ JUGAR PRÓXIMO PARTIDO</button>
+      <button class="btn btn-gold" style="margin-top:1rem" id="play-next">⚽ SALIR A LA CANCHA</button>
     </div>
   </div>
 
@@ -424,7 +424,7 @@
         <div class="dots" id="dots-rival"></div>
       </div>
     </div>
-    <div class="turn-label" id="turn-label">VOS PATEÁS</div>
+    <div class="turn-label" id="turn-label">DALE, PATEÁ VOS</div>
     <div class="penal-zones" id="penal-zones">
       <div class="zone" data-z="0">↖</div>
       <div class="zone" data-z="1">↑</div>
@@ -439,9 +439,9 @@
   <div class="screen" id="screen-out">
     <div class="panel" style="text-align:center">
       <div style="font-size:4rem">😭</div>
-      <div style="font-family:'Anton',sans-serif;font-size:1.8rem;color:var(--rojo);letter-spacing:0.1em">ELIMINADO</div>
+      <div style="font-family:'Anton',sans-serif;font-size:1.8rem;color:var(--rojo);letter-spacing:0.1em">AFUERA</div>
       <p style="margin:1rem 0" id="out-msg">Te ganó X en penales. Hasta acá llegó tu torneo.</p>
-      <button class="btn btn-secondary" onclick="restart()">↻ Otro torneo</button>
+      <button class="btn btn-secondary" onclick="restart()">↻ Revancha, otro torneo</button>
     </div>
   </div>
 
@@ -456,8 +456,8 @@
         <div class="champion-jugador">★ <span id="champion-player">PLAYER</span> ★ @JUVENTUD_LAPAMPA</div>
       </div>
     </div>
-    <button class="btn btn-gold" id="share-champion">📸 DESCARGAR / COMPARTIR TÍTULO</button>
-    <button class="btn" style="margin-top:0.5rem" onclick="restart()">⚽ Jugar otro torneo</button>
+    <button class="btn btn-gold" id="share-champion">📸 MOSTRÁ LA COPA AL BARRIO</button>
+    <button class="btn" style="margin-top:0.5rem" onclick="restart()">⚽ A defender el título</button>
   </div>
 </div>
 
@@ -556,8 +556,8 @@ function renderEquiposGrid() {
 
 document.getElementById('start').onclick = () => {
   const name = document.getElementById('player-name').value.trim();
-  if (!name) { alert('Ingresá tu nombre'); return; }
-  if (!state.myTeam) { alert('Elegí una selección'); return; }
+  if (!name) { alert('Pará, decime tu nombre primero'); return; }
+  if (!state.myTeam) { alert('Elegí con qué camiseta jugás'); return; }
   state.playerName = name;
   initAudio();
   buildBracket();
@@ -636,11 +636,11 @@ function renderBracket() {
   const currentMatch = state.bracket[state.currentRound][state.currentMatchIndex];
   if (currentMatch && !currentMatch.result) {
     const rival = currentMatch.a.id === state.myTeam.id ? currentMatch.b : currentMatch.a;
-    document.getElementById('bracket-info').innerHTML = `Tu rival: <strong>${rival.n}</strong> · ${RONDA_NAMES[state.currentRound]}`;
+    document.getElementById('bracket-info').innerHTML = `Te toca: <strong>${rival.n}</strong> · ${RONDA_NAMES[state.currentRound]}. A no aflojar.`;
     document.getElementById('play-next').style.display = 'block';
     document.getElementById('play-next').textContent = `⚽ JUGAR ${RONDA_NAMES[state.currentRound]}`;
   } else {
-    document.getElementById('bracket-info').textContent = '✓ Torneo terminado';
+    document.getElementById('bracket-info').textContent = '✓ Se terminó el torneo';
     document.getElementById('play-next').style.display = 'none';
   }
 }
@@ -719,7 +719,7 @@ function nextTurn() {
   // Detectar muerte súbita
   if (!ms.sudden && ms.golesYo.length >= 5 && ms.golesRival.length >= 5) {
     ms.sudden = true;
-    showBigMsg('¡MUERTE SÚBITA!', 'gol');
+    showBigMsg('¡MUERTE SÚBITA!', 'gol'); // acá no se perdona, eh
   }
   const isPatea = ms.turno % 2 === 0;
   const label = document.getElementById('turn-label');
@@ -728,7 +728,7 @@ function nextTurn() {
   zones.forEach(z => { z.onclick = null; z.classList.remove('hint', 'locked'); });
 
   if (isPatea) {
-    label.textContent = '⚽ VOS PATEÁS · Tap en una zona';
+    label.textContent = '⚽ DALE, CLAVALA · Elegí dónde la mandás';
     zones.forEach(z => {
       z.onclick = () => zoneClick(parseInt(z.dataset.z), true);
     });
@@ -743,7 +743,7 @@ function nextTurn() {
   if (!honesto) {
     do { pistaZone = Math.floor(Math.random() * 6); } while (pistaZone === ms.rivalZone);
   }
-  label.textContent = '🧤 VOS ATAJÁS · Leé el amago del pateador';
+  label.textContent = '🧤 AL ARCO · Leele el amague antes de tirarte';
   // Mostrar la pista ~1s con tap bloqueado, después habilitar
   zones.forEach(z => z.classList.add('locked'));
   const pistaEl = document.querySelector(`.zone[data-z="${pistaZone}"]`);
@@ -753,7 +753,7 @@ function nextTurn() {
       z.classList.remove('hint', 'locked');
       z.onclick = () => zoneClick(parseInt(z.dataset.z), false);
     });
-    label.textContent = '🧤 ¡AHORA! · Tap a dónde te tirás';
+    label.textContent = '🧤 ¡AHORA! · Volá para donde la va a poner';
   }, 1000);
 }
 
@@ -770,9 +770,9 @@ function zoneClick(zone, isPatea) {
     const gol = !atajada;
     ms.golesYo.push(gol);
     if (gol) {
-      showBigMsg('¡GOL!', 'gol'); sfx.gol(); confeti(); vibe(60);
+      showBigMsg('¡GOLAZO!', 'gol'); sfx.gol(); confeti(); vibe(60);
     } else {
-      showBigMsg('¡ATAJÓ!', 'atajada'); sfx.ataj();
+      showBigMsg('¡TE LA SACÓ!', 'atajada'); sfx.ataj();
     }
   } else {
     // Vos atajás: el rival ya eligió su zona (telegrafiada con la pista previa)
@@ -780,9 +780,9 @@ function zoneClick(zone, isPatea) {
     const atajada = acertaste; // gol si NO atajaste la zona correcta
     ms.golesRival.push(!atajada);
     if (atajada) {
-      showBigMsg('¡LA ATAJASTE!', 'atajada'); sfx.ataj(); confeti(); vibe(50);
+      showBigMsg('¡ATAJADÓN!', 'atajada'); sfx.ataj(); confeti(); vibe(50);
     } else {
-      showBigMsg('GOL', 'gol'); sfx.gol(); vibe(40);
+      showBigMsg('TE LA CLAVÓ', 'gol'); sfx.gol(); vibe(40);
     }
   }
   setTimeout(() => {
@@ -813,7 +813,7 @@ function endMatch() {
 
   if (!ganaste) {
     // Eliminado
-    document.getElementById('out-msg').textContent = `Te ganó ${ms.rival.n} en penales (${gy}-${gr}). Hasta acá llegó tu torneo.`;
+    document.getElementById('out-msg').textContent = `Te ganó ${ms.rival.n} desde los doce pasos (${gy}-${gr}). Hasta acá llegaste, pero la peleaste. La próxima es tuya.`;
     // También simulamos los otros partidos para mostrar bracket completo
     simulateRestAllRounds();
     setTimeout(() => show('out'), 600);
@@ -939,5 +939,6 @@ window.restart = restart;
 
 renderEquiposGrid();
 </script>
+<div class="grain"></div>
 </body>
 </html>

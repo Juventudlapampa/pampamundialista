@@ -32,7 +32,6 @@
   body {
     font-family: 'DM Sans', sans-serif;
     background: var(--bg);
-    background-image: radial-gradient(ellipse at top, rgba(13,59,38,0.6), transparent 70%);
     min-height: 100vh;
     color: var(--crema);
     padding: 1rem;
@@ -406,6 +405,7 @@
   }
   .result-stat-row:last-child { border-bottom: none; }
   .result-stats-center { color: var(--gold); writing-mode: vertical-lr; font-size: 0.7rem; letter-spacing: 0.2em; }
+.grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
 </style>
 </head>
 <body>
@@ -418,7 +418,7 @@
   <!-- SETUP -->
   <div class="screen active" id="screen-setup">
     <div class="panel">
-      <div class="panel-title">⚽ Elegí los equipos</div>
+      <div class="panel-title">⚽ Armá el partidazo</div>
       <div class="equipos-pick">
         <div class="equipo-col">
           <div class="equipo-flag" id="flag-local">🇦🇷</div>
@@ -433,7 +433,7 @@
         </div>
       </div>
 
-      <div class="panel-title" style="font-size:1rem;margin-top:1rem">Tu táctica inicial</div>
+      <div class="panel-title" style="font-size:1rem;margin-top:1rem">¿Cómo salís a la cancha?</div>
       <div class="tactica-row">
         <button class="tactica-btn" data-tactica="defensivo">
           🛡 DEFENSIVO
@@ -451,11 +451,11 @@
     </div>
 
     <div class="panel">
-      <div class="panel-title">📊 Stats comparados</div>
+      <div class="panel-title">📊 Cómo vienen mano a mano</div>
       <div id="stats-compare"></div>
     </div>
 
-    <button class="btn" id="iniciar">▶ INICIAR PARTIDO</button>
+    <button class="btn" id="iniciar">▶ ¡QUE RUEDE LA PELOTA!</button>
   </div>
 
   <!-- SIMULACIÓN -->
@@ -487,19 +487,19 @@
     </div>
 
     <div class="panel" style="margin-bottom:0.8rem;padding:0.8rem">
-      <div style="font-family:'Anton',sans-serif;color:var(--gold);font-size:0.95rem;letter-spacing:0.1em;margin-bottom:0.5rem">⚙ TU TÁCTICA</div>
+      <div style="font-family:'Anton',sans-serif;color:var(--gold);font-size:0.95rem;letter-spacing:0.1em;margin-bottom:0.5rem">⚙ EL PLANTEO ES TUYO</div>
       <div class="controls-bar">
         <button class="ctrl-btn" data-set-tactica="defensivo">🛡 DEF</button>
         <button class="ctrl-btn active" data-set-tactica="equilibrado">⚖ EQUI</button>
         <button class="ctrl-btn" data-set-tactica="ofensivo">⚔ OFE</button>
       </div>
-      <div style="font-family:'Anton',sans-serif;color:var(--gold);font-size:0.85rem;letter-spacing:0.1em;margin:0.8rem 0 0.3rem">🔥 INSTRUCCIONES OSADAS (1 sola vez)</div>
+      <div style="font-family:'Anton',sans-serif;color:var(--gold);font-size:0.85rem;letter-spacing:0.1em;margin:0.8rem 0 0.3rem">🔥 JUGADAS DE CRACK (una sola vez cada una)</div>
       <div id="ordenes-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem"></div>
       <div id="orden-activa" style="margin-top:0.5rem;font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--verde-fluo);text-align:center;min-height:1em"></div>
     </div>
 
     <div class="panel" style="padding:0.8rem">
-      <div style="font-family:'Anton',sans-serif;color:var(--gold);font-size:0.95rem;letter-spacing:0.1em;margin-bottom:0.5rem">📋 EVENTOS DEL PARTIDO</div>
+      <div style="font-family:'Anton',sans-serif;color:var(--gold);font-size:0.95rem;letter-spacing:0.1em;margin-bottom:0.5rem">📋 EL RELATO, MINUTO A MINUTO</div>
       <div class="eventos-log" id="eventos-log"></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-top:0.6rem">
         <button class="btn btn-secondary" id="pause" style="padding:0.6rem;font-size:0.85rem">⏸ PAUSA</button>
@@ -522,7 +522,7 @@
           <div class="result-stats-center">STATS</div>
           <div id="r-stats-v"></div>
         </div>
-        <button class="btn" onclick="restart()">⚽ Otra partida</button>
+        <button class="btn" onclick="restart()">⚽ Revancha, dale</button>
       </div>
     </div>
   </div>
@@ -713,13 +713,13 @@
       document.querySelectorAll('[data-set-tactica]').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       estado.tactica_local = btn.dataset.setTactica;
-      log(estado.min, `📋 Cambio de táctica: ${btn.dataset.setTactica.toUpperCase()}`);
+      log(estado.min, `📋 El técnico mueve el banco: ahora van ${btn.dataset.setTactica.toUpperCase()}`);
     };
   });
 
   document.getElementById('iniciar').onclick = () => {
     if (estado.local.id === estado.visit.id) {
-      alert('Elegí selecciones distintas');
+      alert('Che, no podés enfrentar a un equipo con sí mismo. Elegí dos distintos.');
       return;
     }
     show('game');
@@ -762,7 +762,7 @@
     document.getElementById('eventos-log').innerHTML = '';
     document.getElementById('et-banner-container').innerHTML = '';
 
-    log(0, `🏁 Empieza el partido. ${estado.local.name} vs ${estado.visit.name}.`);
+    log(0, `🏁 ¡Rueda la pelota! Arranca ${estado.local.name} vs ${estado.visit.name}. A morder desde el arranque.`);
     runMatch();
   }
 
@@ -812,7 +812,7 @@
     estado.ordenActiva = o;
     estado.ordenExpire = estado.min + o.dur;
     if (o.special === 'panenka') estado.panenkaQueue = true;
-    log(estado.min, `🔥 ORDEN ESPECIAL: ${o.n} — ${o.desc}`, 'penal');
+    log(estado.min, `🔥 ¡JUGADA DE CRACK!: ${o.n} — ${o.desc}`, 'penal');
     document.getElementById('orden-activa').textContent = `▶ ${o.n} activa hasta min ${estado.min + o.dur}`;
     renderOrdenes();
     // La orden expira por MINUTO SIMULADO (se limpia en tickMinute), no por tiempo real,
@@ -857,13 +857,13 @@
 
     // Entretiempo
     if (estado.min === 45) {
-      document.getElementById('et-banner-container').innerHTML = '<div class="et-banner">⏸ ENTRETIEMPO · Cambiá tu táctica si querés</div>';
+      document.getElementById('et-banner-container').innerHTML = '<div class="et-banner">⏸ ENTRETIEMPO · Charla técnica: acomodá el equipo si hace falta</div>';
       estado.halftime = true;
-      log(45, '⏱ ENTRETIEMPO. Resultado parcial.');
+      log(45, '⏱ Se van al vestuario. Esto recién empieza.');
       setTimeout(() => {
         document.getElementById('et-banner-container').innerHTML = '';
         estado.halftime = false;
-        log(45, '▶ Empieza el segundo tiempo.');
+        log(45, '▶ Vuelven a la cancha. ¡Arranca el complemento!');
       }, 3500 / estado.speed);
       return;
     }
@@ -873,7 +873,7 @@
       if (estado.min >= 90 + 4) {
         endMatch();
       } else if (estado.min === 90) {
-        log(90, '⏱ Tiempo cumplido. Hay descuento.');
+        log(90, '⏱ Noventa cumplidos. El juez da descuento, no aflojen.');
       }
     }
   }
@@ -919,7 +919,7 @@
       tryPenal(atacante, defensor, team, otro, localHasIt);
     } else {
       // jugada peligrosa sin gol
-      log(estado.min, `🔥 ${team.flag} ${pickJugador(team.id)} la tuvo, pero la mandó cerca del palo.`);
+      log(estado.min, `🔥 ${team.flag} ¡La tuvo ${pickJugador(team.id)}! La pasó rozando el palo, por poco la rompe.`);
     }
   }
 
@@ -931,40 +931,40 @@
     if (r < golProb * 0.55) {
       gol(team, otro, isLocal, pickJugador(team.id));
     } else if (r < golProb * 0.55 + 0.15) {
-      log(estado.min, `🥅 ${team.flag} Atajada del arquero de ${otro.name}.`);
+      log(estado.min, `🥅 ${team.flag} ¡Tapadón del arquero de ${otro.name}! Le ahogó el grito.`);
     } else {
-      log(estado.min, `⚽ ${team.flag} ${pickJugador(team.id)} remató pero la sacaron a la defensa.`);
+      log(estado.min, `⚽ ${team.flag} ${pickJugador(team.id)} sacó el latigazo, pero un defensor de ${otro.name} la mandó al córner.`);
     }
   }
 
   function tryFreekick(atk, def, team, otro, isLocal) {
-    log(estado.min, `🎯 ${team.flag} Tiro libre para ${team.name}...`);
+    log(estado.min, `🎯 ${team.flag} Falta peligrosa, tiro libre para ${team.name}. Acomodan la barrera...`);
     const prob = (atk.atk * 0.7 + atk.med * 0.3) / (atk.atk + def.por * 1.5);
     if (Math.random() < prob * 0.45) {
-      gol(team, otro, isLocal, pickJugador(team.id), '⚽ tiro libre');
+      gol(team, otro, isLocal, pickJugador(team.id), '⚽ de tiro libre, a la escuadra');
     } else {
-      log(estado.min, `   ${Math.random() < 0.5 ? 'Tapó el arquero.' : 'Se fue por arriba del travesaño.'}`);
+      log(estado.min, `   ${Math.random() < 0.5 ? 'Voló el arquero y la mandó al córner.' : 'La colgó arriba del travesaño, por nada.'}`);
     }
   }
 
   function tryPenal(atk, def, team, otro, isLocal) {
-    log(estado.min, `🚨 ${team.flag} ¡PENAL para ${team.name}!`, 'penal');
+    log(estado.min, `🚨 ${team.flag} ¡PENAL para ${team.name}! ¡El árbitro no duda y señala los doce pasos!`, 'penal');
     // Si activaste "panenka", próximo penal: o gol épico o atajada épica
     if (isLocal && estado.panenkaQueue) {
       estado.panenkaQueue = false;
       if (Math.random() < 0.55) {
-        gol(team, otro, isLocal, pickJugador(team.id), '🎩 con PANENKA');
+        gol(team, otro, isLocal, pickJugador(team.id), '🎩 con una Panenka de otro planeta');
         return;
       } else {
-        log(estado.min, `   🧤 ¡SE QUEDÓ EL ARQUERO! Quiso la Panenka y se la atajaron.`);
+        log(estado.min, `   🧤 ¡SE LA COMIÓ EL ARQUERO! Quiso hacerse el canchero con la Panenka y se la adivinaron. Para no creer.`);
         return;
       }
     }
     const prob = 0.75 - (def.por - 80) / 200;
     if (Math.random() < prob) {
-      gol(team, otro, isLocal, pickJugador(team.id), '⚽ de penal');
+      gol(team, otro, isLocal, pickJugador(team.id), '⚽ de penal, fría como el hielo');
     } else {
-      log(estado.min, `   🧤 ¡ATAJADA INCREÍBLE del arquero de ${otro.name}!`);
+      log(estado.min, `   🧤 ¡ATAJADÓN del arquero de ${otro.name}! ¡Voló y la sacó del ángulo, una bestia!`);
     }
   }
 
@@ -975,10 +975,10 @@
     if (isRoja) {
       if (isLocalCard) { estado.cards_l++; estado.rojas_l++; }
       else { estado.cards_v++; estado.rojas_v++; }
-      log(estado.min, `🟥 Roja directa para ${teamCard.flag} ${teamCard.name}. ${pickJugador(teamCard.id)} se va expulsado.`, 'roja');
+      log(estado.min, `🟥 ¡Roja directa para ${teamCard.flag} ${teamCard.name}! ${pickJugador(teamCard.id)} se va a las duchas y deja al equipo con uno menos.`, 'roja');
     } else {
       if (isLocalCard) estado.cards_l++; else estado.cards_v++;
-      log(estado.min, `🟨 Amarilla para ${teamCard.flag} ${teamCard.name}, ${pickJugador(teamCard.id)}.`, 'tarjeta');
+      log(estado.min, `🟨 Amarilla para ${teamCard.flag} ${teamCard.name}: ${pickJugador(teamCard.id)} la vio por planchazo. A jugar con cuidado.`, 'tarjeta');
     }
   }
 
@@ -986,7 +986,7 @@
     if (isLocal) estado.score_l++; else estado.score_v++;
     document.getElementById('m-score-l').textContent = estado.score_l;
     document.getElementById('m-score-v').textContent = estado.score_v;
-    log(estado.min, `⚽ ¡GOOOOL DE ${team.flag} ${team.name.toUpperCase()}! ${scorer} ${tipo}. ${estado.score_l}-${estado.score_v}.`, 'gol');
+    log(estado.min, `⚽ ¡GOOOOOL, GOL, GOL DE ${team.flag} ${team.name.toUpperCase()}! ¡La clavó ${scorer} ${tipo} y la rompió! ${estado.score_l}-${estado.score_v}. ¡Metela y gritala!`, 'gol');
     // El equipo que recibió gol cambia táctica
     if (isLocal) {
       // Es la IA la que recibió
@@ -1006,7 +1006,7 @@
   function endMatch() {
     clearInterval(estado.interval);
     estado.running = false;
-    log(estado.min, `🏁 Final del partido. ${estado.local.name} ${estado.score_l} · ${estado.score_v} ${estado.visit.name}.`, 'final');
+    log(estado.min, `🏁 ¡Pitazo final! Se terminó: ${estado.local.name} ${estado.score_l} · ${estado.score_v} ${estado.visit.name}. ¡A guardarlo!`, 'final');
     setTimeout(showResult, 2000);
   }
 
@@ -1017,13 +1017,13 @@
     let trophy, verdict;
     if (estado.score_l > estado.score_v) {
       trophy = '🏆';
-      verdict = `¡VICTORIA DE ${estado.local.name.toUpperCase()}!`;
+      verdict = `¡GANÓ ${estado.local.name.toUpperCase()} Y LA GENTE LO GRITA!`;
     } else if (estado.score_l < estado.score_v) {
       trophy = '😭';
-      verdict = `Triunfo de ${estado.visit.name}. A casa.`;
+      verdict = `Se lo llevó ${estado.visit.name}. A bancarla y pensar en la revancha.`;
     } else {
       trophy = '🤝';
-      verdict = `EMPATE ${estado.score_l}-${estado.score_v}.`;
+      verdict = `EMPATE ${estado.score_l}-${estado.score_v}. Se repartieron los puntos.`;
     }
     document.getElementById('r-trophy').textContent = trophy;
     document.getElementById('r-verdict').textContent = verdict;
@@ -1065,5 +1065,6 @@
   }
   window.restart = restart;
 </script>
+<div class="grain"></div>
 </body>
 </html>

@@ -33,7 +33,6 @@
   body {
     font-family: 'DM Sans', sans-serif;
     background: var(--bg);
-    background-image: radial-gradient(ellipse at top, rgba(13,59,38,0.7), transparent 70%);
     color: var(--crema);
     padding: 1rem;
     min-height: 100vh;
@@ -405,6 +404,7 @@
   .ranking-item { display: grid; grid-template-columns: 35px 1fr auto; gap: 0.8rem; align-items: center; padding: 0.6rem 0.9rem; border-bottom: 1px solid rgba(244,236,216,0.1); }
   .rank-n { font-family: 'Anton', sans-serif; color: var(--gold); }
   .rank-pts { font-family: 'JetBrains Mono', monospace; color: var(--verde-fluo); font-weight: 700; }
+.grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
 </style>
 </head>
 <body>
@@ -419,17 +419,17 @@
     <div class="panel">
       <div style="font-family:'Anton',sans-serif;color:var(--gold);font-size:1.1rem;letter-spacing:0.1em;margin-bottom:0.7rem;text-transform:uppercase">⚽ Cómo jugar</div>
       <p style="line-height:1.5;font-size:0.85rem;margin-bottom:0.8rem">
-        <strong>3 toques por tiro</strong>: 1) elegís la zona del arco, 2) tap en la barra de potencia (el centro verde es el sweet spot), 3) le metés curva izq/der/recto. Tenés 10 tiros, vas sumando puntos por cada gol.
+        <strong>3 toques y la clavás</strong>: 1) apuntá la zona del arco donde la querés meter, 2) tap en la barra de potencia (el verde del medio es el punto justo, no la reventés), 3) le ponés efecto: comba a la izquierda, a la derecha o derechito. Tenés 10 tiros para hacerte el Maradona y sumar puntos.
       </p>
       <p style="line-height:1.5;font-size:0.85rem;margin-bottom:1rem;color:var(--gold-2)">
-        ⚡ <strong>Pateador real</strong> de la selección que elijas. <strong>Arquero IA</strong> de la lista oficial: aprende de tus tiros y va para donde cree que vas a patear.
+        ⚡ <strong>Pateador real</strong> de la selección que elijas. <strong>Arquero IA</strong> de la lista oficial: el tipo te estudia y se tira para donde cree que la vas a poner. Si te hace el repetido, te lee y te la ataja.
       </p>
       <input type="text" class="input-name" id="player-name" placeholder="Tu nombre" maxlength="18">
-      <label>Tu selección (pateador)</label>
+      <label>Tu selección (el que patea)</label>
       <select id="sel-team"></select>
-      <label>Arquero rival (IA)</label>
+      <label>El arquero que te toca cruzar (IA)</label>
       <select id="sel-gk"></select>
-      <button class="btn" id="start" style="margin-top:1rem">⚽ EMPEZAR · 10 TIROS</button>
+      <button class="btn" id="start" style="margin-top:1rem">⚽ A LA CANCHA · 10 TIROS</button>
     </div>
   </div>
 
@@ -440,7 +440,7 @@
       <div class="hud-block score"><div class="hud-block-num" id="hud-score">0</div><div class="hud-block-lab">Puntos</div></div>
       <div class="hud-block tries"><div class="hud-block-num" id="hud-goles">0</div><div class="hud-block-lab">Goles</div></div>
     </div>
-    <div class="instruction" id="instruction">🎯 TAP EN UNA ZONA DEL ARCO</div>
+    <div class="instruction" id="instruction">🎯 APUNTÁ DÓNDE LA CLAVÁS</div>
     <div class="cancha-wrap" id="cancha">
       <div class="arco">
         <div class="arco-frame"></div>
@@ -475,15 +475,15 @@
       <div class="big-msg" id="big-msg"></div>
     </div>
     <div class="power-bar-wrap" id="power-bar-wrap">
-      <div class="power-bar-label">⚡ POTENCIA · TAP CUANDO LLEGUE AL VERDE</div>
+      <div class="power-bar-label">⚡ POTENCIA · FRENALA EN EL VERDE, NO LA REVIENTES</div>
       <div class="power-bar-track" id="power-bar"><div class="power-marker" id="power-marker"></div></div>
     </div>
     <div class="curve-wrap" id="curve-wrap">
-      <button class="curve-btn" data-curve="-1">← CURVA IZQUIERDA</button>
-      <button class="curve-btn" data-curve="0">↑ DERECHO</button>
-      <button class="curve-btn" data-curve="1">→ CURVA DERECHA</button>
+      <button class="curve-btn" data-curve="-1">← COMBA A LA IZQUIERDA</button>
+      <button class="curve-btn" data-curve="0">↑ DERECHITA</button>
+      <button class="curve-btn" data-curve="1">→ COMBA A LA DERECHA</button>
     </div>
-    <button class="btn btn-secondary" id="quit" style="padding:0.7rem;font-size:0.9rem">⏏ SALIR DEL JUEGO</button>
+    <button class="btn btn-secondary" id="quit" style="padding:0.7rem;font-size:0.9rem">⏏ ME VOY A LAS DUCHAS</button>
   </div>
 
   <!-- RESULT -->
@@ -498,8 +498,8 @@
         <div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;color:rgba(244,236,216,0.5);margin-top:0.6rem">⚽ TIROS LIBRES · MUNDIAL 2026 · @juventud_lapampa</div>
       </div>
     </div>
-    <button class="btn btn-gold" style="margin-top:0.6rem" id="r-download">📸 COMPARTIR RESULTADO</button>
-    <button class="btn btn-secondary" style="margin-top:0.5rem" onclick="restart()">⚽ Otra partida</button>
+    <button class="btn btn-gold" style="margin-top:0.6rem" id="r-download">📸 MOSTRÁ TUS GOLAZOS</button>
+    <button class="btn btn-secondary" style="margin-top:0.5rem" onclick="restart()">⚽ Revancha, dale</button>
   </div>
 </div>
 
@@ -583,7 +583,7 @@ let game = {
 
 document.getElementById('start').onclick = () => {
   const name = document.getElementById('player-name').value.trim();
-  if (!name) { alert('Ingresá tu nombre'); return; }
+  if (!name) { alert('Eh, decime tu nombre antes de patear'); return; }
   initAudio();
   game.name = name;
   game.team = PATEADORES.find(p => p.team === document.getElementById('sel-team').value);
@@ -619,7 +619,7 @@ function nextTiro() {
   p.style.transform = 'translate(-50%, 0) scale(1)';
   p.style.opacity = '1';
   setTimeout(() => { p.style.transition = ''; }, 50);
-  setInstruction('🎯 TAP EN UNA ZONA DEL ARCO');
+  setInstruction('🎯 APUNTÁ DÓNDE LA CLAVÁS');
 }
 
 function setInstruction(text, type='') {
@@ -650,7 +650,7 @@ document.querySelectorAll('.zona').forEach(z => {
 
 function startPowerBar() {
   game.state = 'POWER';
-  setInstruction('⚡ TAP CUANDO EL MARCADOR LLEGUE AL VERDE', 'power');
+  setInstruction('⚡ FRENALA EN EL VERDE · NI BLANDA NI REVENTADA', 'power');
   document.getElementById('power-bar-wrap').classList.add('active');
   const marker = document.getElementById('power-marker');
   let pos = 0, dir = 1, speed = 3.0;
@@ -671,7 +671,7 @@ function startPowerBar() {
 function showCurve() {
   game.state = 'CURVA';
   document.getElementById('power-bar-wrap').classList.remove('active');
-  setInstruction('🌀 ELEGÍ EFECTO: IZQUIERDA, DERECHO O DERECHA', 'curve');
+  setInstruction('🌀 PONELE EFECTO: COMBA O DERECHITA AL ÁNGULO', 'curve');
   document.getElementById('curve-wrap').classList.add('active');
 }
 document.querySelectorAll('.curve-btn').forEach(b => {
@@ -679,7 +679,7 @@ document.querySelectorAll('.curve-btn').forEach(b => {
     if (game.state !== 'CURVA') return;
     game.curve = parseInt(b.dataset.curve);
     document.getElementById('curve-wrap').classList.remove('active');
-    setInstruction('🚀 PATEANDO...', '');
+    setInstruction('🚀 LA REVIENTA...', '');
     fireBall();
   };
 });
@@ -790,17 +790,17 @@ function showResult(result) {
     if (result.sweet) pts += 50;
     if (result.isCentro && game.power < 30) pts += 100; // Panenka!
     game.score += pts;
-    showBigMsg(result.isCentro && game.power < 30 ? '¡PANENKA!' : '¡GOOOL!', 'gol');
+    showBigMsg(result.isCentro && game.power < 30 ? '¡PANENKA!' : '¡GOOOL!', 'gol'); // metela y gritala
     sfx.gol(); confeti(); vibe(60);
   } else if (result.type === 'atajada') {
-    showBigMsg('¡ATAJÓ!', 'atajada');
+    showBigMsg('¡TE LA SACÓ!', 'atajada');
     sfx.ataj(); vibe(25);
   } else if (result.type === 'muro') {
-    showBigMsg('¡EN EL MURO!', 'muro');
+    showBigMsg('¡PEGÓ EN LA BARRERA!', 'muro');
     sfx.muro();
     shake();
   } else {
-    showBigMsg('¡AFUERA!', 'afuera');
+    showBigMsg('¡A LA TRIBUNA!', 'afuera');
     sfx.afuera();
     shake();
   }
@@ -825,7 +825,7 @@ function confeti(){
     setTimeout(()=>c.remove(),dur); }
 }
 
-document.getElementById('quit').onclick = () => { if (confirm('¿Salir?')) finish(); };
+document.getElementById('quit').onclick = () => { if (confirm('¿Colgás los botines?')) finish(); };
 
 // ========================================================================
 // FINISH
@@ -835,11 +835,11 @@ function finish() {
   document.getElementById('r-score').textContent = game.score;
   document.getElementById('r-goles').textContent = game.goles;
   document.getElementById('r-line').textContent = `${game.team.star.toUpperCase()} vs ${game.gk.name.toUpperCase()}`;
-  let t = '⚽', v = 'Hay que entrenar';
-  if (game.goles >= 9) { t = '🏆'; v = '¡MAESTRO DEL TIRO LIBRE!'; }
-  else if (game.goles >= 7) { t = '🥇'; v = '¡Crack absoluto!'; }
-  else if (game.goles >= 5) { t = '🥈'; v = 'Buen pateador'; }
-  else if (game.goles >= 3) { t = '🥉'; v = 'Vas mejorando'; }
+  let t = '⚽', v = 'A entrenar al potrero, maestro';
+  if (game.goles >= 9) { t = '🏆'; v = '¡SOS UN FENÓMENO DE LA PELOTA PARADA!'; }
+  else if (game.goles >= 7) { t = '🥇'; v = '¡Crack total, la clavás de taquito!'; }
+  else if (game.goles >= 5) { t = '🥈'; v = 'Pateás bien, ya casi sos titular'; }
+  else if (game.goles >= 3) { t = '🥉'; v = 'Vas agarrando la mano, dale que se puede'; }
   document.getElementById('r-trophy').textContent = t;
   document.getElementById('r-verdict').textContent = v;
 }
@@ -868,5 +868,6 @@ function show(s) {
 function restart() { show('intro'); }
 window.restart = restart;
 </script>
+<div class="grain"></div>
 </body>
 </html>

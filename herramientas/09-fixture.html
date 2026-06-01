@@ -34,7 +34,6 @@
   body {
     font-family: 'DM Sans', sans-serif;
     background: #050d08;
-    background-image: radial-gradient(ellipse at top, rgba(13,59,38,0.6), transparent 70%);
     min-height: 100vh;
     color: var(--crema);
     padding: 1.5rem 1rem;
@@ -493,6 +492,7 @@
   .flag.v { background:linear-gradient(to right, var(--f1) 0 33%, var(--f2) 33% 66%, var(--f3) 66% 100%); }
   .equipo-flag-big .flag { width:30px; height:20px; }
   .campeon-flag .flag { width:70px; height:47px; margin:0 auto; }
+  .grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
 </style>
 </head>
 <body>
@@ -500,7 +500,7 @@
   <header>
     <div class="header-tag">Fixture Completo · Mundial 2026</div>
     <h1>FIXTURE <span>MUNDIAL 2026</span></h1>
-    <p class="subtitle">Cargá resultados de la fase de grupos y las eliminatorias se arman solas. 48 selecciones · 104 partidos · 1 campeón.</p>
+    <p class="subtitle">Vos cargás los resultados de los grupos y las eliminatorias se arman solitas, como por arte de magia. 48 selecciones, 104 partidos y un solo campeón. ¿Quién la levanta?</p>
   </header>
 
   <div class="tabs">
@@ -515,13 +515,13 @@
   <!-- ETAPA 1: GRUPOS -->
   <div class="etapa active" id="etapa-grupos">
     <div class="toolbar">
-      <button class="btn btn-primary" id="random-all">🎲 Simular todos los grupos</button>
-      <button class="btn" id="reset-grupos">↻ Reiniciar grupos</button>
+      <button class="btn btn-primary" id="random-all">🎲 Que el azar arme los grupos</button>
+      <button class="btn" id="reset-grupos">↻ Borrón y cuenta nueva</button>
     </div>
     <div class="grupos-grid" id="grupos"></div>
     <div class="clasificados">
-      <div class="clasificados-title">🏆 Clasificados a 16avos</div>
-      <p style="font-size:0.85rem;opacity:0.7">Pasan los 2 primeros de cada grupo + 8 mejores terceros (32 equipos en total)</p>
+      <div class="clasificados-title">🏆 Los que se meten en 16avos</div>
+      <p style="font-size:0.85rem;opacity:0.7">Avanzan los 2 punteros de cada grupo + los 8 mejores terceros. En total, 32 que siguen en carrera.</p>
       <div class="clasificados-grid" id="clasificados-list"></div>
     </div>
   </div>
@@ -530,8 +530,8 @@
   <div class="etapa" id="etapa-elim">
     <div id="bracket-info"></div>
     <div class="toolbar">
-      <button class="btn btn-primary" id="random-elim">🎲 Simular eliminatorias</button>
-      <button class="btn" id="reset-elim">↻ Reiniciar eliminatorias</button>
+      <button class="btn btn-primary" id="random-elim">🎲 Que la suerte tire la llave</button>
+      <button class="btn" id="reset-elim">↻ Limpiar la llave</button>
     </div>
     <div class="rondas-tabs" id="rondas-tabs"></div>
     <div id="rondas-container"></div>
@@ -545,8 +545,8 @@
     <div class="modal-title" id="modal-grupo-title"></div>
     <div id="modal-grupo-partidos"></div>
     <div style="display:flex;gap:0.5rem;margin-top:1rem">
-      <button class="btn" style="flex:1" id="modal-grupo-clear">Limpiar</button>
-      <button class="btn btn-primary" style="flex:1" id="modal-grupo-save">Guardar</button>
+      <button class="btn" style="flex:1" id="modal-grupo-clear">Borrar todo</button>
+      <button class="btn btn-primary" style="flex:1" id="modal-grupo-save">Listo, guardá</button>
     </div>
   </div>
 </div>
@@ -557,7 +557,7 @@
     <div class="modal-title" id="modal-elim-title"></div>
     <div id="modal-elim-partido"></div>
     <div class="penales-section" id="modal-elim-penales">
-      <div class="penales-label">Empate. Hubo definición por penales:</div>
+      <div class="penales-label">Empataron. A los penales, corazones de acero:</div>
       <div class="partido-row" style="grid-template-columns:1fr 50px auto 50px 1fr">
         <div class="partido-equipo right" id="pen-eq-h"></div>
         <input type="number" class="gol-input" id="pen-h" min="0" max="20" placeholder="0">
@@ -567,8 +567,8 @@
       </div>
     </div>
     <div style="display:flex;gap:0.5rem;margin-top:1rem">
-      <button class="btn" style="flex:1" id="modal-elim-clear">Limpiar</button>
-      <button class="btn btn-primary" style="flex:1" id="modal-elim-save">Guardar</button>
+      <button class="btn" style="flex:1" id="modal-elim-clear">Borrar todo</button>
+      <button class="btn btn-primary" style="flex:1" id="modal-elim-save">Listo, guardá</button>
     </div>
   </div>
 </div>
@@ -680,7 +680,7 @@
       div.innerHTML = `
         <div class="grupo-header">
           <div class="grupo-letra">GRUPO ${letra}</div>
-          <button class="grupo-edit" data-grupo="${letra}">⚽ Cargar partidos</button>
+          <button class="grupo-edit" data-grupo="${letra}">⚽ Cargar la fecha</button>
         </div>
         <table class="tabla-grupo">
           <thead>
@@ -926,18 +926,18 @@
 
     if (!gruposCompletos()) {
       info.className = 'bracket-info warning';
-      info.innerHTML = '⚠ Completá los 3 partidos de cada grupo para que se desbloqueen las eliminatorias.';
+      info.innerHTML = '⚠ Primero terminá de cargar los 3 partidos de cada grupo y recién ahí se abre la llave. Paciencia, hincha.';
       cont.innerHTML = '';
       tabsEl.innerHTML = '';
       return;
     }
 
     info.className = 'bracket-info';
-    info.innerHTML = '✅ Fase de grupos completa · Los 32 clasificados ya están seedeados en el cuadro · Cargá resultados para que avancen las rondas.';
+    info.innerHTML = '✅ Grupos terminados · Los 32 ya están ubicados en la llave · Cargá los resultados y mirá cómo avanzan ronda a ronda.';
 
     const rondas = buildAllRondas();
     if (!rondas) {
-      info.innerHTML = '⚠ Algo salió mal armando el cuadro. Reiniciá.';
+      info.innerHTML = '⚠ Uh, se nos enredó la llave. Dale a reiniciar y arrancamos de nuevo.';
       return;
     }
 
@@ -976,11 +976,11 @@
       campeonCont.innerHTML = `
         <div class="campeon-banner">
           <div class="campeon-trophy">🏆</div>
-          <div class="campeon-label">CAMPEÓN DEL MUNDO 2026</div>
+          <div class="campeon-label">DALE CAMPEÓN DEL MUNDO 2026</div>
           <div class="campeon-flag">${g.flag}</div>
           <div class="campeon-nombre">${g.n}</div>
         </div>
-        <button class="btn btn-primary" id="download-campeon" style="width:100%;margin-top:1rem">📸 Descargar campeón</button>
+        <button class="btn btn-primary" id="download-campeon" style="width:100%;margin-top:1rem">📸 Bajar la foto del campeón</button>
       `;
       document.getElementById('download-campeon').onclick = () => downloadCampeon(g.n);
     }
@@ -1024,7 +1024,7 @@
     const goalDisplay = (eq, gol, pen, isWinner, isLoser) => {
       if (!eq) return `
         <div class="partido-elim-row tba">
-          <div class="partido-elim-equipo">⏳ por definir</div>
+          <div class="partido-elim-equipo">⏳ a definir</div>
           <div class="partido-elim-goles no-played">—</div>
         </div>
       `;
@@ -1154,11 +1154,11 @@
         a_pen: isEmpate && penA !== '' ? parseInt(penA) : null
       };
       if (isEmpate && (data.h_pen === null || data.a_pen === null)) {
-        alert('Hubo empate. Cargá la definición por penales.');
+        alert('Quedaron iguales. Cargá la tanda de penales, que acá no hay empates.');
         return;
       }
       if (isEmpate && data.h_pen === data.a_pen) {
-        alert('Los penales no pueden empatar. Tiene que haber un ganador.');
+        alert('Che, en los penales no se empata. Alguno tiene que festejar.');
         return;
       }
       // Si el resultado cambió, limpiar las rondas siguientes que dependen
@@ -1208,7 +1208,7 @@
   // SIMULAR TODO
   // ========================================================================
   document.getElementById('random-all').onclick = () => {
-    if (!confirm('¿Simular todos los resultados de fase de grupos?')) return;
+    if (!confirm('¿Dejamos que la suerte resuelva todos los grupos de una?')) return;
     Object.keys(grupos).forEach(letra => {
       const partidos = combos.map(() => ({
         h: Math.floor(Math.random() * 5),
@@ -1221,7 +1221,7 @@
     renderElim();
   };
   document.getElementById('reset-grupos').onclick = () => {
-    if (!confirm('¿Borrar resultados de la fase de grupos? (Esto también borra las eliminatorias.)')) return;
+    if (!confirm('¿Borramos todos los resultados de los grupos? Ojo que esto también se lleva puesta la llave.')) return;
     store.grupos = {};
     store.elim = {};
     save();
@@ -1230,8 +1230,8 @@
   };
 
   document.getElementById('random-elim').onclick = () => {
-    if (!gruposCompletos()) { alert('Completá primero la fase de grupos.'); return; }
-    if (!confirm('¿Simular todas las eliminatorias?')) return;
+    if (!gruposCompletos()) { alert('Pará, pará. Primero terminá los grupos y después vamos a la llave.'); return; }
+    if (!confirm('¿Dejamos que la suerte juegue toda la llave hasta la final?')) return;
     const orden = ['16','8','4','sf','3p','fn'];
     // Limpiar elim primero
     store.elim = {};
@@ -1260,7 +1260,7 @@
   };
 
   document.getElementById('reset-elim').onclick = () => {
-    if (!confirm('¿Borrar resultados de las eliminatorias?')) return;
+    if (!confirm('¿Limpiamos toda la llave y arrancamos de cero?')) return;
     store.elim = {};
     save();
     renderElim();
@@ -1283,5 +1283,6 @@
   renderGrupos();
   renderElim();
 </script>
+<div class="grain"></div>
 </body>
 </html>
