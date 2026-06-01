@@ -194,7 +194,7 @@ const rnd = arr => arr[Math.floor(Math.random()*arr.length)];
 
 /* ===================== DATA ===================== */
 const SKINS = ['#fce0bd','#f0c79a','#d8a679','#b07a4f','#8a5734','#5c3a1f'];
-const HAIRS = ['Rapado','Pelado','Taper','Mullet','Rulos','Colita','Trenzas','Despeinado','Mohawk','Jopo'];
+const HAIRS = ['Rapado','Pelado','Taper','Mullet','Rulos','Colita','Trenzas','Despeinado','Mohawk','Jopo','Melena','Ondas','Coletas','Rodete','Bob'];
 const HAIR_COLORS = ['#1a1a1a','#4a2c1a','#d4a82e','#a83e0f','#f4ecd8'];
 const HAIR_COLOR_NAMES = ['Negro','Castaño','Rubio','Colorado','Decolorado'];
 const BEARDS = ['Lampiño','Candado','Perilla','3 días','Completa'];
@@ -208,7 +208,10 @@ const ACCS = [
   {id:'y2k', ic:'🕶️', lb:'Y2K'},
   {id:'bandana', ic:'🧣', lb:'Bandana'},
   {id:'cadenita', ic:'⛓️', lb:'Cadenita'},
-  {id:'arito', ic:'💎', lb:'Arito'}
+  {id:'arito', ic:'💎', lb:'Arito'},
+  {id:'aros', ic:'💠', lb:'Aros'},
+  {id:'flor', ic:'🌸', lb:'Flor'},
+  {id:'beanie', ic:'🧶', lb:'Gorrito'}
 ];
 const MEMES = [
   {id:'afro', ic:'🦱', lb:'Afro'},
@@ -294,6 +297,11 @@ function hairSVG(style, hc){
     case 'Despeinado': return `<path d="M62,84 Q56,52 76,54 Q84,40 96,52 Q104,40 116,52 Q140,50 138,84 Q120,60 100,58 Q80,60 62,84 Z" fill="${hc}"/>`;
     case 'Mohawk': return `<path d="M91,46 Q100,30 109,46 L109,72 Q100,64 91,72 Z" fill="${hc}"/>`;
     case 'Jopo': return `<path d="M62,84 Q60,52 100,52 Q142,52 138,82 Q132,60 96,58 Q116,46 70,50 Q60,58 62,84 Z" fill="${hc}"/>`;
+    case 'Melena': return `<path d="M59,90 Q56,48 100,48 Q144,48 141,90 Q134,60 118,57 Q121,73 111,77 Q105,60 100,59 Q95,60 89,77 Q79,73 82,57 Q66,60 59,90 Z" fill="${hc}"/>`;
+    case 'Ondas': return `<path d="M59,86 Q57,50 100,50 Q143,50 141,86 Q135,66 127,72 Q133,60 117,61 Q121,73 109,71 Q113,59 100,60 Q87,59 91,71 Q79,73 83,61 Q67,60 73,72 Q65,66 59,86 Z" fill="${hc}"/>`;
+    case 'Coletas': return `<path d="M62,86 Q60,50 100,50 Q140,50 138,86 Q130,60 100,58 Q70,60 62,86 Z M97,52 L103,52 L101,72 L99,72 Z" fill="${hc}"/>`;
+    case 'Rodete': return `<circle cx="100" cy="41" r="13" fill="${hc}"/><circle cx="100" cy="41" r="13" fill="#000" opacity="0.12"/><path d="M62,84 Q60,52 100,52 Q140,52 138,84 Q130,62 100,60 Q70,62 62,84 Z" fill="${hc}"/>`;
+    case 'Bob': return `<path d="M57,98 Q55,50 100,50 Q145,50 143,98 Q141,72 129,67 Q131,88 125,98 L125,72 Q100,63 75,72 L75,98 Q69,88 71,67 Q59,72 57,98 Z" fill="${hc}"/>`;
   }
   return '';
 }
@@ -302,6 +310,10 @@ function backHairSVG(style, hc){
     case 'Mullet': return `<path d="M64,92 Q60,150 84,150 L88,150 Q72,118 72,96 Z M136,92 Q140,150 116,150 L112,150 Q128,118 128,96 Z" fill="${hc}"/>`;
     case 'Colita': return `<path d="M134,70 Q166,96 156,138 Q150,112 132,98 Z" fill="${hc}"/>`;
     case 'Trenzas': return `<path d="M70,118 Q72,150 84,156 L92,150 Q80,128 80,114 Z M130,118 Q128,150 116,156 L108,150 Q120,128 120,114 Z" fill="${hc}"/>`;
+    case 'Melena': return `<path d="M58,72 Q43,134 60,182 L83,182 Q66,124 72,84 Z M142,72 Q157,134 140,182 L117,182 Q134,124 128,84 Z" fill="${hc}"/>`;
+    case 'Ondas': return `<path d="M58,74 Q40,118 56,176 Q64,150 58,122 Q70,150 64,178 L86,178 Q70,120 72,86 Z M142,74 Q160,118 144,176 Q136,150 142,122 Q130,150 136,178 L114,178 Q130,120 128,86 Z" fill="${hc}"/>`;
+    case 'Coletas': return `<path d="M56,80 Q33,94 40,140 Q53,117 65,99 Z M144,80 Q167,94 160,140 Q147,117 135,99 Z" fill="${hc}"/>`;
+    case 'Bob': return `<path d="M60,82 Q54,118 71,124 L81,117 Q70,100 72,86 Z M140,82 Q146,118 129,124 L119,117 Q130,100 128,86 Z" fill="${hc}"/>`;
     default: return '';
   }
 }
@@ -350,6 +362,9 @@ function accHeadSVG(skin, hc){
   if(has('bandana')) s+=`<rect x="80" y="126" width="40" height="12" rx="3" fill="#dc2626"/><rect x="80" y="126" width="40" height="12" rx="3" fill="none" stroke="#fff" stroke-width="1" stroke-dasharray="3 3"/>`;
   if(has('cadenita')) s+=`<path d="M84,130 Q100,150 116,130" fill="none" stroke="#facc15" stroke-width="3"/><circle cx="100" cy="144" r="3" fill="#facc15"/>`;
   if(has('arito')) s+=`<circle cx="138" cy="100" r="3.5" fill="none" stroke="#facc15" stroke-width="2"/>`;
+  if(has('aros')) s+=`<circle cx="60.5" cy="105" r="4.5" fill="none" stroke="#facc15" stroke-width="2.5"/><circle cx="139.5" cy="105" r="4.5" fill="none" stroke="#facc15" stroke-width="2.5"/>`;
+  if(has('flor')) s+=`<g transform="translate(126,63)"><circle cx="-5" cy="0" r="4" fill="#ff9ec9"/><circle cx="5" cy="0" r="4" fill="#ff9ec9"/><circle cx="0" cy="-5" r="4" fill="#ff9ec9"/><circle cx="0" cy="5" r="4" fill="#ff9ec9"/><circle r="3" fill="#ffe14d"/></g>`;
+  if(has('beanie')) s=`<path d="M58,72 Q60,40 100,40 Q140,40 142,72 Q120,60 100,60 Q80,60 58,72 Z" fill="#7c3aed"/><rect x="56" y="68" width="88" height="10" rx="5" fill="#6d28d9"/><circle cx="100" cy="37" r="5" fill="#a78bfa"/>`+s;
   return s;
 }
 function glassesSVG(){
@@ -446,7 +461,7 @@ function chipGrid(cid, items, isOn, onClick, thumb){
     c.appendChild(b);
   });
 }
-function setGenero(g){ av.genero=g; if(g==='f' && av.hair<=2) av.hair=5; if(g==='m' && (av.hair===5||av.hair===6)) av.hair=2; commit(); }
+function setGenero(g){ av.genero=g; const fem=[5,6,10,11,12,13,14]; if(g==='f' && !fem.includes(av.hair)) av.hair=10; if(g==='m' && fem.includes(av.hair)) av.hair=2; commit(); }
 function refreshChips(){
   chipGrid('c-genero', GENEROS, i=>av.genero===GENEROS[i].id, i=>{setGenero(GENEROS[i].id);}, (it)=>`<span class="ic">${it.ic}</span><span class="lb">${it.lb}</span>`);
   chipGrid('c-kit', KITS, i=>av.kit===i, i=>{av.kit=i;commit();}, (it)=>`<span class="sw" style="background:linear-gradient(135deg,${it.main} 60%,${it.accent} 60%)"></span><span class="lb">${it.n}</span>`);
