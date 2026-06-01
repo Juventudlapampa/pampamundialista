@@ -21,16 +21,18 @@
   :root {
     --bg: #050d08; --verde: #0d3b26; --verde-fluo: #4ade80;
     --gold: #d4a82e; --gold-2: #f4cd60; --crema: #f4ecd8;
-    --rojo: #dc2626; --azul: #38bdf8; --purple: #a78bfa;
-    --celeste: #75AADB; --celeste-2: #9ec9ed;
+    --rojo: #dc2626; --celeste: #75AADB; --celeste-2: #9ec9ed;
+    --relato: #ffd43b; --cesped: #1f7a43;
   }
   body {
     font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    background-image: radial-gradient(circle at 50% -5%, rgba(117,170,219,0.22), transparent 45%), radial-gradient(circle at 10% 10%, rgba(212,168,46,0.15), transparent 50%), radial-gradient(circle at 90% 90%, rgba(74,222,128,0.1), transparent 50%);
-    background-attachment: fixed; min-height: 100vh; color: var(--crema); padding: 1.5rem 1rem;
+    background: #06140c;
+    background-image: repeating-linear-gradient(90deg, rgba(31,122,67,0.12) 0 64px, rgba(8,24,14,0.12) 64px 128px);
+    background-attachment: fixed; min-height: 100vh; color: var(--crema); padding: 1.5rem 1rem; position: relative;
   }
-  .container { max-width: 1000px; margin: 0 auto; }
+  body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index:0; mix-blend-mode:overlay; opacity:0.55;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E"); }
+  .container { max-width: 1000px; margin: 0 auto; position: relative; z-index: 1; }
   header { text-align: center; margin-bottom: 1.5rem; }
   .header-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.25em; color: var(--gold); text-transform: uppercase; margin-bottom: 0.4rem; }
   h1 { font-family: 'Anton', sans-serif; font-size: clamp(2.6rem, 11vw, 5rem); letter-spacing: 0.04em; text-transform: uppercase; line-height: 0.92; }
@@ -53,6 +55,10 @@
   .snd-fab .pulse { position:absolute; inset:-2px; border-radius:50%; border:2px solid var(--celeste); animation:pulsefab 1.7s ease-out infinite; pointer-events:none; }
   .snd-fab.on .pulse { display:none; }
   @keyframes pulsefab { 0%{transform:scale(1);opacity:0.55} 100%{transform:scale(1.55);opacity:0} }
+  .cuenta { display:flex; align-items:center; justify-content:center; gap:0.7rem; flex-wrap:wrap; background:linear-gradient(90deg, rgba(117,170,219,0.16), rgba(255,212,59,0.12)); border:1px solid rgba(117,170,219,0.4); border-radius:12px; padding:0.6rem 0.9rem; margin:0 auto 1.2rem; max-width:560px; transform:rotate(-0.5deg); }
+  .cuenta .lbl { font-family:'JetBrains Mono',monospace; font-size:0.62rem; letter-spacing:0.14em; color:var(--celeste-2); text-transform:uppercase; }
+  .cuenta .num { font-family:'Anton',sans-serif; font-size:1.2rem; color:var(--relato); letter-spacing:0.05em; }
+  .papelito { position:fixed; top:-10vh; width:8px; height:13px; z-index:90; pointer-events:none; border-radius:1px; box-shadow:0 1px 2px rgba(0,0,0,0.3); }
 
   /* PASAPORTE */
   .pass { background: rgba(0,0,0,0.45); border: 1px solid rgba(212,168,46,0.3); border-radius: 14px; padding: 0.9rem 1.1rem; margin: 1.2rem 0; display: flex; align-items: center; gap: 0.9rem; }
@@ -80,14 +86,16 @@
 
   .grid-tools { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); gap: 0.7rem; }
   .tool-card { background: rgba(0,0,0,0.4); border: 1px solid rgba(212,168,46,0.25); border-radius: 12px; padding: 1rem; text-decoration: none; color: var(--crema); transition: all 0.18s; display: flex; flex-direction: column; gap: 0.35rem; position: relative; }
-  .tool-card:hover { transform: translateY(-3px); border-color: var(--ac, var(--gold)); }
+  .grid-tools .tool-card:nth-child(2n) { transform: rotate(-0.6deg); }
+  .grid-tools .tool-card:nth-child(3n) { transform: rotate(0.7deg); }
+  .tool-card:hover { transform: translateY(-3px) rotate(0deg) !important; border-color: var(--ac, var(--gold)); box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
   .tool-card .seal { position: absolute; top: 8px; right: 8px; font-size: 1rem; opacity: 0; transition: opacity 0.2s; }
   .tool-card.done .seal { opacity: 1; }
   .tool-icon { font-size: 1.6rem; }
   .tool-name { font-family: 'Anton', sans-serif; font-size: 1.05rem; letter-spacing: 0.03em; text-transform: uppercase; line-height: 1.05; }
   .tool-desc { font-size: 0.76rem; opacity: 0.78; line-height: 1.35; }
   .tag-new { display: inline-block; background: var(--rojo); color: #fff; font-family: 'Anton', sans-serif; font-size: 0.55rem; padding: 1px 6px; border-radius: 4px; letter-spacing: 0.12em; margin-left: 0.3rem; vertical-align: middle; }
-  .tag-esi { display: inline-block; background: var(--purple); color: #1a1030; font-family: 'Anton', sans-serif; font-size: 0.55rem; padding: 1px 6px; border-radius: 4px; letter-spacing: 0.12em; margin-left: 0.3rem; vertical-align: middle; }
+  .tag-esi { display: inline-block; background: #16a34a; color: #fff; font-family: 'Anton', sans-serif; font-size: 0.55rem; padding: 1px 6px; border-radius: 4px; letter-spacing: 0.12em; margin-left: 0.3rem; vertical-align: middle; }
 
   /* SECCIONES */
   .block { background: rgba(0,0,0,0.4); border: 1px solid rgba(212,168,46,0.25); border-radius: 16px; padding: 1.3rem; margin-top: 1.6rem; }
@@ -151,7 +159,7 @@
   <header>
     <div class="header-tag">🇦🇷 Subsecretaría de Juventudes · La Pampa</div>
     <h1>PAMPA <span>JUEGA</span></h1>
-    <p class="subtitle">Jugá, armá tu carta y viví el <b>Mundial 2026</b> a lo pampeano. Entrá, divertite y sumate al concurso. Gratis, sin registro para jugar.</p>
+    <p class="subtitle">La previa del <b>Mundial 2026</b> ya arrancó. Armá tu figurita, metele un caño a la compu y demostrá que la tenés más clara que nadie. Gratis y sin vueltas — dale, entrá.</p>
     <div class="stat-strip">
       <div class="stat-pill">🎮 20 cosas para hacer</div>
       <div class="stat-pill">📲 Para compartir</div>
@@ -161,6 +169,8 @@
   </header>
 
   <div class="flag-marquee"><span id="flag-mq"></span></div>
+
+  <div class="cuenta"><span class="lbl">⚽ Falta para el pitazo inicial</span><span class="num" id="cuenta-num">—</span></div>
 
   <!-- PASAPORTE -->
   <div class="pass">
@@ -172,12 +182,12 @@
   </div>
 
   <!-- PUERTA 1: CREÁ TU CRACK -->
-  <section class="puerta" style="--ac:var(--azul)">
+  <section class="puerta" style="--ac:var(--celeste)">
     <button class="puerta-head" onclick="togglePuerta(this)">
       <div class="puerta-ic">🎽</div>
       <div class="puerta-info">
         <div class="puerta-name">Creá tu Crack</div>
-        <div class="puerta-desc">Armá algo tuyo y compartilo en tus historias.</div>
+        <div class="puerta-desc">Hacete la figurita, el carnet y tu 11 con tu sello. Para mandar al grupo y que se mueran de envidia.</div>
         <div class="puerta-chips">Avatar fachero · Figurita con tu foto · Carnet de hincha · Armá tu 11</div>
       </div>
       <div class="puerta-badge">4</div><div class="puerta-arrow">▼</div>
@@ -198,7 +208,7 @@
       <div class="puerta-ic">🥅</div>
       <div class="puerta-info">
         <div class="puerta-name">Desafío FUT</div>
-        <div class="puerta-desc">Patear, gambetear y ganar. Poné a prueba tu puntería.</div>
+        <div class="puerta-desc">Pateá, gambeteá y cabeceá. Acá se viene a ganar, no a participar.</div>
         <div class="puerta-chips">Penales · Tiros libres · El picado · Tu carrera</div>
       </div>
       <div class="puerta-badge">4</div><div class="puerta-arrow">▼</div>
@@ -220,7 +230,7 @@
       <div class="puerta-ic">🧠</div>
       <div class="puerta-info">
         <div class="puerta-name">Ponete a Prueba</div>
-        <div class="puerta-desc">Cabeza, memoria e ingenio mundialista.</div>
+        <div class="puerta-desc">¿Cuánto sabés de Mundiales? Demostralo… o quedate calladito.</div>
         <div class="puerta-chips">Trivia · ¿Qué selección sos? · Sala de escape · Memo</div>
       </div>
       <div class="puerta-badge">4</div><div class="puerta-arrow">▼</div>
@@ -236,12 +246,12 @@
   </section>
 
   <!-- PUERTA 4: TU PRONÓSTICO -->
-  <section class="puerta" style="--ac:var(--purple)">
+  <section class="puerta" style="--ac:var(--relato)">
     <button class="puerta-head" onclick="togglePuerta(this)">
       <div class="puerta-ic">🔮</div>
       <div class="puerta-info">
         <div class="puerta-name">Tu Pronóstico</div>
-        <div class="puerta-desc">Adiviná el Mundial y seguí los resultados.</div>
+        <div class="puerta-desc">Bancá tu corazonada: decí quién levanta la Copa y jugátela.</div>
         <div class="puerta-chips">Predictor del campeón · Fixture completo · Cartón mundialista</div>
       </div>
       <div class="puerta-badge">3</div><div class="puerta-arrow">▼</div>
@@ -261,7 +271,7 @@
       <div class="puerta-ic">👥</div>
       <div class="puerta-info">
         <div class="puerta-name">Para tu Grupo</div>
-        <div class="puerta-desc">Actividades para hacer en el aula, el club, la biblioteca o la ONG.</div>
+        <div class="puerta-desc">Para el aula, el club o la previa con los pibes y las pibas. En patota es mejor.</div>
         <div class="puerta-chips">Equipo del aula · Figurita del curso · Simulador · Juego limpio (ESI)</div>
       </div>
       <div class="puerta-badge">4</div><div class="puerta-arrow">▼</div>
@@ -346,7 +356,7 @@
   const INSCRIPCION_URL = "https://forms.gle/sCAEagJnVTMughh3A"; // Google Form de inscripción al Desafío
 
   // Acordeón de puertas
-  function togglePuerta(btn){ btn.parentElement.classList.toggle('open'); }
+  function togglePuerta(btn){ const s=btn.parentElement; const abre=!s.classList.contains('open'); s.classList.toggle('open'); if(window.__click)window.__click(); if(abre && window.__papel)window.__papel(10); }
 
   // Pasaporte de sellos: marca las herramientas que abriste desde la home
   const SEAL_KEY = 'pampa-juega-sellos';
@@ -459,9 +469,21 @@
     const fab=document.getElementById('snd-fab');
     function setOn(on){ soundOn=on; if(fab){ fab.classList.toggle('off',!on); fab.classList.toggle('on',on); const ic=fab.querySelector('.ico'); if(ic) ic.textContent=on?'🔊':'🔇'; } if(on) startCrowd(); else stopCrowd(); }
     if(fab) fab.onclick=()=>setOn(!soundOn);
-    // arranca la hinchada en la primera interacción (las políticas del navegador no permiten audio sin un toque)
-    function kickoff(){ if(!soundOn) setOn(true); window.removeEventListener('pointerdown',kickoff); window.removeEventListener('keydown',kickoff); }
+    // bombo de cancha + clic de sticker (síntesis liviana, sin archivos, para cualquier celu)
+    function bombo(){ const c=ctx(); if(!c||!soundOn) return; try{ const o=c.createOscillator(), g=c.createGain(); o.type='sine'; o.frequency.setValueAtTime(150,c.currentTime); o.frequency.exponentialRampToValueAtTime(46,c.currentTime+0.18); g.gain.setValueAtTime(0.0001,c.currentTime); g.gain.exponentialRampToValueAtTime(0.5,c.currentTime+0.012); g.gain.exponentialRampToValueAtTime(0.0001,c.currentTime+0.32); o.connect(g); g.connect(c.destination); o.start(); o.stop(c.currentTime+0.34);}catch(e){} }
+    function clickSticker(){ const c=ctx(); if(!c||!soundOn) return; try{ const o=c.createOscillator(), g=c.createGain(); o.type='triangle'; o.frequency.value=680; g.gain.setValueAtTime(0.13,c.currentTime); g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.06); o.connect(g); g.connect(c.destination); o.start(); o.stop(c.currentTime+0.07);}catch(e){} }
+    window.__bombo=bombo; window.__click=clickSticker;
+    // arranca la hinchada + un par de bombazos en el primer toque (autoplay necesita un gesto)
+    function kickoff(){ if(!soundOn){ setOn(true); setTimeout(bombo,120); setTimeout(bombo,540); } window.removeEventListener('pointerdown',kickoff); window.removeEventListener('keydown',kickoff); }
     window.addEventListener('pointerdown',kickoff); window.addEventListener('keydown',kickoff);
+
+    // ===== cuenta regresiva al pitazo inicial (en vivo) =====
+    const cn=document.getElementById('cuenta-num');
+    if(cn){ const target=new Date('2026-06-11T16:00:00'); function tick(){ const ms=target-new Date(); if(ms<=0){ cn.textContent='¡YA RUEDA LA PELOTA!'; return; } const d=Math.floor(ms/86400000), h=Math.floor(ms/3600000)%24, mn=Math.floor(ms/60000)%60, s=Math.floor(ms/1000)%60; cn.textContent=d+'d '+h+'h '+mn+'m '+s+'s'; } tick(); setInterval(tick,1000); }
+
+    // ===== papelitos celestes y blancos =====
+    function papel(n){ const cols=['#75AADB','#ffffff','#9ec9ed']; for(let i=0;i<n;i++){ const p=document.createElement('div'); p.className='papelito'; p.style.left=Math.random()*100+'vw'; p.style.background=cols[i%3]; document.body.appendChild(p); const dur=2600+Math.random()*2400; p.animate([{transform:'translateY(-10vh) rotate(0deg)',opacity:1},{transform:'translateY(106vh) rotate('+(Math.random()*720-360)+'deg)',opacity:0.85}],{duration:dur,easing:'cubic-bezier(.3,.5,.6,1)'}); setTimeout(()=>p.remove(),dur); } }
+    window.__papel=papel; setTimeout(()=>papel(28),350);
   })();
 </script>
 </body>
