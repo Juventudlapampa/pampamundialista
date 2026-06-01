@@ -623,5 +623,6 @@ $('share').onclick=()=>{ shareReto(`🪄 Metí ${G?G.goles:0} goles gambeteando 
 function shareReto(text){ if(navigator.share){navigator.share({title:'Gambeteá como Leo · Pampa Juega',text}).catch(()=>{});} else if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>alert('¡Desafío copiado! Pasáselo a un amigo 📲'),()=>prompt('Copiá tu desafío:',text));} else {prompt('Copiá tu desafío:',text);} }
 </script>
 <div class="grain"></div>
+<script src="../pampa-ambiente.js"></script>
 </body>
 </html>

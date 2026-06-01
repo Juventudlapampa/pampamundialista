@@ -338,5 +338,6 @@ $('share').onclick = () => shareReto(`💚 Saqué ${estado.score}/110 en "Juego 
 function shareReto(text){ if(navigator.share){navigator.share({title:'Juego Limpio · Mundial 2026',text}).catch(()=>{});} else if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>alert('¡Reto copiado! Mandáselo a un amigo 📲'),()=>prompt('Copiá tu reto:',text));} else {prompt('Copiá tu reto:',text);} }
 </script>
 <div class="grain"></div>
+<script src="../pampa-ambiente.js"></script>
 </body>
 </html>
