@@ -15,7 +15,7 @@
 <meta name="twitter:title" content="Pampa Juega - El Mundial de Juventudes La Pampa">
 <meta name="twitter:image" content="https://juventudlapampa.github.io/pampa-juega/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
@@ -35,6 +35,9 @@
   .container { max-width: 1000px; margin: 0 auto; position: relative; z-index: 1; }
   header { text-align: center; margin-bottom: 1.5rem; }
   .header-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.25em; color: var(--gold); text-transform: uppercase; margin-bottom: 0.4rem; }
+  .brand-lockup { display: inline-flex; flex-direction: column; align-items: center; gap: 0.35rem; margin-bottom: 0.9rem; padding: 0.7rem 1.1rem; background: rgba(5,13,8,0.55); border: 1px solid rgba(244,236,216,0.14); border-radius: 14px; }
+  .brand-word { font-family: 'Archivo Black', sans-serif; font-size: clamp(1.5rem, 6vw, 2.3rem); letter-spacing: 0.01em; line-height: 1; white-space: nowrap; }
+  .brand-inst { font-family: 'JetBrains Mono', monospace; font-size: 0.66rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--crema); opacity: 0.82; }
   h1 { font-family: 'Anton', sans-serif; font-size: clamp(2.6rem, 11vw, 5rem); letter-spacing: 0.04em; text-transform: uppercase; line-height: 0.92; }
   h1 span { color: var(--gold); text-shadow: 0 0 30px rgba(212,168,46,0.4); }
   .subtitle { font-size: 1rem; opacity: 0.9; max-width: 640px; margin: 0.8rem auto 0; line-height: 1.5; }
@@ -159,7 +162,10 @@
 <div class="container">
   <div class="bunting" id="bunting"></div>
   <header>
-    <div class="header-tag">🇦🇷 Subsecretaría de Juventudes · La Pampa</div>
+    <div class="brand-lockup">
+      <span class="brand-word" aria-label="JUVENTUDES"><span style="color:#9B3DAA">J</span><span style="color:#2B3A8F">U</span><span style="color:#00968A">V</span><span style="color:#5CB83A">E</span><span style="color:#F5C400">N</span><span style="color:#F58220">T</span><span style="color:#E03A2F">U</span><span style="color:#E8317A">D</span><span style="color:#5CB83A">E</span><span style="color:#2BAADC">S</span></span>
+      <span class="brand-inst">Subsecretaría de Juventud · La Pampa</span>
+    </div>
     <h1>PAMPA <span>JUEGA</span></h1>
     <p class="subtitle">La previa del <b>Mundial 2026</b> ya arrancó. Armá tu figurita, metele un caño a la compu y demostrá que la tenés más clara que nadie. Gratis y sin vueltas — dale, entrá.</p>
     <div class="stat-strip">
@@ -517,5 +523,6 @@
     });
   })();
 </script>
+<script src="pampa-marca.js"></script>
 </body>
 </html>
