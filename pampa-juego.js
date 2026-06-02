@@ -59,6 +59,23 @@
   ];
   var DOBLE = [5,6]; // viernes(5)/sábado(6) = doble sello ("Finde de la Gambeta")
 
+  // ===== Coleccionables pampeanos (Capa 6): se desbloquean juntando sellos. Nada de personas vivas. =====
+  var CROMOS = [
+    {n:'El Potrero', e:'⚽', r:'común', need:1},
+    {n:'El Caldén', e:'🌳', r:'común', need:2},
+    {n:'El Mate', e:'🧉', r:'común', need:4},
+    {n:'La Martineta', e:'🐦', r:'rara', need:6},
+    {n:'El Viento Pampero', e:'💨', r:'rara', need:8},
+    {n:'La Jarilla', e:'🌾', r:'rara', need:10},
+    {n:'El Zorro Gris', e:'🦊', r:'épica', need:12},
+    {n:'Laguna Don Tomás', e:'🏞️', r:'épica', need:14},
+    {n:'El Águila Mora', e:'🦅', r:'épica', need:16},
+    {n:'El Caldenal', e:'🌵', r:'legendaria', need:18},
+    {n:'La Estrella Pampeana', e:'⭐', r:'legendaria', need:20}
+  ];
+  var RAR_COL = {'común':'#9ec9ed','rara':'#4ade80','épica':'#d4a82e','legendaria':'#e8317a'};
+  function cromosState(){ var n=sellosArr().length; return CROMOS.map(function(c){ return {c:c, on:n>=c.need}; }); }
+
   // ===== rutas relativas (según profundidad de la página) =====
   var SELF = document.currentScript;
   var BASE = (SELF && SELF.src) ? SELF.src.replace(/[^/]*$/, '') : '';
@@ -101,6 +118,7 @@
   function sello(id, bonusXP){ id=id||CUR; if(!id) return;
     var arr=sellosArr(); var nuevo=false;
     if(arr.indexOf(id)<0){ arr.push(id); setSellos(arr); nuevo=true; }
+    if(nuevo){ var cnt=arr.length; CROMOS.forEach(function(c){ if(c.need===cnt){ setTimeout(function(){ tone([700,1000,1300],0.14,0.12); toast('🎴 ¡Cromo nuevo! <b>'+c.e+' '+c.n+'</b> · '+c.r); }, 1400); } }); }
     var dobleHoy = DOBLE.indexOf(new Date(stamp()).getDay())>=0;
     if(!S.done[id]){ S.done[id]=1; var base=10*(dobleHoy?2:1); S.xp+=base; save(S);
       tone([600,820,1000],0.12,0.12);
@@ -167,6 +185,8 @@
     var grid=TOOLS.map(function(t){ var on=arr.indexOf(t[0])>=0; return '<div class="pj-cell'+(on?' on':'')+'" title="'+t[1]+'">'+t[2]+'</div>'; }).join('');
     var logros=Object.keys(S.logros);
     var logrosHtml = logros.length ? logros.map(function(k){return '<span class="pj-badge">🏅 '+S.logros[k].t+'</span>';}).join('') : '<span class="pj-dim">Todavía no desbloqueaste logros. ¡A jugar!</span>';
+    var cr=cromosState(); var crOn=cr.filter(function(x){return x.on;}).length;
+    var crHtml=cr.map(function(x){ return '<div class="pj-cromo'+(x.on?' on':'')+'" title="'+x.c.n+' · '+x.c.r+'" style="border-color:'+(x.on?RAR_COL[x.c.r]:'rgba(244,236,216,.12)')+'"><span class="pj-cr-e">'+(x.on?x.c.e:'❓')+'</span><span class="pj-cr-n">'+(x.on?x.c.n:'???')+'</span></div>'; }).join('');
     var titulo = tituloActual();
     var bd=document.createElement('div'); bd.className='pj-modal-bd';
     bd.innerHTML='<div class="pj-modal pj-pass">'+
@@ -179,6 +199,7 @@
       '<div class="pj-p-lab">SELLOS ('+arr.length+'/'+TOOLS.length+')</div>'+
       '<div class="pj-grid">'+grid+'</div>'+
       '<div class="pj-p-lab">LOGROS</div><div class="pj-badges">'+logrosHtml+'</div>'+
+      '<div class="pj-p-lab">COLECCIÓN PAMPEANA ('+crOn+'/'+CROMOS.length+')</div><div class="pj-cromos">'+crHtml+'</div>'+
       '<button class="pj-btn" id="pj-pass-dl">📸 BAJAR MI PASAPORTE</button>'+
       '<button class="pj-btn ghost" id="pj-pass-loc">Cambiar mi localidad</button>'+
       '</div>';
@@ -237,7 +258,12 @@
     '.pj-cell.on{filter:none;opacity:1;border-color:#4ade80;background:rgba(74,222,128,.12);transform:rotate(1.5deg)}'+
     '.pj-badges{display:flex;flex-wrap:wrap;gap:.35rem}'+
     '.pj-badge{font-size:.72rem;background:rgba(212,168,46,.15);border:1px solid rgba(212,168,46,.5);color:#f4cd60;border-radius:20px;padding:.2rem .55rem}'+
-    '.pj-dim{font-size:.78rem;opacity:.6}';
+    '.pj-dim{font-size:.78rem;opacity:.6}'+
+    '.pj-cromos{display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem}'+
+    '.pj-cromo{display:flex;flex-direction:column;align-items:center;gap:2px;padding:.4rem .2rem;border:2px solid;border-radius:10px;background:rgba(0,0,0,.4);opacity:.45;filter:grayscale(1)}'+
+    '.pj-cromo.on{opacity:1;filter:none;background:rgba(255,255,255,.04)}'+
+    '.pj-cr-e{font-size:1.3rem;line-height:1}'+
+    '.pj-cr-n{font-size:.5rem;font-family:"JetBrains Mono",monospace;text-align:center;line-height:1.1;opacity:.9}';
   document.head.appendChild(css);
 
   // ===== arranque =====
