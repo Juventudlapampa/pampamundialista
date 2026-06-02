@@ -205,7 +205,7 @@
       '<div class="pj-p-lab">LOGROS</div><div class="pj-badges">'+logrosHtml+'</div>'+
       '<div class="pj-p-lab">COLECCIÓN PAMPEANA ('+crOn+'/'+CROMOS.length+')</div><div class="pj-cromos">'+crHtml+'</div>'+
       '<button class="pj-btn" id="pj-pass-dl">📸 COMPARTIR MI PASAPORTE</button>'+
-      '<button class="pj-btn" id="pj-pass-grupo" style="background:linear-gradient(135deg,#d4a82e,#f4cd60);color:#04212e">👥 PASAPORTE GRUPAL</button>'+
+      '<button class="pj-btn" id="pj-pass-grupo" style="background:linear-gradient(135deg,#d4a82e,#f4cd60);color:#04212e">⚽ ARMAR MI EQUIPO</button>'+
       '<button class="pj-btn ghost" id="pj-pass-loc">Cambiar mi localidad</button>'+
       '</div>';
     document.body.appendChild(bd);
@@ -317,51 +317,94 @@
   }
 
   // ===== Pasaporte GRUPAL (aula, club, etc.) — todo local, sin servidor =====
+  var EQ_ROLES=['Capitán','Titular 2','Titular 3','Titular 4','Titular 5','Suplente 1','Suplente 2','Suplente 3'];
+  var EQ_COLS=['#75AADB','#d4a82e','#4ade80','#dc2626','#2563eb','#e8317a','#00968a'];
+  function eqColor(nombre){ var h=0,s=String(nombre||'Pampa'); for(var i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))>>>0; return EQ_COLS[h%EQ_COLS.length]; }
+  function eqInic(nombre){ var p=String(nombre||'').trim().split(/\s+/).filter(Boolean); return ((p[0]||'P')[0]+((p[1]||'')[0]||'')).toUpperCase(); }
+
+  // ===== Armar / inscribir el EQUIPO de futbol 5 (capitan + 4 + hasta 3 suplentes) =====
   function pasaporteGrupal(){
-    var saved={}; try{ saved=JSON.parse(localStorage.getItem('pampa-grupo')||'{}'); }catch(e){ saved={}; }
-    var locOpts='<option value="">— Localidad —</option>'+LOCS.map(function(l){return '<option'+(l===(saved.loc||S.loc)?' selected':'')+'>'+l+'</option>';}).join('');
-    var integ=(saved.integrantes||[]).map(function(x){return x.n+(x.num?(' '+x.num):'');}).join('\n');
+    var saved={}; try{ saved=JSON.parse(localStorage.getItem('pampa-equipo')||'{}'); }catch(e){ saved={}; }
+    var J=saved.jugadores||[];
+    function locSel(id,val){ return '<select class="pj-sel" id="'+id+'" style="margin:0">'+'<option value="">— Localidad —</option>'+LOCS.map(function(l){return '<option'+(l===val?' selected':'')+'>'+l+'</option>';}).join('')+'</select>'; }
+    var rowsHtml='';
+    for(var i=0;i<8;i++){
+      var j=J[i]||{}; var titular=i<5;
+      var defLoc=(i===0?(j.loc||S.loc):j.loc)||'';
+      rowsHtml+='<div style="border:1px solid rgba(244,236,216,.15);border-radius:10px;padding:.5rem .6rem;margin-bottom:.5rem;background:'+(titular?'rgba(212,168,46,.06)':'rgba(255,255,255,.02)')+'">'+
+        '<div style="font-family:\'Anton\',sans-serif;font-size:.75rem;letter-spacing:.06em;color:'+(i===0?'#f4cd60':(titular?'#d4a82e':'#75AADB'))+';margin-bottom:.35rem">'+(i===0?'🅒 CAPITÁN':(titular?('⚽ '+EQ_ROLES[i]):('🔁 '+EQ_ROLES[i]+' (opcional)')))+'</div>'+
+        '<input class="pj-inp" id="eq-n-'+i+'" style="margin-bottom:.35rem" maxlength="32" placeholder="Nombre y apellido" value="'+esc(j.n||'').replace(/"/g,'&quot;')+'">'+
+        '<div style="display:flex;gap:.4rem">'+
+          '<input class="pj-inp" id="eq-num-'+i+'" style="margin:0;flex:1" inputmode="numeric" maxlength="12" placeholder="N° Tarjeta Joven" value="'+esc(j.num||'')+'">'+
+          '<div style="flex:1">'+locSel('eq-loc-'+i,defLoc)+'</div>'+
+        '</div></div>';
+    }
     var bd=document.createElement('div'); bd.className='pj-modal-bd';
-    bd.innerHTML='<div class="pj-modal"><button class="pj-x" id="pg-x">✕</button>'+
-      '<div class="pj-m-tit">👥 Pasaporte Grupal</div>'+
-      '<div class="pj-m-sub">Para presentar tu <b>aula, club o grupo</b> en la categoría grupal. Cargá el grupo y los números de Jugador Oficial de cada integrante (los que cada uno ya validó).</div>'+
-      '<input class="pj-inp" id="pg-nombre" maxlength="40" placeholder="Nombre del grupo (ej: 5°B Esc. 1)" value="'+(saved.nombre||'').replace(/"/g,'&quot;')+'">'+
-      '<select class="pj-sel" id="pg-loc">'+locOpts+'</select>'+
-      '<textarea class="pj-inp" id="pg-integ" rows="6" placeholder="Un integrante por línea:&#10;Sofía 1234567&#10;Mateo 7654321">'+integ.replace(/</g,'&lt;')+'</textarea>'+
-      '<div class="pj-tjw-legal" style="font-size:.72rem;opacity:.8;margin:.2rem 0 .6rem">El equipo de Juventud <b>valida los números al entregar los premios</b>. Acá no se manda nada: queda en tu celu.</div>'+
-      '<button class="pj-btn" id="pg-gen">📸 GENERAR PASAPORTE GRUPAL</button>'+
-      '<button class="pj-btn ghost" id="pg-cancel">Cerrar</button></div>';
+    bd.innerHTML='<div class="pj-modal"><button class="pj-x" id="eq-x">✕</button>'+
+      '<div class="pj-m-tit">⚽ Mi Equipo</div>'+
+      '<div class="pj-m-sub">Armá tu <b>fútbol cinco</b>: vos de capitán + 4 titulares, y hasta 3 suplentes. Para los premios, cada integrante necesita <b>14–30 años</b> y <b>Tarjeta Joven</b>.</div>'+
+      '<input class="pj-inp" id="eq-nombre" maxlength="36" placeholder="Nombre del equipo (ej: Los Pibes del Caldén)" value="'+esc(saved.nombre||'').replace(/"/g,'&quot;')+'">'+
+      rowsHtml+
+      '<div style="font-family:\'Anton\',sans-serif;font-size:.75rem;letter-spacing:.06em;color:#4ade80;margin:.4rem 0 .35rem">📞 CONTACTO DEL CAPITÁN (solo del capitán)</div>'+
+      '<input class="pj-inp" id="eq-cel" inputmode="tel" maxlength="22" placeholder="Celular del capitán" value="'+esc(saved.cel||'')+'">'+
+      '<input class="pj-inp" id="eq-mail" inputmode="email" maxlength="50" placeholder="Mail del capitán" value="'+esc(saved.mail||'')+'">'+
+      '<div class="pj-tjw-legal" style="font-size:.72rem;opacity:.82;margin:.2rem 0 .6rem">El cel y el mail son <b>solo para que Juventud se comunique por el concurso</b>. Los números de Tarjeta <b>se validan al entregar los premios</b>. Acá no se manda nada: queda en tu celu.</div>'+
+      '<button class="pj-btn" id="eq-priv">📄 FICHA PRIVADA (para el concurso)</button>'+
+      '<button class="pj-btn" id="eq-pub" style="background:linear-gradient(135deg,#4ade80,#22c55e)">📸 IMAGEN PÚBLICA (para redes)</button>'+
+      '<button class="pj-btn ghost" id="eq-cancel">Cerrar</button></div>';
     document.body.appendChild(bd);
-    bd.querySelector('#pg-x').onclick=bd.querySelector('#pg-cancel').onclick=function(){ bd.remove(); };
-    bd.querySelector('#pg-gen').onclick=function(){
-      var nombre=(bd.querySelector('#pg-nombre').value||'').trim();
-      var loc=bd.querySelector('#pg-loc').value||'';
-      var lines=(bd.querySelector('#pg-integ').value||'').split('\n').map(function(s){return s.trim();}).filter(Boolean);
-      if(!nombre){ toast('Ponele un nombre al grupo 🙌'); return; }
-      if(!lines.length){ toast('Cargá al menos un integrante'); return; }
-      var integrantes=lines.map(function(l){ var m=l.match(/^(.*?)[\s,\-]*([0-9]{4,12})?$/); var num=(l.match(/([0-9]{4,12})/)||[])[1]||''; var n=l.replace(/[0-9]{4,12}/,'').replace(/[,\-]\s*$/,'').trim()||'—'; return {n:n, num:num}; });
-      try{ localStorage.setItem('pampa-grupo', JSON.stringify({nombre:nombre,loc:loc,integrantes:integrantes})); }catch(e){}
-      renderGrupoCard(nombre, loc, integrantes);
-      bd.remove();
-    };
+    function collect(){
+      var nombre=(bd.querySelector('#eq-nombre').value||'').trim();
+      var jug=[];
+      for(var i=0;i<8;i++){ var n=(bd.querySelector('#eq-n-'+i).value||'').trim(); if(!n) continue;
+        jug.push({rol:EQ_ROLES[i], n:n, num:(bd.querySelector('#eq-num-'+i).value||'').replace(/[^0-9]/g,''), loc:bd.querySelector('#eq-loc-'+i).value||'', titular:i<5}); }
+      var data={nombre:nombre, jugadores:jug, cel:(bd.querySelector('#eq-cel').value||'').trim(), mail:(bd.querySelector('#eq-mail').value||'').trim()};
+      try{ localStorage.setItem('pampa-equipo', JSON.stringify(data)); }catch(e){}
+      return data;
+    }
+    bd.querySelector('#eq-x').onclick=bd.querySelector('#eq-cancel').onclick=function(){ collect(); bd.remove(); };
+    bd.querySelector('#eq-priv').onclick=function(){ var d=collect(); if(!d.nombre){ toast('Ponele un nombre al equipo 🏷️'); return; } if(!d.jugadores.length){ toast('Cargá al menos al capitán'); return; } renderEquipoPrivado(d); bd.remove(); };
+    bd.querySelector('#eq-pub').onclick=function(){ var d=collect(); if(!d.nombre){ toast('Ponele un nombre al equipo 🏷️'); return; } if(!d.jugadores.length){ toast('Cargá al menos al capitán'); return; } renderEquipoPublico(d); bd.remove(); };
   }
-  function renderGrupoCard(nombre, loc, integrantes){
-    var rows=integrantes.map(function(x,i){ return '<div style="display:flex;justify-content:space-between;gap:.6rem;padding:.32rem .5rem;border-bottom:1px solid rgba(244,236,216,.12);font-size:.92rem"><span><b style="color:#d4a82e">'+(i+1)+'.</b> '+esc(x.n)+'</span><span style="font-family:monospace;color:#4ade80">'+(x.num?('N° '+esc(x.num)):'<span style=\"opacity:.5\">sin número</span>')+'</span></div>'; }).join('');
-    var card=document.createElement('div');
-    card.style.cssText='position:fixed;left:-9999px;top:0;width:420px;background:linear-gradient(160deg,#0d3b26,#081b10);border:3px solid #d4a82e;border-radius:16px;padding:1.4rem;color:#f4ecd8;font-family:system-ui,sans-serif;box-sizing:border-box';
-    card.innerHTML='<div style="text-align:center"><div style="font-family:\'Anton\',sans-serif;color:#d4a82e;font-size:.8rem;letter-spacing:.2em">PAMPA MUNDIALISTA · PASAPORTE GRUPAL</div>'+
-      '<div style="font-family:\'Anton\',sans-serif;font-size:1.8rem;line-height:1.05;margin:.4rem 0 .1rem">'+esc(nombre)+'</div>'+
-      '<div style="font-size:.9rem;opacity:.9">📍 '+(esc(loc)||'La Pampa')+' · 👥 '+integrantes.length+' integrante'+(integrantes.length!==1?'s':'')+'</div></div>'+
-      '<div style="margin:.9rem 0;background:rgba(0,0,0,.3);border-radius:10px;overflow:hidden">'+rows+'</div>'+
-      '<div style="font-size:.62rem;font-family:monospace;letter-spacing:.12em;color:rgba(244,236,216,.6);text-align:center">'+CUENTA+' · #PampaMundialista · juventudlapampa.github.io/pampa-juega</div>';
+
+  function teamCanvas(card, filename, bg, okMsg){
     document.body.appendChild(card);
     var done=function(){ card.remove(); };
     if(typeof html2canvas!=='undefined'){
-      html2canvas(card,{backgroundColor:'#081b10',scale:2,useCORS:true}).then(function(c){
-        var a=document.createElement('a'); a.download='pasaporte-grupal-'+(nombre.toLowerCase().replace(/[^a-z0-9]+/g,'-')||'grupo')+'.png'; a.href=c.toDataURL('image/png'); a.click(); done();
-        toast('👥 ¡Pasaporte grupal listo! Presentalo en la categoría grupal.');
+      html2canvas(card,{backgroundColor:bg,scale:2,useCORS:true}).then(function(c){
+        var a=document.createElement('a'); a.download=filename; a.href=c.toDataURL('image/png'); a.click(); done(); if(okMsg) toast(okMsg);
       }).catch(function(){ done(); toast('No se pudo generar; probá una captura 📲'); });
     } else { done(); toast('Sacá una captura de pantalla 📲'); }
+  }
+
+  // FICHA PRIVADA: nombre, integrantes con N° y localidad, contacto del capitán. NO publicar.
+  function renderEquipoPrivado(d){
+    var rows=d.jugadores.map(function(x){ return '<tr><td style="padding:.3rem .4rem;color:'+(x.titular?'#d4a82e':'#75AADB')+';font-size:.7rem;white-space:nowrap">'+esc(x.rol)+'</td><td style="padding:.3rem .4rem">'+esc(x.n)+'</td><td style="padding:.3rem .4rem;font-family:monospace;color:#4ade80">'+(x.num?esc(x.num):'—')+'</td><td style="padding:.3rem .4rem;font-size:.82rem;opacity:.9">'+(esc(x.loc)||'—')+'</td></tr>'; }).join('');
+    var card=document.createElement('div');
+    card.style.cssText='position:fixed;left:-9999px;top:0;width:440px;background:linear-gradient(160deg,#0d3b26,#081b10);border:3px solid #d4a82e;border-radius:16px;padding:1.3rem;color:#f4ecd8;font-family:system-ui,sans-serif;box-sizing:border-box';
+    card.innerHTML='<div style="text-align:center;font-family:\'Anton\',sans-serif;color:#dc2626;font-size:.72rem;letter-spacing:.18em">PAMPA MUNDIALISTA · FICHA PRIVADA DEL EQUIPO</div>'+
+      '<div style="text-align:center;font-family:\'Anton\',sans-serif;font-size:1.7rem;line-height:1.05;margin:.3rem 0 .5rem">'+esc(d.nombre)+'</div>'+
+      '<table style="width:100%;border-collapse:collapse;font-size:.9rem"><thead><tr style="color:#d4a82e;font-size:.6rem;letter-spacing:.1em;text-align:left"><th style="padding:.2rem .4rem">ROL</th><th style="padding:.2rem .4rem">NOMBRE</th><th style="padding:.2rem .4rem">N° TARJETA</th><th style="padding:.2rem .4rem">LOCALIDAD</th></tr></thead><tbody>'+rows+'</tbody></table>'+
+      '<div style="margin:.7rem 0;padding:.6rem .7rem;background:rgba(0,0,0,.3);border-radius:8px;font-size:.85rem">📞 <b>Contacto del capitán:</b> '+(esc(d.cel)||'—')+' · '+(esc(d.mail)||'—')+'</div>'+
+      '<div style="font-size:.66rem;line-height:1.45;color:rgba(244,236,216,.75)">🔒 <b>Ficha privada:</b> presentala por el canal privado del concurso. <b>No la publiques en redes</b> (tiene números de Tarjeta y datos de contacto). El cel y el mail son solo para que Juventud se comunique por el concurso. Los números se validan al entregar los premios.</div>';
+    teamCanvas(card,'equipo-'+(d.nombre.toLowerCase().replace(/[^a-z0-9]+/g,'-')||'pampa')+'-PRIVADA.png','#081b10','📄 Ficha privada lista. Presentala por el canal privado del concurso (no la publiques).');
+  }
+
+  // IMAGEN PÚBLICA: escudo, nombre, cantidad y localidades. SIN números ni contacto.
+  function renderEquipoPublico(d){
+    var col=eqColor(d.nombre), ini=eqInic(d.nombre);
+    var locs=[]; d.jugadores.forEach(function(x){ if(x.loc && locs.indexOf(x.loc)<0) locs.push(x.loc); });
+    var card=document.createElement('div');
+    card.style.cssText='position:fixed;left:-9999px;top:0;width:420px;background:linear-gradient(160deg,#0d3b26,#081b10);border:3px solid '+col+';border-radius:16px;padding:1.5rem 1.3rem;color:#f4ecd8;font-family:system-ui,sans-serif;box-sizing:border-box;text-align:center';
+    card.innerHTML='<div style="font-family:\'Anton\',sans-serif;color:#d4a82e;font-size:.72rem;letter-spacing:.2em">PAMPA MUNDIALISTA · MI EQUIPO</div>'+
+      '<div style="width:108px;height:108px;margin:.7rem auto .5rem;border-radius:24px;background:'+col+';display:flex;align-items:center;justify-content:center;font-family:\'Anton\',sans-serif;font-size:3rem;color:#06140c;border:3px solid rgba(255,255,255,.35);box-shadow:0 6px 18px rgba(0,0,0,.5)">'+esc(ini)+'</div>'+
+      '<div style="font-family:\'Anton\',sans-serif;font-size:2rem;line-height:1.05;margin:.2rem 0">'+esc(d.nombre)+'</div>'+
+      '<div style="font-size:1rem;margin:.3rem 0 .2rem">👥 '+d.jugadores.length+' jugador'+(d.jugadores.length!==1?'es':'')+'</div>'+
+      (locs.length?('<div style="font-size:.9rem;opacity:.92;line-height:1.4">📍 De '+locs.length+' localidad'+(locs.length!==1?'es':'')+' de La Pampa:<br><b>'+locs.map(esc).join(' · ')+'</b></div>'):'')+
+      '<div style="margin-top:1rem;font-size:.66rem;font-family:monospace;letter-spacing:.1em;color:rgba(244,236,216,.75)">'+CUENTA+' · #PampaMundialista<br>juventudlapampa.github.io/pampa-juega</div>';
+    teamCanvas(card,'equipo-'+(d.nombre.toLowerCase().replace(/[^a-z0-9]+/g,'-')||'pampa')+'.png','#081b10','📸 ¡Imagen del equipo lista! Subila y etiquetá a '+CUENTA);
+    var cap='Armamos «'+d.nombre+'» para Pampa Mundialista ⚽🔥 '+CUENTA+' #PampaMundialista';
+    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(cap).then(function(){},function(){}); }
   }
   function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
