@@ -390,11 +390,11 @@ function spawnWave(){
     // SOLO: un rival con postura (barrida o parado). Lo podés gambetear o esquivar.
     const lane=(Math.random()*3)|0;
     const type=Math.random()<0.5?'slide':'stand';
-    G.defs.push({ z:0.02, laneIdx:lane, type, state:'incoming', flyDir:0 });
+    G.defs.push({ z:0.02, laneIdx:lane, type, state:'incoming', flyDir:0, wave:G.wave });
   } else {
     // HUECO: dos que cierran carriles; uno queda libre. Hay que leer y correrse.
     const open=(Math.random()*3)|0;
-    for(let i=0;i<3;i++){ if(i!==open) G.defs.push({ z:0.02+(i*0.01), laneIdx:i, type:'block', state:'incoming', flyDir:0 }); }
+    for(let i=0;i<3;i++){ if(i!==open) G.defs.push({ z:0.02+(i*0.01), laneIdx:i, type:'block', state:'incoming', flyDir:0, wave:G.wave }); }
   }
 }
 function enterShoot(){
@@ -429,7 +429,12 @@ function update(dt){
         df.z += dt*d.speed*(0.55+df.z*0.7);
         if(df.z>=d.zDead){ // llegó: si está en mi carril y no lo resolví, me lo roba; si no, lo pasé
           if(df.laneIdx===G.laneIdx) failTackle(df);
-          else beat(df, df.type==='block' ? 'esquive' : 'avoid'); // bloqueo=esquive válido; rival de caño/salto esquivado=casi no suma
+          else {
+            // ¿choqué con OTRO de la misma oleada (estoy en un carril tapado)? entonces no premia
+            const choque = G.defs.some(o=>o!==df && o.wave===df.wave && o.laneIdx===G.laneIdx);
+            if(choque){ df.state='beaten'; df.flyDir=(df.laneIdx===0?1:-1); } // chocaste: no suma
+            else beat(df, df.type==='block' ? 'esquive' : 'avoid'); // bloqueo esquivado bien = jugada válida
+          }
         }
       } else if(df.state==='beaten'){ df.z += dt*1.4; }
       else if(df.state==='tackled'){ df.z += dt*0.6; }
