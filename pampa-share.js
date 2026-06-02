@@ -1,10 +1,10 @@
-/* Pampa Juega · helper compartido para Story 9:16 + Web Share
+/* Pampa Mundialista · helper compartido para Story 9:16 + Web Share
    Uso:  pampaStory(nodo, 'MI CARNET DE HINCHA', 'historia-carnet')
          pampaShare(nodo, 'texto para compartir')
    Requiere html2canvas ya cargado en la página. */
 (function(){
   const SITE = 'juventudlapampa.github.io/pampa-juega';
-  const CUENTA = '@pampajuega';
+  const CUENTA = '@pampamundialista';
 
   function capture(node){
     const w = node.offsetWidth, h = node.offsetHeight;
@@ -24,7 +24,7 @@
     g.fillStyle='rgba(212,168,46,0.10)'; g.beginPath(); g.arc(170,250,300,0,7); g.fill();
     g.fillStyle='rgba(74,222,128,0.08)'; g.beginPath(); g.arc(910,1700,360,0,7); g.fill();
     g.textAlign='center';
-    g.fillStyle='#d4a82e'; g.font='bold 50px Arial'; g.fillText('PAMPA JUEGA', SW/2, 150);
+    g.fillStyle='#d4a82e'; g.font='bold 50px Arial'; g.fillText('PAMPA MUNDIALISTA', SW/2, 150);
     g.fillStyle='rgba(244,236,216,0.85)'; g.font='27px Arial'; g.fillText(subtitle||'MUNDIAL 2026', SW/2, 200);
     // card centrada, ancho máx 760, respetando ratio
     const maxW=760, maxH=1180;
@@ -36,7 +36,7 @@
     const py=cy+ch+80;
     g.fillStyle='#f4cd60'; g.font='bold 36px Arial'; g.fillText('Hacé la tuya gratis 👇', SW/2, py);
     g.fillStyle='rgba(244,236,216,0.92)'; g.font='28px Arial'; g.fillText(SITE, SW/2, py+52);
-    g.fillStyle='#4ade80'; g.font='bold 30px Arial'; g.fillText(CUENTA+' · #DesafioPampaJuega', SW/2, py+110);
+    g.fillStyle='#4ade80'; g.font='bold 30px Arial'; g.fillText(CUENTA+' · #PampaMundialista', SW/2, py+110);
     return st;
   }
 
@@ -52,8 +52,8 @@
     return capture(node).then(card=>{
       card.toBlob(blob=>{
         const file=new File([blob],'pampa-juega.png',{type:'image/png'});
-        if(navigator.canShare && navigator.canShare({files:[file]})){ navigator.share({files:[file], text, title:'Pampa Juega'}).catch(()=>{}); }
-        else if(navigator.share){ navigator.share({text, title:'Pampa Juega'}).catch(()=>{}); }
+        if(navigator.canShare && navigator.canShare({files:[file]})){ navigator.share({files:[file], text, title:'Pampa Mundialista'}).catch(()=>{}); }
+        else if(navigator.share){ navigator.share({text, title:'Pampa Mundialista'}).catch(()=>{}); }
         else if(navigator.clipboard){ navigator.clipboard.writeText(text).then(()=>alert('¡Texto copiado! Descargá la imagen y subila etiquetando a '+CUENTA),()=>{}); }
         else alert('Descargá la imagen y subila etiquetando a '+CUENTA);
       });

@@ -1,4 +1,4 @@
-/* Pampa Juega · firma institucional — Subsecretaría de Juventud · La Pampa.
+/* Pampa Mundialista · firma institucional — Subsecretaría de Juventud · La Pampa.
    Incluir con: <script src="../pampa-marca.js"></script>  (en la raíz: "pampa-marca.js")
    Reproduce el sistema del manual de marca: wordmark JUVENTUDES letra por letra
    con los 10 colores oficiales (Archivo Black) + línea institucional.

@@ -1,4 +1,4 @@
-/* Pampa Juega · META-JUEGO (sin servidor, todo en localStorage)
+/* Pampa Mundialista · META-JUEGO (sin servidor, todo en localStorage)
    Capas: 2) Localidad pampeana · 3) Pasaporte RPG (sellos + XP + niveles + títulos + logros)
           4) Desafío del Día (determinístico por fecha) + racha.
    Incluir con: <script src="../pampa-juego.js"></script>  (en la raíz: "pampa-juego.js")
@@ -7,8 +7,8 @@
 (function(){
   if (window.__pampaJuego) return; window.__pampaJuego = true;
 
-  // ===== Cuenta de redes (definida): @pampajuega =====
-  var CUENTA = (window.CUENTA || '@pampajuega');
+  // ===== Cuenta de redes (definida): @pampamundialista =====
+  var CUENTA = (window.CUENTA || '@pampamundialista');
   var SITE = 'juventudlapampa.github.io/pampa-juega';
 
   // ===== Herramientas (id = el data-id del index, para que el contador cuadre) =====
@@ -221,11 +221,11 @@
   function golazo(){ tone([392,523,659,784,1047],0.22,0.16); try{ if(navigator.vibrate) navigator.vibrate([30,40,60]); }catch(e){} }
 
   // ===== Compartir viral (texto propio por herramienta) =====
-  // opts: { texto:'gancho', modo:'wsp'|'share' }. Cierra siempre con el link + #PampaJuega.
+  // opts: { texto:'gancho', modo:'wsp'|'share' }. Cierra siempre con el link + #PampaMundialista.
   function compartir(opts){
     opts = opts || {};
-    var texto = (opts.texto || '¡Jugá en Pampa Juega!');
-    var full = texto + ' ⚽ ' + SITE + ' #PampaJuega';
+    var texto = (opts.texto || '¡Jugá en Pampa Mundialista!');
+    var full = texto + ' ⚽ ' + SITE + ' #PampaMundialista';
     try { golazo(); confetti(20); } catch(e) {}
     if (opts.modo === 'wsp') {
       // Desafío directo: abre WhatsApp con el texto pre-cargado (en La Pampa manda el grupo del curso)
@@ -233,7 +233,7 @@
       return;
     }
     // Mostrarse: menú nativo -> portapapeles -> prompt
-    if (navigator.share) { navigator.share({ title: 'Pampa Juega', text: full }).catch(function(){}); }
+    if (navigator.share) { navigator.share({ title: 'Pampa Mundialista', text: full }).catch(function(){}); }
     else if (navigator.clipboard) { navigator.clipboard.writeText(full).then(function(){ toast('¡Texto copiado! Pegalo en tu historia o en el grupo 📲'); }, function(){ try { prompt('Copiá tu texto:', full); } catch(e){} }); }
     else { try { prompt('Copiá tu texto:', full); } catch(e){} }
   }

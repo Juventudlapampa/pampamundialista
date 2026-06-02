@@ -7,12 +7,12 @@
 <meta name="description" content="Jugá los juegos del Mundial 2026 de Juventudes La Pampa. Gratis, desde el celu.">
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Pampa Juega - Mundial 2026">
+<meta property="og:title" content="Pampa Mundialista - Mundial 2026">
 <meta property="og:description" content="Jugá los juegos del Mundial 2026 de Juventudes La Pampa. Gratis, desde el celu.">
 <meta property="og:image" content="https://juventudlapampa.github.io/pampa-juega/og-image.png">
 <meta property="og:url" content="https://juventudlapampa.github.io/pampa-juega/generadores/01-figurita.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Pampa Juega - Mundial 2026">
+<meta name="twitter:title" content="Pampa Mundialista - Mundial 2026">
 <meta name="twitter:image" content="https://juventudlapampa.github.io/pampa-juega/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -386,7 +386,7 @@
 </head>
 <body>
 <div class="container">
-  <a href="../index.html" style="display:inline-block;font-family:'JetBrains Mono',monospace;font-size:0.75rem;letter-spacing:0.1em;color:var(--dorado);text-decoration:none;opacity:0.85;margin-bottom:0.8rem">← Volver a Pampa Juega</a>
+  <a href="../index.html" style="display:inline-block;font-family:'JetBrains Mono',monospace;font-size:0.75rem;letter-spacing:0.1em;color:var(--dorado);text-decoration:none;opacity:0.85;margin-bottom:0.8rem">← Volver a Pampa Mundialista</a>
   <header>
     <div class="header-tag">Generador Oficial · Mundial 2026</div>
     <h1>TU <span>FIGURITA</span></h1>
@@ -717,7 +717,7 @@
     }).then(canvas => { node.setAttribute('style', origCss); return canvas; });
   }
 
-  // ===== Story 9:16 (1080x1920) con marca Pampa Juega =====
+  // ===== Story 9:16 (1080x1920) con marca Pampa Mundialista =====
   function buildStory(cardCanvas) {
     const SW=1080, SH=1920, st=document.createElement('canvas'); st.width=SW; st.height=SH;
     const g=st.getContext('2d');
@@ -728,7 +728,7 @@
     g.beginPath(); g.arc(900,1700,360,0,7); g.fillStyle='rgba(74,222,128,0.08)'; g.fill();
     // titulo arriba
     g.textAlign='center'; g.fillStyle='#d4a82e'; g.font='bold 46px Arial';
-    g.fillText('PAMPA JUEGA', SW/2, 150);
+    g.fillText('PAMPA MUNDIALISTA', SW/2, 150);
     g.fillStyle='rgba(244,236,216,0.85)'; g.font='28px Arial';
     g.fillText('MI FIGURITA DEL MUNDIAL 2026', SW/2, 200);
     // card centrada
@@ -741,7 +741,7 @@
     g.fillStyle='rgba(244,236,216,0.9)'; g.font='26px Arial';
     g.fillText('juventudlapampa.github.io/pampa-juega', SW/2, cy+ch+140);
     g.fillStyle='#4ade80'; g.font='bold 30px Arial';
-    g.fillText('@pampajuega · #DesafioPampaJuega', SW/2, cy+ch+200);
+    g.fillText('@pampamundialista · #PampaMundialista', SW/2, cy+ch+200);
     return st;
   }
 

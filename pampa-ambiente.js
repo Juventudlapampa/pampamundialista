@@ -1,4 +1,4 @@
-/* Pampa Juega · hinchada de fondo + bombo (ambiente liviano, sin archivos).
+/* Pampa Mundialista · hinchada de fondo + bombo (ambiente liviano, sin archivos).
    Incluir con: <script src="../pampa-ambiente.js"></script>
    Pone un botón flotante 🥁 abajo a la izquierda. Arranca con el primer toque
    (las políticas del navegador no dejan sonar audio sin un gesto) y se silencia

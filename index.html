@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pampa Juega · Mundial 2026 · Juventudes La Pampa</title>
+<title>Pampa Mundialista · Mundial 2026 · Juventudes La Pampa</title>
 <meta name="description" content="Jugá, armá tu carta y competí por premios mundialistas. 20 juegos gratis desde el celu.">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Pampa Juega - El Mundial de Juventudes La Pampa">
+<meta property="og:title" content="Pampa Mundialista - El Mundial de Juventudes La Pampa">
 <meta property="og:description" content="Jugá, armá tu carta y competí por premios mundialistas. 20 juegos gratis desde el celu.">
 <meta property="og:image" content="https://juventudlapampa.github.io/pampa-juega/og-image.png">
 <meta property="og:url" content="https://juventudlapampa.github.io/pampa-juega/">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Pampa Juega - El Mundial de Juventudes La Pampa">
+<meta name="twitter:title" content="Pampa Mundialista - El Mundial de Juventudes La Pampa">
 <meta name="twitter:image" content="https://juventudlapampa.github.io/pampa-juega/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -321,7 +321,7 @@
 
   <!-- EL DESAFÍO -->
   <div class="block" id="concurso">
-    <div class="block-title">🏅 El Desafío Pampa Juega</div>
+    <div class="block-title">🏅 El Desafío Pampa Mundialista</div>
     <p>Hacé <b>misiones</b>, juntá <b>sellos</b> y entrá al <b>sorteo de premios mundialistas</b>. No se gana por azar ni por plata: se gana <b>participando</b>. Cada misión que cumplís y compartís te da un sello en tu pasaporte (mirá el de arriba 👆).</p>
 
     <p style="margin:0.6rem 0 0.2rem"><b>Subí de nivel juntando sellos:</b></p>
@@ -375,7 +375,7 @@
   </div>
 
   <footer>
-    <b>PAMPA JUEGA</b> · Una propuesta de la Subsecretaría de Juventud de La Pampa para el Mundial 2026<br>
+    <b>PAMPA MUNDIALISTA</b> · Una propuesta de la Subsecretaría de Juventud de La Pampa para el Mundial 2026<br>
     Seguinos en <a href="https://instagram.com/juventud_lapampa" target="_blank" rel="noopener">@juventud_lapampa</a> · Funciona en cualquier celular y PC · 100% gratis · Sin apuestas · Con mirada ESI<br>
     <span style="opacity:0.8">Esta propuesta no tiene relación oficial con la FIFA ni con el torneo. Es contenido cultural y de participación juvenil de la provincia de La Pampa.</span>
   </footer>
@@ -385,7 +385,7 @@
 
 <script>
   // ===== CONFIG (cambiá en un solo lugar) =====
-  const CUENTA = "@pampajuega";            // cuenta del Desafío (placeholder, cambiá cuando la definas)
+  const CUENTA = "@pampamundialista";            // cuenta del Desafío (placeholder, cambiá cuando la definas)
   const WHATSAPP_JUVENTUD = "5492954801601"; // WhatsApp institucional de la Subse
   const INSCRIPCION_URL = "https://forms.gle/sCAEagJnVTMughh3A"; // Google Form de inscripción al Desafío
 
@@ -422,7 +422,7 @@
   renderSellos();
 
   // ===== Limpiar avances: borra sellos, rankings y partidas guardadas (este dispositivo) =====
-  // Todas las claves que usa Pampa Juega (mismo origen para todas las páginas).
+  // Todas las claves que usa Pampa Mundialista (mismo origen para todas las páginas).
   const PAMPA_KEYS = [
     'pampa-juega-sellos',        // pasaporte / sellos (home)
     'mundial-fixture-2026-v2',   // fixture / torneo
@@ -449,7 +449,7 @@
   const MISIONES = [
     { ic:'🎙️', name:'Relato de Gol', sello:'1 sello x fecha', wpp:true,
       desc:'Relatá un gol como relator de cancha y mandá tu audio. Los mejores salen en la cuenta. ¡Una por fecha del Mundial!',
-      btn:'Mandar mi relato', link:wppBase('¡Hola! Mando mi relato de gol para el Desafío Pampa Juega 🎙️⚽') },
+      btn:'Mandar mi relato', link:wppBase('¡Hola! Mando mi relato de gol para el Desafío Pampa Mundialista 🎙️⚽') },
     { ic:'🎨', name:'Dibujá tu Selección', sello:'1 sello', wpp:false,
       desc:'Dibujá a tu selección o tu jugador favorito, sacale una foto y subila etiquetando a '+CUENTA+'. (¡Ideal para los más chicos!)',
       btn:'Subir y etiquetar', link:'#' },
@@ -480,8 +480,8 @@
   // botones de "subir y etiquetar" -> abren share nativo / copian la consigna
   document.querySelectorAll('.mis-btn[data-share]').forEach(b => b.addEventListener('click', e => {
     e.preventDefault();
-    const txt = `Estoy haciendo la misión "${b.dataset.share}" del Desafío Pampa Juega ⚽ Subí la tuya y etiquetá a ${CUENTA} · Mundial 2026 · Juventudes La Pampa`;
-    if (navigator.share) { navigator.share({ title:'Desafío Pampa Juega', text:txt }).catch(()=>{}); }
+    const txt = `Estoy haciendo la misión "${b.dataset.share}" del Desafío Pampa Mundialista ⚽ Subí la tuya y etiquetá a ${CUENTA} · Mundial 2026 · Juventudes La Pampa`;
+    if (navigator.share) { navigator.share({ title:'Desafío Pampa Mundialista', text:txt }).catch(()=>{}); }
     else if (navigator.clipboard) { navigator.clipboard.writeText(txt).then(()=>alert('¡Consigna copiada! Subí tu material y etiquetá a '+CUENTA),()=>{}); }
     else { alert('Subí tu material y etiquetá a '+CUENTA); }
   }));

@@ -7,12 +7,12 @@
 <meta name="description" content="Vos decidís: leé la postura del rival, esquivá al hueco o clavá un sombrero o un caño, y definí mano a mano con el arquero estilo Supercampeones.">
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Gambeteá como Leo · Pampa Juega">
+<meta property="og:title" content="Gambeteá como Leo · Pampa Mundialista">
 <meta property="og:description" content="Decidí vos: esquivá rivales, tirá sombreros y caños, y definí mano a mano con el arquero.">
 <meta property="og:image" content="https://juventudlapampa.github.io/pampa-juega/og-image.png">
 <meta property="og:url" content="https://juventudlapampa.github.io/pampa-juega/juegos/28-gambeta-leo.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Gambeteá como Leo · Pampa Juega">
+<meta name="twitter:title" content="Gambeteá como Leo · Pampa Mundialista">
 <meta name="twitter:image" content="https://juventudlapampa.github.io/pampa-juega/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -105,7 +105,7 @@
 </head>
 <body>
 <div class="container">
-  <a class="volver" href="../index.html">← Volver a Pampa Juega</a>
+  <a class="volver" href="../index.html">← Volver a Pampa Mundialista</a>
   <header>
     <div class="header-tag">Arcade · Mundial 2026</div>
     <h1>GAMBETEÁ COMO <span>LEO</span></h1>
@@ -691,7 +691,7 @@ function showScreen(s){ if(s!=='game'){ if(raf){cancelAnimationFrame(raf);raf=nu
 $('start').onclick=startMatch; $('replay').onclick=startMatch; $('to-intro').onclick=()=>showScreen('intro');
 $('download').onclick=()=>{ const node=$('res-card'); const w=node.offsetWidth,h=node.offsetHeight; html2canvas(node,{backgroundColor:'#050d08',scale:2,useCORS:true,allowTaint:true,logging:false,width:w,height:h,windowWidth:document.documentElement.clientWidth,windowHeight:document.documentElement.clientHeight}).then(c=>{ const l=document.createElement('a'); l.download='gambeta-como-leo-2026.png'; l.href=c.toDataURL('image/png'); l.click(); }); };
 $('share').onclick=()=>{ window.PampaJuego.compartir({texto:'Mirá la gambeta que me mandé ⚽ ¿Vos podés?', modo:'wsp'}); };
-function shareReto(text){ if(navigator.share){navigator.share({title:'Gambeteá como Leo · Pampa Juega',text}).catch(()=>{});} else if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>alert('¡Desafío copiado! Pasáselo a un amigo 📲'),()=>prompt('Copiá tu desafío:',text));} else {prompt('Copiá tu desafío:',text);} }
+function shareReto(text){ if(navigator.share){navigator.share({title:'Gambeteá como Leo · Pampa Mundialista',text}).catch(()=>{});} else if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>alert('¡Desafío copiado! Pasáselo a un amigo 📲'),()=>prompt('Copiá tu desafío:',text));} else {prompt('Copiá tu desafío:',text);} }
 </script>
 <div class="grain"></div>
 <script src="../pampa-ambiente.js"></script>
