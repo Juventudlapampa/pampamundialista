@@ -76,6 +76,21 @@
   .pass-reset.ok { background: rgba(74,222,128,0.18); border-color: rgba(74,222,128,0.5); color: var(--verde-fluo); }
   @media (max-width: 560px) { .pass { flex-wrap: wrap; } .pass-reset { width: 100%; text-align: center; } }
 
+  /* DESAFÍO DEL DÍA + MI PASAPORTE */
+  .pj-row { display:flex; gap:0.7rem; align-items:stretch; flex-wrap:wrap; margin: 0 0 1.2rem; }
+  .pj-dia { flex:1; min-width:240px; background:linear-gradient(135deg, rgba(31,122,67,0.25), rgba(212,168,46,0.12)); border:2px solid var(--cesped); border-radius:14px; padding:0.8rem 1rem; transform:rotate(-0.4deg); }
+  .pj-dia-tag { font-family:'JetBrains Mono',monospace; font-size:0.6rem; letter-spacing:0.14em; color:var(--relato); text-transform:uppercase; }
+  .pj-dia-tit { font-family:'Anton',sans-serif; font-size:1.25rem; color:var(--crema); line-height:1; margin:0.25rem 0; }
+  .pj-dia-desc { font-size:0.82rem; opacity:0.9; line-height:1.35; }
+  .pj-dia-acts { display:flex; gap:0.5rem; align-items:center; margin-top:0.55rem; flex-wrap:wrap; }
+  .pj-dia-go { background:var(--celeste); color:#04212e; text-decoration:none; font-family:'Anton',sans-serif; letter-spacing:0.05em; font-size:0.85rem; padding:0.4rem 0.8rem; border-radius:8px; }
+  .pj-dia-mark { background:transparent; border:1px solid rgba(244,236,216,0.4); color:var(--crema); border-radius:8px; padding:0.4rem 0.7rem; font-family:'JetBrains Mono',monospace; font-size:0.66rem; cursor:pointer; }
+  .pj-dia-done { color:var(--verde-fluo); font-family:'JetBrains Mono',monospace; font-size:0.72rem; }
+  .pj-pass-btn { flex:none; background:linear-gradient(135deg, var(--gold), var(--gold-2)); color:#000; border:none; border-radius:14px; padding:0.8rem 1rem; font-family:'Anton',sans-serif; letter-spacing:0.05em; font-size:1rem; cursor:pointer; box-shadow:0 5px 0 #927200; }
+  .pj-pass-btn small { display:block; font-family:'JetBrains Mono',monospace; font-weight:400; font-size:0.58rem; letter-spacing:0.05em; opacity:0.8; margin-top:0.2rem; }
+  .pj-pass-btn:active { transform:translateY(3px); box-shadow:0 2px 0 #927200; }
+  @media (max-width: 560px) { .pj-pass-btn { width:100%; } }
+
   /* PUERTAS */
   .puerta { border-radius: 16px; margin-bottom: 0.9rem; overflow: hidden; border: 2px solid var(--ac, var(--gold)); background: rgba(0,0,0,0.35); }
   .puerta-head { width: 100%; background: none; border: none; color: var(--crema); cursor: pointer; display: flex; align-items: center; gap: 0.9rem; padding: 1.1rem 1rem; text-align: left; font-family: inherit; }
@@ -192,6 +207,11 @@
       <div class="pass-bar"><div class="pass-fill" id="pass-fill"></div></div>
     </div>
     <button class="pass-reset" id="pass-reset" title="Borrar sellos, rankings y partidas guardadas de este dispositivo">🗑️ Limpiar mis avances</button>
+  </div>
+
+  <div class="pj-row">
+    <div id="pj-desafio" class="pj-dia">Cargando el desafío del día…</div>
+    <button class="pj-pass-btn" id="pj-pass-open">🎟️ Mi Pasaporte<small id="pj-xp">0 XP</small></button>
   </div>
 
   <!-- PUERTA 1: CREÁ TU CRACK -->
@@ -553,5 +573,26 @@
   })();
 </script>
 <script src="pampa-marca.js"></script>
+<script src="pampa-juego.js"></script>
+<script>
+(function(){
+  function init(){
+    if(!window.PampaJuego){ return setTimeout(init,150); }
+    // XP en el botón
+    var xp=document.getElementById('pj-xp'); if(xp) xp.textContent=PampaJuego.xp()+' XP · '+PampaJuego.levelName();
+    var b=document.getElementById('pj-pass-open'); if(b) b.onclick=function(){ PampaJuego.openPasaporte(); };
+    // Desafío del Día
+    var d=PampaJuego.desafioHoy(), el=document.getElementById('pj-desafio');
+    if(el && d){
+      el.innerHTML='<div class="pj-dia-tag">🔥 Desafío del Día'+(d.doble?' · ¡DOBLE SELLO!':'')+(d.racha?(' · Racha '+d.racha+'🔥'):'')+'</div>'+
+        '<div class="pj-dia-tit">'+d.reto.t+'</div><div class="pj-dia-desc">'+d.reto.d+'</div>'+
+        '<div class="pj-dia-acts"><a class="pj-dia-go" href="'+d.reto.go+'">▶ Ir a jugarlo</a>'+
+        (d.hecho?'<span class="pj-dia-done">✓ Hecho hoy</span>':'<button class="pj-dia-mark" id="pj-dia-mark">Ya lo hice</button>')+'</div>';
+      var mk=document.getElementById('pj-dia-mark'); if(mk) mk.onclick=function(){ PampaJuego.marcarDesafio(); init(); };
+    }
+  }
+  init();
+})();
+</script>
 </body>
 </html>
