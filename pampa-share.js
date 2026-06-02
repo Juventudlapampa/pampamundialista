@@ -3,7 +3,7 @@
          pampaShare(nodo, 'texto para compartir')
    Requiere html2canvas ya cargado en la página. */
 (function(){
-  const SITE = 'juventudlapampa.github.io/pampa-juega';
+  const SITE = 'juventudlapampa.github.io/pampamundialista';
   const CUENTA = '@pampamundialista';
 
   function capture(node){

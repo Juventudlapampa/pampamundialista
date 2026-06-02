@@ -9,7 +9,7 @@
 
   // ===== Cuenta de redes (definida): @pampamundialista =====
   var CUENTA = (window.CUENTA || '@pampamundialista');
-  var SITE = 'juventudlapampa.github.io/pampa-juega';
+  var SITE = 'juventudlapampa.github.io/pampamundialista';
 
   // ===== Herramientas (id = el data-id del index, para que el contador cuadre) =====
   var TOOLS = [
@@ -401,7 +401,7 @@
       '<div style="font-family:\'Anton\',sans-serif;font-size:2rem;line-height:1.05;margin:.2rem 0">'+esc(d.nombre)+'</div>'+
       '<div style="font-size:1rem;margin:.3rem 0 .2rem">👥 '+d.jugadores.length+' jugador'+(d.jugadores.length!==1?'es':'')+'</div>'+
       (locs.length?('<div style="font-size:.9rem;opacity:.92;line-height:1.4">📍 De '+locs.length+' localidad'+(locs.length!==1?'es':'')+' de La Pampa:<br><b>'+locs.map(esc).join(' · ')+'</b></div>'):'')+
-      '<div style="margin-top:1rem;font-size:.66rem;font-family:monospace;letter-spacing:.1em;color:rgba(244,236,216,.75)">'+CUENTA+' · #PampaMundialista<br>juventudlapampa.github.io/pampa-juega</div>';
+      '<div style="margin-top:1rem;font-size:.66rem;font-family:monospace;letter-spacing:.1em;color:rgba(244,236,216,.75)">'+CUENTA+' · #PampaMundialista<br>juventudlapampa.github.io/pampamundialista</div>';
     teamCanvas(card,'equipo-'+(d.nombre.toLowerCase().replace(/[^a-z0-9]+/g,'-')||'pampa')+'.png','#081b10','📸 ¡Imagen del equipo lista! Subila y etiquetá a '+CUENTA);
     var cap='Armamos «'+d.nombre+'» para Pampa Mundialista ⚽🔥 '+CUENTA+' #PampaMundialista';
     if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(cap).then(function(){},function(){}); }
