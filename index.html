@@ -263,7 +263,7 @@
       <div class="puerta-ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 11a5.5 5.5 0 0 0 5.5 5.5h6.2L19 20v-4.2A4.3 4.3 0 0 0 17.5 7H7.5A5.5 5.5 0 0 0 2 11z"/><circle cx="7.7" cy="11.2" r="2.6" fill="#06140c"/><rect x="13.5" y="2.5" width="6.5" height="3" rx="1.2"/></svg></div>
       <div class="puerta-info">
         <div class="puerta-name">Ponete a Prueba</div>
-        <div class="puerta-desc">¿Cuánto sabés de Mundiales? Demostralo… o quedate calladito.</div>
+        <div class="puerta-desc">¿Cuánto sabés de Mundiales? Demostralo… o quedate piola.</div>
         <div class="puerta-chips">Trivia · ¿Qué selección sos? · Sala de escape · Memo</div>
       </div>
       <div class="puerta-badge">4</div><div class="puerta-arrow">▼</div>
@@ -410,7 +410,7 @@
     else if (n >= 3) nivel = ' · 🥉 NIVEL BRONCE';
     if (n === 0) msg.textContent = '¡arrancá a jugar y llenalo!';
     else if (n < 7) msg.textContent = '¡bien ahí, seguí sumando!' + nivel;
-    else if (n < TOTAL) msg.textContent = '¡sos un crack, te falta poco!' + nivel;
+    else if (n < TOTAL) msg.textContent = '¡la estás rompiendo, te falta poco!' + nivel;
     else msg.textContent = '🏆 ¡completaste el pasaporte! Sos leyenda pampeana.';
     // niveles visuales
     document.querySelectorAll('.nivel').forEach(el => el.classList.toggle('on', n >= +el.dataset.min));
