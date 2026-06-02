@@ -19,7 +19,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-  :root { --bg:#070d14; --verde-fluo:#4ade80; --gold:#d4a82e; --gold-2:#f4cd60; --crema:#f4ecd8; --azul:#38bdf8; --rojo:#f87171; --purple:#a78bfa; }
+  :root { --bg:#070d14; --verde-fluo:#4ade80; --gold:#d4a82e; --gold-2:#f4cd60; --crema:#f4ecd8; --azul:#38bdf8; --rojo:#f87171; --purple:#9ec9ed; }
   body { font-family:'DM Sans',sans-serif; background:var(--bg); background-image:radial-gradient(circle at 50% -10%, rgba(108,172,228,0.07), transparent 60%); min-height:100vh; color:var(--crema); padding:1rem; touch-action:manipulation; }
   .container { max-width:520px; margin:0 auto; }
   header { text-align:center; margin-bottom:0.6rem; }
@@ -372,7 +372,7 @@ function accHeadSVG(skin, hc){
   if(has('arito')) s+=`<circle cx="138" cy="100" r="3.5" fill="none" stroke="#facc15" stroke-width="2"/>`;
   if(has('aros')) s+=`<circle cx="60.5" cy="105" r="4.5" fill="none" stroke="#facc15" stroke-width="2.5"/><circle cx="139.5" cy="105" r="4.5" fill="none" stroke="#facc15" stroke-width="2.5"/>`;
   if(has('flor')) s+=`<g transform="translate(126,63)"><circle cx="-5" cy="0" r="4" fill="#ff9ec9"/><circle cx="5" cy="0" r="4" fill="#ff9ec9"/><circle cx="0" cy="-5" r="4" fill="#ff9ec9"/><circle cx="0" cy="5" r="4" fill="#ff9ec9"/><circle r="3" fill="#ffe14d"/></g>`;
-  if(has('beanie')) s=`<path d="M58,72 Q60,40 100,40 Q140,40 142,72 Q120,60 100,60 Q80,60 58,72 Z" fill="#7c3aed"/><rect x="56" y="68" width="88" height="10" rx="5" fill="#6d28d9"/><circle cx="100" cy="37" r="5" fill="#a78bfa"/>`+s;
+  if(has('beanie')) s=`<path d="M58,72 Q60,40 100,40 Q140,40 142,72 Q120,60 100,60 Q80,60 58,72 Z" fill="#1f7a43"/><rect x="56" y="68" width="88" height="10" rx="5" fill="#155e34"/><circle cx="100" cy="37" r="5" fill="#9ec9ed"/>`+s;
   return s;
 }
 function glassesSVG(){
