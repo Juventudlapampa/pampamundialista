@@ -696,11 +696,14 @@
   };
 
   // Download con forzado de dimensiones
-  $('download').onclick = () => {
+  $('download').onclick = async () => {
     const node = $('figurita');
     const origCss = node.getAttribute('style') || '';
     node.style.cssText = origCss +
       ';width:320px!important;height:448px!important;max-width:320px!important;max-height:448px!important;overflow:hidden!important;box-sizing:border-box!important;';
+    // mobile: esperar fuentes/foto antes de capturar (si no, sale en blanco/estirada)
+    try { if (document.fonts && document.fonts.ready) await document.fonts.ready; } catch(e){}
+    await new Promise(function(r){ requestAnimationFrame(function(){ requestAnimationFrame(function(){ setTimeout(r, 100); }); }); });
 
     html2canvas(node, {
       backgroundColor: null,

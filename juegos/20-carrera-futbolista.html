@@ -309,21 +309,74 @@
         <option value="x">Prefiero no decir</option>
       </select>
       <select id="origen">
-        <option value="santarosa">Santa Rosa</option>
-        <option value="pico">General Pico</option>
-        <option value="toay">Toay</option>
-        <option value="acha">General Acha</option>
+        <option value="Adolfo Van Praet">Adolfo Van Praet</option>
+        <option value="Agustoni">Agustoni</option>
+        <option value="Algarrobo del Águila">Algarrobo del Águila</option>
+        <option value="Alpachiri">Alpachiri</option>
+        <option value="Alta Italia">Alta Italia</option>
+        <option value="Anguil">Anguil</option>
+        <option value="Arata">Arata</option>
+        <option value="Ataliva Roca">Ataliva Roca</option>
+        <option value="Bernardo Larroudé">Bernardo Larroudé</option>
+        <option value="Bernasconi">Bernasconi</option>
+        <option value="Caleufú">Caleufú</option>
+        <option value="Carro Quemado">Carro Quemado</option>
+        <option value="catrilo">Catriló</option>
+        <option value="Ceballos">Ceballos</option>
+        <option value="Chacharramendi">Chacharramendi</option>
         <option value="venticinco">Colonia 25 de Mayo</option>
+        <option value="Colonia Barón">Colonia Barón</option>
+        <option value="Conhelo">Conhelo</option>
+        <option value="Coronel Hilario Lagos">Coronel Hilario Lagos</option>
+        <option value="Cuchillo-Có">Cuchillo-Có</option>
+        <option value="Doblas">Doblas</option>
         <option value="castex">Eduardo Castex</option>
-        <option value="alvear">Intendente Alvear</option>
-        <option value="realico">Realicó</option>
-        <option value="victorica">Victorica</option>
-        <option value="macachin">Macachín</option>
+        <option value="Embajador Martini">Embajador Martini</option>
+        <option value="Falucho">Falucho</option>
+        <option value="acha">General Acha</option>
+        <option value="pico">General Pico</option>
+        <option value="Gobernador Duval">Gobernador Duval</option>
         <option value="guatrache">Guatraché</option>
         <option value="luiggi">Ingeniero Luiggi</option>
-        <option value="catrilo">Catriló</option>
+        <option value="alvear">Intendente Alvear</option>
+        <option value="Jacinto Arauz">Jacinto Arauz</option>
+        <option value="La Adela">La Adela</option>
+        <option value="La Humada">La Humada</option>
+        <option value="La Maruja">La Maruja</option>
+        <option value="La Reforma">La Reforma</option>
+        <option value="Limay Mahuida">Limay Mahuida</option>
+        <option value="Lonquimay">Lonquimay</option>
+        <option value="Luan Toro">Luan Toro</option>
+        <option value="macachin">Macachín</option>
+        <option value="Maisonnave">Maisonnave</option>
+        <option value="Mariano Miró">Mariano Miró</option>
+        <option value="Mauricio Mayer">Mauricio Mayer</option>
+        <option value="Metileo">Metileo</option>
+        <option value="Miguel Riglos">Miguel Riglos</option>
+        <option value="Monte Nievas">Monte Nievas</option>
+        <option value="Naicó">Naicó</option>
+        <option value="Parera">Parera</option>
+        <option value="Pichi Huinca">Pichi Huinca</option>
+        <option value="Puelches">Puelches</option>
+        <option value="Puelén">Puelén</option>
+        <option value="Quehué">Quehué</option>
         <option value="quemu">Quemú Quemú</option>
         <option value="rancul">Rancul</option>
+        <option value="realico">Realicó</option>
+        <option value="Rolón">Rolón</option>
+        <option value="Santa Isabel">Santa Isabel</option>
+        <option value="santarosa" selected>Santa Rosa</option>
+        <option value="Sarah">Sarah</option>
+        <option value="Speluzzi">Speluzzi</option>
+        <option value="Telén">Telén</option>
+        <option value="toay">Toay</option>
+        <option value="Tomás M. de Anchorena">Tomás M. de Anchorena</option>
+        <option value="Trenel">Trenel</option>
+        <option value="Uriburu">Uriburu</option>
+        <option value="Vértiz">Vértiz</option>
+        <option value="victorica">Victorica</option>
+        <option value="Villa Mirasol">Villa Mirasol</option>
+        <option value="Winifreda">Winifreda</option>
         <option value="otro">Otro pueblo de La Pampa</option>
       </select>
       <button class="btn" id="start">▶ EMPEZAR MI CARRERA</button>
@@ -422,8 +475,8 @@ function gen(m, f, x) {
 }
 function clamp(v){ return Math.max(0, Math.min(99, v)); }
 const NAME = () => game.name.toUpperCase();
-const ORI = () => (TOWNS[game.origen] || TOWNS.otro).n;
-const CLUB = () => (TOWNS[game.origen] || TOWNS.otro).club;
+const ORI = () => { const t = TOWNS[game.origen]; return t ? t.n : (game.origen || TOWNS.otro.n); };
+const CLUB = () => { const t = TOWNS[game.origen]; return t ? t.club : ('el club de ' + (game.origen || 'tu pueblo')); };
 
 // ========================================================================
 // DADO DE LA VIDA

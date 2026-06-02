@@ -657,7 +657,20 @@
   });
 
   // Download
-  $('download').addEventListener('click', () => {
+  // En mobile la foto/fuentes tardan en pintar: esperamos antes de capturar (si no, sale en blanco/estirada)
+  async function esperarRender(){
+    try { if (document.fonts && document.fonts.ready) await document.fonts.ready; } catch(e){}
+    // que termine de cargar la foto subida (background-image) si la hay
+    try {
+      var ph = document.querySelector('.fig-photo');
+      var bg = ph && getComputedStyle(ph).backgroundImage;
+      var m = bg && bg.match(/url\(["']?(.*?)["']?\)/);
+      if (m && m[1] && m[1] !== 'none') { await new Promise(function(res){ var im=new Image(); im.onload=res; im.onerror=res; im.src=m[1]; setTimeout(res, 1200); }); }
+    } catch(e){}
+    await new Promise(function(r){ requestAnimationFrame(function(){ requestAnimationFrame(function(){ setTimeout(r, 90); }); }); });
+  }
+
+  $('download').addEventListener('click', async () => {
     const node = document.getElementById('figurita');
     // Forzar dimensiones inline ANTES de capturar (override de cualquier CSS)
     const origCss = node.getAttribute('style') || '';
@@ -665,6 +678,7 @@
       ';width:320px!important;height:448px!important;' +
       'max-width:320px!important;max-height:448px!important;' +
       'overflow:hidden!important;box-sizing:border-box!important;';
+    await esperarRender();
 
     html2canvas(node, {
       backgroundColor: null,
@@ -707,10 +721,11 @@
   });
 
   // ===== Reutilizable: captura la figurita y devuelve el canvas =====
-  function captureFigCanvas() {
+  async function captureFigCanvas() {
     const node = document.getElementById('figurita');
     const origCss = node.getAttribute('style') || '';
     node.style.cssText = origCss + ';width:320px!important;height:448px!important;max-width:320px!important;max-height:448px!important;overflow:hidden!important;box-sizing:border-box!important;';
+    await esperarRender();
     return html2canvas(node, { backgroundColor:null, scale:3, useCORS:true, logging:false, allowTaint:true, width:320, height:448,
       windowWidth:document.documentElement.clientWidth, windowHeight:document.documentElement.clientHeight,
       onclone:(doc)=>{ const c=doc.getElementById('figurita'); if(c){c.style.width='320px';c.style.height='448px';c.style.maxWidth='320px';c.style.maxHeight='448px';c.style.overflow='hidden';c.style.boxSizing='border-box';} const p=doc.querySelector('.fig-photo'); if(p){p.style.cssText+=';width:240px!important;height:240px!important;flex:0 0 240px!important;';} }

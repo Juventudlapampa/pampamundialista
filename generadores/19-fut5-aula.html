@@ -437,11 +437,14 @@ document.getElementById('equipo-nombre').addEventListener('input', e => {
 });
 
 // Download
-document.getElementById('download').onclick = () => {
+document.getElementById('download').onclick = async () => {
   const node = document.getElementById('cancha-output');
   const w = node.offsetWidth, h = node.offsetHeight;
   const origCss = node.getAttribute('style') || '';
   node.style.cssText = origCss + `;width:${w}px!important;height:${h}px!important;overflow:hidden!important;`;
+  // mobile: esperar fuentes/fotos antes de capturar
+  try { if (document.fonts && document.fonts.ready) await document.fonts.ready; } catch(e){}
+  await new Promise(function(r){ requestAnimationFrame(function(){ requestAnimationFrame(function(){ setTimeout(r, 100); }); }); });
   html2canvas(node, {
     backgroundColor: null, scale: 2, useCORS: true, allowTaint: true, logging: false,
     width: w, height: h,
