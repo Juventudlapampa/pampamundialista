@@ -345,23 +345,22 @@
     <div class="block-title">🏅 El Desafío Pampa Mundialista</div>
     <p>Hacé <b>misiones</b>, juntá <b>sellos</b> y entrá al <b>sorteo de premios mundialistas</b>. No se gana por azar ni por plata: se gana <b>participando</b>. Cada misión que cumplís y compartís te da un sello en tu pasaporte (mirá el de arriba 👆).</p>
 
-    <p style="margin:0.6rem 0 0.2rem"><b>Subí de nivel juntando sellos:</b></p>
+    <p style="margin:0.6rem 0 0.2rem"><b>El equipo sube de nivel juntando sellos entre todos:</b></p>
     <div class="niveles" id="niveles">
       <div class="nivel" data-min="3"><div class="medal">🥉</div><div class="nivel-name">Bronce</div><div class="nivel-req">3 sellos</div></div>
       <div class="nivel" data-min="6"><div class="medal">🥈</div><div class="nivel-name">Plata</div><div class="nivel-req">6 sellos</div></div>
       <div class="nivel" data-min="10"><div class="medal">🥇</div><div class="nivel-name">Oro</div><div class="nivel-req">10 sellos</div></div>
     </div>
 
-    <p style="margin:1rem 0 0.2rem"><b>¿Cómo participás?</b> Elegí qué sos (cada categoría compite contra su par):</p>
-    <div class="part-chips" id="part-chips">
-      <button class="part-chip" data-c="Individual">🙋 Individual</button>
-      <button class="part-chip" data-c="Aula">🏫 Aula</button>
-      <button class="part-chip" data-c="Club">⚽ Club</button>
-      <button class="part-chip" data-c="Biblioteca">📚 Biblioteca</button>
-      <button class="part-chip" data-c="ONG">🤝 ONG</button>
-      <button class="part-chip" data-c="Otro grupo">✨ Otro grupo</button>
+    <p style="margin:1.1rem 0 0.2rem"><b>⚽ Esto se juega POR EQUIPOS, como un fútbol cinco.</b></p>
+    <div class="part-out" id="part-out" style="border-left-color:var(--gold);background:rgba(212,168,46,0.08)">
+      <b>Armá tu equipo:</b> vos de <b>capitán</b> + <b>cuatro compañeros del fulbito</b> = 5 titulares. Si querés, sumá hasta <b>3 suplentes</b> (plantel de hasta <b>8</b>).<br><br>
+      🎟️ <b>Para los premios</b>, cada integrante —titular <b>y suplente</b>— necesita tener <b>14 a 30 años</b> y <b>Tarjeta Joven</b>. Los suplentes también: si el equipo quiere llevarse premios, ¡que tengan la suya!<br><br>
+      🌎 El equipo es de <b>donde se les cante</b>: la banda de amigos, la ONG, la iglesia, el club, la biblioteca, la facu, el grupo del asado, la peña, la plaza, el Discord… <b>No importa que sean de pueblos distintos</b>, pueden ser de toda La Pampa.<br><br>
+      🏷️ Elegí un <b>nombre con mística</b> para el equipo (tipo "Los Pibes del Caldén" o "La Banda de Macachín", lo que se les cante). Ese nombre es el protagonista en la inscripción y en el pasaporte del equipo.<br><br>
+      🏆 <b>Se gana participando:</b> el equipo <b>junta sellos entre todos</b> sus integrantes. No por azar ni por acertar resultados — a meterle a las herramientas y misiones de arriba.
     </div>
-    <div class="part-out" id="part-out">Tocá una opción y te decimos contra quiénes competís.</div>
+    <p style="margin:0.9rem 0 0.2rem;font-size:0.9rem">👉 Armá y descargá el <b>pasaporte de tu equipo</b> desde <b>🎟️ Mi Pasaporte</b> (arriba de todo).</p>
 
     <p style="margin:1.2rem 0 0.2rem"><b>🎙️ Misiones de Creación</b> — además de jugar, podés crear y mandar:</p>
     <div class="mis-grid" id="mis-grid"></div>
@@ -369,8 +368,8 @@
     <ul class="bases">
       <li>Las <b>misiones de juego</b> se cumplen usando las herramientas de arriba: cada una te da un sello.</li>
       <li>Las <b>misiones de creación</b>: tocás <b>Copiar texto</b>, lo pegás en tu historia o feed de Instagram y etiquetás a <b>@pampamundialista</b> (el Relato de Gol va por WhatsApp).</li>
-      <li>Para llevarte premios necesitás <b>Tarjeta Joven</b> y activar el <b>Modo Jugador Oficial</b> (mirá arriba 👆).</li>
-      <li>El equipo de Juventud valida las misiones para el sorteo. Bases completas en las redes de la Subse.</li>
+      <li>Para los premios, <b>cada integrante del equipo</b> (titulares y suplentes) necesita <b>Tarjeta Joven</b> y activar el <b>Modo Jugador Oficial</b> (mirá arriba 👆).</li>
+      <li>El equipo de Juventud valida las misiones y los números de Tarjeta para el sorteo. Bases completas en las redes de la Subse.</li>
     </ul>
     <a class="desafio-cta" id="inscribite-btn" href="#" target="_blank" rel="noopener">📋 Inscribite al Desafío</a>
   </div>
@@ -505,21 +504,6 @@
     }
   }));
   (function(){ var ib = document.getElementById('inscribite-btn'); ib.href = INSCRIPCION_URL; ib.target = '_blank'; ib.rel = 'noopener'; })();
-
-  // Concurso: categoría
-  const OUT = {
-    'Individual': '🙋 Competís en la categoría INDIVIDUAL, contra otros jugadores solos. ¡Vos contra todos!',
-    'Aula': '🏫 Tu AULA compite contra otras aulas. Junten sellos entre todos y suben juntos.',
-    'Club': '⚽ Tu CLUB compite contra otros clubes de La Pampa. A representar la camiseta.',
-    'Biblioteca': '📚 Tu BIBLIOTECA compite contra otras bibliotecas. El saber también juega.',
-    'ONG': '🤝 Tu ONG/grupo compite contra otras organizaciones. Sumar jugando.',
-    'Otro grupo': '✨ Tu grupo compite en la categoría grupos. ¡Armen equipo y a llenar el pasaporte!'
-  };
-  document.querySelectorAll('.part-chip').forEach(ch => ch.onclick = () => {
-    document.querySelectorAll('.part-chip').forEach(x => x.classList.remove('on'));
-    ch.classList.add('on');
-    document.getElementById('part-out').textContent = OUT[ch.dataset.c];
-  });
 
   // ===== CLIMA MUNDIALISTA: banderines, banderas y ruido de hinchada =====
   (function(){
