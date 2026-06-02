@@ -32,7 +32,7 @@
   .screen.active { display:block; animation:fade 0.3s; }
   @keyframes fade { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
 
-  .panel { background:rgba(0,0,0,0.5); border:2px solid rgba(167,139,250,0.3); border-radius:16px; padding:1.4rem; }
+  .panel { background:rgba(0,0,0,0.5); border:2px solid rgba(158,201,237,0.3); border-radius:16px; padding:1.4rem; }
   .intro-text { line-height:1.6; font-size:0.95rem; margin-bottom:1rem; }
   .intro-text strong { color:var(--purple); }
   .btn { background:linear-gradient(135deg,var(--purple-d),var(--purple)); color:#fff; border:none; padding:1rem; font-family:'Anton',sans-serif; letter-spacing:0.12em; border-radius:10px; cursor:pointer; width:100%; text-transform:uppercase; font-size:1.05rem; margin-top:0.5rem; }
@@ -45,14 +45,14 @@
   .q-context { font-family:'JetBrains Mono',monospace; font-size:0.65rem; letter-spacing:0.15em; color:var(--purple); text-transform:uppercase; margin-bottom:0.4rem; }
   .q-text { font-size:1.1rem; line-height:1.45; margin-bottom:1rem; font-weight:700; }
   .opt { display:block; width:100%; text-align:left; background:rgba(255,255,255,0.04); border:2px solid rgba(244,236,216,0.15); color:var(--crema); padding:0.9rem 1rem; border-radius:10px; margin-bottom:0.6rem; cursor:pointer; font-family:inherit; font-size:0.95rem; line-height:1.35; transition:all 0.15s; }
-  .opt:hover:not(:disabled) { border-color:var(--purple); background:rgba(124,58,237,0.12); }
+  .opt:hover:not(:disabled) { border-color:var(--purple); background:rgba(31,122,67,0.12); }
   .opt:disabled { cursor:default; }
   .opt.best { border-color:var(--verde-fluo); background:rgba(74,222,128,0.15); }
   .opt.mid { border-color:var(--gold); background:rgba(212,168,46,0.12); }
   .opt.bad { border-color:var(--rojo); background:rgba(248,113,113,0.12); }
   .opt.dim { opacity:0.45; }
 
-  .feedback { background:rgba(124,58,237,0.12); border-left:4px solid var(--purple); border-radius:8px; padding:1rem; margin-top:0.4rem; line-height:1.5; font-size:0.92rem; display:none; }
+  .feedback { background:rgba(31,122,67,0.12); border-left:4px solid var(--purple); border-radius:8px; padding:1rem; margin-top:0.4rem; line-height:1.5; font-size:0.92rem; display:none; }
   .feedback.show { display:block; animation:fade 0.3s; }
   .feedback .fb-pts { font-family:'Anton',sans-serif; color:var(--gold-2); letter-spacing:0.05em; }
 
@@ -63,7 +63,7 @@
   .res-score small { font-size:1.3rem; opacity:0.6; }
   .res-level { font-family:'Anton',sans-serif; font-size:1.7rem; color:var(--purple); letter-spacing:0.04em; margin-top:0.6rem; text-transform:uppercase; }
   .res-msg { font-size:0.95rem; line-height:1.5; margin-top:0.7rem; }
-  .res-compromiso { font-size:0.85rem; line-height:1.5; margin-top:1rem; padding-top:1rem; border-top:1px dashed rgba(167,139,250,0.3); font-style:italic; }
+  .res-compromiso { font-size:0.85rem; line-height:1.5; margin-top:1rem; padding-top:1rem; border-top:1px dashed rgba(158,201,237,0.3); font-style:italic; }
   .res-wm { font-family:'JetBrains Mono',monospace; font-size:0.58rem; letter-spacing:0.2em; color:var(--purple); margin-top:1rem; }
 .grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
 </style>
@@ -83,7 +83,7 @@
       <p class="intro-text">Acá no hay verso: elegí lo que de verdad harías. Sumás puntos con las jugadas más <strong>limpias</strong> —las que cuidan a los demás— y al final te llevás tu tarjeta de <strong>Juego Limpio</strong>.</p>
       <p class="intro-text" style="font-size:0.85rem;opacity:0.8">Hablamos de igualdad, respeto a la diversidad, frenar la violencia y la discriminación, cuidar la imagen y el cuerpo de cada quien, y pedir ayuda cuando hace falta.</p>
       <label style="display:block;font-family:'JetBrains Mono',monospace;font-size:0.7rem;letter-spacing:0.15em;color:var(--purple);text-transform:uppercase;margin-bottom:0.4rem">¿Cómo te identificás?</label>
-      <select id="genero" style="width:100%;background:rgba(0,0,0,0.5);border:1px solid rgba(167,139,250,0.5);color:var(--crema);padding:0.75rem;border-radius:8px;font-family:inherit;font-size:1rem;margin-bottom:0.9rem">
+      <select id="genero" style="width:100%;background:rgba(0,0,0,0.5);border:1px solid rgba(158,201,237,0.5);color:var(--crema);padding:0.75rem;border-radius:8px;font-family:inherit;font-size:1rem;margin-bottom:0.9rem">
         <option value="f">Mujer</option>
         <option value="m" selected>Varón</option>
         <option value="x">Prefiero no decir</option>

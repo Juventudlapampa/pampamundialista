@@ -21,8 +21,8 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
     --bg: #0a0612;
-    --bg-2: #1a0a2e;
-    --purple: #4a1a6b;
+    --bg-2: #0a1420;
+    --purple: #10204b;
     --purple-2: #1f7a43;
     --gold: #d4a82e;
     --gold-2: #f4cd60;
@@ -105,7 +105,7 @@
   .btn:hover { background: linear-gradient(135deg, var(--purple), var(--purple-2)); }
   .btn-gold {
     background: linear-gradient(135deg, var(--gold), var(--gold-2));
-    color: #1a0a2e;
+    color: #0a1420;
     border: none;
   }
   .btn-secondary {
@@ -199,13 +199,13 @@
 
   .rpg-card {
     background:
-      radial-gradient(circle at 50% 0%, rgba(212,168,46,0.3), transparent 60%),
-      linear-gradient(180deg, #1a0a2e 0%, #0a0612 100%);
+      linear-gradient(transparent,transparent),
+      linear-gradient(180deg, #0a1420 0%, #0a0612 100%);
     border: 2px solid var(--gold);
     border-radius: 16px;
     padding: 2rem 1.5rem;
     position: relative;
-    box-shadow: 0 30px 80px rgba(124,58,237,0.4);
+    box-shadow: 0 30px 80px rgba(31,122,67,0.4);
     overflow: hidden;
     animation: revealCard 0.8s ease;
   }

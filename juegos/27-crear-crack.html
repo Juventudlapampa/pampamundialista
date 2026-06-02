@@ -20,7 +20,7 @@
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   :root { --bg:#070d14; --verde-fluo:#4ade80; --gold:#d4a82e; --gold-2:#f4cd60; --crema:#f4ecd8; --azul:#38bdf8; --rojo:#f87171; --purple:#9ec9ed; }
-  body { font-family:'DM Sans',sans-serif; background:var(--bg); background-image:radial-gradient(circle at 50% -10%, rgba(108,172,228,0.07), transparent 60%); min-height:100vh; color:var(--crema); padding:1rem; touch-action:manipulation; }
+  body { font-family:'DM Sans',sans-serif; background:var(--bg); background-image:linear-gradient(transparent,transparent); min-height:100vh; color:var(--crema); padding:1rem; touch-action:manipulation; }
   .container { max-width:520px; margin:0 auto; }
   header { text-align:center; margin-bottom:0.6rem; }
   .header-tag { font-family:'JetBrains Mono',monospace; font-size:0.7rem; letter-spacing:0.3em; color:var(--azul); text-transform:uppercase; }
@@ -63,7 +63,7 @@
   .toggle-row { display:flex; gap:0.45rem; flex-wrap:wrap; margin-top:0.5rem; }
   .tg { flex:1; min-width:120px; background:rgba(0,0,0,0.4); border:2px solid rgba(212,168,46,0.2); border-radius:10px; padding:0.55rem; cursor:pointer; text-align:center; font-size:0.8rem; transition:all 0.12s; }
   .tg.on { border-color:var(--gold); background:rgba(212,168,46,0.18); color:var(--gold-2); }
-  .tg.meme.on { border-color:var(--purple); background:rgba(167,139,250,0.18); color:var(--purple); }
+  .tg.meme.on { border-color:var(--purple); background:rgba(158,201,237,0.18); color:var(--purple); }
 
   .btn { background:linear-gradient(135deg,var(--azul),#0ea5e9); color:#04212e; border:none; padding:1rem; font-family:'Anton',sans-serif; letter-spacing:0.1em; border-radius:12px; cursor:pointer; width:100%; text-transform:uppercase; font-size:1.05rem; margin-top:0.6rem; transition:transform 0.1s; }
   .btn:active { transform:scale(0.97); }
