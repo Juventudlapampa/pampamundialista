@@ -177,6 +177,11 @@
   .desafio-cta { display: block; text-align: center; background: linear-gradient(135deg, var(--gold), var(--gold-2)); color: #06140c; text-decoration: none; font-family: 'Anton', sans-serif; letter-spacing: 0.08em; padding: 0.9rem; border-radius: 10px; margin-top: 1rem; text-transform: uppercase; }
   .bases-btn { display: block; text-align: center; background: rgba(0,0,0,0.35); color: var(--gold); text-decoration: none; font-family: 'Anton', sans-serif; letter-spacing: 0.08em; padding: 0.75rem; border-radius: 10px; margin-top: 0.6rem; text-transform: uppercase; border: 1px solid var(--gold); }
   .bases-btn:hover { background: rgba(212,168,46,0.12); }
+  .insc-btn { display: block; text-align: center; text-decoration: none; font-family: 'Anton', sans-serif; letter-spacing: 0.06em; padding: 0.95rem; border-radius: 10px; text-transform: uppercase; font-size: 1.05rem; }
+  .insc-ind { background: linear-gradient(135deg, #75AADB, #4d8fc7); color: #04212e; }
+  .insc-grp { background: linear-gradient(135deg, var(--gold), var(--gold-2)); color: #06140c; margin-top: 0.3rem; }
+  .insc-btn:hover { filter: brightness(1.07); }
+  .insc-desc { font-size: 0.82rem; opacity: 0.85; margin: 0.3rem 0 0.7rem; }
 </style>
 </head>
 <body>
@@ -373,7 +378,11 @@
       <li>📍 Cada jugador marca su <b>localidad</b> al entrar. El equipo puede ser de varios pueblos: en el pasaporte del equipo se ven todas las localidades de las que vienen. Pampa Mundialista es para <b>toda La Pampa</b>.</li>
       <li>El equipo de Juventud valida las misiones y los números de Tarjeta para el sorteo. Bases completas en las redes de la Subse.</li>
     </ul>
-    <a class="desafio-cta" id="inscribite-btn" href="#" target="_blank" rel="noopener">📋 Inscribite al Desafío</a>
+    <p style="margin:1.2rem 0 0.4rem"><b>📋 Inscribite (por Google Forms):</b></p>
+    <a class="insc-btn insc-ind" href="https://forms.gle/FmjTAYpU6ewZBD537" target="_blank" rel="noopener">🙋 Anotate solo (individual)</a>
+    <p class="insc-desc">Para el que juega por su cuenta.</p>
+    <a class="insc-btn insc-grp" href="https://forms.gle/21fojnyVVPRdDYvf8" target="_blank" rel="noopener">⚽ Anotá tu equipo (grupal)</a>
+    <p class="insc-desc">Para el <b>capitán</b> que anota a su equipo de fútbol cinco (capitán + cuatro, hasta tres suplentes).</p>
     <a class="bases-btn" href="./bases.pdf" target="_blank" rel="noopener">📄 Bases y Condiciones</a>
   </div>
 
@@ -507,7 +516,7 @@
       ta.remove();
     }
   }));
-  (function(){ var ib = document.getElementById('inscribite-btn'); ib.href = INSCRIPCION_URL; ib.target = '_blank'; ib.rel = 'noopener'; })();
+  // Inscripción ahora con dos botones fijos (individual / grupal) en el HTML.
 
   // ===== CLIMA MUNDIALISTA: banderines, banderas y ruido de hinchada =====
   (function(){
