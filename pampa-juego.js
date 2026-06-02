@@ -91,6 +91,8 @@
   if(!S.done) S.done={}; if(!S.logros) S.logros={}; if(typeof S.xp!=='number') S.xp=0;
   if(!S.loc) S.loc='';
   if(!S.dia) S.dia={date:'',racha:0,done:{}};
+  if(typeof S.vip!=='boolean') S.vip=false; if(!S.vipNum) S.vipNum=''; if(typeof S.vipWelcome!=='boolean') S.vipWelcome=false;
+  try{ if(S.vip) document.documentElement.classList.add('pj-vip'); }catch(e){}
 
   function levelOf(xp){ var n=LEVELS[0][1], i=0; for(var k=0;k<LEVELS.length;k++){ if(xp>=LEVELS[k][0]){ n=LEVELS[k][1]; i=k; } } return {name:n, idx:i}; }
   function nextLevel(xp){ for(var k=0;k<LEVELS.length;k++){ if(xp<LEVELS[k][0]) return LEVELS[k]; } return null; }
@@ -121,9 +123,9 @@
     if(arr.indexOf(id)<0){ arr.push(id); setSellos(arr); nuevo=true; }
     if(nuevo){ var cnt=arr.length; CROMOS.forEach(function(c){ if(c.need===cnt){ setTimeout(function(){ tone([700,1000,1300],0.14,0.12); confetti(28); toast('🎴 ¡Cromo nuevo! <b>'+c.e+' '+c.n+'</b> · '+c.r); }, 1400); } }); }
     var dobleHoy = DOBLE.indexOf(new Date(stamp()).getDay())>=0;
-    if(!S.done[id]){ S.done[id]=1; var base=10*(dobleHoy?2:1); S.xp+=base; save(S);
+    if(!S.done[id]){ S.done[id]=1; var base=10*(dobleHoy?2:1)*(S.vip?2:1); S.xp+=base; save(S);
       tone([600,820,1000],0.12,0.12);
-      toast((TOOL_ICON[id]||'⚽')+' Sello: <b>'+(TOOL_NAME[id]||id)+'</b>'+(dobleHoy?' ·2x':'')+' +'+(10*(dobleHoy?2:1))+'XP');
+      toast((TOOL_ICON[id]||'⚽')+' Sello: <b>'+(TOOL_NAME[id]||id)+'</b>'+(dobleHoy?' ·2x':'')+(S.vip?' ·OFICIAL x2':'')+' +'+base+'XP');
     }
     if(bonusXP) addXP(bonusXP);
     var done=Object.keys(S.done).length;
@@ -194,7 +196,8 @@
       '<button class="pj-x" id="pj-pass-x">✕</button>'+
       '<div class="pj-p-head"><div class="pj-p-lvl">'+lv.name+'</div>'+
         '<div class="pj-p-loc">'+(S.loc?('📍 '+S.loc):'📍 elegí tu localidad')+'</div>'+
-        (titulo?'<div class="pj-p-title">«'+titulo+'»</div>':'')+'</div>'+
+        (titulo?'<div class="pj-p-title">«'+titulo+'»</div>':'')+
+        (S.vip?'<div class="pj-p-title" style="color:#f4cd60">⭐ Jugador Oficial</div>':'')+'</div>'+
       '<div class="pj-xpbar"><div class="pj-xpfill" style="width:'+pct+'%"></div></div>'+
       '<div class="pj-xptxt">'+S.xp+' XP'+(nx?(' · faltan '+(nx[0]-S.xp)+' para '+nx[1]):' · ¡máximo nivel!')+'</div>'+
       '<div class="pj-p-lab">SELLOS ('+arr.length+'/'+TOOLS.length+')</div>'+
@@ -233,6 +236,41 @@
     if (navigator.share) { navigator.share({ title: 'Pampa Juega', text: full }).catch(function(){}); }
     else if (navigator.clipboard) { navigator.clipboard.writeText(full).then(function(){ toast('¡Texto copiado! Pegalo en tu historia o en el grupo 📲'); }, function(){ try { prompt('Copiá tu texto:', full); } catch(e){} }); }
     else { try { prompt('Copiá tu texto:', full); } catch(e){} }
+  }
+
+  // ===== Tarjeta Joven = Modo Jugador Oficial (sin servidor; valida solo el FORMATO, local) =====
+  function applyVip(){ try{ document.documentElement.classList.toggle('pj-vip', !!S.vip); }catch(e){} }
+  function tieneTarjeta(){ return !!S.vip; }
+  function activarTarjeta(num){
+    var clean=(num||'').replace(/[^0-9]/g,'');
+    if(!/^[0-9]{6,12}$/.test(clean)) return {ok:false, msg:'Revisá el número: tiene que tener entre 6 y 12 dígitos.'};
+    var first=!S.vipWelcome;
+    S.vip=true; S.vipNum=clean; if(first) S.vipWelcome=true; save(S); applyVip();
+    if(first){ addXP(30); unlock('jugador-oficial','Jugador Oficial ⭐'); }
+    refreshIndex(); try{ confetti(46); }catch(e){}
+    toast('⭐ ¡Listo, crack! Activaste el <b>Modo Jugador Oficial</b>. Tu figurita ahora tiene el dorado, sumás el doble de sellos y ya estás en la lista para los premios.', true);
+    return {ok:true};
+  }
+  function tarjetaWidget(el){
+    if(!el) return;
+    function render(){
+      if(S.vip){
+        el.innerHTML='<div class="pj-vip-on"><div class="pj-vip-t">⭐ MODO JUGADOR OFICIAL ACTIVO</div>'+
+          '<div class="pj-vip-d">Tus cartas tienen el dorado, sumás el <b>doble de sellos</b> y ya estás en la lista para los premios.</div>'+
+          (S.vipNum?'<div class="pj-vip-n">Tarjeta •••• '+S.vipNum.slice(-4)+'</div>':'')+'</div>';
+      } else {
+        el.innerHTML='<div class="pj-tjw"><div class="pj-tjw-t">🎟️ Validá tu Tarjeta Joven</div>'+
+          '<div class="pj-tjw-s">Activá el <b>Modo Jugador Oficial</b>: dorado en tus cartas, el <b>doble de sellos</b> y entrás al sorteo de premios.</div>'+
+          '<input class="pj-inp" id="pj-tjw-num" inputmode="numeric" autocomplete="off" placeholder="Número de tu Tarjeta Joven">'+
+          '<button class="pj-btn" id="pj-tjw-ok">ACTIVAR MODO JUGADOR OFICIAL</button>'+
+          '<div class="pj-tjw-err" id="pj-tjw-err" role="alert"></div>'+
+          '<div class="pj-tjw-legal">Solo validamos que el número tenga <b>forma válida</b>; <b>no se envía a ningún lado</b> (no hay servidor). El número se verifica de verdad recién cuando reclamás un premio.</div>'+
+          '<a class="pj-tjw-link" href="https://tarjetajoven.lapampa.gob.ar" target="_blank" rel="noopener">¿No la tenés? Sacala gratis en 3 minutos 👇</a></div>';
+      }
+      var ok=el.querySelector('#pj-tjw-ok');
+      if(ok) ok.onclick=function(){ var inp=el.querySelector('#pj-tjw-num'); var r=activarTarjeta(inp?inp.value:''); if(!r.ok){ var e=el.querySelector('#pj-tjw-err'); if(e) e.textContent=r.msg; } else { render(); } };
+    }
+    el.__pjRender=render; render();
   }
 
   // ===== Onboarding mínimo (Capa 5): 3 primeras cosas para hacer, una sola vez =====
@@ -310,7 +348,18 @@
     '.pj-step{display:flex;align-items:center;gap:.6rem;background:rgba(0,0,0,.4);border:1px solid rgba(244,236,216,.15);border-radius:10px;padding:.55rem .7rem;font-size:.88rem}'+
     '.pj-step b{flex:none;width:1.5rem;height:1.5rem;display:flex;align-items:center;justify-content:center;background:#75AADB;color:#04212e;border-radius:50%;font-family:"Anton",sans-serif}'+
     '.pj-confeti{position:fixed;top:-16px;width:9px;height:14px;border-radius:2px;z-index:99997;pointer-events:none;animation:pjfall linear forwards}'+
-    '@keyframes pjfall{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(105vh) rotate(540deg);opacity:.9}}';
+    '@keyframes pjfall{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(105vh) rotate(540deg);opacity:.9}}'+
+    'html.pj-vip .pj-foilable{animation:pjFoil 2.6s ease-in-out infinite!important;border-radius:inherit}'+
+    '@keyframes pjFoil{0%,100%{box-shadow:0 0 0 3px #d4a82e,0 0 14px rgba(212,168,46,.45)}50%{box-shadow:0 0 0 3px #f4cd60,0 0 28px rgba(212,168,46,.8)}}'+
+    '.pj-tjw-t{font-family:"Anton",sans-serif;font-size:1.15rem;color:#f4cd60;letter-spacing:.03em}'+
+    '.pj-tjw-s{font-size:.84rem;opacity:.9;margin:.25rem 0 .6rem;line-height:1.45}'+
+    '.pj-tjw-err{color:#f87171;font-size:.78rem;min-height:1rem;margin-top:.3rem}'+
+    '.pj-tjw-legal{font-size:.72rem;opacity:.72;line-height:1.45;margin-top:.5rem}'+
+    '.pj-tjw-link{display:inline-block;margin-top:.6rem;color:#75AADB;font-weight:700;text-decoration:none}'+
+    '.pj-vip-on{border:2px solid #d4a82e;border-radius:12px;padding:.8rem;background:linear-gradient(135deg,rgba(212,168,46,.16),rgba(244,205,96,.05))}'+
+    '.pj-vip-t{font-family:"Anton",sans-serif;color:#f4cd60;letter-spacing:.04em}'+
+    '.pj-vip-d{font-size:.82rem;opacity:.92;margin-top:.3rem;line-height:1.45}'+
+    '.pj-vip-n{font-family:"JetBrains Mono",monospace;font-size:.7rem;opacity:.7;margin-top:.4rem}';
   document.head.appendChild(css);
 
   // ===== arranque =====
@@ -318,6 +367,8 @@
   (function detect(){ var m=location.pathname.match(/([^\/]+)\.html?$/); if(m){ CUR=TOOL_BY_FILE[m[1]]||null; } })();
 
   function boot(){
+    applyVip();
+    var tjEl=document.getElementById('pj-tarjeta'); if(tjEl) tarjetaWidget(tjEl);
     // Capa 2: pedir localidad la 1ª vez
     askLoc(false);
     // Capa 5: onboarding en el home (si ya tiene localidad y no lo vio)
@@ -332,6 +383,7 @@
     sello:sello, addXP:addXP, unlock:unlock, loc:loc, setLoc:setLoc, askLoc:function(){askLoc(true);},
     openPasaporte:openPasaporte, desafioHoy:desafioHoy, marcarDesafio:marcarDesafio,
     confetti:confetti, golazo:golazo, compartir:compartir, SITE:SITE,
+    tieneTarjeta:tieneTarjeta, activarTarjeta:activarTarjeta, tarjetaWidget:tarjetaWidget,
     levelName:function(){return levelOf(S.xp).name;}, xp:function(){return S.xp;}, titulo:tituloActual, TOOLS:TOOLS, CUENTA:CUENTA
   };
 })();
