@@ -401,7 +401,13 @@
         <div class="stat-box"><div class="stat-box-num">×5</div><div class="stat-box-lab">Multiplicador</div></div>
         <div class="stat-box"><div class="stat-box-num">20</div><div class="stat-box-lab">Preguntas</div></div>
       </div>
+      <div class="mode-row" id="mode-row">
+        <button class="mode-btn sel" data-m="1" type="button">👤 1 Jugador</button>
+        <button class="mode-btn" data-m="2" type="button">🆚 2 Jugadores</button>
+      </div>
       <input type="text" class="input-name" id="player-name" placeholder="¿Cómo te anotamos?" maxlength="18">
+      <input type="text" class="input-name" id="player2-name" placeholder="Nombre del Jugador 2" maxlength="18" style="display:none">
+      <p id="vs-hint" style="display:none;font-size:0.8rem;opacity:0.85;line-height:1.4;margin:-0.2rem 0 0.6rem">🆚 <b>Mismo celu, por turnos:</b> 10 preguntas cada uno, se van pasando el teléfono. Gana el de más puntos.</p>
       <button class="btn" id="start">⚡ ¡A LA CANCHA!</button>
       <button class="btn btn-secondary" style="margin-top:0.6rem" id="ver-ranking">🏆 Ver la tabla</button>
     </div>
@@ -423,6 +429,7 @@
         <div class="hud-racha" id="hud-racha"><span class="hud-racha-num" id="racha">0</span> 🔥</div>
       </div>
       <div class="progress-mini"><div class="progress-mini-fill" id="prog-mini"></div></div>
+      <div class="vs-banner" id="vs-banner" style="display:none"></div>
       <div class="question-text" id="q-text"></div>
       <div class="answers-vf">
         <button class="ans-btn ans-v" id="btn-v">✓ VERDADERO</button>
@@ -452,6 +459,40 @@
     <button class="btn btn-secondary" style="margin-top:0.5rem" onclick="goRanking()">🏆 Ver la tabla</button>
     <button class="btn btn-secondary" style="margin-top:0.5rem" onclick="restart()">⚡ Revancha, dale</button>
   </div>
+
+  <!-- RESULT VERSUS -->
+  <div class="screen" id="screen-vs">
+    <div class="panel" id="vs-panel">
+      <div class="vs-r-title">🆚 ¡SE TERMINÓ EL DUELO!</div>
+      <div class="vs-r-grid">
+        <div class="vs-r-card" id="vs-c1"></div>
+        <div class="vs-r-mid">VS</div>
+        <div class="vs-r-card" id="vs-c2"></div>
+      </div>
+      <div class="vs-r-winner" id="vs-winner"></div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.58rem;letter-spacing:0.2em;color:rgba(244,236,216,0.5);margin-top:0.6rem;text-align:center">⚡ TRIVIA · VERSUS · MUNDIAL 2026</div>
+    </div>
+    <button class="btn" style="margin-top:0.6rem" id="vs-download">📸 BAJAR EL RESULTADO</button>
+    <button class="btn btn-secondary" style="margin-top:0.5rem" onclick="restart()">⚡ Revancha, dale</button>
+  </div>
+
+  <style>
+    .mode-row { display:flex; gap:0.5rem; margin-bottom:0.7rem; }
+    .mode-btn { flex:1; background:rgba(0,0,0,0.4); border:2px solid rgba(244,236,216,0.25); color:var(--crema,#f4ecd8); border-radius:10px; padding:0.6rem 0.4rem; cursor:pointer; font-family:'Anton',sans-serif; letter-spacing:0.04em; font-size:0.95rem; }
+    .mode-btn.sel { border-color:var(--celeste,#75AADB); background:rgba(117,170,219,0.18); color:#fff; }
+    .vs-banner { display:flex; align-items:center; justify-content:space-between; gap:0.5rem; background:rgba(117,170,219,0.14); border:1px solid rgba(117,170,219,0.45); border-radius:10px; padding:0.45rem 0.7rem; margin-bottom:0.7rem; font-family:'JetBrains Mono',monospace; font-size:0.7rem; }
+    .vs-banner .vsb-turn { font-family:'Anton',sans-serif; font-size:0.95rem; letter-spacing:0.03em; color:#75AADB; }
+    .vs-banner .vsb-score b { color:#f4cd60; }
+    .vs-r-title { font-family:'Anton',sans-serif; font-size:1.4rem; text-align:center; color:#f4cd60; letter-spacing:0.04em; margin-bottom:0.8rem; }
+    .vs-r-grid { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:0.6rem; }
+    .vs-r-card { background:rgba(0,0,0,0.4); border:2px solid rgba(244,236,216,0.2); border-radius:12px; padding:0.9rem 0.5rem; text-align:center; }
+    .vs-r-card.win { border-color:#4ade80; background:rgba(74,222,128,0.12); box-shadow:0 0 18px rgba(74,222,128,0.3); }
+    .vs-r-card .vsc-name { font-family:'Anton',sans-serif; font-size:1.05rem; line-height:1; margin-bottom:0.3rem; word-break:break-word; }
+    .vs-r-card .vsc-score { font-family:'Anton',sans-serif; font-size:2rem; color:#f4cd60; line-height:1; }
+    .vs-r-card .vsc-sub { font-family:'JetBrains Mono',monospace; font-size:0.55rem; opacity:0.7; margin-top:0.25rem; letter-spacing:0.05em; }
+    .vs-r-mid { font-family:'Anton',sans-serif; font-size:1.1rem; opacity:0.6; }
+    .vs-r-winner { font-family:'Anton',sans-serif; font-size:1.25rem; text-align:center; color:#4ade80; margin-top:0.9rem; letter-spacing:0.03em; }
+  </style>
 
   <!-- RANKING -->
   <div class="screen" id="screen-ranking">
@@ -694,23 +735,49 @@
     return a;
   }
 
+  // ===== Modo VERSUS local (2 jugadores, mismo celu) =====
+  let versusMode = false;
+  document.querySelectorAll('#mode-row .mode-btn').forEach(b => b.onclick = () => {
+    document.querySelectorAll('#mode-row .mode-btn').forEach(x => x.classList.remove('sel'));
+    b.classList.add('sel');
+    versusMode = b.dataset.m === '2';
+    document.getElementById('player2-name').style.display = versusMode ? 'block' : 'none';
+    document.getElementById('vs-hint').style.display = versusMode ? 'block' : 'none';
+    document.getElementById('player-name').placeholder = versusMode ? 'Nombre del Jugador 1' : '¿Cómo te anotamos?';
+    document.getElementById('start').textContent = versusMode ? '🆚 ¡A DUELAR!' : '⚡ ¡A LA CANCHA!';
+  });
+  function blankStats(name){ return { name:name, score:0, racha:0, mejorRacha:0, correctas:0, rapidas:0 }; }
+  function loadFromPlayer(){ const p = estado.players[estado.current % 2]; estado.score=p.score; estado.racha=p.racha; estado.mejorRacha=p.mejorRacha; estado.correctas=p.correctas; estado.rapidas=p.rapidas; }
+  function saveToPlayer(){ const p = estado.players[estado.current % 2]; p.score=estado.score; p.racha=estado.racha; p.mejorRacha=estado.mejorRacha; p.correctas=estado.correctas; p.rapidas=estado.rapidas; }
+  function updateVsBanner(){ const b=document.getElementById('vs-banner'); if(!b) return; const turn=estado.current%2; const p0=estado.players[0], p1=estado.players[1];
+    b.innerHTML = '<span class="vsb-turn">▶ Turno de '+(turn===0?p0.name:p1.name)+'</span><span class="vsb-score">'+p0.name+' <b>'+p0.score+'</b> · <b>'+p1.score+'</b> '+p1.name+'</span>'; }
+  function advance(){
+    if (estado.versus) { saveToPlayer(); estado.current++; if (estado.current >= 20) { finishVersus(); return; } renderQ(); }
+    else { estado.current++; if (estado.current >= 20) finish(); else renderQ(); }
+  }
+
   document.getElementById('start').onclick = () => {
     const name = document.getElementById('player-name').value.trim();
     if (!name) { alert('Eh, primero decinos cómo te llamás'); return; }
     initAudio();
-    estado.name = name;
-    estado.score = 0;
-    estado.current = 0;
-    estado.racha = 0;
-    estado.mejorRacha = 0;
-    estado.correctas = 0;
-    estado.rapidas = 0;
     estado.preguntas = shuffle(preguntas).slice(0, 20);
+    estado.current = 0;
+    estado.versus = versusMode;
+    if (versusMode) {
+      const n2 = document.getElementById('player2-name').value.trim() || 'Jugador 2';
+      estado.players = [ blankStats(name), blankStats(n2) ];
+      estado.name = name + ' vs ' + n2;
+    } else {
+      estado.players = null; estado.name = name;
+      estado.score = 0; estado.racha = 0; estado.mejorRacha = 0; estado.correctas = 0; estado.rapidas = 0;
+    }
+    document.getElementById('vs-banner').style.display = versusMode ? 'flex' : 'none';
     show('game');
     renderQ();
   };
 
   function renderQ() {
+    if (estado.versus) { loadFromPlayer(); updateVsBanner(); }
     const p = estado.preguntas[estado.current];
     document.getElementById('q-text').textContent = p.q;
     document.getElementById('score').textContent = estado.score;
@@ -819,11 +886,7 @@
     document.getElementById('racha').textContent = estado.racha;
     document.getElementById('hud-racha').classList.toggle('fire', estado.racha >= 3);
 
-    setTimeout(() => {
-      estado.current++;
-      if (estado.current >= 20) finish();
-      else renderQ();
-    }, 1400);
+    setTimeout(advance, 1400);
   }
 
   function timeOut() {
@@ -837,11 +900,7 @@
     document.getElementById('feedback').classList.add('wrong');
     document.body.classList.add('shaking');
     setTimeout(() => document.body.classList.remove('shaking'), 400);
-    setTimeout(() => {
-      estado.current++;
-      if (estado.current >= 20) finish();
-      else renderQ();
-    }, 1500);
+    setTimeout(advance, 1500);
   }
 
   document.getElementById('btn-v').onclick = () => answer(true);
@@ -863,6 +922,35 @@
     document.getElementById('r-trophy').textContent = trophy;
     document.getElementById('r-verdict').textContent = verdict;
   }
+
+  function saveScoreVersus(){
+    const ranking = JSON.parse(localStorage.getItem('trivia-mundial-ranking') || '[]');
+    estado.players.forEach(p => ranking.push({ name:p.name, score:p.score, streak:p.mejorRacha, date:Date.now() }));
+    ranking.sort((a,b)=>b.score-a.score);
+    localStorage.setItem('trivia-mundial-ranking', JSON.stringify(ranking.slice(0,100)));
+  }
+  function finishVersus(){
+    if (estado.timer) clearInterval(estado.timer);
+    saveScoreVersus();
+    const p0=estado.players[0], p1=estado.players[1];
+    show('vs');
+    const card = p => '<div class="vsc-name">'+p.name+'</div><div class="vsc-score">'+p.score+'</div><div class="vsc-sub">'+p.correctas+'/10 · racha '+p.mejorRacha+'</div>';
+    const c1=document.getElementById('vs-c1'), c2=document.getElementById('vs-c2'), w=document.getElementById('vs-winner');
+    c1.innerHTML=card(p0); c2.innerHTML=card(p1); c1.classList.remove('win'); c2.classList.remove('win');
+    if (p0.score>p1.score){ c1.classList.add('win'); w.textContent='🏆 ¡Ganó '+p0.name+'!'; }
+    else if (p1.score>p0.score){ c2.classList.add('win'); w.textContent='🏆 ¡Ganó '+p1.name+'!'; }
+    else { c1.classList.add('win'); c2.classList.add('win'); w.textContent='🤝 ¡Empataron! Va el desempate.'; }
+    try { if (window.PampaJuego) PampaJuego.confetti(); } catch(e){}
+  }
+  document.getElementById('vs-download').onclick = () => {
+    const go = () => {
+      const node=document.getElementById('vs-panel'); const w=node.offsetWidth, h=node.offsetHeight;
+      html2canvas(node,{backgroundColor:'#0a0a0a',scale:2,useCORS:true,allowTaint:true,logging:false,width:w,height:h}).then(c=>{
+        const a=document.createElement('a'); a.download='trivia-versus-mundial-2026.png'; a.href=c.toDataURL('image/png'); a.click();
+      }).catch(e=>alert('Error al descargar: '+e.message));
+    };
+    if (typeof html2canvas==='undefined'){ const s=document.createElement('script'); s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'; s.onload=go; document.head.appendChild(s); } else go();
+  };
 
   // Compartir resultado: capturar el panel de resultado como imagen
   document.getElementById('r-download').onclick = () => {
@@ -943,7 +1031,12 @@
   function restart() {
     if (estado.timer) clearInterval(estado.timer);
     show('intro');
-    document.getElementById('player-name').value = estado.name;
+    if (estado.versus && estado.players) {
+      document.getElementById('player-name').value = estado.players[0].name;
+      document.getElementById('player2-name').value = estado.players[1].name;
+    } else {
+      document.getElementById('player-name').value = estado.name;
+    }
   }
 
   document.getElementById('ver-ranking').onclick = goRanking;
