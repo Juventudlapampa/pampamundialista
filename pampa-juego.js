@@ -250,7 +250,13 @@
   function tieneTarjeta(){ return !!S.vip; }
   function activarTarjeta(num){
     var clean=(num||'').replace(/[^0-9]/g,'');
-    if(!/^[0-9]{6,12}$/.test(clean)) return {ok:false, msg:'Revisá el número: tiene que tener entre 6 y 12 dígitos.'};
+    // Debe tener exactamente 5 dígitos
+    if(!/^[0-9]{5}$/.test(clean)) return {ok:false, msg:'Revisá el número: la Tarjeta Joven tiene 5 dígitos.'};
+    var v=parseInt(clean,10);
+    // Descartar números obviamente falsos aunque cumplan el formato (5 iguales, o secuencias)
+    var fake = /^(\d)\1{4}$/.test(clean) || ['12345','54321','23456','34567','45678','56789','01234','98765'].indexOf(clean)>=0;
+    // Rango válido del padrón (NO se le muestra el tope al usuario)
+    if(fake || v<1 || v>27500) return {ok:false, msg:'Ese número no nos figura. Revisá tu Tarjeta Joven 🤔'};
     var first=!S.vipWelcome;
     S.vip=true; S.vipNum=clean; if(first) S.vipWelcome=true; save(S); applyVip();
     if(first){ addXP(30); unlock('jugador-oficial','Jugador Oficial ⭐'); }
