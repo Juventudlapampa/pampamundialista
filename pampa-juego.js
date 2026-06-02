@@ -248,7 +248,7 @@
     S.vip=true; S.vipNum=clean; if(first) S.vipWelcome=true; save(S); applyVip();
     if(first){ addXP(30); unlock('jugador-oficial','Jugador Oficial ⭐'); }
     refreshIndex(); try{ confetti(46); }catch(e){}
-    toast('⭐ ¡Listo, crack! Activaste el <b>Modo Jugador Oficial</b>. Tu figurita ahora tiene el dorado, sumás el doble de sellos y ya estás en la lista para los premios.', true);
+    toast('⭐ ¡Listo, crack! Sos <b>Jugador Oficial</b> de Pampa Mundialista. Duplicás tus chances en el sorteo y tu figurita ahora tiene el dorado.', true);
     return {ok:true};
   }
   function tarjetaWidget(el){
@@ -256,11 +256,11 @@
     function render(){
       if(S.vip){
         el.innerHTML='<div class="pj-vip-on"><div class="pj-vip-t">⭐ MODO JUGADOR OFICIAL ACTIVO</div>'+
-          '<div class="pj-vip-d">Tus cartas tienen el dorado, sumás el <b>doble de sellos</b> y ya estás en la lista para los premios.</div>'+
+          '<div class="pj-vip-d">Tus cartas tienen el dorado y <b>duplicás tus chances en el sorteo</b>. Ya estás en la lista para los premios.</div>'+
           (S.vipNum?'<div class="pj-vip-n">Tarjeta •••• '+S.vipNum.slice(-4)+'</div>':'')+'</div>';
       } else {
         el.innerHTML='<div class="pj-tjw"><div class="pj-tjw-t">🎟️ Validá tu Tarjeta Joven</div>'+
-          '<div class="pj-tjw-s">Activá el <b>Modo Jugador Oficial</b>: dorado en tus cartas, el <b>doble de sellos</b> y entrás al sorteo de premios.</div>'+
+          '<div class="pj-tjw-s">Activá el <b>Modo Jugador Oficial</b>: dorado en tus cartas y <b>duplicás tus chances en el sorteo</b> de premios.</div>'+
           '<input class="pj-inp" id="pj-tjw-num" inputmode="numeric" autocomplete="off" placeholder="Número de tu Tarjeta Joven">'+
           '<button class="pj-btn" id="pj-tjw-ok">ACTIVAR MODO JUGADOR OFICIAL</button>'+
           '<div class="pj-tjw-err" id="pj-tjw-err" role="alert"></div>'+

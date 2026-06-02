@@ -185,7 +185,7 @@
       <span class="brand-word" aria-label="JUVENTUDES"><span style="color:#9B3DAA">J</span><span style="color:#2B3A8F">U</span><span style="color:#00968A">V</span><span style="color:#5CB83A">E</span><span style="color:#F5C400">N</span><span style="color:#F58220">T</span><span style="color:#E03A2F">U</span><span style="color:#E8317A">D</span><span style="color:#5CB83A">E</span><span style="color:#2BAADC">S</span></span>
       <span class="brand-inst">Subsecretaría de Juventud · La Pampa</span>
     </div>
-    <h1>PAMPA <span>JUEGA</span></h1>
+    <h1>PAMPA <span>MUNDIALISTA</span></h1>
     <p class="subtitle">La previa del <b>Mundial 2026</b> ya arrancó, <b>del potrero al Mundial</b>. Armá tu figurita, metele un caño a la compu y demostrá que la tenés más clara que nadie — de Santa Rosa a Macachín, de Realicó a General Acha. Gratis, desde el celu y sin vueltas — dale, entrá.</p>
     <div class="stat-strip">
       <div class="stat-pill">🎮 20 cosas para hacer</div>
@@ -198,6 +198,27 @@
   <div class="flag-marquee"><span id="flag-mq"></span></div>
 
   <div class="cuenta"><span class="lbl">⚽ Falta para que ruede la pelota</span><span class="num" id="cuenta-num">—</span></div>
+
+  <!-- MODO JUGADOR OFICIAL (Tarjeta Joven, arriba de todo) -->
+  <section class="tj" id="modo-oficial">
+    <div class="tj-tag">🎟️ Modo Jugador Oficial</div>
+    <h2>Validá tu <span>Tarjeta Joven</span> y jugá por los premios</h2>
+    <p>Jugar es <b>libre y sin registro</b>. Si tenés <b>Tarjeta Joven</b> (14 a 30 años) y validás tu número, activás el <b>Modo Jugador Oficial</b>: tus cartas se ponen <b>doradas</b> ✨ y <b>duplicás tus chances en el sorteo</b>.</p>
+    <div id="pj-tarjeta" style="margin:0.7rem 0 0.9rem"></div>
+    <div class="tj-note" style="background:rgba(212,168,46,0.1);border:1px solid rgba(212,168,46,0.35);border-radius:10px;padding:0.7rem 0.9rem;text-align:left">
+      <b>¿No sabés tu número de Tarjeta Joven?</b> Escribile a la <b>Agencia Juvenil</b> de tu localidad, o a la <b>Subsecretaría de Juventud</b> al <b>[TEL. SUBSE — editar]</b>.<br>
+      <b>Tenés tiempo hasta el 26 de julio</b> para validarlo. No corras: <b>podés jugar igual</b> mientras tanto. 😉
+    </div>
+    <div class="tj-paths" style="margin-top:0.7rem">
+      <a class="tj-path" href="https://tarjetajoven.lapampa.gob.ar/" target="_blank" rel="noopener">
+        <div class="e">🆕</div><div class="t"><b>No la tengo todavía</b><small>Sacala gratis 👇 Es online y rapidísimo.</small></div><div class="go">Sacar →</div>
+      </a>
+      <a class="tj-path" href="https://tarjetajoven.lapampa.gob.ar/" target="_blank" rel="noopener">
+        <div class="e">🔎</div><div class="t"><b>No sé si la tengo / actualizar datos</b><small>Chequealo en el mismo lugar.</small></div><div class="go">Chequear →</div>
+      </a>
+    </div>
+    <div class="tj-note">El número se valida <b>de verdad</b> recién cuando se entrega el premio. Mientras tanto no guardamos ni mandamos tus datos: todo queda en tu celu. 💚</div>
+  </section>
 
   <!-- PASAPORTE -->
   <div class="pass">
@@ -348,31 +369,13 @@
     <ul class="bases">
       <li>Las <b>misiones de juego</b> se cumplen usando las herramientas de arriba: cada una te da un sello.</li>
       <li>Las <b>misiones de creación</b> se mandan por WhatsApp o se suben a tu cuenta etiquetando.</li>
-      <li>Para llevarte premios necesitás <b>Tarjeta Joven</b> (mirá abajo 👇).</li>
+      <li>Para llevarte premios necesitás <b>Tarjeta Joven</b> y activar el <b>Modo Jugador Oficial</b> (mirá arriba 👆).</li>
       <li>El equipo de Juventud valida las misiones para el sorteo. Bases completas en las redes de la Subse.</li>
     </ul>
     <a class="desafio-cta" id="inscribite-btn" href="#" target="_blank" rel="noopener">📋 Inscribite al Desafío</a>
   </div>
 
-  <!-- TARJETA JOVEN -->
-  <div class="tj">
-    <div class="tj-tag">El requisito para los premios</div>
-    <h2>¿Tenés la <span>Tarjeta Joven</span>?</h2>
-    <p>Jugar es <b>libre y sin registro</b>. Pero para <b>llevarte los premios</b> del concurso necesitás tu Tarjeta Joven (de 14 a 30 años). Elegí tu caso:</p>
-    <div id="pj-tarjeta" style="margin:0.6rem 0 0.9rem"></div>
-    <div class="tj-paths">
-      <a class="tj-path" href="https://tarjetajoven.lapampa.gob.ar/" target="_blank" rel="noopener">
-        <div class="e">✅</div><div class="t"><b>Ya la tengo</b><small>Guardá tu N° de beneficiario: te lo vamos a pedir para los premios 😉</small></div><div class="go">OK →</div>
-      </a>
-      <a class="tj-path" href="https://tarjetajoven.lapampa.gob.ar/" target="_blank" rel="noopener">
-        <div class="e">🆕</div><div class="t"><b>No la tengo</b><small>Sacala gratis acá, es online y rapidísimo.</small></div><div class="go">Sacar →</div>
-      </a>
-      <a class="tj-path" href="https://tarjetajoven.lapampa.gob.ar/" target="_blank" rel="noopener">
-        <div class="e">🔎</div><div class="t"><b>No sé si la tengo / actualizar datos</b><small>Chequealo y actualizá tus datos en el mismo lugar.</small></div><div class="go">Chequear →</div>
-      </a>
-    </div>
-    <div class="tj-note">Esto es de la Subsecretaría de Juventud de La Pampa. La Tarjeta Joven es la llave de los premios — no un muro para jugar. 💚</div>
-  </div>
+  <!-- (El bloque de Tarjeta Joven se movió arriba como "Modo Jugador Oficial") -->
 
   <footer>
     <b>PAMPA MUNDIALISTA</b> · Una propuesta de la Subsecretaría de Juventud de La Pampa para el Mundial 2026<br>
