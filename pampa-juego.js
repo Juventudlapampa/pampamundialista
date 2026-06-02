@@ -44,7 +44,7 @@
   var DESAFIOS = [
     {t:'Trivia relámpago', d:'Meté 6 respuestas seguidas en la Trivia.', go:'juegos/08-trivia.html'},
     {t:'Tanda perfecta', d:'Ganá una tanda en el Torneo de Penales.', go:'juegos/18-torneo-penales.html'},
-    {t:'Caño del día', d:'Clavá 5 caños en Gambeteá.', go:'juegos/28-gambeta-leo.html'},
+    {t:'Caño del día', d:'Clavá 5 caños en Gambeteá, como en el potrero de tu pueblo.', go:'juegos/28-gambeta-leo.html'},
     {t:'Armá tu equipo', d:'Creá tu Crack y bajá la figurita.', go:'juegos/27-crear-crack.html'},
     {t:'Ojo de relator', d:'Hacé tu Predicción del Mundial.', go:'herramientas/24-predictor.html'},
     {t:'Pizarrón fino', d:'Armá tu 11 ideal y descargalo.', go:'generadores/02-armar-11.html'},
