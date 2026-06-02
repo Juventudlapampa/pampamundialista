@@ -158,9 +158,9 @@
   function askLoc(force){
     if(S.loc && !force) return;
     var bd=document.createElement('div'); bd.className='pj-modal-bd';
-    var opts='<option value="">— Elegí tu pueblo —</option>'+LOCS.map(function(l){return '<option'+(l===S.loc?' selected':'')+'>'+l+'</option>';}).join('')+'<option value="__otra">Otra localidad…</option>';
+    var opts='<option value="">— Elegí tu localidad —</option>'+LOCS.map(function(l){return '<option'+(l===S.loc?' selected':'')+'>'+l+'</option>';}).join('')+'<option value="__otra">Otra localidad…</option>';
     bd.innerHTML='<div class="pj-modal">'+
-      '<div class="pj-m-tit">¿DE QUÉ PUEBLO SOS?</div>'+
+      '<div class="pj-m-tit">¿DE QUÉ LOCALIDAD SOS?</div>'+
       '<div class="pj-m-sub">Tu localidad va en tu figurita, tu crack y tu pasaporte. ¡Banca a los tuyos!</div>'+
       '<select class="pj-sel" id="pj-loc-sel">'+opts+'</select>'+
       '<input class="pj-inp" id="pj-loc-otra" placeholder="Escribí tu localidad" style="display:none">'+
@@ -192,7 +192,7 @@
     bd.innerHTML='<div class="pj-modal pj-pass">'+
       '<button class="pj-x" id="pj-pass-x">✕</button>'+
       '<div class="pj-p-head"><div class="pj-p-lvl">'+lv.name+'</div>'+
-        '<div class="pj-p-loc">'+(S.loc?('📍 '+S.loc):'📍 elegí tu pueblo')+'</div>'+
+        '<div class="pj-p-loc">'+(S.loc?('📍 '+S.loc):'📍 elegí tu localidad')+'</div>'+
         (titulo?'<div class="pj-p-title">«'+titulo+'»</div>':'')+'</div>'+
       '<div class="pj-xpbar"><div class="pj-xpfill" style="width:'+pct+'%"></div></div>'+
       '<div class="pj-xptxt">'+S.xp+' XP'+(nx?(' · faltan '+(nx[0]-S.xp)+' para '+nx[1]):' · ¡máximo nivel!')+'</div>'+
