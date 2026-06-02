@@ -416,7 +416,7 @@
 </div>
 
 <script>
-  // 24 selecciones con su perfil completo
+  // selecciones del Mundial 2026 con su perfil completo
   const selecciones = {
     'Argentina': {
       flag:'🇦🇷', clase:'EL/LA HEREDERO/A DEL CETRO',
@@ -473,14 +473,6 @@
       debilidad:'Cuando el plan falla, te cuesta improvisar.',
       leyenda:'No buscás aplausos. Buscás resultados. La belleza, para vos, está en lo que funciona.',
       quote:'Hay un sistema para esto.'
-    },
-    'Italia': {
-      flag:'🇮🇹', clase:'EL/LA ESTRATEGA',
-      ejes: { creatividad:7, disciplina:8, garra:8, lider:7, analitico:9, epico:8, pragmatico:9, festejero:7, intuitivo:7, frio:8 },
-      habilidad:'Leés el partido antes de que pase. Defendés con elegancia, atacás con precisión.',
-      debilidad:'A veces sobreanalizás y perdés el momento.',
-      leyenda:'Cuatro estrellas. Cuando jugás bien, sos arte puro. Cuando jugás mal, ni siquiera vas al Mundial.',
-      quote:'Esto es así, escuchame.'
     },
     'Países Bajos': {
       flag:'🇳🇱', clase:'EL/LA INNOVADOR/A',
@@ -570,22 +562,6 @@
       leyenda:'Constancia helvética. Llegás, hacés tu torneo digno y volvés.',
       quote:'Como dijimos, así.'
     },
-    'Polonia': {
-      flag:'🇵🇱', clase:'EL/LA SOLITARIO/A',
-      ejes: { creatividad:6, disciplina:7, garra:8, lider:9, analitico:6, epico:7, pragmatico:7, festejero:6, intuitivo:7, frio:7 },
-      habilidad:'Sos el referente. Cuando estás encendido, el grupo te sigue.',
-      debilidad:'Sin vos, el grupo no funciona. Demasiada dependencia.',
-      leyenda:'El cazador del área. La banda se apoya en tu firma. La historia te recuerda.',
-      quote:'Pasámela.'
-    },
-    'Dinamarca': {
-      flag:'🇩🇰', clase:'EL/LA ESTABLE',
-      ejes: { creatividad:6, disciplina:8, garra:7, lider:7, analitico:8, epico:6, pragmatico:8, festejero:6, intuitivo:7, frio:8 },
-      habilidad:'Sin estridencias, hacés todo bien. La gente confía en vos.',
-      debilidad:'Te falta el momento épico. Sos correcto pero no inolvidable.',
-      leyenda:'Cuento de hadas en 1992. Selección noble. Hygge en el mediocampo.',
-      quote:'Todo en orden.'
-    },
     'Colombia': {
       flag:'🇨🇴', clase:'EL/LA BAILARÍN/A',
       ejes: { creatividad:9, disciplina:6, garra:7, lider:6, analitico:6, epico:7, pragmatico:5, festejero:10, intuitivo:9, frio:5 },
@@ -615,11 +591,11 @@
   // Banderas dibujadas con CSS (no emoji) para que se vean igual en todos lados
   const FLAGCOLORS = {
     'Argentina':['#75AADB','#FFFFFF','#75AADB','h'],'Brasil':['#009C3B','#FFDF00','#002776','h'],'Francia':['#0055A4','#FFFFFF','#EF4135','v'],'España':['#AA151B','#F1BF00','#AA151B','h'],
-    'Inglaterra':['#FFFFFF','#CE1124','#FFFFFF','v'],'Portugal':['#006600','#006600','#FF0000','v'],'Alemania':['#000000','#DD0000','#FFCE00','h'],'Italia':['#009246','#FFFFFF','#CE2B37','v'],
+    'Inglaterra':['#FFFFFF','#CE1124','#FFFFFF','v'],'Portugal':['#006600','#006600','#FF0000','v'],'Alemania':['#000000','#DD0000','#FFCE00','h'],
     'Países Bajos':['#AE1C28','#FFFFFF','#21468B','h'],'Bélgica':['#000000','#FAE042','#ED2939','v'],'Uruguay':['#FFFFFF','#0038A8','#FFFFFF','h'],'México':['#006847','#FFFFFF','#CE1126','v'],
     'Croacia':['#FF0000','#FFFFFF','#171796','h'],'Marruecos':['#C1272D','#C1272D','#006233','h'],'Senegal':['#00853F','#FDEF42','#E31B23','v'],'Japón':['#FFFFFF','#BC002D','#FFFFFF','h'],
-    'Corea del Sur':['#FFFFFF','#003478','#C60C30','h'],'Australia':['#012169','#012169','#E4002B','h'],'Suiza':['#FF0000','#FFFFFF','#FF0000','h'],'Polonia':['#FFFFFF','#DC143C','#DC143C','h'],
-    'Dinamarca':['#C8102E','#FFFFFF','#C8102E','h'],'Colombia':['#FCD116','#003893','#CE1126','h'],'Ecuador':['#FFDD00','#0072CE','#EF3340','h'],'Estados Unidos':['#B22234','#FFFFFF','#3C3B6E','h']
+    'Corea del Sur':['#FFFFFF','#003478','#C60C30','h'],'Australia':['#012169','#012169','#E4002B','h'],'Suiza':['#FF0000','#FFFFFF','#FF0000','h'],
+    'Colombia':['#FCD116','#003893','#CE1126','h'],'Ecuador':['#FFDD00','#0072CE','#EF3340','h'],'Estados Unidos':['#B22234','#FFFFFF','#3C3B6E','h']
   };
   function flagSpan(name) {
     const c = FLAGCOLORS[name];
