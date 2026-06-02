@@ -32,10 +32,15 @@
   TOOLS.forEach(function(t){ TOOL_NAME[t[0]]=t[1]; TOOL_ICON[t[0]]=t[2]; });
 
   // ===== Localidades de La Pampa =====
-  var LOCS = ['Santa Rosa','General Pico','Toay','General Acha','Realicó','Eduardo Castex','Victorica',
-    'Macachín','Intendente Alvear','Ingeniero Luiggi','Catriló','Quemú Quemú','Guatraché','Jacinto Arauz',
-    'Santa Isabel','25 de Mayo','Colonia Barón','Winifreda','Anguil','Bernasconi','Alpachiri','Telén',
-    'La Adela','Doblas','Miguel Riglos','Rancul','Trenel','Caleufú','Parera','Embajador Martini'];
+  var LOCS = ['25 de Mayo','Adolfo Van Praet','Agustoni','Algarrobo del Águila','Alpachiri','Alta Italia',
+    'Anguil','Arata','Ataliva Roca','Bernardo Larroudé','Bernasconi','Caleufú','Carro Quemado','Catriló',
+    'Ceballos','Chacharramendi','Colonia Barón','Conhelo','Coronel Hilario Lagos','Cuchillo-Có','Doblas',
+    'Eduardo Castex','Embajador Martini','Falucho','General Acha','General Pico','Gobernador Duval','Guatraché',
+    'Ingeniero Luiggi','Intendente Alvear','Jacinto Arauz','La Adela','La Humada','La Maruja','La Reforma',
+    'Limay Mahuida','Lonquimay','Luan Toro','Macachín','Maisonnave','Mariano Miró','Mauricio Mayer','Metileo',
+    'Miguel Riglos','Monte Nievas','Naicó','Parera','Pichi Huinca','Puelches','Puelén','Quehué','Quemú Quemú',
+    'Rancul','Realicó','Rolón','Santa Isabel','Santa Rosa','Sarah','Speluzzi','Telén','Toay',
+    'Tomás M. de Anchorena','Trenel','Uriburu','Vértiz','Victorica','Villa Mirasol','Winifreda'];
 
   // ===== Niveles (XP) =====
   var LEVELS = [
