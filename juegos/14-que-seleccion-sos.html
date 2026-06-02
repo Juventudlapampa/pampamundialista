@@ -873,6 +873,15 @@
           c.style.maxHeight = h + 'px';
           c.style.overflow = 'hidden';
           c.style.boxSizing = 'border-box';
+          // En el clon, la animación 'revealCard' (opacity 0->1) se captura en el frame 0
+          // => la carta sale invisible/negra. Matamos animaciones y forzamos opacidad/transform.
+          c.style.animation = 'none'; c.style.opacity = '1'; c.style.transform = 'none';
+          const clEls = c.querySelectorAll('*');
+          for (let i = 0; i < clEls.length; i++) {
+            clEls[i].style.animation = 'none';
+            clEls[i].style.opacity = '1';
+            clEls[i].style.transform = 'none';
+          }
         }
       }
     }).then(canvas => {
