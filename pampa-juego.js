@@ -111,14 +111,14 @@
 
   // ===== API: sumar XP / sello / logro =====
   function addXP(n){ var before=levelOf(S.xp).idx; S.xp+=(n||0); save(S); var after=levelOf(S.xp).idx;
-    if(after>before){ tone([523,659,880,1047],0.18,0.14); toast('⬆️ ¡Subiste a <b>'+LEVELS[after][1]+'</b>!', true); }
+    if(after>before){ tone([523,659,880,1047],0.18,0.14); confetti(); toast('⬆️ ¡Subiste a <b>'+LEVELS[after][1]+'</b>!', true); }
     refreshIndex(); }
   function unlock(id,label){ if(S.logros[id]) return false; S.logros[id]={t:label||id, d:Date.now()}; save(S);
     tone([700,1000,1300],0.14,0.13); toast('🏅 Logro: <b>'+(label||id)+'</b>'); refreshIndex(); return true; }
   function sello(id, bonusXP){ id=id||CUR; if(!id) return;
     var arr=sellosArr(); var nuevo=false;
     if(arr.indexOf(id)<0){ arr.push(id); setSellos(arr); nuevo=true; }
-    if(nuevo){ var cnt=arr.length; CROMOS.forEach(function(c){ if(c.need===cnt){ setTimeout(function(){ tone([700,1000,1300],0.14,0.12); toast('🎴 ¡Cromo nuevo! <b>'+c.e+' '+c.n+'</b> · '+c.r); }, 1400); } }); }
+    if(nuevo){ var cnt=arr.length; CROMOS.forEach(function(c){ if(c.need===cnt){ setTimeout(function(){ tone([700,1000,1300],0.14,0.12); confetti(28); toast('🎴 ¡Cromo nuevo! <b>'+c.e+' '+c.n+'</b> · '+c.r); }, 1400); } }); }
     var dobleHoy = DOBLE.indexOf(new Date(stamp()).getDay())>=0;
     if(!S.done[id]){ S.done[id]=1; var base=10*(dobleHoy?2:1); S.xp+=base; save(S);
       tone([600,820,1000],0.12,0.12);
@@ -153,7 +153,7 @@
   }
 
   // ===== Localidad (Capa 2) =====
-  function setLoc(v){ S.loc=v||''; save(S); refreshIndex(); }
+  function setLoc(v){ S.loc=v||''; save(S); refreshIndex(); if(!CUR) setTimeout(onboard, 400); }
   function loc(){ return S.loc||''; }
   function askLoc(force){
     if(S.loc && !force) return;
@@ -208,6 +208,29 @@
     bd.querySelector('#pj-pass-loc').onclick=function(){ bd.remove(); askLoc(true); };
     bd.querySelector('#pj-pass-dl').onclick=function(){ downloadPass(bd.querySelector('.pj-pass')); };
   }
+  // ===== Juicy compartido: confeti + golazo (Capa 5) =====
+  function confetti(n){ n=n||44; var cols=['#75AADB','#ffffff','#d4a82e','#4ade80','#f4cd60'];
+    for(var i=0;i<n;i++){ var p=document.createElement('div'); p.className='pj-confeti';
+      p.style.left=(Math.random()*100)+'vw'; p.style.background=cols[i%cols.length];
+      p.style.animationDuration=(1.6+Math.random()*1.2)+'s'; p.style.animationDelay=(Math.random()*0.35)+'s';
+      document.body.appendChild(p); (function(el){ setTimeout(function(){ el.remove(); }, 3200); })(p); } }
+  function golazo(){ tone([392,523,659,784,1047],0.22,0.16); try{ if(navigator.vibrate) navigator.vibrate([30,40,60]); }catch(e){} }
+
+  // ===== Onboarding mínimo (Capa 5): 3 primeras cosas para hacer, una sola vez =====
+  function onboard(){
+    if(S.onboard) return; S.onboard=1; save(S);
+    var bd=document.createElement('div'); bd.className='pj-modal-bd';
+    bd.innerHTML='<div class="pj-modal"><div class="pj-m-tit">¡BIENVENIDO/A!</div>'+
+      '<div class="pj-m-sub">Tres cosas para arrancar y llenar tu pasaporte:</div>'+
+      '<div class="pj-steps">'+
+        '<div class="pj-step"><b>1</b> Creá tu Crack y bajá tu figurita 🎽</div>'+
+        '<div class="pj-step"><b>2</b> Hacé el Desafío del Día 🔥</div>'+
+        '<div class="pj-step"><b>3</b> Sumá sellos jugando y subí de nivel 🎟️</div>'+
+      '</div><button class="pj-btn" id="pj-onb-ok">¡DALE, A JUGAR!</button></div>';
+    document.body.appendChild(bd);
+    bd.querySelector('#pj-onb-ok').onclick=function(){ bd.remove(); };
+  }
+
   function tituloActual(){
     var lv=levelOf(S.xp).idx, L=S.loc||'La Pampa';
     if(lv>=5) return 'Leyenda de '+L;
@@ -263,7 +286,12 @@
     '.pj-cromo{display:flex;flex-direction:column;align-items:center;gap:2px;padding:.4rem .2rem;border:2px solid;border-radius:10px;background:rgba(0,0,0,.4);opacity:.45;filter:grayscale(1)}'+
     '.pj-cromo.on{opacity:1;filter:none;background:rgba(255,255,255,.04)}'+
     '.pj-cr-e{font-size:1.3rem;line-height:1}'+
-    '.pj-cr-n{font-size:.5rem;font-family:"JetBrains Mono",monospace;text-align:center;line-height:1.1;opacity:.9}';
+    '.pj-cr-n{font-size:.5rem;font-family:"JetBrains Mono",monospace;text-align:center;line-height:1.1;opacity:.9}'+
+    '.pj-steps{display:flex;flex-direction:column;gap:.45rem;margin:.3rem 0 .9rem}'+
+    '.pj-step{display:flex;align-items:center;gap:.6rem;background:rgba(0,0,0,.4);border:1px solid rgba(244,236,216,.15);border-radius:10px;padding:.55rem .7rem;font-size:.88rem}'+
+    '.pj-step b{flex:none;width:1.5rem;height:1.5rem;display:flex;align-items:center;justify-content:center;background:#75AADB;color:#04212e;border-radius:50%;font-family:"Anton",sans-serif}'+
+    '.pj-confeti{position:fixed;top:-16px;width:9px;height:14px;border-radius:2px;z-index:99997;pointer-events:none;animation:pjfall linear forwards}'+
+    '@keyframes pjfall{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(105vh) rotate(540deg);opacity:.9}}';
   document.head.appendChild(css);
 
   // ===== arranque =====
@@ -273,6 +301,8 @@
   function boot(){
     // Capa 2: pedir localidad la 1ª vez
     askLoc(false);
+    // Capa 5: onboarding en el home (si ya tiene localidad y no lo vio)
+    if(!CUR && S.loc) setTimeout(onboard, 500);
     // Capa 3: marcar sello de la herramienta actual (confiable: con visitarla alcanza)
     if(CUR) setTimeout(function(){ sello(CUR); }, 600);
     refreshIndex();
@@ -282,6 +312,7 @@
   window.PampaJuego = {
     sello:sello, addXP:addXP, unlock:unlock, loc:loc, setLoc:setLoc, askLoc:function(){askLoc(true);},
     openPasaporte:openPasaporte, desafioHoy:desafioHoy, marcarDesafio:marcarDesafio,
+    confetti:confetti, golazo:golazo,
     levelName:function(){return levelOf(S.xp).name;}, xp:function(){return S.xp;}, titulo:tituloActual, TOOLS:TOOLS, CUENTA:CUENTA
   };
 })();
