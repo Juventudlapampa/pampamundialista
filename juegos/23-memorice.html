@@ -206,7 +206,8 @@
       <div style="font-family:'Anton',sans-serif;font-size:1.1rem" id="r-verdict"></div>
       <div class="result-wm">MEMO MUNDIAL · MUNDIAL 2026 · @JUVENTUD_LAPAMPA</div>
     </div>
-    <button class="btn" style="margin-top:0.6rem" id="r-download">📸 COMPARTIR</button>
+    <button class="btn" style="margin-top:0.6rem" id="r-download">📸 BAJAR IMAGEN</button>
+    <button class="btn" style="margin-top:0.5rem;background:linear-gradient(135deg,#22c55e,#16a34a);color:#04210f" id="r-share">🔗 PICALE A UN AMIGO</button>
     <button class="btn btn-secondary" style="margin-top:0.5rem" onclick="restart()">🔁 La revancha</button>
   </div>
 </div>
@@ -350,6 +351,8 @@ document.getElementById('r-download').onclick = () => {
     link.click();
   });
 };
+
+document.getElementById('r-share').onclick = () => window.PampaJuego.compartir({texto:'Encontré todos los pares ⚡ ¿Tenés memoria de crack?', modo:'share'});
 
 function show(s) {
   document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));

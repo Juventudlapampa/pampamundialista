@@ -499,6 +499,7 @@
       </div>
     </div>
     <button class="btn btn-gold" style="margin-top:0.6rem" id="r-download">📸 MOSTRÁ TUS GOLAZOS</button>
+    <button class="btn" style="margin-top:0.5rem" id="r-reto">🔗 DESAFIÁ A UN AMIGO</button>
     <button class="btn btn-secondary" style="margin-top:0.5rem" onclick="restart()">⚽ Revancha, dale</button>
   </div>
 </div>
@@ -859,6 +860,11 @@ document.getElementById('r-download').onclick = () => {
     link.href = canvas.toDataURL('image/png');
     link.click();
   });
+};
+
+// Desafío directo por WhatsApp
+document.getElementById('r-reto').onclick = () => {
+  window.PampaJuego.compartir({ texto: 'Le hice ' + game.goles + ' goles al arquero 🎯 Superame si podés', modo: 'wsp' });
 };
 
 function show(s) {

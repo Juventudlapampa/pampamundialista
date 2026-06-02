@@ -334,7 +334,7 @@ $('download').onclick = () => {
   });
 };
 
-$('share').onclick = () => shareReto(`💚 Saqué ${estado.score}/110 en "Juego Limpio" del Mundial 2026 (respeto, igualdad y juego limpio dentro y fuera de la cancha). ¿Cuánto sacás vos? 📲 @juventud_lapampa`);
+$('share').onclick = () => window.PampaJuego.compartir({texto:'Jugué Limpio en Pampa Juega 💚 ¿Vos qué tan buena onda sos?', modo:'share'});
 function shareReto(text){ if(navigator.share){navigator.share({title:'Juego Limpio · Mundial 2026',text}).catch(()=>{});} else if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>alert('¡Reto copiado! Mandáselo a un amigo 📲'),()=>prompt('Copiá tu reto:',text));} else {prompt('Copiá tu reto:',text);} }
 </script>
 <div class="grain"></div>

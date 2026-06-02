@@ -192,6 +192,9 @@
 
     <div class="btn-row">
       <button class="btn" id="download-resumen">🏅 Bajar la predicción completa</button>
+      <button class="btn btn-sec" id="share-campeon">📲 Compartir mi campeón</button>
+    </div>
+    <div class="btn-row">
       <button class="btn btn-sec" id="download-cuadro2">📋 Bajar el cuadro (fixture)</button>
     </div>
     <div class="btn-row">
@@ -567,6 +570,10 @@ function captureResumen(){
 
 $('download-resumen').onclick = captureResumen;
 $('download-cuadro2').onclick = captureCuadro;
+$('share-campeon').onclick = () => {
+  const CAMPEON = (pred.rounds[4] && pred.rounds[4][0] && pred.rounds[4][0].w) || '';
+  window.PampaJuego.compartir({texto:'Mi campeón del Mundial es '+CAMPEON+' 🔮 Guardá captura para cobrármelo después', modo:'share'});
+};
 
 // init
 renderGrupos();

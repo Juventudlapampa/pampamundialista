@@ -690,7 +690,7 @@ function showScreen(s){ if(s!=='game'){ if(raf){cancelAnimationFrame(raf);raf=nu
 
 $('start').onclick=startMatch; $('replay').onclick=startMatch; $('to-intro').onclick=()=>showScreen('intro');
 $('download').onclick=()=>{ const node=$('res-card'); const w=node.offsetWidth,h=node.offsetHeight; html2canvas(node,{backgroundColor:'#050d08',scale:2,useCORS:true,allowTaint:true,logging:false,width:w,height:h,windowWidth:document.documentElement.clientWidth,windowHeight:document.documentElement.clientHeight}).then(c=>{ const l=document.createElement('a'); l.download='gambeta-como-leo-2026.png'; l.href=c.toDataURL('image/png'); l.click(); }); };
-$('share').onclick=()=>{ shareReto(`🪄 Metí ${G?G.goles:0} goles gambeteando como Leo (${G?G.gambetas:0} gambetas) en el Mundial 2026 con ${TEAMS[myTeamIdx].n}. ¿Me la superás? 📲 juventudlapampa.github.io/pampa-juega · @juventud_lapampa`); };
+$('share').onclick=()=>{ window.PampaJuego.compartir({texto:'Mirá la gambeta que me mandé ⚽ ¿Vos podés?', modo:'wsp'}); };
 function shareReto(text){ if(navigator.share){navigator.share({title:'Gambeteá como Leo · Pampa Juega',text}).catch(()=>{});} else if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>alert('¡Desafío copiado! Pasáselo a un amigo 📲'),()=>prompt('Copiá tu desafío:',text));} else {prompt('Copiá tu desafío:',text);} }
 </script>
 <div class="grain"></div>

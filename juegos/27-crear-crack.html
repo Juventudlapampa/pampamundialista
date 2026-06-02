@@ -656,7 +656,7 @@ $('dl-result').onclick=dlCardFromState;
 $('dl-editor').onclick=dlCardFromState;
 $('dl-sticker').onclick=dlSticker;
 $('dl-sticker2').onclick=dlSticker;
-$('share-result').onclick=()=>{ const sc = gameType==='penales' ? `metí ${pg?pg.goals:0}/${pg?pg.total:5} penales` : `hice ${game?game.score:0} toques de dominio`; shareReto(`⚽ Me armé "${(av.mote||'Mi Crack')}" con la ${KITS[av.kit].n} y ${sc} en "Creá tu Crack" del Mundial 2026. ¿Me la superás? 📲 @juventud_lapampa`); };
+$('share-result').onclick=()=>{ window.PampaJuego.compartir({texto:'Mirá el crack que me armé en Pampa Juega 🔥 ¿Te animás a hacer el tuyo?', modo:'share'}); };
 
 /* ===================== INIT ===================== */
 loadSaved();

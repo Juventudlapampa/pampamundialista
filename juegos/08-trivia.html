@@ -456,6 +456,7 @@
       </div>
     </div>
     <button class="btn" style="margin-top:0.6rem" id="r-download">📸 BAJAR Y MOSTRAR EL PUNTAJE</button>
+    <button class="btn btn-secondary" style="margin-top:0.5rem" id="r-share">💬 DESAFIAR POR WHATSAPP</button>
     <button class="btn btn-secondary" style="margin-top:0.5rem" onclick="goRanking()">🏆 Ver la tabla</button>
     <button class="btn btn-secondary" style="margin-top:0.5rem" onclick="restart()">⚡ Revancha, dale</button>
   </div>
@@ -986,6 +987,10 @@
         link.click();
       }).catch(err => alert('Error al descargar: ' + err.message));
     }
+  };
+
+  document.getElementById('r-share').onclick = () => {
+    if (window.PampaJuego) PampaJuego.compartir({ texto: 'Saqué ' + estado.score + ' en la trivia mundialista 🧠 ¿Cuánto sacás vos?', modo: 'wsp' });
   };
 
   function saveScore() {

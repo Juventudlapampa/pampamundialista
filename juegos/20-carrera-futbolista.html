@@ -889,7 +889,7 @@ $('r-download').onclick = () => {
   });
 };
 
-$('r-share').onclick = () => shareReto(`🎮 En "Tu Carrera de Futbolista" del Mundial 2026 la terminé como: ${$('final-titulo').textContent}. ¿Vos hasta dónde llegás? 📲 @juventud_lapampa`);
+$('r-share').onclick = () => window.PampaJuego.compartir({texto:'Así terminó mi carrera de futbolista jajaja 😂 ¿Dónde llegás vos?', modo:'share'});
 function shareReto(text){ if(navigator.share){navigator.share({title:'Tu Carrera · Mundial 2026',text}).catch(()=>{});} else if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>alert('¡Desafío copiado! Pasáselo a un amigo 📲'),()=>prompt('Copiá tu desafío:',text));} else {prompt('Copiá tu desafío:',text);} }
 
 function show(s) {

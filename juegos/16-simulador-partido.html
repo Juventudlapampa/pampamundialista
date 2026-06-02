@@ -522,7 +522,8 @@
           <div class="result-stats-center">STATS</div>
           <div id="r-stats-v"></div>
         </div>
-        <button class="btn" onclick="restart()">⚽ Revancha, dale</button>
+        <button class="btn" id="share-resultado">📲 Compartir el resultado</button>
+        <button class="btn btn-secondary" onclick="restart()" style="margin-top:0.6rem">⚽ Revancha, dale</button>
       </div>
     </div>
   </div>
@@ -1081,6 +1082,8 @@
       <div class="result-stat-row"><span>Rojas</span><strong>${estado.rojas_v}</strong></div>
       <div class="result-stat-row"><span>Posesión</span><strong>${100 - Math.round(estado.pos_l)}%</strong></div>
     `;
+    const RESULTADO = `${estado.local.name} ${estado.score_l} · ${estado.score_v} ${estado.visit.name}`;
+    document.getElementById('share-resultado').onclick = () => window.PampaJuego.compartir({texto:'En mi simulación quedó '+RESULTADO+' 📊 Probá el tuyo', modo:'share'});
   }
 
   // ========================================================================

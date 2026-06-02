@@ -889,9 +889,8 @@
 
   document.getElementById('share').onclick = () => {
     const sel = document.querySelector('.rpg-name')?.textContent || 'una selección';
-    shareReto(`🔮 Hice el test "¿Qué Selección Sos?" del Mundial 2026 y me tocó: ${sel}. ¿Qué selección sos vos? 📲 @juventud_lapampa`);
+    if (window.PampaJuego) PampaJuego.compartir({ texto: 'Me salió que soy ' + sel + ' 🌍 ¿Vos qué selección sos? Adiviná antes de hacerlo', modo: 'share' });
   };
-  function shareReto(text){ if(navigator.share){navigator.share({title:'¿Qué Selección Sos? · Mundial 2026',text}).catch(()=>{});} else if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>alert('¡Reto copiado! Mandáselo a un amigo 📲'),()=>prompt('Copiá tu reto:',text));} else {prompt('Copiá tu reto:',text);} }
 
   function show(s) {
     document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));

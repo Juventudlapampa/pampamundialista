@@ -472,6 +472,7 @@
       </div>
     </div>
     <button class="btn btn-gold" id="share-champion">📸 MOSTRÁ LA COPA AL BARRIO</button>
+    <button class="btn" style="margin-top:0.5rem" id="reto-champion">🔗 DESAFIÁ A UN AMIGO</button>
     <button class="btn" style="margin-top:0.5rem" onclick="restart()">⚽ A defender el título</button>
   </div>
 </div>
@@ -968,6 +969,10 @@ document.getElementById('share-champion').onclick = () => {
     link.href = canvas.toDataURL('image/png');
     link.click();
   }).catch(e => alert('Error: ' + e.message));
+};
+
+document.getElementById('reto-champion').onclick = () => {
+  window.PampaJuego.compartir({ texto: 'Salí campeón en penales 🧤 Vení a que te gane', modo: 'wsp' });
 };
 
 // ========================================================================

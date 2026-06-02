@@ -839,17 +839,8 @@ document.getElementById('snd-btn').onclick = (e) => { e.stopPropagation(); sound
 setupPan();
 
 document.getElementById('r-download').onclick = () => {
-  const node = document.querySelector('.escape-banner');
-  const w = node.offsetWidth, h = node.offsetHeight;
-  html2canvas(node, {
-    backgroundColor: '#0a0612', scale: 2, useCORS: true, allowTaint: true, logging: false,
-    width: w, height: h
-  }).then(c => {
-    const link = document.createElement('a');
-    link.download = `escape-mundial-${state.name.toLowerCase().replace(/[^a-z0-9]+/g,'-')}.png`;
-    link.href = c.toDataURL('image/png');
-    link.click();
-  });
+  const tiempo = document.getElementById('r-time').textContent;
+  if (window.PampaJuego) PampaJuego.compartir({ texto: 'Escapé del vestuario en ' + tiempo + ' 🔒 Cronometrate y superame', modo: 'wsp' });
 };
 
 function show(s) {

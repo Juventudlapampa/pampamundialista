@@ -979,7 +979,7 @@
     };
     document.getElementById('download-' + modo).onclick = () => downloadCancha(modo);
     document.getElementById('story-' + modo).onclick = () => pampaStory(document.getElementById('cancha-wrap-' + modo), modo==='arg'?'MI 11 DE ARGENTINA':'MI 11 IDEAL DEL MUNDIAL', 'historia-11-'+modo);
-    document.getElementById('share-' + modo).onclick = () => pampaShare(document.getElementById('cancha-wrap-' + modo), '⚽ Armé mi 11 del Mundial 2026 en Pampa Juega. Armá el tuyo gratis 👉 juventudlapampa.github.io/pampa-juega · @pampajuega');
+    document.getElementById('share-' + modo).onclick = () => window.PampaJuego.compartir({texto:'Este es mi 11 ideal. A ver si me lo bancás 😏 Armá el tuyo', modo:'share'});
   });
 
   // Update DT display

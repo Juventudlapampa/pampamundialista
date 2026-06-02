@@ -465,7 +465,10 @@ document.getElementById('download').onclick = () => {
 };
 
 document.getElementById('download-story').onclick = () => pampaStory(document.getElementById('cancha-output'), 'EL FUT5 DE MI AULA', 'historia-fut5-aula');
-document.getElementById('share-fut5').onclick = () => pampaShare(document.getElementById('cancha-output'), '🏫 Armamos el FUT5 de nuestro curso en Pampa Juega. Armá el de tu aula 👉 juventudlapampa.github.io/pampa-juega · @pampajuega');
+document.getElementById('share-fut5').onclick = () => {
+  var LOC=(window.PampaJuego&&PampaJuego.loc&&PampaJuego.loc())||'La Pampa';
+  window.PampaJuego.compartir({texto:'Este es el equipo de '+LOC+' 🏫 Armá el tuyo y etiquetá a @pampajuega', modo:'share'});
+};
 </script>
 <div class="grain"></div>
 <script src="../pampa-marca.js"></script>

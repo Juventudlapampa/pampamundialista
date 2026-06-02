@@ -547,7 +547,7 @@
   };
 
   $('download-story').onclick = () => pampaStory($('carnet'), 'MI CARNET DE HINCHA', 'historia-carnet');
-  $('share-card').onclick = () => pampaShare($('carnet'), '🪪 Saqué mi carnet oficial de hincha del Mundial 2026 en Pampa Juega. Hacé el tuyo gratis 👉 juventudlapampa.github.io/pampa-juega · @pampajuega');
+  $('share-card').onclick = () => window.PampaJuego.compartir({texto:'Este es mi carnet de hincha oficial 🎫 Sacá el tuyo', modo:'share'});
 </script>
 <div class="grain"></div>
 <script src="../pampa-marca.js"></script>

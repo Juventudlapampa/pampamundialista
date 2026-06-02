@@ -55,6 +55,7 @@
   <div class="controls">
     <button class="btn btn-sec" id="nueva">🎲 Dame otro cartón</button>
     <button class="btn" id="download">📸 Mostrar mi cartón</button>
+    <button class="btn btn-sec" id="share">📲 Compartir mi cartón</button>
   </div>
   <div class="status" id="status"></div>
   <div class="progress"><div class="progress-fill" id="prog"></div></div>
@@ -127,6 +128,7 @@
     html2canvas(node, { backgroundColor:'#0a1f1a', scale:2, useCORS:true, allowTaint:true, logging:false, windowWidth:document.documentElement.clientWidth, windowHeight:document.documentElement.clientHeight })
       .then(canvas => { const link=document.createElement('a'); link.download='mi-carton-mundialista.png'; link.href=canvas.toDataURL('image/png'); link.click(); });
   };
+  document.getElementById('share').onclick = () => window.PampaJuego.compartir({texto:'Mi cartón para el partido de hoy 🎰 Llená el tuyo', modo:'share'});
 
   load(); if(!card) nuevoCarton(); else render();
 </script>

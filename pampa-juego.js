@@ -7,8 +7,9 @@
 (function(){
   if (window.__pampaJuego) return; window.__pampaJuego = true;
 
-  // ===== Cuenta de redes: EDITABLE, todavía sin definir =====
-  var CUENTA = (window.CUENTA || '@juventud_lapampa');
+  // ===== Cuenta de redes (definida): @pampajuega =====
+  var CUENTA = (window.CUENTA || '@pampajuega');
+  var SITE = 'juventudlapampa.github.io/pampa-juega';
 
   // ===== Herramientas (id = el data-id del index, para que el contador cuadre) =====
   var TOOLS = [
@@ -216,6 +217,24 @@
       document.body.appendChild(p); (function(el){ setTimeout(function(){ el.remove(); }, 3200); })(p); } }
   function golazo(){ tone([392,523,659,784,1047],0.22,0.16); try{ if(navigator.vibrate) navigator.vibrate([30,40,60]); }catch(e){} }
 
+  // ===== Compartir viral (texto propio por herramienta) =====
+  // opts: { texto:'gancho', modo:'wsp'|'share' }. Cierra siempre con el link + #PampaJuega.
+  function compartir(opts){
+    opts = opts || {};
+    var texto = (opts.texto || '¡Jugá en Pampa Juega!');
+    var full = texto + ' ⚽ ' + SITE + ' #PampaJuega';
+    try { golazo(); confetti(20); } catch(e) {}
+    if (opts.modo === 'wsp') {
+      // Desafío directo: abre WhatsApp con el texto pre-cargado (en La Pampa manda el grupo del curso)
+      window.open('https://wa.me/?text=' + encodeURIComponent(full), '_blank');
+      return;
+    }
+    // Mostrarse: menú nativo -> portapapeles -> prompt
+    if (navigator.share) { navigator.share({ title: 'Pampa Juega', text: full }).catch(function(){}); }
+    else if (navigator.clipboard) { navigator.clipboard.writeText(full).then(function(){ toast('¡Texto copiado! Pegalo en tu historia o en el grupo 📲'); }, function(){ try { prompt('Copiá tu texto:', full); } catch(e){} }); }
+    else { try { prompt('Copiá tu texto:', full); } catch(e){} }
+  }
+
   // ===== Onboarding mínimo (Capa 5): 3 primeras cosas para hacer, una sola vez =====
   function onboard(){
     if(S.onboard) return; S.onboard=1; save(S);
@@ -312,7 +331,7 @@
   window.PampaJuego = {
     sello:sello, addXP:addXP, unlock:unlock, loc:loc, setLoc:setLoc, askLoc:function(){askLoc(true);},
     openPasaporte:openPasaporte, desafioHoy:desafioHoy, marcarDesafio:marcarDesafio,
-    confetti:confetti, golazo:golazo,
+    confetti:confetti, golazo:golazo, compartir:compartir, SITE:SITE,
     levelName:function(){return levelOf(S.xp).name;}, xp:function(){return S.xp;}, titulo:tituloActual, TOOLS:TOOLS, CUENTA:CUENTA
   };
 })();

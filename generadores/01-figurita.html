@@ -756,17 +756,8 @@
   });
 
   $('share-fig').addEventListener('click', () => {
-    const txt = `🃏 Me armé mi figurita del Mundial 2026 en Pampa Juega. Armá la tuya gratis 👉 juventudlapampa.github.io/pampa-juega · @pampajuega`;
-    captureFigCanvas().then(card => {
-      card.toBlob(blob => {
-        const file = new File([blob], 'mi-figurita.png', {type:'image/png'});
-        if (navigator.canShare && navigator.canShare({files:[file]})) {
-          navigator.share({ files:[file], text:txt, title:'Mi Figurita · Pampa Juega' }).catch(()=>{});
-        } else if (navigator.share) { navigator.share({ text:txt, title:'Pampa Juega' }).catch(()=>{}); }
-        else if (navigator.clipboard) { navigator.clipboard.writeText(txt).then(()=>alert('¡Texto copiado! Bajá la imagen y subila arrobando a @pampajuega, que se note'),()=>{}); }
-        else alert('Bajá la imagen y subila arrobando a @pampajuega, que se note');
-      });
-    });
+    var LOC=(window.PampaJuego&&PampaJuego.loc&&PampaJuego.loc())||'La Pampa';
+    window.PampaJuego.compartir({texto:'Soy figurita oficial de '+LOC+' ⚽ Hacé la tuya 👇', modo:'share'});
   });
 </script>
 <div class="grain"></div>

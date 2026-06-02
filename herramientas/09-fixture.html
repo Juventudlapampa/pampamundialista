@@ -981,8 +981,10 @@
           <div class="campeon-nombre">${g.n}</div>
         </div>
         <button class="btn btn-primary" id="download-campeon" style="width:100%;margin-top:1rem">📸 Bajar la foto del campeón</button>
+        <button class="btn" id="share-cuadro" style="width:100%;margin-top:0.6rem">📲 Compartir mi cuadro</button>
       `;
       document.getElementById('download-campeon').onclick = () => downloadCampeon(g.n);
+      document.getElementById('share-cuadro').onclick = () => window.PampaJuego.compartir({texto:'Armé todo el cuadro del Mundial 🏆 Este sale campeón. ¿Vos qué decís?', modo:'share'});
     }
   }
 
