@@ -368,7 +368,7 @@
 
     <ul class="bases">
       <li>Las <b>misiones de juego</b> se cumplen usando las herramientas de arriba: cada una te da un sello.</li>
-      <li>Las <b>misiones de creación</b> se mandan por WhatsApp o se suben a tu cuenta etiquetando.</li>
+      <li>Las <b>misiones de creación</b>: tocás <b>Copiar texto</b>, lo pegás en tu historia o feed de Instagram y etiquetás a <b>@pampamundialista</b> (el Relato de Gol va por WhatsApp).</li>
       <li>Para llevarte premios necesitás <b>Tarjeta Joven</b> y activar el <b>Modo Jugador Oficial</b> (mirá arriba 👆).</li>
       <li>El equipo de Juventud valida las misiones para el sorteo. Bases completas en las redes de la Subse.</li>
     </ul>
@@ -455,19 +455,19 @@
       btn:'Mandar mi relato', link:wppBase('¡Hola! Mando mi relato de gol para el Desafío Pampa Mundialista 🎙️⚽') },
     { ic:'🎨', name:'Dibujá tu Selección', sello:'1 sello', wpp:false,
       desc:'Dibujá a tu selección o tu jugador favorito, sacale una foto y subila etiquetando a '+CUENTA+'. (¡Ideal para los más chicos!)',
-      btn:'Subir y etiquetar', link:'#' },
+      btn:'Copiar texto', copy:'Dibujé a mi selección para Pampa Mundialista 🎨⚽ '+CUENTA+' #PampaMundialista' },
     { ic:'🧤', name:'Penal Imposible', sello:'1 sello', wpp:false,
       desc:'Pateá un penal vendado, atado a un compañero o de espaldas, filmalo y subilo etiquetando a '+CUENTA+'.',
-      btn:'Subir y etiquetar', link:'#' },
+      btn:'Copiar texto', copy:'Mirá el penal imposible que me mandé para Pampa Mundialista 🧤😅 '+CUENTA+' #PampaMundialista' },
     { ic:'🎉', name:'Festejo del Curso', sello:'2 sellos', wpp:false,
       desc:'Inventen un festejo de gol entre todo el curso y fílmenlo. ¡Las grupales valen doble!',
-      btn:'Subir y etiquetar', link:'#' },
+      btn:'Copiar texto', copy:'Mirá el festejo que nos inventamos con el curso para Pampa Mundialista 🎉⚽ '+CUENTA+' #PampaMundialista' },
     { ic:'📣', name:'Cántico Pampeano', sello:'1 sello', wpp:false,
       desc:'Creen el cántico de su localidad o su curso y grábenlo. Cada pueblo defiende el suyo.',
-      btn:'Subir y etiquetar', link:'#' },
+      btn:'Copiar texto', copy:'Este es el cántico de mi pueblo para Pampa Mundialista 📣🔥 '+CUENTA+' #PampaMundialista' },
     { ic:'🧑‍🏫', name:'El Profe Relata', sello:'1 sello', wpp:false,
       desc:'Sumá a un profe a relatar un gol o a patear un penal, filmalo y subilo etiquetando a '+CUENTA+'.',
-      btn:'Subir y etiquetar', link:'#' }
+      btn:'Copiar texto', copy:'Sumé a mi profe a jugar para Pampa Mundialista 🧑‍🏫⚽ '+CUENTA+' #PampaMundialista' }
   ];
   const misGrid = document.getElementById('mis-grid');
   MISIONES.forEach(m => {
@@ -475,18 +475,34 @@
     div.className = 'mision' + (m.wpp ? ' wpp' : '');
     const btnHtml = m.wpp
       ? `<a class="mis-btn wpp" href="${m.link}" target="_blank" rel="noopener">📲 ${m.btn}</a>`
-      : `<a class="mis-btn" href="${m.link}" data-share="${m.name}">📤 ${m.btn}</a>`;
+      : `<button class="mis-btn" type="button" data-copy="${m.name}">📋 ${m.btn}</button>`;
     div.innerHTML = `<div class="mis-top"><span class="mis-ic">${m.ic}</span><span class="mis-name">${m.name}</span><span class="mis-sello">${m.sello}</span></div>
       <div class="mis-desc">${m.desc}</div>${btnHtml}`;
     misGrid.appendChild(div);
   });
-  // botones de "subir y etiquetar" -> abren share nativo / copian la consigna
-  document.querySelectorAll('.mis-btn[data-share]').forEach(b => b.addEventListener('click', e => {
+  // mini-toast simple (liviano)
+  function pmToast(msg){
+    let t = document.getElementById('pm-toast');
+    if(!t){ t = document.createElement('div'); t.id='pm-toast';
+      t.style.cssText='position:fixed;left:50%;bottom:1.2rem;transform:translateX(-50%);max-width:90%;background:#0d3b26;color:#f4ecd8;border:2px solid #d4a82e;border-radius:12px;padding:0.8rem 1.1rem;font-family:inherit;font-size:0.92rem;line-height:1.4;z-index:9999;box-shadow:0 6px 20px rgba(0,0,0,0.5);text-align:center;opacity:0;transition:opacity .25s';
+      document.body.appendChild(t); }
+    t.textContent = msg; t.style.opacity='1';
+    clearTimeout(t.__h); t.__h = setTimeout(()=>{ t.style.opacity='0'; }, 3200);
+  }
+  // botones "Copiar texto" -> copian el texto de Instagram al portapapeles
+  document.querySelectorAll('.mis-btn[data-copy]').forEach(b => b.addEventListener('click', e => {
     e.preventDefault();
-    const txt = `Estoy haciendo la misión "${b.dataset.share}" del Desafío Pampa Mundialista ⚽ Subí la tuya y etiquetá a ${CUENTA} · Mundial 2026 · Juventudes La Pampa`;
-    if (navigator.share) { navigator.share({ title:'Desafío Pampa Mundialista', text:txt }).catch(()=>{}); }
-    else if (navigator.clipboard) { navigator.clipboard.writeText(txt).then(()=>alert('¡Consigna copiada! Subí tu material y etiquetá a '+CUENTA),()=>{}); }
-    else { alert('Subí tu material y etiquetá a '+CUENTA); }
+    const m = MISIONES.find(x => x.name === b.dataset.copy);
+    const txt = (m && m.copy) ? m.copy : ('Hago la misión de Pampa Mundialista '+CUENTA+' #PampaMundialista');
+    const aviso = '¡Texto copiado! Pegalo en tu historia o publicación de Instagram y etiquetá a '+CUENTA;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt).then(()=>pmToast(aviso), ()=>{ window.prompt('Copiá este texto:', txt); });
+    } else {
+      // fallback sin Clipboard API (gama baja)
+      const ta=document.createElement('textarea'); ta.value=txt; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select();
+      try{ document.execCommand('copy'); pmToast(aviso); }catch(err){ window.prompt('Copiá este texto:', txt); }
+      ta.remove();
+    }
   }));
   (function(){ var ib = document.getElementById('inscribite-btn'); ib.href = INSCRIPCION_URL; ib.target = '_blank'; ib.rel = 'noopener'; })();
 
