@@ -204,13 +204,15 @@
       '<div class="pj-grid">'+grid+'</div>'+
       '<div class="pj-p-lab">LOGROS</div><div class="pj-badges">'+logrosHtml+'</div>'+
       '<div class="pj-p-lab">COLECCIÓN PAMPEANA ('+crOn+'/'+CROMOS.length+')</div><div class="pj-cromos">'+crHtml+'</div>'+
-      '<button class="pj-btn" id="pj-pass-dl">📸 BAJAR MI PASAPORTE</button>'+
+      '<button class="pj-btn" id="pj-pass-dl">📸 COMPARTIR MI PASAPORTE</button>'+
+      '<button class="pj-btn" id="pj-pass-grupo" style="background:linear-gradient(135deg,#d4a82e,#f4cd60);color:#04212e">👥 PASAPORTE GRUPAL</button>'+
       '<button class="pj-btn ghost" id="pj-pass-loc">Cambiar mi localidad</button>'+
       '</div>';
     document.body.appendChild(bd);
     bd.querySelector('#pj-pass-x').onclick=function(){ bd.remove(); };
     bd.querySelector('#pj-pass-loc').onclick=function(){ bd.remove(); askLoc(true); };
     bd.querySelector('#pj-pass-dl').onclick=function(){ downloadPass(bd.querySelector('.pj-pass')); };
+    bd.querySelector('#pj-pass-grupo').onclick=function(){ bd.remove(); pasaporteGrupal(); };
   }
   // ===== Juicy compartido: confeti + golazo (Capa 5) =====
   function confetti(n){ n=n||44; var cols=['#75AADB','#ffffff','#d4a82e','#4ade80','#f4cd60'];
@@ -298,11 +300,70 @@
     return '';
   }
   function downloadPass(node){
-    if(typeof html2canvas==='undefined'){ toast('Sacá una captura de pantalla para compartirlo 📲'); return; }
-    html2canvas(node,{backgroundColor:'#0a0f0a',scale:2}).then(function(c){
-      var a=document.createElement('a'); a.download='mi-pasaporte-pampa-juega.png'; a.href=c.toDataURL('image/png'); a.click();
-    }).catch(function(){ toast('No se pudo bajar; probá una captura 📲'); });
+    var lv=levelOf(S.xp).name, L=S.loc||'mi pueblo';
+    var cap='Voy '+lv+' en Pampa Mundialista, sumando para '+L+' 🔥 '+CUENTA;
+    // 9:16 listo para historias (pampa-share compone el formato vertical)
+    if(typeof window.pampaStory==='function'){
+      window.pampaStory(node, 'MI PASAPORTE · '+L.toUpperCase(), 'mi-pasaporte-pampa');
+      if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(cap).then(function(){ toast('📸 ¡Bajaste tu pasaporte 9:16! Texto copiado: pegalo en tu historia 🔥'); }, function(){ toast('📸 ¡Bajaste tu pasaporte! Subilo a tu historia 🔥'); }); }
+      else toast('📸 ¡Bajaste tu pasaporte! Subilo a tu historia 🔥');
+      return;
+    }
+    if(typeof html2canvas!=='undefined'){
+      html2canvas(node,{backgroundColor:'#0a0f0a',scale:2}).then(function(c){ var a=document.createElement('a'); a.download='mi-pasaporte-pampa.png'; a.href=c.toDataURL('image/png'); a.click(); }).catch(function(){ toast('No se pudo bajar; probá una captura 📲'); });
+      return;
+    }
+    toast('Sacá una captura de pantalla para compartirlo 📲');
   }
+
+  // ===== Pasaporte GRUPAL (aula, club, etc.) — todo local, sin servidor =====
+  function pasaporteGrupal(){
+    var saved={}; try{ saved=JSON.parse(localStorage.getItem('pampa-grupo')||'{}'); }catch(e){ saved={}; }
+    var locOpts='<option value="">— Localidad —</option>'+LOCS.map(function(l){return '<option'+(l===(saved.loc||S.loc)?' selected':'')+'>'+l+'</option>';}).join('');
+    var integ=(saved.integrantes||[]).map(function(x){return x.n+(x.num?(' '+x.num):'');}).join('\n');
+    var bd=document.createElement('div'); bd.className='pj-modal-bd';
+    bd.innerHTML='<div class="pj-modal"><button class="pj-x" id="pg-x">✕</button>'+
+      '<div class="pj-m-tit">👥 Pasaporte Grupal</div>'+
+      '<div class="pj-m-sub">Para presentar tu <b>aula, club o grupo</b> en la categoría grupal. Cargá el grupo y los números de Jugador Oficial de cada integrante (los que cada uno ya validó).</div>'+
+      '<input class="pj-inp" id="pg-nombre" maxlength="40" placeholder="Nombre del grupo (ej: 5°B Esc. 1)" value="'+(saved.nombre||'').replace(/"/g,'&quot;')+'">'+
+      '<select class="pj-sel" id="pg-loc">'+locOpts+'</select>'+
+      '<textarea class="pj-inp" id="pg-integ" rows="6" placeholder="Un integrante por línea:&#10;Sofía 1234567&#10;Mateo 7654321">'+integ.replace(/</g,'&lt;')+'</textarea>'+
+      '<div class="pj-tjw-legal" style="font-size:.72rem;opacity:.8;margin:.2rem 0 .6rem">El equipo de Juventud <b>valida los números al entregar los premios</b>. Acá no se manda nada: queda en tu celu.</div>'+
+      '<button class="pj-btn" id="pg-gen">📸 GENERAR PASAPORTE GRUPAL</button>'+
+      '<button class="pj-btn ghost" id="pg-cancel">Cerrar</button></div>';
+    document.body.appendChild(bd);
+    bd.querySelector('#pg-x').onclick=bd.querySelector('#pg-cancel').onclick=function(){ bd.remove(); };
+    bd.querySelector('#pg-gen').onclick=function(){
+      var nombre=(bd.querySelector('#pg-nombre').value||'').trim();
+      var loc=bd.querySelector('#pg-loc').value||'';
+      var lines=(bd.querySelector('#pg-integ').value||'').split('\n').map(function(s){return s.trim();}).filter(Boolean);
+      if(!nombre){ toast('Ponele un nombre al grupo 🙌'); return; }
+      if(!lines.length){ toast('Cargá al menos un integrante'); return; }
+      var integrantes=lines.map(function(l){ var m=l.match(/^(.*?)[\s,\-]*([0-9]{4,12})?$/); var num=(l.match(/([0-9]{4,12})/)||[])[1]||''; var n=l.replace(/[0-9]{4,12}/,'').replace(/[,\-]\s*$/,'').trim()||'—'; return {n:n, num:num}; });
+      try{ localStorage.setItem('pampa-grupo', JSON.stringify({nombre:nombre,loc:loc,integrantes:integrantes})); }catch(e){}
+      renderGrupoCard(nombre, loc, integrantes);
+      bd.remove();
+    };
+  }
+  function renderGrupoCard(nombre, loc, integrantes){
+    var rows=integrantes.map(function(x,i){ return '<div style="display:flex;justify-content:space-between;gap:.6rem;padding:.32rem .5rem;border-bottom:1px solid rgba(244,236,216,.12);font-size:.92rem"><span><b style="color:#d4a82e">'+(i+1)+'.</b> '+esc(x.n)+'</span><span style="font-family:monospace;color:#4ade80">'+(x.num?('N° '+esc(x.num)):'<span style=\"opacity:.5\">sin número</span>')+'</span></div>'; }).join('');
+    var card=document.createElement('div');
+    card.style.cssText='position:fixed;left:-9999px;top:0;width:420px;background:linear-gradient(160deg,#0d3b26,#081b10);border:3px solid #d4a82e;border-radius:16px;padding:1.4rem;color:#f4ecd8;font-family:system-ui,sans-serif;box-sizing:border-box';
+    card.innerHTML='<div style="text-align:center"><div style="font-family:\'Anton\',sans-serif;color:#d4a82e;font-size:.8rem;letter-spacing:.2em">PAMPA MUNDIALISTA · PASAPORTE GRUPAL</div>'+
+      '<div style="font-family:\'Anton\',sans-serif;font-size:1.8rem;line-height:1.05;margin:.4rem 0 .1rem">'+esc(nombre)+'</div>'+
+      '<div style="font-size:.9rem;opacity:.9">📍 '+(esc(loc)||'La Pampa')+' · 👥 '+integrantes.length+' integrante'+(integrantes.length!==1?'s':'')+'</div></div>'+
+      '<div style="margin:.9rem 0;background:rgba(0,0,0,.3);border-radius:10px;overflow:hidden">'+rows+'</div>'+
+      '<div style="font-size:.62rem;font-family:monospace;letter-spacing:.12em;color:rgba(244,236,216,.6);text-align:center">'+CUENTA+' · #PampaMundialista · juventudlapampa.github.io/pampa-juega</div>';
+    document.body.appendChild(card);
+    var done=function(){ card.remove(); };
+    if(typeof html2canvas!=='undefined'){
+      html2canvas(card,{backgroundColor:'#081b10',scale:2,useCORS:true}).then(function(c){
+        var a=document.createElement('a'); a.download='pasaporte-grupal-'+(nombre.toLowerCase().replace(/[^a-z0-9]+/g,'-')||'grupo')+'.png'; a.href=c.toDataURL('image/png'); a.click(); done();
+        toast('👥 ¡Pasaporte grupal listo! Presentalo en la categoría grupal.');
+      }).catch(function(){ done(); toast('No se pudo generar; probá una captura 📲'); });
+    } else { done(); toast('Sacá una captura de pantalla 📲'); }
+  }
+  function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
   // ===== refrescar contadores del index si existen =====
   function refreshIndex(){
@@ -381,7 +442,7 @@
 
   window.PampaJuego = {
     sello:sello, addXP:addXP, unlock:unlock, loc:loc, setLoc:setLoc, askLoc:function(){askLoc(true);},
-    openPasaporte:openPasaporte, desafioHoy:desafioHoy, marcarDesafio:marcarDesafio,
+    openPasaporte:openPasaporte, pasaporteGrupal:pasaporteGrupal, desafioHoy:desafioHoy, marcarDesafio:marcarDesafio,
     confetti:confetti, golazo:golazo, compartir:compartir, SITE:SITE,
     tieneTarjeta:tieneTarjeta, activarTarjeta:activarTarjeta, tarjetaWidget:tarjetaWidget,
     levelName:function(){return levelOf(S.xp).name;}, xp:function(){return S.xp;}, titulo:tituloActual, TOOLS:TOOLS, CUENTA:CUENTA
