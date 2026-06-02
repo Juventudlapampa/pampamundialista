@@ -197,7 +197,7 @@
 
   <div class="flag-marquee"><span id="flag-mq"></span></div>
 
-  <div class="cuenta"><span class="lbl">⚽ Falta para el pitazo inicial</span><span class="num" id="cuenta-num">—</span></div>
+  <div class="cuenta"><span class="lbl">⚽ Falta para que ruede la pelota</span><span class="num" id="cuenta-num">—</span></div>
 
   <!-- PASAPORTE -->
   <div class="pass">
@@ -534,7 +534,7 @@
     function kickoff(){ if(!soundOn){ setOn(true); setTimeout(bombo,120); setTimeout(bombo,540); } window.removeEventListener('pointerdown',kickoff); window.removeEventListener('keydown',kickoff); }
     window.addEventListener('pointerdown',kickoff); window.addEventListener('keydown',kickoff);
 
-    // ===== cuenta regresiva al pitazo inicial (en vivo) =====
+    // ===== cuenta regresiva a que ruede la pelota (en vivo) =====
     const cn=document.getElementById('cuenta-num');
     if(cn){ const target=new Date('2026-06-11T16:00:00'); function tick(){ const ms=target-new Date(); if(ms<=0){ cn.textContent='¡YA RUEDA LA PELOTA!'; return; } const d=Math.floor(ms/86400000), h=Math.floor(ms/3600000)%24, mn=Math.floor(ms/60000)%60, s=Math.floor(ms/1000)%60; cn.textContent=d+'d '+h+'h '+mn+'m '+s+'s'; } tick(); setInterval(tick,1000); }
 

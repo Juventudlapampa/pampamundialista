@@ -2,6 +2,11 @@
 
 Registro de cambios del sitio. En vivo: https://juventudlapampa.github.io/pampa-juega/
 
+## 2026-06-02
+
+- **Capa fina del equipo** (24 commits): identidad argentina al 100% (fuera azul y violeta), meta-juego sin servidor (localidad + pasaporte RPG + desafío del día), colección de cromos, Trivia VERSUS local, marca institucional de la Subsecretaría, simulador con las 48 selecciones oficiales, y más. Detalle en `SYNC-2026-06-01.md`.
+- **Argentinización de la voz**: corregida la única españolada que había quedado — "pitazo inicial" → "que ruede la pelota" en el contador del hub.
+
 ## 2026-06-01
 
 Jornada grande: auditoría completa + rediseño "menos IA, más cancha argentina". 8 commits (`5fc2d7f` → `5cfd989`).
@@ -37,7 +42,7 @@ Jornada grande: auditoría completa + rediseño "menos IA, más cancha argentina
 - Fuera **azul y violeta**: paleta a **celeste Selección, dorado y amarillo relato**.
 - **Íconos propios** SVG en las 5 secciones y en las 20 tarjetas (adiós emojis).
 - Asimetría tipo álbum, **voz relator/hincha** en títulos, secciones y juegos.
-- **Banderines**, marquesina de **banderas**, **cuenta regresiva** al pitazo inicial, **papelitos** celestes y blancos.
+- **Banderines**, marquesina de **banderas**, **cuenta regresiva** a que ruede la pelota, **papelitos** celestes y blancos.
 - Datos de jugadores actualizados; bandera de Inglaterra corregida; jugadores de países no clasificados reemplazados.
 
 ### Sonido
