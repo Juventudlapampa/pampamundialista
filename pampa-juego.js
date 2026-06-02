@@ -209,7 +209,8 @@
       '<div class="pj-grid">'+grid+'</div>'+
       '<div class="pj-p-lab">LOGROS</div><div class="pj-badges">'+logrosHtml+'</div>'+
       '<div class="pj-p-lab">COLECCIÓN PAMPEANA ('+crOn+'/'+CROMOS.length+')</div><div class="pj-cromos">'+crHtml+'</div>'+
-      '<button class="pj-btn" id="pj-pass-dl">📸 COMPARTIR MI PASAPORTE</button>'+
+      '<button class="pj-btn" id="pj-pass-dl">📥 DESCARGAR MI PASAPORTE</button>'+
+      '<div style="font-size:.72rem;opacity:.82;text-align:center;margin:.35rem 0 .2rem">Bajalo como imagen y <b>subilo al formulario de inscripción</b> para entrar a los sorteos. 🎟️</div>'+
       '<button class="pj-btn" id="pj-pass-grupo" style="background:linear-gradient(135deg,#d4a82e,#f4cd60);color:#04212e">⚽ ARMAR MI EQUIPO</button>'+
       '<button class="pj-btn ghost" id="pj-pass-loc">Cambiar mi localidad</button>'+
       '</div>';
@@ -360,8 +361,10 @@
       '<input class="pj-inp" id="eq-cel" inputmode="tel" maxlength="22" placeholder="Celular del capitán" value="'+esc(saved.cel||'')+'">'+
       '<input class="pj-inp" id="eq-mail" inputmode="email" maxlength="50" placeholder="Mail del capitán" value="'+esc(saved.mail||'')+'">'+
       '<div class="pj-tjw-legal" style="font-size:.72rem;opacity:.82;margin:.2rem 0 .6rem">El cel y el mail son <b>solo para que Juventud se comunique por el concurso</b>. Los números de Tarjeta <b>se validan al entregar los premios</b>. Acá no se manda nada: queda en tu celu.</div>'+
-      '<button class="pj-btn" id="eq-priv">📄 FICHA PRIVADA (para el concurso)</button>'+
-      '<button class="pj-btn" id="eq-pub" style="background:linear-gradient(135deg,#4ade80,#22c55e)">📸 IMAGEN PÚBLICA (para redes)</button>'+
+      '<button class="pj-btn" id="eq-priv">📥 DESCARGAR FICHA PRIVADA (para el concurso)</button>'+
+      '<div style="font-size:.72rem;opacity:.82;text-align:center;margin:.35rem 0 .2rem">Esta es la que <b>subís al formulario grupal</b> (con números y contacto). No la publiques.</div>'+
+      '<button class="pj-btn" id="eq-pub" style="background:linear-gradient(135deg,#4ade80,#22c55e)">📸 DESCARGAR IMAGEN PÚBLICA (para redes)</button>'+
+      '<div style="font-size:.72rem;opacity:.82;text-align:center;margin:.35rem 0 .2rem">Sin números ni contacto: para subir a tus redes y etiquetar a '+CUENTA+'.</div>'+
       '<button class="pj-btn ghost" id="eq-cancel">Cerrar</button></div>';
     document.body.appendChild(bd);
     function collect(){

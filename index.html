@@ -182,6 +182,10 @@
   .insc-grp { background: linear-gradient(135deg, var(--gold), var(--gold-2)); color: #06140c; margin-top: 0.3rem; }
   .insc-btn:hover { filter: brightness(1.07); }
   .insc-desc { font-size: 0.82rem; opacity: 0.85; margin: 0.3rem 0 0.7rem; }
+  .flow { display: grid; gap: 0.5rem; margin: 0.7rem 0 0.4rem; }
+  .flow-step { display: flex; align-items: flex-start; gap: 0.7rem; background: rgba(0,0,0,0.35); border: 1px solid rgba(212,168,46,0.25); border-radius: 10px; padding: 0.6rem 0.8rem; }
+  .flow-step .n { flex: none; width: 1.7rem; height: 1.7rem; border-radius: 50%; background: var(--gold); color: #06140c; font-family: 'Anton', sans-serif; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; }
+  .flow-step .t { font-size: 0.9rem; line-height: 1.4; }
 </style>
 </head>
 <body>
@@ -349,7 +353,16 @@
   <!-- EL DESAFÍO -->
   <div class="block" id="concurso">
     <div class="block-title">🏅 El Desafío Pampa Mundialista</div>
-    <p>Hacé <b>misiones</b>, juntá <b>sellos</b> y entrá al <b>sorteo de premios mundialistas</b>. No se gana por azar ni por plata: se gana <b>participando</b>. Cada misión que cumplís y compartís te da un sello en tu pasaporte (mirá el de arriba 👆).</p>
+    <p>Hacé <b>misiones</b>, juntá <b>sellos</b> y entrá a los <b>sorteos mundialistas</b>. No se gana por azar ni por plata: se gana <b>participando</b>. Cada misión que cumplís y compartís te da un sello en tu pasaporte (mirá el de arriba 👆).</p>
+
+    <p style="margin:1rem 0 0.3rem"><b>👉 ¿Cómo se participa? En 5 pasos:</b></p>
+    <div class="flow">
+      <div class="flow-step"><span class="n">1</span><span class="t"><b>Jugá y juntá sellos</b> en las herramientas y misiones de arriba.</span></div>
+      <div class="flow-step"><span class="n">2</span><span class="t"><b>Completá tu pasaporte</b> (el tuyo o el de tu equipo) desde <b>🎟️ Mi Pasaporte</b>, arriba de todo.</span></div>
+      <div class="flow-step"><span class="n">3</span><span class="t"><b>Descargá tu pasaporte</b> como imagen al celu.</span></div>
+      <div class="flow-step"><span class="n">4</span><span class="t"><b>Subilo en el formulario</b> de inscripción (individual o grupal, acá abajo 👇).</span></div>
+      <div class="flow-step"><span class="n">5</span><span class="t"><b>¡Listo! Entrás a los sorteos</b> de cada fecha del Mundial. 🎉</span></div>
+    </div>
 
     <p style="margin:0.6rem 0 0.2rem"><b>El equipo sube de nivel juntando sellos entre todos:</b></p>
     <div class="niveles" id="niveles">
