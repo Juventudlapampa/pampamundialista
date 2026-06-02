@@ -101,6 +101,13 @@
   .confetti { position:fixed; top:-10px; width:9px; height:14px; z-index:200; pointer-events:none; }
   @media (max-width: 360px) { body { padding:0.5rem; } .chip { min-width:46px; } }
 .grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
+/* evolución del crack según sellos del pasaporte */
+.stage.evo1,.stage.evo2,.stage.evo3{position:relative}
+.stage.evo1{box-shadow:inset 0 0 45px rgba(117,170,219,.45)}
+.stage.evo2{box-shadow:inset 0 0 55px rgba(212,168,46,.45)}
+.stage.evo3{box-shadow:inset 0 0 70px rgba(212,168,46,.6),inset 0 0 0 3px rgba(244,205,96,.55)}
+#result-card.evo3{box-shadow:0 0 26px rgba(212,168,46,.5)}
+.evo-badge{position:absolute;top:8px;right:8px;z-index:6;font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.05em;background:rgba(0,0,0,.6);border:1px solid rgba(244,205,96,.65);color:#f4cd60;border-radius:20px;padding:.2rem .55rem;pointer-events:none}
 </style>
 </head>
 <body>
@@ -662,5 +669,20 @@ renderPreview(); refreshChips();
 <script src="../pampa-ambiente.js"></script>
 <script src="../pampa-marca.js"></script>
 <script src="../pampa-juego.js"></script>
+<script>
+/* Capa 6b: el crack evoluciona visualmente según los sellos totales del pasaporte */
+(function(){
+  function tier(){ var n=0; try{ n=JSON.parse(localStorage.getItem('pampa-juega-sellos')||'[]').length; }catch(e){} return n>=18?3:n>=10?2:n>=5?1:0; }
+  function label(t){ return t===1?'✦ EN ASCENSO':t===2?'★ CRAQUEANDO':'★★ CRACK PAMPEANO'; }
+  function apply(){ var t=tier();
+    ['stage','result-card'].forEach(function(id){ var el=document.getElementById(id); if(!el) return;
+      el.classList.remove('evo1','evo2','evo3'); var old=el.querySelector('.evo-badge'); if(old) old.remove();
+      if(t){ el.classList.add('evo'+t); var b=document.createElement('div'); b.className='evo-badge'; b.textContent=label(t); el.appendChild(b); }
+    });
+  }
+  if(document.readyState!=='loading') apply(); else document.addEventListener('DOMContentLoaded', apply);
+  setTimeout(apply, 1300); // re-aplica por si recién sumaste el sello de esta página
+})();
+</script>
 </body>
 </html>
