@@ -140,14 +140,16 @@
   .tj h2 { font-family: 'Anton', sans-serif; font-size: 1.6rem; letter-spacing: 0.04em; text-transform: uppercase; margin: 0.2rem 0 0.5rem; line-height: 1; }
   .tj h2 span { color: var(--gold); }
   .tj p { font-size: 0.9rem; line-height: 1.55; margin-bottom: 0.8rem; }
-  .tj-paths { display: grid; gap: 0.6rem; }
-  .tj-path { display: flex; align-items: center; gap: 0.7rem; background: rgba(0,0,0,0.35); border: 1px solid rgba(212,168,46,0.3); border-radius: 12px; padding: 0.8rem 1rem; text-decoration: none; color: var(--crema); transition: all 0.15s; }
-  .tj-path:hover { border-color: var(--gold); transform: translateX(3px); }
-  .tj-path .e { font-size: 1.5rem; flex: none; }
-  .tj-path .t { flex: 1; }
-  .tj-path .t b { color: var(--gold-2); display: block; font-size: 0.95rem; }
-  .tj-path .t small { opacity: 0.8; font-size: 0.8rem; }
-  .tj-path .go { font-family: 'Anton', sans-serif; color: var(--gold); font-size: 0.85rem; flex: none; }
+  .tj-opts { display: grid; gap: 0.6rem; }
+  .tj-opt { background: rgba(0,0,0,0.35); border: 1px solid rgba(212,168,46,0.3); border-radius: 12px; padding: 0.85rem 1rem; }
+  .tj-opt-head { font-family: 'Anton', sans-serif; color: var(--gold-2); font-size: 1rem; letter-spacing: 0.02em; margin-bottom: 0.35rem; line-height: 1.15; }
+  .tj-opt-desc { font-size: 0.86rem; line-height: 1.5; opacity: 0.92; margin: 0; }
+  .tj-opt-desc b { color: var(--gold); }
+  .tj-opt-list { margin: 0.4rem 0 0; padding-left: 1.1rem; font-size: 0.86rem; line-height: 1.5; opacity: 0.92; }
+  .tj-opt-list li { margin-bottom: 0.15rem; }
+  .tj-opt-list b { color: var(--gold); }
+  .tj-opt-btn { display: inline-block; margin-top: 0.6rem; background: linear-gradient(135deg, var(--gold), var(--gold-2)); color: #06140c; font-family: 'Anton', sans-serif; letter-spacing: 0.05em; text-decoration: none; padding: 0.55rem 1.1rem; border-radius: 8px; font-size: 0.9rem; }
+  .tj-opt-btn:hover { filter: brightness(1.07); }
   .tj-note { font-size: 0.8rem; opacity: 0.85; margin-top: 0.9rem; font-style: italic; line-height: 1.5; }
 
   footer { text-align: center; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(212,168,46,0.2); font-size: 0.8rem; opacity: 0.6; line-height: 1.6; }
@@ -219,12 +221,20 @@
     <div class="tj-note" style="background:rgba(212,168,46,0.1);border:1px solid rgba(212,168,46,0.35);border-radius:10px;padding:0.7rem 0.9rem;text-align:center">
       ⏳ <b>Tenés tiempo hasta el 26 de julio</b> para validar tu número. No corras: <b>podés jugar igual</b> mientras tanto. 😉
     </div>
-    <div class="tj-paths" style="margin-top:0.7rem">
-      <a class="tj-path" href="https://tarjetajoven.lapampa.gob.ar/" target="_blank" rel="noopener">
-        <div class="e">🆕</div><div class="t"><b>¿No tenés Tarjeta Joven?</b><small>Sacala <b>gratis</b> online (es el trámite de alta). Rapidísimo, de 14 a 30 años.</small></div><div class="go">Sacala gratis →</div>
-      </a>
-      <div class="tj-path" style="cursor:default;border-color:rgba(117,170,219,0.45)">
-        <div class="e">🔎</div><div class="t"><b>¿La tenés pero no sabés tu número?</b><small>Pedilo con tu <b>DNI</b> en la <b>Agencia Juvenil</b> de tu localidad, en la <b>delegación zonal del Ministerio</b>, o en la <b>Subsecretaría de Juventud</b> al <b>[TEL. SUBSE — editar]</b>.</small></div>
+    <div class="tj-opts">
+      <div class="tj-opt">
+        <div class="tj-opt-head">🆕 ¿No tenés Tarjeta Joven todavía?</div>
+        <p class="tj-opt-desc">Sacala <b>gratis</b>, es online y rapidísimo (de 14 a 30 años). Es el trámite de alta.</p>
+        <a class="tj-opt-btn" href="https://tarjetajoven.lapampa.gob.ar/" target="_blank" rel="noopener">Sacala gratis →</a>
+      </div>
+      <div class="tj-opt" style="border-color:rgba(117,170,219,0.45)">
+        <div class="tj-opt-head" style="color:var(--celeste)">🔎 ¿La tenés pero no sabés tu número?</div>
+        <p class="tj-opt-desc">Pedilo con tu <b>DNI</b> en cualquiera de estos lugares:</p>
+        <ul class="tj-opt-list">
+          <li>la <b>Agencia Juvenil</b> de tu localidad,</li>
+          <li>la <b>delegación zonal del Ministerio</b>,</li>
+          <li>o la <b>Subsecretaría de Juventud</b> (tel. <b>[TEL. SUBSE — editar]</b>).</li>
+        </ul>
       </div>
     </div>
     <div class="tj-note">El número se valida <b>de verdad</b> recién cuando se entregan los premios. Mientras tanto no guardamos ni mandamos tus datos: todo queda en tu celu. 💚</div>
