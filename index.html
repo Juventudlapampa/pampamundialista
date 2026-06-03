@@ -218,6 +218,49 @@
 
   <div class="cuenta"><span class="lbl">⚽ Falta para que ruede la pelota</span><span class="num" id="cuenta-num">—</span></div>
 
+  <!-- ===== GANCHO: para qué jugás (premio + sorteo), arriba de todo ===== -->
+  <style>
+    .ganar-hero{background:linear-gradient(135deg,rgba(212,168,46,0.18),rgba(31,122,67,0.18));border:2px solid var(--gold);border-radius:16px;padding:1.1rem 1rem 1.2rem;margin:0 0 1.2rem;text-align:center}
+    .gh-tag{font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--relato)}
+    .gh-title{font-family:'Anton',sans-serif;font-size:clamp(1.5rem,6.5vw,2.3rem);letter-spacing:0.02em;line-height:1;margin:0.3rem 0 0.5rem}
+    .gh-title span{color:var(--gold)}
+    .gh-sub{font-size:0.88rem;line-height:1.45;max-width:640px;margin:0 auto 0.85rem;opacity:0.95}
+    .gh-sub b{color:var(--gold-2)}
+    .gh-fechas{display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap;margin-bottom:0.85rem}
+    .gh-fecha{background:rgba(0,0,0,0.4);border:1px solid rgba(117,170,219,0.45);border-radius:12px;padding:0.55rem 0.6rem;min-width:116px;flex:0 1 auto}
+    .gh-fecha .ghf-n{font-family:'JetBrains Mono',monospace;font-size:0.5rem;letter-spacing:0.12em;color:var(--celeste-2);text-transform:uppercase}
+    .gh-fecha .ghf-vs{font-family:'Anton',sans-serif;font-size:0.9rem;line-height:1.1;margin-top:0.15rem}
+    .gh-fecha .ghf-when{font-family:'JetBrains Mono',monospace;font-size:0.55rem;color:rgba(244,236,216,0.72);margin-top:0.2rem}
+    .gh-fecha .ghf-prize{font-size:0.6rem;color:var(--relato);margin-top:0.25rem}
+    .gh-steps{display:flex;gap:0.4rem;justify-content:center;flex-wrap:wrap;margin-bottom:0.7rem}
+    .gh-steps span{background:rgba(0,0,0,0.35);border:1px solid rgba(244,236,216,0.18);border-radius:20px;padding:0.32rem 0.62rem;font-size:0.66rem}
+    .gh-steps b{color:var(--gold-2);font-family:'Anton',sans-serif;margin-right:0.25rem}
+    .gh-cta{display:inline-block;color:var(--celeste-2);font-family:'JetBrains Mono',monospace;font-size:0.68rem;letter-spacing:0.05em;text-decoration:none;border-bottom:1px dashed rgba(158,201,237,0.5);padding-bottom:1px}
+    @media(max-width:480px){.gh-fecha{min-width:30%;flex:1}}
+  </style>
+  <section class="ganar-hero" id="ganar">
+    <div class="gh-tag">🏆 ¿Para qué jugás?</div>
+    <h2 class="gh-title">JUGÁ, LLENÁ TU PASAPORTE Y <span>GANÁ</span></h2>
+    <p class="gh-sub">En <b>cada fecha de la Selección</b> sorteamos premios entre los que tengan el <b>pasaporte completo y subido</b>. Cuanto antes lo completás y más aguante le metés <b>compartiendo</b> (es una misión del pasaporte), en <b>más sorteos</b> entrás. No se gana por azar: se gana <b>participando</b>.</p>
+    <div class="gh-fechas" id="gh-fechas"></div>
+    <div class="gh-steps"><span><b>1</b>Llená tu pasaporte jugando</span><span><b>2</b>Subilo al formulario</span><span><b>3</b>Entrás al sorteo de esa fecha</span></div>
+    <a class="gh-cta" href="#concurso">Ver las bases y cómo se gana 👇</a>
+  </section>
+  <script>
+  (function(){
+    // ⚠️ EDITAR: poné el día/horario OFICIAL de cada fecha. Los rivales son los del grupo de Argentina (mismos del fixture del sitio).
+    const FECHAS_SELECCION = [
+      { n:'1ª fecha', flag:'🇩🇿', rival:'Argelia',  cuando:'Fase de grupos · a confirmar' },
+      { n:'2ª fecha', flag:'🇦🇹', rival:'Austria',  cuando:'Fase de grupos · a confirmar' },
+      { n:'3ª fecha', flag:'🇯🇴', rival:'Jordania', cuando:'Fase de grupos · a confirmar' }
+    ];
+    var el = document.getElementById('gh-fechas');
+    if (el) el.innerHTML = FECHAS_SELECCION.map(function(f){
+      return '<div class="gh-fecha"><div class="ghf-n">'+f.n+'</div><div class="ghf-vs">🇦🇷 ARG vs '+f.flag+' '+f.rival.toUpperCase()+'</div><div class="ghf-when">'+f.cuando+'</div><div class="ghf-prize">🎁 Sorteo de la fecha</div></div>';
+    }).join('');
+  })();
+  </script>
+
   <!-- MODO JUGADOR OFICIAL (Tarjeta Joven, arriba de todo) -->
   <section class="tj" id="modo-oficial">
     <div class="tj-tag">🎟️ Modo Jugador Oficial</div>
