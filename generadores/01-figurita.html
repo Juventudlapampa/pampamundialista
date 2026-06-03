@@ -670,6 +670,12 @@
     await new Promise(function(r){ requestAnimationFrame(function(){ requestAnimationFrame(function(){ setTimeout(r, 90); }); }); });
   }
 
+  // Bajar el canvas de forma robusta en mobile: toBlob + objectURL (el toDataURL gigante hace fallar celus de gama baja)
+  function bajarCanvas(canvas, filename){
+    function viaDataURL(){ try{ const a=document.createElement('a'); a.download=filename; a.href=canvas.toDataURL('image/png'); document.body.appendChild(a); a.click(); a.remove(); }catch(e){ alert('No se pudo bajar: '+e.message); } }
+    if(canvas.toBlob){ try{ canvas.toBlob(function(blob){ if(!blob){ viaDataURL(); return; } const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.download=filename; a.href=url; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){ URL.revokeObjectURL(url); }, 4000); }, 'image/png'); }catch(e){ viaDataURL(); } } else { viaDataURL(); }
+  }
+
   $('download').addEventListener('click', async () => {
     const node = document.getElementById('figurita');
     // Forzar dimensiones inline ANTES de capturar (override de cualquier CSS)
@@ -709,11 +715,8 @@
       }
     }).then(canvas => {
       node.setAttribute('style', origCss);
-      const link = document.createElement('a');
       const name = ($('name').value || 'figurita').toLowerCase().replace(/[^a-z0-9]+/g, '-');
-      link.download = `figurita-mundial-2026-${name}.png`;
-      link.href = canvas.toDataURL('image/png');
-      link.click();
+      bajarCanvas(canvas, `figurita-mundial-2026-${name}.png`);
     }).catch(err => {
       node.setAttribute('style', origCss);
       alert('Uh, se nos escapó la pelota. Probá de nuevo: ' + err.message);
@@ -763,10 +766,8 @@
   $('download-story').addEventListener('click', () => {
     captureFigCanvas().then(card => {
       const story = buildStory(card);
-      const link = document.createElement('a');
       const name = ($('name').value || 'figurita').toLowerCase().replace(/[^a-z0-9]+/g,'-');
-      link.download = `historia-figurita-${name}.png`;
-      link.href = story.toDataURL('image/png'); link.click();
+      bajarCanvas(story, `historia-figurita-${name}.png`);
     }).catch(e=>alert('Uh, se nos escapó la pelota. Probá de nuevo: '+e.message));
   });
 

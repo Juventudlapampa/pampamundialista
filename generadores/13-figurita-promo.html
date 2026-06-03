@@ -728,11 +728,10 @@
       }
     }).then(canvas => {
       node.setAttribute('style', origCss);
-      const link = document.createElement('a');
       const name = ($('name').value || 'figurita').toLowerCase().replace(/[^a-z0-9]/g,'-');
-      link.download = `figurita-promo-${name}.png`;
-      link.href = canvas.toDataURL('image/png');
-      link.click();
+      const fn = `figurita-promo-${name}.png`;
+      if(canvas.toBlob){ canvas.toBlob(function(b){ if(!b){ const a=document.createElement('a'); a.download=fn; a.href=canvas.toDataURL('image/png'); a.click(); return; } const u=URL.createObjectURL(b); const a=document.createElement('a'); a.download=fn; a.href=u; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){URL.revokeObjectURL(u);},4000); }, 'image/png'); }
+      else { const a=document.createElement('a'); a.download=fn; a.href=canvas.toDataURL('image/png'); a.click(); }
     }).catch(err => {
       node.setAttribute('style', origCss);
       alert('Uh, se nos escapó la pelota. Probá de nuevo: ' + err.message);
