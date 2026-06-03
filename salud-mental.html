@@ -93,6 +93,25 @@
   .flip-hint { font-size: 0.75rem; color: var(--soft); margin-top: 0.5rem; }
   .flip-back .vt { font-weight: 700; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.85; margin-bottom: 0.3rem; }
   .flip-back p { font-size: 0.92rem; line-height: 1.45; }
+
+  /* dos caminos: para vos / para acompañar */
+  .dual { display: flex; gap: 0.6rem; flex-wrap: wrap; margin: 0.2rem 0 1.8rem; }
+  .dual a { flex: 1; min-width: 210px; display: block; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 0.75rem 0.9rem; text-decoration: none; color: inherit; transition: border-color 0.15s; }
+  .dual a:hover { border-color: var(--teal); }
+  .dual a .dt { font-weight: 700; font-size: 0.95rem; }
+  .dual a .dd { font-size: 0.82rem; color: var(--soft); margin-top: 0.15rem; }
+  .parthead { margin: 2.4rem 0 0.9rem; padding-top: 1.4rem; border-top: 1px solid var(--line); }
+  .parthead.first { margin-top: 0.4rem; padding-top: 0; border-top: none; }
+  .parthead .pk { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal); font-weight: 700; }
+  .parthead h2 { font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.35rem, 5vw, 1.6rem); font-weight: 700; line-height: 1.15; margin-top: 0.15rem; }
+  /* acciones para sumarse */
+  .acciones { display: grid; gap: 0.6rem; }
+  .accion { display: flex; gap: 0.6rem; align-items: flex-start; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 0.75rem 0.9rem; }
+  .accion .ai { font-size: 1.2rem; flex: none; line-height: 1.4; }
+  .accion p { font-size: 0.9rem; }
+  .accion a { color: var(--teal); }
+  .compartir { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--teal); color: #fff; border: none; text-decoration: none; font-weight: 600; font-size: 0.9rem; padding: 0.65rem 1.05rem; border-radius: 12px; cursor: pointer; margin: 0.2rem 0 0.4rem; }
+  .compartir:hover { background: #266658; }
 </style>
 </head>
 <body>
@@ -104,6 +123,12 @@
   <p class="lead">La salud mental es parte de la salud. En algún momento, cualquiera de nosotros puede necesitar ayuda o acompañamiento.</p>
   <p class="lead2">Pedirla es un buen paso. No estás solo, no estás sola.</p>
 
+  <div class="dual">
+    <a href="#para-vos"><div class="dt">🫂 ¿La estás pasando mal?</div><div class="dd">Líneas de ayuda gratuitas, las 24 horas.</div></a>
+    <a href="#para-acompanar"><div class="dt">🤝 ¿Querés ayudar o sumarte?</div><div class="dd">Cómo acompañar a alguien y dar una mano.</div></a>
+  </div>
+
+  <div class="parthead first" id="para-vos"><div class="pk">Para vos</div><h2>Si necesitás ayuda, esto es lo primero</h2></div>
   <div class="lineas-tit">Líneas gratuitas, las 24 horas, en toda la provincia</div>
 
   <a class="linea" href="tel:132">
@@ -125,9 +150,12 @@
   </a>
 
   <p class="gratis">Tocá el número para llamar directo desde tu celular.</p>
+  <button class="compartir" id="share-recursos">📲 Compartí estos recursos</button>
+
+  <div class="parthead" id="para-acompanar"><div class="pk">Para acompañar y sumarte</div><h2>Dale una mano a quien lo necesita</h2></div>
 
   <!-- BLOQUE 2: Primeros Auxilios Psicológicos (marco OMS) -->
-  <section class="seccion">
+  <section class="seccion" style="margin-top:0">
     <div class="seccion-tit">Si alguien la está pasando mal, podés acompañar</div>
     <div class="seccion-sub">La OMS resume los <b>primeros auxilios psicológicos</b> en tres pasos simples. No hace falta ser profesional para estar presente.</div>
     <div class="pasos">
@@ -177,11 +205,35 @@
     </div>
   </section>
 
+  <!-- BLOQUE: Cómo sumarte (acciones comunitarias seguras, no clínicas) -->
+  <section class="seccion">
+    <div class="seccion-tit">Cómo sumarte</div>
+    <div class="seccion-sub">Cosas simples que ayudan, sin ser profesional ni reemplazar a nadie.</div>
+    <div class="acciones">
+      <div class="accion"><span class="ai">📲</span><p><b>Compartí estos recursos.</b> Pasá las líneas 132 y 136 a quien las pueda necesitar. Que estén a mano, salva.</p></div>
+      <div class="accion"><span class="ai">💬</span><p><b>Hablá del tema sin vueltas.</b> Romper el estigma es de todos: nombrar la salud mental con naturalidad ya ayuda.</p></div>
+      <div class="accion"><span class="ai">👂</span><p><b>Estate disponible.</b> A veces alcanza con preguntar «¿cómo andás?» de verdad y escuchar sin apurar.</p></div>
+      <div class="accion"><span class="ai">📍</span><p><b>Si organizás algo</b> en tu club, escuela o grupo, sumá el tema. En <a href="https://esconvoz.lapampa.edu.ar/salud-mental/" target="_blank" rel="noopener">Es Con Voz</a> hay materiales y contactos.</p></div>
+      <div class="accion"><span class="ai">🚨</span><p><b>Ante una señal de riesgo</b>, no lo guardes para vos: avisá a un adulto de confianza y llamá a <b>132</b> o <b>136</b>.</p></div>
+    </div>
+  </section>
+
   <div class="cierre">
     <p>Un espacio de la <b>Subsecretaría de Salud Mental y Adicciones</b> del Ministerio de Salud de La Pampa, junto con la <b>Subsecretaría de Juventud</b>.</p>
     <a class="btn-mas" href="https://esconvoz.lapampa.edu.ar/salud-mental/" target="_blank" rel="noopener">Más información y todos los contactos</a>
     <a class="ig" href="https://instagram.com/saludmentalyadiccioneslp" target="_blank" rel="noopener">📷 @saludmentalyadiccioneslp</a>
   </div>
 </div>
+<script>
+  (function(){
+    var b = document.getElementById('share-recursos'); if(!b) return;
+    var texto = 'Si vos o alguien la está pasando mal, hay ayuda gratis las 24 hs en La Pampa:\n📞 Línea 132 (consumos problemáticos)\n📞 Línea 136 (crisis)\nMás info: https://esconvoz.lapampa.edu.ar/salud-mental/';
+    b.addEventListener('click', function(){
+      if (navigator.share) { navigator.share({ title:'Líneas de ayuda · La Pampa', text:texto }).catch(function(){}); }
+      else if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(texto).then(function(){ var o=b.textContent; b.textContent='✓ Copiado para compartir'; setTimeout(function(){ b.textContent=o; }, 2200); }, function(){ alert(texto); }); }
+      else { alert(texto); }
+    });
+  })();
+</script>
 </body>
 </html>
