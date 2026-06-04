@@ -9,7 +9,7 @@
 
   // ===== Cuenta de redes (definida): @pampamundialista =====
   var CUENTA = (window.CUENTA || '@pampamundialista');
-  var SITE = 'pampamundialista.vercel.app';
+  var SITE = 'juventudes.lapampa.gob.ar';
 
   // ===== Herramientas (id = el data-id del index, para que el contador cuadre) =====
   var TOOLS = [
@@ -329,7 +329,7 @@
   }
 
   // ===== Pasaporte GRUPAL (aula, club, etc.) — todo local, sin servidor =====
-  var EQ_ROLES=['Capitán','Titular 2','Titular 3','Titular 4','Titular 5','Suplente 1','Suplente 2','Suplente 3'];
+  var EQ_ROLES=['Capitán/a','Titular 2','Titular 3','Titular 4','Titular 5','Suplente 1','Suplente 2','Suplente 3'];
   var EQ_COLS=['#75AADB','#d4a82e','#4ade80','#dc2626','#2563eb','#e8317a','#00968a'];
   function eqColor(nombre){ var h=0,s=String(nombre||'Pampa'); for(var i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))>>>0; return EQ_COLS[h%EQ_COLS.length]; }
   function eqInic(nombre){ var p=String(nombre||'').trim().split(/\s+/).filter(Boolean); return ((p[0]||'P')[0]+((p[1]||'')[0]||'')).toUpperCase(); }
@@ -347,7 +347,7 @@
       var defLoc=(i===0?(j.loc||S.loc):j.loc)||'';
       var defSel=(i===0 && (j.sel===undefined||j.sel===''))?String(miSellos):esc(j.sel!==undefined?String(j.sel):'');
       rowsHtml+='<div style="border:1px solid rgba(244,236,216,.15);border-radius:10px;padding:.5rem .6rem;margin-bottom:.5rem;background:'+(titular?'rgba(212,168,46,.06)':'rgba(255,255,255,.02)')+'">'+
-        '<div style="font-family:\'Anton\',sans-serif;font-size:.75rem;letter-spacing:.06em;color:'+(i===0?'#f4cd60':(titular?'#d4a82e':'#75AADB'))+';margin-bottom:.35rem">'+(i===0?'🅒 CAPITÁN':(titular?('⚽ '+EQ_ROLES[i]):('🔁 '+EQ_ROLES[i]+' (opcional)')))+'</div>'+
+        '<div style="font-family:\'Anton\',sans-serif;font-size:.75rem;letter-spacing:.06em;color:'+(i===0?'#f4cd60':(titular?'#d4a82e':'#75AADB'))+';margin-bottom:.35rem">'+(i===0?'🅒 CAPITÁN/A':(titular?('⚽ '+EQ_ROLES[i]):('🔁 '+EQ_ROLES[i]+' (opcional)')))+'</div>'+
         '<input class="pj-inp" id="eq-n-'+i+'" style="margin-bottom:.35rem" maxlength="32" placeholder="Nombre y apellido" value="'+esc(j.n||'').replace(/"/g,'&quot;')+'">'+
         '<div style="display:flex;gap:.4rem;margin-bottom:.35rem">'+
           '<input class="pj-inp" id="eq-num-'+i+'" style="margin:0;flex:1" inputmode="numeric" maxlength="12" placeholder="N° Tarjeta Joven" value="'+esc(j.num||'')+'">'+
@@ -359,12 +359,12 @@
     var bd=document.createElement('div'); bd.className='pj-modal-bd';
     bd.innerHTML='<div class="pj-modal"><button class="pj-x" id="eq-x">✕</button>'+
       '<div class="pj-m-tit">⚽ Mi Equipo</div>'+
-      '<div class="pj-m-sub">Armá tu <b>fútbol cinco</b>: vos de capitán + 4 titulares, y hasta 3 suplentes. Para los premios, cada integrante necesita <b>14–30 años</b> y <b>Tarjeta Joven</b>.</div>'+
+      '<div class="pj-m-sub">Armá tu <b>fútbol cinco</b>: vos de capitán/a + 4 titulares, y hasta 3 suplentes. Para los premios, cada integrante necesita <b>14–30 años</b> y <b>Tarjeta Joven</b>.</div>'+
       '<input class="pj-inp" id="eq-nombre" maxlength="36" placeholder="Nombre del equipo (ej: Los Pibes del Caldén)" value="'+esc(saved.nombre||'').replace(/"/g,'&quot;')+'">'+
       rowsHtml+
-      '<div style="font-family:\'Anton\',sans-serif;font-size:.75rem;letter-spacing:.06em;color:#4ade80;margin:.4rem 0 .35rem">📞 CONTACTO DEL CAPITÁN (solo del capitán)</div>'+
-      '<input class="pj-inp" id="eq-cel" inputmode="tel" maxlength="22" placeholder="Celular del capitán" value="'+esc(saved.cel||'')+'">'+
-      '<input class="pj-inp" id="eq-mail" inputmode="email" maxlength="50" placeholder="Mail del capitán" value="'+esc(saved.mail||'')+'">'+
+      '<div style="font-family:\'Anton\',sans-serif;font-size:.75rem;letter-spacing:.06em;color:#4ade80;margin:.4rem 0 .35rem">📞 CONTACTO DE LA CAPITANÍA (solo de quien capitanea)</div>'+
+      '<input class="pj-inp" id="eq-cel" inputmode="tel" maxlength="22" placeholder="Celular del capitán/a" value="'+esc(saved.cel||'')+'">'+
+      '<input class="pj-inp" id="eq-mail" inputmode="email" maxlength="50" placeholder="Mail del capitán/a" value="'+esc(saved.mail||'')+'">'+
       '<div class="pj-tjw-legal" style="font-size:.72rem;opacity:.82;margin:.2rem 0 .6rem">El cel y el mail son <b>solo para que Juventud se comunique por el concurso</b>. Los números de Tarjeta <b>se validan al entregar los premios</b>. Acá no se manda nada: queda en tu celu.</div>'+
       '<button class="pj-btn" id="eq-priv">📥 DESCARGAR FICHA PRIVADA (para el concurso)</button>'+
       '<div style="font-size:.72rem;opacity:.82;text-align:center;margin:.35rem 0 .2rem">Esta es la que <b>subís al formulario grupal</b> (con números y contacto). No la publiques.</div>'+
@@ -383,8 +383,8 @@
       return data;
     }
     bd.querySelector('#eq-x').onclick=bd.querySelector('#eq-cancel').onclick=function(){ collect(); bd.remove(); };
-    bd.querySelector('#eq-priv').onclick=function(){ var d=collect(); if(!d.nombre){ toast('Ponele un nombre al equipo 🏷️'); return; } if(!d.jugadores.length){ toast('Cargá al menos al capitán'); return; } renderEquipoPrivado(d); bd.remove(); };
-    bd.querySelector('#eq-pub').onclick=function(){ var d=collect(); if(!d.nombre){ toast('Ponele un nombre al equipo 🏷️'); return; } if(!d.jugadores.length){ toast('Cargá al menos al capitán'); return; } renderEquipoPublico(d); bd.remove(); };
+    bd.querySelector('#eq-priv').onclick=function(){ var d=collect(); if(!d.nombre){ toast('Ponele un nombre al equipo 🏷️'); return; } if(!d.jugadores.length){ toast('Cargá al menos al capitán/a'); return; } renderEquipoPrivado(d); bd.remove(); };
+    bd.querySelector('#eq-pub').onclick=function(){ var d=collect(); if(!d.nombre){ toast('Ponele un nombre al equipo 🏷️'); return; } if(!d.jugadores.length){ toast('Cargá al menos al capitán/a'); return; } renderEquipoPublico(d); bd.remove(); };
   }
 
   function teamCanvas(card, filename, bg, okMsg){
@@ -409,7 +409,7 @@
         '<div style="flex:1;text-align:center;background:rgba(212,168,46,.14);border-radius:8px;padding:.5rem"><div style="font-family:\'Anton\',sans-serif;font-size:1.6rem;color:#f4cd60;line-height:1">'+d.total+'</div><div style="font-size:.55rem;letter-spacing:.12em;opacity:.85">SELLOS DEL EQUIPO</div></div>'+
         '<div style="flex:1.4;text-align:center;background:rgba(74,222,128,.12);border-radius:8px;padding:.5rem"><div style="font-family:\'Anton\',sans-serif;font-size:1rem;color:#4ade80;line-height:1.1">'+d.nivel.e+' '+esc(d.nivel.n)+'</div><div style="font-size:.55rem;letter-spacing:.12em;opacity:.85">NIVEL DEL EQUIPO</div></div>'+
       '</div>'+
-      '<div style="margin:.4rem 0 .6rem;padding:.6rem .7rem;background:rgba(0,0,0,.3);border-radius:8px;font-size:.85rem">📞 <b>Contacto del capitán:</b> '+(esc(d.cel)||'—')+' · '+(esc(d.mail)||'—')+'</div>'+
+      '<div style="margin:.4rem 0 .6rem;padding:.6rem .7rem;background:rgba(0,0,0,.3);border-radius:8px;font-size:.85rem">📞 <b>Contacto de la capitanía:</b>'+(esc(d.cel)||'—')+' · '+(esc(d.mail)||'—')+'</div>'+
       '<div style="font-size:.66rem;line-height:1.45;color:rgba(244,236,216,.75)">🔒 <b>Ficha privada:</b> presentala por el canal privado del concurso. <b>No la publiques en redes</b> (tiene números de Tarjeta y datos de contacto). El cel y el mail son solo para que Juventud se comunique por el concurso. Los números se validan al entregar los premios.</div>';
     teamCanvas(card,'equipo-'+(d.nombre.toLowerCase().replace(/[^a-z0-9]+/g,'-')||'pampa')+'-PRIVADA.png','#081b10','📄 Ficha privada lista. Presentala por el canal privado del concurso (no la publiques).');
   }
@@ -426,7 +426,7 @@
       '<div style="font-size:1rem;margin:.3rem 0 .2rem">👥 '+d.jugadores.length+' jugador'+(d.jugadores.length!==1?'es':'')+' · 🎟️ <b>'+d.total+' sellos</b></div>'+
       '<div style="font-size:1.05rem;margin:.2rem 0 .35rem;color:'+col+';font-family:\'Anton\',sans-serif">'+d.nivel.e+' '+esc(d.nivel.n)+'</div>'+
       (locs.length?('<div style="font-size:.85rem;opacity:.92;line-height:1.4;margin-top:.15rem">📍 '+locs.length+' localidad'+(locs.length!==1?'es':'')+': <b>'+locs.map(esc).join(' · ')+'</b></div>'):'')+
-      '<div style="margin-top:1rem;font-size:.66rem;font-family:monospace;letter-spacing:.1em;color:rgba(244,236,216,.75)">'+CUENTA+' · #PampaMundialista<br>pampamundialista.vercel.app</div>';
+      '<div style="margin-top:1rem;font-size:.66rem;font-family:monospace;letter-spacing:.1em;color:rgba(244,236,216,.75)">'+CUENTA+' · #PampaMundialista<br>juventudes.lapampa.gob.ar</div>';
     teamCanvas(card,'equipo-'+(d.nombre.toLowerCase().replace(/[^a-z0-9]+/g,'-')||'pampa')+'.png','#081b10','📸 ¡Imagen del equipo lista! Subila y etiquetá a '+CUENTA);
     var cap='Armamos «'+d.nombre+'» para Pampa Mundialista ⚽🔥 '+CUENTA+' #PampaMundialista';
     if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(cap).then(function(){},function(){}); }
