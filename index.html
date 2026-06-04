@@ -19,23 +19,32 @@
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
-    --bg: #050d08; --verde: #0d3b26; --verde-fluo: #4ade80;
-    --gold: #d4a82e; --gold-2: #f4cd60; --crema: #f4ecd8;
-    --rojo: #dc2626; --celeste: #75AADB; --celeste-2: #9ec9ed;
-    --relato: #ffd43b; --cesped: #1f7a43;
-    /* paleta de marca (logos Pampa Mundialista) */
-    --navy: #16243F; --azul-brillante: #2BA8E0; --celeste-claro: #75AADB; --blanco: #ffffff;
+    /* paleta unificada Pampa Mundialista: navy fondo · celeste acento · blanco texto */
+    --bg: #16243F; --verde: #1e3657; --verde-fluo: #34a3df;
+    --gold: #2f9fd4; --gold-2: #6cc0ec; --crema: #eef4fa;
+    --rojo: #e0564e; --celeste: #2f9fd4; --celeste-2: #6cc0ec;
+    --relato: #6cc0ec; --cesped: #2a4a72;
+    --navy: #16243F; --azul-brillante: #2f9fd4; --celeste-claro: #75AADB; --blanco: #ffffff;
   }
   .hero-logo{display:block;margin:0.5rem auto 0.7rem;width:min(290px,74vw);height:auto;filter:drop-shadow(0 6px 22px rgba(43,168,224,0.22))}
   .visually-hidden{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
   .footer-sol{display:block;margin:0.2rem auto 0.9rem;width:104px;height:auto;opacity:0.9}
+  /* en Pampa Mundialista el wordmark JUVENTUDES va sobrio (no arcoíris) */
+  .pm-word span, .pm-word{color:#eef4fa !important;text-shadow:none !important}
+  /* unifico el modal del pasaporte (pampa-juego.js) a celeste */
+  .pj-modal{border-color:#2f9fd4 !important}
+  .pj-m-tit,.pj-p-lvl,.pj-p-lab,.pj-tjw-t,.pj-vip-t,.pj-p-title,.pj-toast b{color:#6cc0ec !important}
+  .pj-badge{color:#6cc0ec !important;background:rgba(47,159,212,.15)!important;border-color:rgba(47,159,212,.5)!important}
+  .pj-xpfill{background:linear-gradient(90deg,#2f9fd4,#6cc0ec)!important}
+  #pj-pass-grupo{background:linear-gradient(135deg,#2f9fd4,#6cc0ec)!important;color:#04212e!important}
+  .pj-vip-on{border-color:#2f9fd4 !important;background:linear-gradient(135deg,rgba(47,159,212,.16),rgba(108,192,236,.05))!important}
   body {
     font-family: 'DM Sans', sans-serif;
-    background: #06140c;
-    background-image: repeating-linear-gradient(90deg, rgba(31,122,67,0.12) 0 64px, rgba(8,24,14,0.12) 64px 128px);
+    background: #16243F;
+    background-image: radial-gradient(1200px 600px at 50% -10%, #1d2f4f 0%, #16243F 60%);
     background-attachment: fixed; min-height: 100vh; color: var(--crema); padding: 1.5rem 1rem; position: relative;
   }
-  body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index:0; mix-blend-mode:overlay; opacity:0.55;
+  body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index:0; mix-blend-mode:overlay; opacity:0.22;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E"); }
   .container { max-width: 1000px; margin: 0 auto; position: relative; z-index: 1; }
   header { text-align: center; margin-bottom: 1.5rem; }
@@ -44,10 +53,10 @@
   .brand-word { font-family: 'Archivo Black', sans-serif; font-size: clamp(1.5rem, 6vw, 2.3rem); letter-spacing: 0.01em; line-height: 1; white-space: nowrap; }
   .brand-inst { font-family: 'JetBrains Mono', monospace; font-size: 0.66rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--crema); opacity: 0.82; }
   h1 { font-family: 'Anton', sans-serif; font-size: clamp(2.6rem, 11vw, 5rem); letter-spacing: 0.04em; text-transform: uppercase; line-height: 0.92; }
-  h1 span { color: var(--gold); text-shadow: 0 0 30px rgba(212,168,46,0.4); }
+  h1 span { color: var(--gold); text-shadow: 0 0 30px rgba(47,159,212,0.4); }
   .subtitle { font-size: 1rem; opacity: 0.9; max-width: 640px; margin: 0.8rem auto 0; line-height: 1.5; }
   .stat-strip { display: flex; justify-content: center; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap; }
-  .stat-pill { background: rgba(212,168,46,0.15); border: 1px solid rgba(212,168,46,0.3); padding: 0.35rem 0.8rem; border-radius: 20px; font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em; }
+  .stat-pill { background: rgba(47,159,212,0.15); border: 1px solid rgba(47,159,212,0.3); padding: 0.35rem 0.8rem; border-radius: 20px; font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em; }
 
   /* ===== CLIMA MUNDIALISTA ===== */
   .bunting { display:flex; justify-content:center; flex-wrap:nowrap; overflow:hidden; height:20px; margin:0 0 0.5rem; }
@@ -63,13 +72,13 @@
   .snd-fab .pulse { position:absolute; inset:-2px; border-radius:50%; border:2px solid var(--celeste); animation:pulsefab 1.7s ease-out infinite; pointer-events:none; }
   .snd-fab.on .pulse { display:none; }
   @keyframes pulsefab { 0%{transform:scale(1);opacity:0.55} 100%{transform:scale(1.55);opacity:0} }
-  .cuenta { display:flex; align-items:center; justify-content:center; gap:0.7rem; flex-wrap:wrap; background:linear-gradient(90deg, rgba(117,170,219,0.16), rgba(255,212,59,0.12)); border:1px solid rgba(117,170,219,0.4); border-radius:12px; padding:0.6rem 0.9rem; margin:0 auto 1.2rem; max-width:560px; transform:rotate(-0.5deg); }
+  .cuenta { display:flex; align-items:center; justify-content:center; gap:0.7rem; flex-wrap:wrap; background:linear-gradient(90deg, rgba(117,170,219,0.16), rgba(47,159,212,0.12)); border:1px solid rgba(117,170,219,0.4); border-radius:12px; padding:0.6rem 0.9rem; margin:0 auto 1.2rem; max-width:560px; transform:rotate(-0.5deg); }
   .cuenta .lbl { font-family:'JetBrains Mono',monospace; font-size:0.62rem; letter-spacing:0.14em; color:var(--celeste-2); text-transform:uppercase; }
   .cuenta .num { font-family:'Anton',sans-serif; font-size:1.2rem; color:var(--relato); letter-spacing:0.05em; }
   .papelito { position:fixed; top:-10vh; width:8px; height:13px; z-index:90; pointer-events:none; border-radius:1px; box-shadow:0 1px 2px rgba(0,0,0,0.3); }
 
   /* PASAPORTE */
-  .pass { background: rgba(0,0,0,0.45); border: 1px solid rgba(212,168,46,0.3); border-radius: 14px; padding: 0.9rem 1.1rem; margin: 1.2rem 0; display: flex; align-items: center; gap: 0.9rem; }
+  .pass { background: rgba(0,0,0,0.45); border: 1px solid rgba(47,159,212,0.3); border-radius: 14px; padding: 0.9rem 1.1rem; margin: 1.2rem 0; display: flex; align-items: center; gap: 0.9rem; }
   .pass-ic { font-size: 1.8rem; }
   .pass-body { flex: 1; }
   .pass-txt { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; letter-spacing: 0.05em; }
@@ -78,12 +87,12 @@
   .pass-fill { height: 100%; width: 0; background: linear-gradient(90deg, var(--verde-fluo), var(--gold)); transition: width 0.6s; }
   .pass-reset { flex: none; background: rgba(220,38,38,0.12); border: 1px solid rgba(220,38,38,0.45); color: #f1b4b4; border-radius: 9px; padding: 0.4rem 0.7rem; font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; letter-spacing: 0.06em; cursor: pointer; transition: background 0.15s, color 0.15s; }
   .pass-reset:hover { background: rgba(220,38,38,0.25); color: #fff; }
-  .pass-reset.ok { background: rgba(74,222,128,0.18); border-color: rgba(74,222,128,0.5); color: var(--verde-fluo); }
+  .pass-reset.ok { background: rgba(47,159,212,0.18); border-color: rgba(47,159,212,0.5); color: var(--verde-fluo); }
   @media (max-width: 560px) { .pass { flex-wrap: wrap; } .pass-reset { width: 100%; text-align: center; } }
 
   /* DESAFÍO DEL DÍA + MI PASAPORTE */
   .pj-row { display:flex; gap:0.7rem; align-items:stretch; flex-wrap:wrap; margin: 0 0 1.2rem; }
-  .pj-dia { flex:1; min-width:240px; background:linear-gradient(135deg, rgba(31,122,67,0.25), rgba(212,168,46,0.12)); border:2px solid var(--cesped); border-radius:14px; padding:0.8rem 1rem; transform:rotate(-0.4deg); }
+  .pj-dia { flex:1; min-width:240px; background:linear-gradient(135deg, rgba(22,36,63,0.25), rgba(47,159,212,0.12)); border:2px solid var(--cesped); border-radius:14px; padding:0.8rem 1rem; transform:rotate(-0.4deg); }
   .pj-dia-tag { font-family:'JetBrains Mono',monospace; font-size:0.6rem; letter-spacing:0.14em; color:var(--relato); text-transform:uppercase; }
   .pj-dia-tit { font-family:'Anton',sans-serif; font-size:1.25rem; color:var(--crema); line-height:1; margin:0.25rem 0; }
   .pj-dia-desc { font-size:0.82rem; opacity:0.9; line-height:1.35; }
@@ -91,9 +100,9 @@
   .pj-dia-go { background:var(--celeste); color:#04212e; text-decoration:none; font-family:'Anton',sans-serif; letter-spacing:0.05em; font-size:0.85rem; padding:0.4rem 0.8rem; border-radius:8px; }
   .pj-dia-mark { background:transparent; border:1px solid rgba(244,236,216,0.4); color:var(--crema); border-radius:8px; padding:0.4rem 0.7rem; font-family:'JetBrains Mono',monospace; font-size:0.66rem; cursor:pointer; }
   .pj-dia-done { color:var(--verde-fluo); font-family:'JetBrains Mono',monospace; font-size:0.72rem; }
-  .pj-pass-btn { flex:none; background:linear-gradient(135deg, var(--gold), var(--gold-2)); color:#000; border:none; border-radius:14px; padding:0.8rem 1rem; font-family:'Anton',sans-serif; letter-spacing:0.05em; font-size:1rem; cursor:pointer; box-shadow:0 5px 0 #927200; }
+  .pj-pass-btn { flex:none; background:linear-gradient(135deg, var(--gold), var(--gold-2)); color:#000; border:none; border-radius:14px; padding:0.8rem 1rem; font-family:'Anton',sans-serif; letter-spacing:0.05em; font-size:1rem; cursor:pointer; box-shadow:0 5px 0 #1a6a9e; }
   .pj-pass-btn small { display:block; font-family:'JetBrains Mono',monospace; font-weight:400; font-size:0.58rem; letter-spacing:0.05em; opacity:0.8; margin-top:0.2rem; }
-  .pj-pass-btn:active { transform:translateY(3px); box-shadow:0 2px 0 #927200; }
+  .pj-pass-btn:active { transform:translateY(3px); box-shadow:0 2px 0 #1a6a9e; }
   @media (max-width: 560px) { .pj-pass-btn { width:100%; } }
 
   /* PUERTAS */
@@ -113,7 +122,7 @@
   @keyframes fade { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
 
   .grid-tools { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); gap: 0.7rem; }
-  .tool-card { background: rgba(0,0,0,0.4); border: 1px solid rgba(212,168,46,0.25); border-radius: 12px; padding: 1rem; text-decoration: none; color: var(--crema); transition: all 0.18s; display: flex; flex-direction: column; gap: 0.35rem; position: relative; }
+  .tool-card { background: rgba(0,0,0,0.4); border: 1px solid rgba(47,159,212,0.25); border-radius: 12px; padding: 1rem; text-decoration: none; color: var(--crema); transition: all 0.18s; display: flex; flex-direction: column; gap: 0.35rem; position: relative; }
   .grid-tools .tool-card:nth-child(2n) { transform: rotate(-0.6deg); }
   .grid-tools .tool-card:nth-child(3n) { transform: rotate(0.7deg); }
   .tool-card:hover { transform: translateY(-3px) rotate(0deg) !important; border-color: var(--ac, var(--gold)); box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
@@ -124,29 +133,29 @@
   .tool-name { font-family: 'Anton', sans-serif; font-size: 1.05rem; letter-spacing: 0.03em; text-transform: uppercase; line-height: 1.05; }
   .tool-desc { font-size: 0.76rem; opacity: 0.78; line-height: 1.35; }
   .tag-new { display: inline-block; background: var(--rojo); color: #fff; font-family: 'Anton', sans-serif; font-size: 0.55rem; padding: 1px 6px; border-radius: 4px; letter-spacing: 0.12em; margin-left: 0.3rem; vertical-align: middle; }
-  .tag-esi { display: inline-block; background: #16a34a; color: #fff; font-family: 'Anton', sans-serif; font-size: 0.55rem; padding: 1px 6px; border-radius: 4px; letter-spacing: 0.12em; margin-left: 0.3rem; vertical-align: middle; }
+  .tag-esi { display: inline-block; background: #2f9fd4; color: #06222e; font-family: 'Anton', sans-serif; font-size: 0.55rem; padding: 1px 6px; border-radius: 4px; letter-spacing: 0.12em; margin-left: 0.3rem; vertical-align: middle; }
 
   /* SECCIONES */
-  .block { background: rgba(0,0,0,0.4); border: 1px solid rgba(212,168,46,0.25); border-radius: 16px; padding: 1.3rem; margin-top: 1.6rem; }
+  .block { background: rgba(0,0,0,0.4); border: 1px solid rgba(47,159,212,0.25); border-radius: 16px; padding: 1.3rem; margin-top: 1.6rem; }
   .block-title { font-family: 'Anton', sans-serif; font-size: 1.4rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
   .block p { font-size: 0.9rem; line-height: 1.55; opacity: 0.92; margin-bottom: 0.6rem; }
   .block p b { color: var(--gold-2); }
 
   .part-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.8rem 0; }
-  .part-chip { background: rgba(0,0,0,0.4); border: 2px solid rgba(212,168,46,0.3); border-radius: 10px; padding: 0.55rem 0.9rem; cursor: pointer; font-family: inherit; color: var(--crema); font-size: 0.85rem; }
-  .part-chip.on { border-color: var(--verde-fluo); background: rgba(74,222,128,0.15); color: var(--verde-fluo); }
-  .part-out { font-size: 0.88rem; line-height: 1.5; background: rgba(74,222,128,0.08); border-left: 3px solid var(--verde-fluo); padding: 0.7rem 0.9rem; border-radius: 8px; min-height: 1rem; }
+  .part-chip { background: rgba(0,0,0,0.4); border: 2px solid rgba(47,159,212,0.3); border-radius: 10px; padding: 0.55rem 0.9rem; cursor: pointer; font-family: inherit; color: var(--crema); font-size: 0.85rem; }
+  .part-chip.on { border-color: var(--verde-fluo); background: rgba(47,159,212,0.15); color: var(--verde-fluo); }
+  .part-out { font-size: 0.88rem; line-height: 1.5; background: rgba(47,159,212,0.08); border-left: 3px solid var(--verde-fluo); padding: 0.7rem 0.9rem; border-radius: 8px; min-height: 1rem; }
   .bases { font-size: 0.82rem; line-height: 1.6; opacity: 0.88; margin-top: 0.8rem; }
   .bases li { margin-left: 1.1rem; margin-bottom: 0.2rem; }
 
   /* TARJETA JOVEN */
-  .tj { background: linear-gradient(135deg, rgba(212,168,46,0.18), rgba(13,59,38,0.5)); border: 2px solid var(--gold); border-radius: 16px; padding: 1.4rem; margin-top: 1.6rem; }
+  .tj { background: linear-gradient(135deg, rgba(47,159,212,0.18), rgba(13,59,38,0.5)); border: 2px solid var(--gold); border-radius: 16px; padding: 1.4rem; margin-top: 1.6rem; }
   .tj-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 0.2em; color: var(--gold); text-transform: uppercase; }
   .tj h2 { font-family: 'Anton', sans-serif; font-size: 1.6rem; letter-spacing: 0.04em; text-transform: uppercase; margin: 0.2rem 0 0.5rem; line-height: 1; }
   .tj h2 span { color: var(--gold); }
   .tj p { font-size: 0.9rem; line-height: 1.55; margin-bottom: 0.8rem; }
   .tj-opts { display: grid; gap: 0.6rem; }
-  .tj-opt { background: rgba(0,0,0,0.35); border: 1px solid rgba(212,168,46,0.3); border-radius: 12px; padding: 0.85rem 1rem; }
+  .tj-opt { background: rgba(0,0,0,0.35); border: 1px solid rgba(47,159,212,0.3); border-radius: 12px; padding: 0.85rem 1rem; }
   .tj-opt-head { font-family: 'Anton', sans-serif; color: var(--gold-2); font-size: 1rem; letter-spacing: 0.02em; margin-bottom: 0.35rem; line-height: 1.15; }
   .tj-opt-desc { font-size: 0.86rem; line-height: 1.5; opacity: 0.92; margin: 0; }
   .tj-opt-desc b { color: var(--gold); }
@@ -158,13 +167,13 @@
   .tj-opt-btn.wa { background: linear-gradient(135deg, #25D366, #1da851); color: #06140c; }
   .tj-note { font-size: 0.8rem; opacity: 0.85; margin-top: 0.9rem; font-style: italic; line-height: 1.5; }
 
-  footer { text-align: center; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(212,168,46,0.2); font-size: 0.8rem; opacity: 0.6; line-height: 1.6; }
+  footer { text-align: center; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(47,159,212,0.2); font-size: 0.8rem; opacity: 0.6; line-height: 1.6; }
   footer a { color: var(--gold); }
 
   /* NIVELES */
   .niveles { display: flex; gap: 0.5rem; margin: 0.9rem 0; }
-  .nivel { flex: 1; text-align: center; background: rgba(0,0,0,0.4); border: 2px solid rgba(212,168,46,0.2); border-radius: 10px; padding: 0.6rem 0.3rem; transition: all 0.25s; }
-  .nivel.on { border-color: var(--gold); background: rgba(212,168,46,0.15); box-shadow: 0 0 14px rgba(212,168,46,0.25); }
+  .nivel { flex: 1; text-align: center; background: rgba(0,0,0,0.4); border: 2px solid rgba(47,159,212,0.2); border-radius: 10px; padding: 0.6rem 0.3rem; transition: all 0.25s; }
+  .nivel.on { border-color: var(--gold); background: rgba(47,159,212,0.15); box-shadow: 0 0 14px rgba(47,159,212,0.25); }
   .nivel .medal { font-size: 1.7rem; line-height: 1; filter: grayscale(1) opacity(0.4); transition: all 0.25s; }
   .nivel.on .medal { filter: none; }
   .nivel .nivel-name { font-family: 'Anton', sans-serif; font-size: 0.85rem; letter-spacing: 0.05em; margin-top: 0.2rem; }
@@ -172,19 +181,19 @@
 
   /* MISIONES DE CREACIÓN */
   .mis-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: 0.7rem; margin-top: 0.9rem; }
-  .mision { background: rgba(0,0,0,0.4); border: 1px solid rgba(74,222,128,0.25); border-radius: 12px; padding: 1rem; display: flex; flex-direction: column; gap: 0.4rem; }
+  .mision { background: rgba(0,0,0,0.4); border: 1px solid rgba(47,159,212,0.25); border-radius: 12px; padding: 1rem; display: flex; flex-direction: column; gap: 0.4rem; }
   .mision.wpp { border-color: rgba(37,211,102,0.4); }
   .mis-top { display: flex; align-items: center; gap: 0.5rem; }
   .mis-ic { font-size: 1.5rem; }
   .mis-name { font-family: 'Anton', sans-serif; font-size: 1rem; letter-spacing: 0.03em; text-transform: uppercase; line-height: 1; }
-  .mis-sello { margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--gold-2); border: 1px solid rgba(212,168,46,0.4); border-radius: 20px; padding: 0.15rem 0.5rem; white-space: nowrap; }
+  .mis-sello { margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--gold-2); border: 1px solid rgba(47,159,212,0.4); border-radius: 20px; padding: 0.15rem 0.5rem; white-space: nowrap; }
   .mis-desc { font-size: 0.8rem; opacity: 0.82; line-height: 1.4; }
-  .mis-btn { margin-top: auto; text-decoration: none; text-align: center; background: rgba(74,222,128,0.15); border: 1px solid var(--verde-fluo); color: var(--verde-fluo); border-radius: 8px; padding: 0.5rem; font-family: 'Anton', sans-serif; letter-spacing: 0.05em; font-size: 0.8rem; cursor: pointer; }
+  .mis-btn { margin-top: auto; text-decoration: none; text-align: center; background: rgba(47,159,212,0.15); border: 1px solid var(--verde-fluo); color: var(--verde-fluo); border-radius: 8px; padding: 0.5rem; font-family: 'Anton', sans-serif; letter-spacing: 0.05em; font-size: 0.8rem; cursor: pointer; }
   .mis-btn.wpp { background: rgba(37,211,102,0.18); border-color: #25d366; color: #5af58e; }
   .mis-btn:hover { filter: brightness(1.2); }
   .desafio-cta { display: block; text-align: center; background: linear-gradient(135deg, var(--gold), var(--gold-2)); color: #06140c; text-decoration: none; font-family: 'Anton', sans-serif; letter-spacing: 0.08em; padding: 0.9rem; border-radius: 10px; margin-top: 1rem; text-transform: uppercase; }
   .bases-btn { display: block; text-align: center; background: rgba(0,0,0,0.35); color: var(--gold); text-decoration: none; font-family: 'Anton', sans-serif; letter-spacing: 0.08em; padding: 0.75rem; border-radius: 10px; margin-top: 0.6rem; text-transform: uppercase; border: 1px solid var(--gold); }
-  .bases-btn:hover { background: rgba(212,168,46,0.12); }
+  .bases-btn:hover { background: rgba(47,159,212,0.12); }
   .ayuda-link { display: inline-block; margin-top: 1rem; color: #a7d8c9; text-decoration: none; font-size: 0.86rem; background: rgba(47,125,107,0.18); border: 1px solid rgba(167,216,201,0.4); border-radius: 999px; padding: 0.45rem 1rem; }
   .ayuda-link:hover { background: rgba(47,125,107,0.3); color: #d4efe7; }
   .ayuda-footer { display: inline-block; margin-top: 0.9rem; color: #a7d8c9; text-decoration: none; font-weight: 600; font-size: 0.9rem; border: 1px solid rgba(167,216,201,0.45); border-radius: 999px; padding: 0.45rem 1rem; }
@@ -195,7 +204,7 @@
   .insc-btn:hover { filter: brightness(1.07); }
   .insc-desc { font-size: 0.82rem; opacity: 0.85; margin: 0.3rem 0 0.7rem; }
   .flow { display: grid; gap: 0.5rem; margin: 0.7rem 0 0.4rem; }
-  .flow-step { display: flex; align-items: flex-start; gap: 0.7rem; background: rgba(0,0,0,0.35); border: 1px solid rgba(212,168,46,0.25); border-radius: 10px; padding: 0.6rem 0.8rem; }
+  .flow-step { display: flex; align-items: flex-start; gap: 0.7rem; background: rgba(0,0,0,0.35); border: 1px solid rgba(47,159,212,0.25); border-radius: 10px; padding: 0.6rem 0.8rem; }
   .flow-step .n { flex: none; width: 1.7rem; height: 1.7rem; border-radius: 50%; background: var(--gold); color: #06140c; font-family: 'Anton', sans-serif; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; }
   .flow-step .t { font-size: 0.9rem; line-height: 1.4; }
 </style>
@@ -205,7 +214,7 @@
   <div class="bunting" id="bunting"></div>
   <header>
     <div class="brand-lockup">
-      <span class="brand-word" aria-label="JUVENTUDES"><span style="color:#9B3DAA">J</span><span style="color:#2B3A8F">U</span><span style="color:#00968A">V</span><span style="color:#5CB83A">E</span><span style="color:#F5C400">N</span><span style="color:#F58220">T</span><span style="color:#E03A2F">U</span><span style="color:#E8317A">D</span><span style="color:#5CB83A">E</span><span style="color:#2BAADC">S</span></span>
+      <span class="brand-word" aria-label="JUVENTUDES" style="color:#ffffff">JUVENTUDES</span>
       <span class="brand-inst">Subsecretaría de Juventud · La Pampa</span>
     </div>
     <img class="hero-logo" src="assets/logo-copa.png" alt="Pampa Mundialista — Coronados de gloria vivamos" width="448" height="518" fetchpriority="high">
@@ -226,7 +235,7 @@
 
   <!-- ===== GANCHO: para qué jugás (premio + sorteo) ===== -->
   <style>
-    .ganar-hero{background:linear-gradient(135deg,rgba(212,168,46,0.18),rgba(31,122,67,0.18));border:2px solid var(--gold);border-radius:16px;padding:1.1rem 1rem 1.2rem;margin:0 0 1.2rem;text-align:center}
+    .ganar-hero{background:linear-gradient(135deg,rgba(47,159,212,0.18),rgba(22,36,63,0.18));border:2px solid var(--gold);border-radius:16px;padding:1.1rem 1rem 1.2rem;margin:0 0 1.2rem;text-align:center}
     .gh-tag{font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--relato)}
     .gh-title{font-family:'Anton',sans-serif;font-size:clamp(1.5rem,6.5vw,2.3rem);letter-spacing:0.02em;line-height:1;margin:0.3rem 0 0.5rem}
     .gh-title span{color:var(--gold)}
@@ -246,7 +255,7 @@
     .gh-mas b{color:var(--gold-2)}
     .gh-bases{display:block;margin-top:0.55rem;color:var(--gold-2);font-family:'JetBrains Mono',monospace;font-size:0.64rem;letter-spacing:0.04em;text-decoration:none;opacity:0.92}
     .gh-hooks{display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap;max-width:640px;margin:0 auto 0.9rem}
-    .gh-hook{flex:1 1 0;min-width:150px;max-width:300px;border-radius:12px;padding:0.7rem 0.8rem;text-align:left;text-decoration:none;color:inherit;display:block;background:rgba(212,168,46,0.1);border:1px solid rgba(212,168,46,0.42);transition:transform .12s,box-shadow .12s}
+    .gh-hook{flex:1 1 0;min-width:150px;max-width:300px;border-radius:12px;padding:0.7rem 0.8rem;text-align:left;text-decoration:none;color:inherit;display:block;background:rgba(47,159,212,0.1);border:1px solid rgba(47,159,212,0.42);transition:transform .12s,box-shadow .12s}
     .gh-hook:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,0.3)}
     .gh-hook .ghh-ic{font-size:1.4rem;line-height:1}
     .gh-hook .ghh-t{font-family:'Anton',sans-serif;font-size:1rem;letter-spacing:0.02em;margin-top:0.2rem;color:var(--gold-2)}
@@ -310,7 +319,7 @@
     <h2>Validá tu <span>Tarjeta Joven</span> y jugá por los premios</h2>
     <p>Jugar es <b>libre y sin registro</b>. Si tenés <b>Tarjeta Joven</b> (14 a 30 años) y validás tu número, activás el <b>Modo Jugador Oficial</b>: tus cartas se ponen <b>doradas</b> ✨ y <b>duplicás tus chances en el sorteo</b>.</p>
     <div id="pj-tarjeta" style="margin:0.7rem 0 0.9rem"></div>
-    <div class="tj-note" style="background:rgba(212,168,46,0.1);border:1px solid rgba(212,168,46,0.35);border-radius:10px;padding:0.7rem 0.9rem;text-align:center">
+    <div class="tj-note" style="background:rgba(47,159,212,0.1);border:1px solid rgba(47,159,212,0.35);border-radius:10px;padding:0.7rem 0.9rem;text-align:center">
       ⏳ <b>Son dos plazos distintos:</b> validás tu Tarjeta Joven (<b>hasta el 26 de julio</b>) para poder cobrar si ganás, y entrás a los <b>sorteos</b> completando y subiendo tu pasaporte <b>en cada fecha</b> de la Selección. <b>Podés jugar y sumar sellos desde ya.</b> 😉
     </div>
     <div class="tj-opts">
@@ -319,7 +328,7 @@
         <p class="tj-opt-desc">Sacala <b>gratis</b>, es online y rapidísimo (de 14 a 30 años). Es el trámite de alta.</p>
         <a class="tj-opt-btn" href="https://tarjetajoven.lapampa.gob.ar/" target="_blank" rel="noopener">Sacala gratis →</a>
       </div>
-      <div class="tj-opt" style="border-color:rgba(74,222,128,0.45)">
+      <div class="tj-opt" style="border-color:rgba(47,159,212,0.45)">
         <div class="tj-opt-head" style="color:var(--verde-fluo)">🔎 ¿No sabés tu número, lo querés actualizar o pedir la tarjeta?</div>
         <p class="tj-opt-desc">Mandanos tu <b>DNI</b> por WhatsApp y te pasamos tu número. Sirve también para <b>actualizar datos</b> o <b>pedir la Tarjeta</b>.</p>
         <a class="tj-opt-btn wa" href="https://wa.me/5492954801601?text=%C2%A1Hola%21%20Para%20jugar%20en%20Pampa%20Mundialista%20quiero%20pedir%20o%20actualizar%20mi%20n%C3%BAmero%20de%20Tarjeta%20Joven.%20Mi%20DNI%20es%3A%20" target="_blank" rel="noopener">📲 Escribir a la Subse · 2954 80-1601</a>
@@ -453,7 +462,7 @@
   <div class="block" id="concurso">
     <div class="block-title">🏅 El Desafío Pampa Mundialista</div>
     <p>Hacé <b>misiones</b>, juntá <b>sellos</b> y entrá a los <b>sorteos mundialistas</b> de cada fecha. Cada misión que cumplís y compartís te da un sello en tu pasaporte (mirá el de arriba 👆).</p>
-    <div class="part-out" style="border-left-color:var(--verde-fluo);background:rgba(74,222,128,0.1);font-weight:600">🏅 Acá se gana <b>participando</b>: ni por azar, ni por plata, ni por acertar resultados. Cada misión suma un sello, y con el pasaporte completo entrás a los sorteos.</div>
+    <div class="part-out" style="border-left-color:var(--verde-fluo);background:rgba(47,159,212,0.1);font-weight:600">🏅 Acá se gana <b>participando</b>: ni por azar, ni por plata, ni por acertar resultados. Cada misión suma un sello, y con el pasaporte completo entrás a los sorteos.</div>
 
     <p style="margin:1rem 0 0.3rem"><b>👉 ¿Cómo se participa? En 5 pasos:</b></p>
     <div class="flow">
@@ -472,7 +481,7 @@
     </div>
 
     <p style="margin:1.1rem 0 0.2rem"><b>⚽ Esto se juega POR EQUIPOS, como un fútbol cinco.</b></p>
-    <div class="part-out" id="part-out" style="border-left-color:var(--gold);background:rgba(212,168,46,0.08)">
+    <div class="part-out" id="part-out" style="border-left-color:var(--gold);background:rgba(47,159,212,0.08)">
       <b>Armá tu equipo:</b> vos de <b>capitán</b> + <b>cuatro compañeros del fulbito</b> = 5 titulares. Si querés, sumá hasta <b>3 suplentes</b> (plantel de hasta <b>8</b>).<br><br>
       🎟️ <b>Para llevarse premios</b>, cada integrante —titulares <b>y suplentes</b>— necesita tener <b>14 a 30 años</b> y <b>Tarjeta Joven</b> con el <b>Modo Jugador Oficial</b> activado (👆). Jugar, en cambio, es <b>libre y sin requisitos</b>.<br><br>
       🌎 El equipo es de <b>donde se les cante</b>: la banda de amigos, la ONG, la iglesia, el club, la biblioteca, la facu, el grupo del asado, la peña, la plaza, el Discord… <b>No importa que sean de pueblos distintos</b>, pueden ser de toda La Pampa.<br><br>
@@ -482,7 +491,7 @@
     <p style="margin:0.9rem 0 0.2rem;font-size:0.9rem">👉 Armá y descargá el <b>pasaporte de tu equipo</b> desde <b>🎟️ Mi Pasaporte</b>.</p>
 
     <p style="margin:1.2rem 0 0.3rem"><b>🎁 ¿Cómo se gana? Sorteos por fecha</b></p>
-    <div class="part-out" style="border-left-color:var(--verde-fluo);background:rgba(74,222,128,0.08)">
+    <div class="part-out" style="border-left-color:var(--verde-fluo);background:rgba(47,159,212,0.08)">
       Durante todo el Mundial, <b>en cada fecha de la Selección Argentina hacemos sorteos</b>: uno <b>individual</b> y uno <b>grupal</b>, entre todos los que tengan el <b>pasaporte completo y subido</b> al formulario.<br><br>
       🇦🇷 <b>Cuanto más avanza la Selección, más sorteos:</b> hay una fecha por cada partido —fase de grupos, octavos, cuartos, semi y la final—. Si Argentina llega lejos, más chances para todos.<br><br>
       ⏱️ <b>Cuanto antes completás y subís tu pasaporte, en más sorteos entrás.</b> El único requisito para participar es ese: tener el pasaporte completado y subido.<br><br>
@@ -513,11 +522,11 @@
     <p>Pampa Mundialista también es una <b>búsqueda de talentos de toda La Pampa</b>. ¿Tenés algo para mostrar —relatar, crear, jugar, organizar? <b>Completá la encuesta de intereses</b> de la Subsecretaría de Juventud (14 a 30 años) y contanos qué te gusta:</p>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0.6rem;margin:0.9rem 0">
       <div class="part-out" style="border-left-color:var(--celeste);background:rgba(117,170,219,0.08)">🙌 <b>Voluntariado mundialista</b><br><span style="font-size:0.82rem;opacity:0.9">Dale una mano en tu localidad: pantallas gigantes, eventos y acciones comunitarias.</span></div>
-      <div class="part-out" style="border-left-color:var(--relato);background:rgba(255,212,59,0.08)">🎤 <b>Comentaristas de deportes</b><br><span style="font-size:0.82rem;opacity:0.9">¿Te gusta relatar? La Liga de Relatores es la cantera: mandá tu relato y sumate.</span></div>
-      <div class="part-out" style="border-left-color:var(--gold);background:rgba(212,168,46,0.08)">⭐ <b>Talentos pampeanos</b><br><span style="font-size:0.82rem;opacity:0.9">Música, dibujo, deporte… mostrá lo tuyo y que te conozcan en toda la provincia.</span></div>
-      <div class="part-out" style="border-left-color:var(--verde-fluo);background:rgba(74,222,128,0.08)">🃏 <b>Juegos provinciales online</b><br><span style="font-size:0.82rem;opacity:0.9">Truco y más: representá a tu localidad en los torneos pampeanos.</span></div>
+      <div class="part-out" style="border-left-color:var(--relato);background:rgba(47,159,212,0.08)">🎤 <b>Comentaristas de deportes</b><br><span style="font-size:0.82rem;opacity:0.9">¿Te gusta relatar? La Liga de Relatores es la cantera: mandá tu relato y sumate.</span></div>
+      <div class="part-out" style="border-left-color:var(--gold);background:rgba(47,159,212,0.08)">⭐ <b>Talentos pampeanos</b><br><span style="font-size:0.82rem;opacity:0.9">Música, dibujo, deporte… mostrá lo tuyo y que te conozcan en toda la provincia.</span></div>
+      <div class="part-out" style="border-left-color:var(--verde-fluo);background:rgba(47,159,212,0.08)">🃏 <b>Juegos provinciales online</b><br><span style="font-size:0.82rem;opacity:0.9">Truco y más: representá a tu localidad en los torneos pampeanos.</span></div>
     </div>
-    <div class="part-out" style="border-left-color:var(--gold);background:rgba(212,168,46,0.1)">
+    <div class="part-out" style="border-left-color:var(--gold);background:rgba(47,159,212,0.1)">
       🎁 <b>Completá la encuesta y entrás a la categoría Protagonistas:</b> es <b>optativa</b> y expresa tu interés (no te obliga a sumarte a nada). Completarla es <b>una participación más</b>, y te suma a una <b>categoría especial de sorteo</b> en cada fecha de la Selección, además de las categorías individual y por equipo. Así hacemos la <b>búsqueda de talentos</b> de toda la provincia.
     </div>
     <a class="insc-btn" id="encuesta-cta" style="background:linear-gradient(135deg,var(--celeste),var(--celeste-2));color:#06140c;margin-top:0.9rem" href="https://wa.me/5492954801601?text=%C2%A1Hola%21%20Quiero%20completar%20la%20encuesta%20de%20intereses%20de%20Pampa%20Mundialista.%20Me%20interesan%3A%20" target="_blank" rel="noopener">📝 Completá la encuesta de intereses</a>
@@ -635,7 +644,7 @@
   function pmToast(msg){
     let t = document.getElementById('pm-toast');
     if(!t){ t = document.createElement('div'); t.id='pm-toast';
-      t.style.cssText='position:fixed;left:50%;bottom:1.2rem;transform:translateX(-50%);max-width:90%;background:#0d3b26;color:#f4ecd8;border:2px solid #d4a82e;border-radius:12px;padding:0.8rem 1.1rem;font-family:inherit;font-size:0.92rem;line-height:1.4;z-index:9999;box-shadow:0 6px 20px rgba(0,0,0,0.5);text-align:center;opacity:0;transition:opacity .25s';
+      t.style.cssText='position:fixed;left:50%;bottom:1.2rem;transform:translateX(-50%);max-width:90%;background:#16243F;color:#eef4fa;border:2px solid #2f9fd4;border-radius:12px;padding:0.8rem 1.1rem;font-family:inherit;font-size:0.92rem;line-height:1.4;z-index:9999;box-shadow:0 6px 20px rgba(0,0,0,0.5);text-align:center;opacity:0;transition:opacity .25s';
       document.body.appendChild(t); }
     t.textContent = msg; t.style.opacity='1';
     clearTimeout(t.__h); t.__h = setTimeout(()=>{ t.style.opacity='0'; }, 3200);
