@@ -144,7 +144,9 @@
   function stamp(){ return Date.now(); }
   function hoyStr(){ var d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
   function seedFromDate(s){ var h=0; for(var i=0;i<s.length;i++){ h=(h*31+s.charCodeAt(i))>>>0; } return h; }
-  function desafioHoy(){ var s=hoyStr(); var idx=seedFromDate(s)%DESAFIOS.length; var dd=DESAFIOS[idx];
+  function desafioHoy(){ var s=hoyStr();
+    // Destacado fijo: Gambeteá como Leo (es el mejor para enganchar)
+    var dd=DESAFIOS.filter(function(x){return x.go.indexOf('28-gambeta')>=0;})[0] || DESAFIOS[seedFromDate(s)%DESAFIOS.length];
     var dobleHoy=DOBLE.indexOf(new Date().getDay())>=0;
     return {fecha:s, reto:dd, doble:dobleHoy, hecho: !!(S.dia.done&&S.dia.done[s]), racha:S.dia.racha||0}; }
   function marcarDesafio(){ var s=hoyStr(); if(!S.dia.done) S.dia.done={};
@@ -262,27 +264,31 @@
     S.vip=true; S.vipNum=clean; if(first) S.vipWelcome=true; save(S); applyVip();
     if(first){ addXP(30); unlock('jugador-oficial','Jugador Oficial ⭐'); }
     refreshIndex(); try{ confetti(46); }catch(e){}
-    toast('⭐ ¡Listo, crack! Sos <b>Jugador Oficial</b> de Pampa Mundialista. Duplicás tus chances en el sorteo y tu figurita ahora tiene el dorado.', true);
+    toast('⭐ ¡Listo, crack! Sos <b>Jugador Oficial</b> de Pampa Mundialista. Tus cartas tienen el dorado ✨ y ya estás habilitado para buscar tu premio si ganás.', true);
     return {ok:true};
   }
+  function limpiarTarjeta(){ S.vip=false; S.vipNum=''; save(S); applyVip(); refreshIndex(); }
   function tarjetaWidget(el){
     if(!el) return;
     function render(){
       if(S.vip){
         el.innerHTML='<div class="pj-vip-on"><div class="pj-vip-t">⭐ MODO JUGADOR OFICIAL ACTIVO</div>'+
-          '<div class="pj-vip-d">Tus cartas tienen el dorado y <b>duplicás tus chances en el sorteo</b>. Ya estás en la lista para los premios.</div>'+
-          (S.vipNum?'<div class="pj-vip-n">Tarjeta •••• '+S.vipNum.slice(-4)+'</div>':'')+'</div>';
+          '<div class="pj-vip-d">Tus cartas tienen el dorado ✨. Ya estás habilitado para <b>buscar tu premio si ganás</b>.</div>'+
+          (S.vipNum?'<div class="pj-vip-n">Tarjeta •••• '+S.vipNum.slice(-4)+'</div>':'')+
+          '<button class="pj-btn ghost" id="pj-tjw-clear" style="margin-top:.5rem">🗑️ Borrar / cambiar número</button></div>';
       } else {
         el.innerHTML='<div class="pj-tjw"><div class="pj-tjw-t">🎟️ Validá tu Tarjeta Joven</div>'+
-          '<div class="pj-tjw-s">Activá el <b>Modo Jugador Oficial</b>: dorado en tus cartas y <b>duplicás tus chances en el sorteo</b> de premios.</div>'+
+          '<div class="pj-tjw-s">Activá el <b>Modo Jugador Oficial</b>: tus cartas se ponen <b>doradas</b> ✨. La Tarjeta la necesitás para <b>buscar tu premio si ganás</b> (jugar y entrar a los sorteos es libre).</div>'+
           '<input class="pj-inp" id="pj-tjw-num" inputmode="numeric" autocomplete="off" placeholder="Número de tu Tarjeta Joven">'+
           '<button class="pj-btn" id="pj-tjw-ok">ACTIVAR MODO JUGADOR OFICIAL</button>'+
           '<div class="pj-tjw-err" id="pj-tjw-err" role="alert"></div>'+
-          '<div class="pj-tjw-legal">Solo validamos que el número tenga <b>forma válida</b>; <b>no se envía a ningún lado</b> (no hay servidor). El número se verifica de verdad recién cuando reclamás un premio.</div>'+
+          '<div class="pj-tjw-legal">Solo validamos que el número tenga <b>forma válida</b>; <b>no se envía a ningún lado</b> (no hay servidor). El número se verifica de verdad recién cuando buscás tu premio.</div>'+
           '<a class="pj-tjw-link" href="https://tarjetajoven.lapampa.gob.ar" target="_blank" rel="noopener">¿No la tenés? Sacala gratis en 3 minutos 👇</a></div>';
       }
       var ok=el.querySelector('#pj-tjw-ok');
       if(ok) ok.onclick=function(){ var inp=el.querySelector('#pj-tjw-num'); var r=activarTarjeta(inp?inp.value:''); if(!r.ok){ var e=el.querySelector('#pj-tjw-err'); if(e) e.textContent=r.msg; } else { render(); } };
+      var clr=el.querySelector('#pj-tjw-clear');
+      if(clr) clr.onclick=function(){ limpiarTarjeta(); render(); };
     }
     el.__pjRender=render; render();
   }
