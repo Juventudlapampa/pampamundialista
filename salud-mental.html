@@ -16,6 +16,7 @@
     --line: #dbe4e0;
     --teal: #2f7d6b;
     --blue: #3a6ea5;
+    --alert: #b3261e;
   }
   body {
     font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -52,6 +53,11 @@
   .linea .info .cuándo { font-size: 0.82rem; color: var(--soft); margin-top: 0.15rem; }
   .linea .llamar { flex: none; font-size: 0.8rem; font-weight: 700; color: var(--teal); border: 1px solid var(--teal); border-radius: 999px; padding: 0.3rem 0.6rem; white-space: nowrap; }
   .linea.crisis .llamar { color: var(--blue); border-color: var(--blue); }
+  .emerg-tit { font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--alert); font-weight: 700; margin: 1.3rem 0 0.5rem; }
+  .linea.emergencia { border-left-color: var(--alert); background: #fff6f5; }
+  .linea.emergencia .num { color: var(--alert); }
+  .linea.emergencia .llamar { color: var(--alert); border-color: var(--alert); }
+  .emerg-nota { text-align: center; font-size: 0.8rem; color: var(--soft); margin: 0.35rem 0 0; }
 
   .gratis { text-align: center; font-size: 0.85rem; color: var(--soft); margin: 0.4rem 0 0; }
 
@@ -150,6 +156,18 @@
   </a>
 
   <p class="gratis">Tocá el número para llamar directo desde tu celular.</p>
+
+  <div class="emerg-tit">⚠️ Si es una emergencia ahora mismo</div>
+  <a class="linea emergencia" href="tel:911">
+    <div class="num">911</div>
+    <div class="info">
+      <div class="qué">Riesgo de vida o emergencia que necesita asistencia inmediata</div>
+      <div class="cuándo">Pedí una ambulancia · funciona en toda la provincia</div>
+    </div>
+    <div class="llamar">📞 Llamar</div>
+  </a>
+  <p class="emerg-nota">Las líneas 132 y 136 acompañan y orientan; ante un riesgo físico inminente, llamá al <b>911</b>.</p>
+
   <button class="compartir" id="share-recursos">📲 Compartí estos recursos</button>
 
   <div class="parthead" id="para-acompanar"><div class="pk">Para acompañar y sumarte</div><h2>Dale una mano a quien lo necesita</h2></div>
