@@ -239,12 +239,36 @@
     .gh-mas{font-size:0.78rem;line-height:1.4;max-width:560px;margin:-0.25rem auto 0.85rem;padding:0.5rem 0.7rem;background:rgba(117,170,219,0.12);border:1px solid rgba(117,170,219,0.32);border-radius:10px}
     .gh-mas b{color:var(--gold-2)}
     .gh-bases{display:block;margin-top:0.55rem;color:var(--gold-2);font-family:'JetBrains Mono',monospace;font-size:0.64rem;letter-spacing:0.04em;text-decoration:none;opacity:0.92}
+    .gh-hooks{display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap;max-width:640px;margin:0 auto 0.9rem}
+    .gh-hook{flex:1 1 0;min-width:150px;max-width:300px;border-radius:12px;padding:0.7rem 0.8rem;text-align:left;text-decoration:none;color:inherit;display:block;background:rgba(212,168,46,0.1);border:1px solid rgba(212,168,46,0.42);transition:transform .12s,box-shadow .12s}
+    .gh-hook:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,0.3)}
+    .gh-hook .ghh-ic{font-size:1.4rem;line-height:1}
+    .gh-hook .ghh-t{font-family:'Anton',sans-serif;font-size:1rem;letter-spacing:0.02em;margin-top:0.2rem;color:var(--gold-2)}
+    .gh-hook .ghh-d{font-size:0.72rem;line-height:1.35;opacity:0.92;margin-top:0.2rem}
+    .gh-hook .ghh-go{display:inline-block;margin-top:0.35rem;font-family:'JetBrains Mono',monospace;font-size:0.58rem;letter-spacing:0.05em;color:var(--gold-2);opacity:0.85}
+    .gh-hook.team{background:rgba(117,170,219,0.12);border-color:rgba(117,170,219,0.42)}
+    .gh-hook.team .ghh-t,.gh-hook.team .ghh-go{color:var(--celeste-2)}
+    @media(max-width:480px){.gh-hook{min-width:44%}}
     @media(max-width:480px){.gh-fecha{min-width:30%;flex:1}}
   </style>
   <section class="ganar-hero" id="ganar">
     <div class="gh-tag">🏆 ¿Para qué jugás?</div>
     <h2 class="gh-title">JUGÁ, LLENÁ TU PASAPORTE Y <span>GANÁ</span></h2>
     <p class="gh-sub">En <b>cada fecha de la Selección</b> sorteamos premios entre los que tengan el <b>pasaporte completo y subido</b>. Cuanto antes lo completás y más aguante le metés <b>compartiendo</b> (es una misión del pasaporte), en <b>más sorteos</b> entrás.</p>
+    <div class="gh-hooks">
+      <a class="gh-hook" href="#concurso">
+        <div class="ghh-ic">🎁</div>
+        <div class="ghh-t">¿Qué ganás?</div>
+        <div class="ghh-d">Pelotas, camisetas e indumentaria deportiva, merch mundialista y beneficios de Tarjeta Joven.</div>
+        <span class="ghh-go">VER PREMIOS Y SORTEOS ↓</span>
+      </a>
+      <a class="gh-hook team" href="#concurso">
+        <div class="ghh-ic">⚽</div>
+        <div class="ghh-t">Participá con tu banda</div>
+        <div class="ghh-d">Armá tu equipo de fútbol cinco con tus amigos, el club o la peña — de toda La Pampa.</div>
+        <span class="ghh-go">CÓMO ARMAR TU EQUIPO ↓</span>
+      </a>
+    </div>
     <div class="gh-fechas" id="gh-fechas"></div>
     <div class="gh-mas">🇦🇷 Y cuanto <b>más avanza la Selección</b>, más fechas y más sorteos: octavos, cuartos, semi y la final. ¡Si Argentina llega lejos, hay más chances para todos!</div>
     <div class="gh-steps"><span><b>1</b>Llená tu pasaporte jugando</span><span><b>2</b>Subilo al formulario</span><span><b>3</b>Entrás al sorteo de esa fecha</span></div>
