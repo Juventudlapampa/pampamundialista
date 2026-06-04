@@ -23,7 +23,12 @@
     --gold: #d4a82e; --gold-2: #f4cd60; --crema: #f4ecd8;
     --rojo: #dc2626; --celeste: #75AADB; --celeste-2: #9ec9ed;
     --relato: #ffd43b; --cesped: #1f7a43;
+    /* paleta de marca (logos Pampa Mundialista) */
+    --navy: #16243F; --azul-brillante: #2BA8E0; --celeste-claro: #75AADB; --blanco: #ffffff;
   }
+  .hero-logo{display:block;margin:0.5rem auto 0.7rem;width:min(290px,74vw);height:auto;filter:drop-shadow(0 6px 22px rgba(43,168,224,0.22))}
+  .visually-hidden{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+  .footer-sol{display:block;margin:0.2rem auto 0.9rem;width:104px;height:auto;opacity:0.9}
   body {
     font-family: 'DM Sans', sans-serif;
     background: #06140c;
@@ -203,7 +208,8 @@
       <span class="brand-word" aria-label="JUVENTUDES"><span style="color:#9B3DAA">J</span><span style="color:#2B3A8F">U</span><span style="color:#00968A">V</span><span style="color:#5CB83A">E</span><span style="color:#F5C400">N</span><span style="color:#F58220">T</span><span style="color:#E03A2F">U</span><span style="color:#E8317A">D</span><span style="color:#5CB83A">E</span><span style="color:#2BAADC">S</span></span>
       <span class="brand-inst">Subsecretaría de Juventud · La Pampa</span>
     </div>
-    <h1>PAMPA <span>MUNDIALISTA</span></h1>
+    <img class="hero-logo" src="assets/logo-copa.png" alt="Pampa Mundialista — Coronados de gloria vivamos" width="448" height="518" fetchpriority="high">
+    <h1 class="visually-hidden">PAMPA MUNDIALISTA</h1>
     <p class="subtitle">La previa del <b>Mundial 2026</b> ya arrancó, <b>del potrero al Mundial</b>. Armá tu figurita, metele un caño a la compu y demostrá que la tenés más clara que nadie — de Santa Rosa a Macachín, de Realicó a General Acha. Gratis, desde el celu y sin vueltas — dale, entrá.</p>
     <div class="stat-strip">
       <div class="stat-pill">🎮 20 cosas para hacer</div>
@@ -521,6 +527,7 @@
   <!-- (El bloque de Tarjeta Joven se movió arriba como "Modo Jugador Oficial") -->
 
   <footer>
+    <img class="footer-sol" src="assets/logo-sol-blanco.png" alt="Pampa Mundialista" width="413" height="513" loading="lazy">
     <b>PAMPA MUNDIALISTA</b> · Una propuesta de la Subsecretaría de Juventud de La Pampa para el Mundial 2026<br>
     Seguinos en <a href="https://instagram.com/pampamundialista" target="_blank" rel="noopener"><b>@pampamundialista</b></a> · cuenta madre <a href="https://instagram.com/juventud_lapampa" target="_blank" rel="noopener">@juventud_lapampa</a> · Funciona en cualquier celular y PC · 100% gratis · Sin apuestas · Con mirada ESI<br>
     <span style="opacity:0.8">Esta propuesta no tiene relación oficial con la FIFA ni con el torneo. Es contenido cultural y de participación juvenil de la provincia de La Pampa.</span><br>
