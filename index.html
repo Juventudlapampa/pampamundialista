@@ -215,9 +215,14 @@
 
   <!-- Banner de la Selección: los 26 + el DT (se va corriendo) -->
   <div class="players-marquee"><span id="players-mq"></span></div>
-  <!-- Contadores: arranque del Mundial + próximo partido de Argentina -->
+  <!-- Contador del arranque del Mundial -->
   <div class="cuenta"><span class="lbl">⚽ Falta para que ruede la pelota</span><span class="num" id="cuenta-num">—</span></div>
-  <div class="cuenta prox" id="cuenta-prox-wrap"><span class="lbl">⚽ Falta para el próximo partido</span><span class="num" id="cuenta-prox">—</span></div>
+  <!-- Botón Seguí nuestra Selección: contador de Argentina + deriva al camino (abajo) -->
+  <a class="segui-btn" id="cuenta-prox-wrap" href="#camino-seleccion">
+    <span class="sb-t">🇦🇷 SEGUÍ NUESTRA SELECCIÓN</span>
+    <span class="sb-c"><span id="cuenta-prox-lbl">⚽ Próximo partido</span>: <b><span id="cuenta-prox">—</span></b></span>
+    <span class="sb-go">VER EL CAMINO DE LA SELECCIÓN ↓</span>
+  </a>
 
   <header>
     <div class="brand-inst-top">Subsecretaría de Juventud · La Pampa</div>
@@ -283,9 +288,16 @@
     .brand-inst-top{font-family:'JetBrains Mono',monospace;font-size:0.66rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--crema);opacity:0.82;text-align:center;margin-bottom:0.7rem}
     .cuenta.prox{transform:rotate(0.5deg)}
     /* terceto de botones del hero */
-    .gh-btn.valida{background:rgba(224,86,78,0.14);color:var(--crema);border:2px solid var(--rojo)}
-    .gh-btn.valida:hover{background:rgba(224,86,78,0.24)}
-    /* botón de inscripción deshabilitado (link a confirmar) */
+    .gh-btn.valida{background:rgba(47,159,212,0.16);color:var(--crema);border:2px solid var(--celeste)}
+    .gh-btn.valida:hover{background:rgba(47,159,212,0.28)}
+    /* botón "Seguí nuestra Selección" (deriva al camino, abajo) */
+    .segui-btn{display:block;max-width:560px;margin:0 auto 0.7rem;text-decoration:none;color:var(--crema);background:linear-gradient(90deg,rgba(117,170,219,0.18),rgba(47,159,212,0.14));border:1px solid rgba(117,170,219,0.45);border-radius:12px;padding:0.6rem 0.9rem;text-align:center;transition:transform .12s,box-shadow .12s}
+    .segui-btn:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,0.3)}
+    .segui-btn .sb-t{font-family:'Anton',sans-serif;letter-spacing:0.04em;font-size:1.05rem;color:var(--celeste-2)}
+    .segui-btn .sb-c{font-family:'JetBrains Mono',monospace;font-size:0.8rem;margin-top:0.2rem}
+    .segui-btn .sb-c b{color:var(--crema)}
+    .segui-btn .sb-go{display:block;font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:0.08em;color:var(--celeste-2);opacity:0.85;margin-top:0.25rem}
+    /* botón de inscripción deshabilitado (por si hay que volver a usarlo) */
     .insc-btn.disabled{background:rgba(255,255,255,0.06)!important;color:rgba(238,244,250,0.55)!important;border:1px dashed rgba(238,244,250,0.35);cursor:not-allowed;pointer-events:none}
   </style>
   <section class="ganar-hero" id="ganar">
@@ -324,29 +336,6 @@
     <span class="ab-ic">💬</span>
     <div class="ab-t"><b>¿Necesitás ayuda?</b> Hablar te hace bien. Líneas gratuitas 24 h y a quién recurrir.<br><a href="./salud-mental.html">Salud mental · entrá →</a></div>
   </div>
-
-  <!-- SEGUÍ NUESTRA SELECCIÓN (el camino de la Selección) -->
-  <section class="block" id="fixture-arg" style="text-align:center">
-    <div class="block-title" style="text-align:center">🇦🇷 SEGUÍ NUESTRA SELECCIÓN</div>
-    <p style="text-align:center">El camino de Argentina en la fase de grupos (horario de Argentina). En <b>cada fecha</b> sorteamos premios entre los pasaportes completos y subidos.</p>
-    <div class="gh-fechas" id="gh-fechas"></div>
-    <div class="gh-mas" style="margin:0.9rem auto 0">🇦🇷 Y cuanto <b>más avanza la Selección</b>, más fechas y más sorteos: octavos, cuartos, semi y la final. ¡Si Argentina llega lejos, hay más chances para todos!</div>
-  </section>
-  <script>
-  (function(){
-    // Fixture de grupos confirmado de Argentina (horario de Argentina, UTC-3).
-    var FECHAS_SELECCION = [
-      { n:'1ª fecha', rival:'Argelia',  cuando:'16/6 · 22:00', iso:'2026-06-16T22:00:00-03:00' },
-      { n:'2ª fecha', rival:'Austria',  cuando:'22/6 · 14:00', iso:'2026-06-22T14:00:00-03:00' },
-      { n:'3ª fecha', rival:'Jordania', cuando:'27/6 · 23:00', iso:'2026-06-27T23:00:00-03:00' }
-    ];
-    window.__FECHAS_ARG = FECHAS_SELECCION;
-    var el = document.getElementById('gh-fechas');
-    if (el) el.innerHTML = FECHAS_SELECCION.map(function(f){
-      return '<div class="gh-fecha"><div class="ghf-n">'+f.n+'</div><div class="ghf-vs">ARG vs '+f.rival.toUpperCase()+'</div><div class="ghf-when">'+f.cuando+'</div><div class="ghf-prize">🎁 Sorteo de la fecha</div></div>';
-    }).join('');
-  })();
-  </script>
 
   <!-- PASAPORTE -->
   <div class="pass">
@@ -471,6 +460,29 @@
     </div>
   </section>
 
+  <!-- EL CAMINO DE LA SELECCIÓN (debajo de los juegos; el botón de arriba deriva acá) -->
+  <section class="block" id="camino-seleccion" style="text-align:center;scroll-margin-top:0.5rem">
+    <div class="block-title" style="text-align:center">🇦🇷 EL CAMINO DE LA SELECCIÓN</div>
+    <p style="text-align:center">El camino de Argentina en la fase de grupos (horario de Argentina). En <b>cada fecha</b> sorteamos premios entre los pasaportes completos y subidos.</p>
+    <div class="gh-fechas" id="gh-fechas"></div>
+    <div class="gh-mas" style="margin:0.9rem auto 0">🇦🇷 Y cuanto <b>más avanza la Selección</b>, más fechas y más sorteos: octavos, cuartos, semi y la final. ¡Si Argentina llega lejos, hay más chances para todos!</div>
+  </section>
+  <script>
+  (function(){
+    // Fixture de grupos confirmado de Argentina (horario de Argentina, UTC-3).
+    var FECHAS_SELECCION = [
+      { n:'1ª fecha', rival:'Argelia',  cuando:'16/6 · 22:00', iso:'2026-06-16T22:00:00-03:00' },
+      { n:'2ª fecha', rival:'Austria',  cuando:'22/6 · 14:00', iso:'2026-06-22T14:00:00-03:00' },
+      { n:'3ª fecha', rival:'Jordania', cuando:'27/6 · 23:00', iso:'2026-06-27T23:00:00-03:00' }
+    ];
+    window.__FECHAS_ARG = FECHAS_SELECCION;
+    var el = document.getElementById('gh-fechas');
+    if (el) el.innerHTML = FECHAS_SELECCION.map(function(f){
+      return '<div class="gh-fecha"><div class="ghf-n">'+f.n+'</div><div class="ghf-vs">ARG vs '+f.rival.toUpperCase()+'</div><div class="ghf-when">'+f.cuando+'</div><div class="ghf-prize">🎁 Sorteo de la fecha</div></div>';
+    }).join('');
+  })();
+  </script>
+
   <!-- EL DESAFÍO -->
   <div class="block" id="concurso">
     <div class="block-title">🏅 El Desafío Pampa Mundialista</div>
@@ -498,20 +510,21 @@
       <div class="tj-opts">
         <div class="tj-opt">
           <div class="tj-opt-head">🎟️ ¿No la tenés, no la recordás o querés actualizarla?</div>
-          <p class="tj-opt-desc">Sacala o gestionala <b>gratis</b> (14 a 30 años):</p>
-          <a class="tj-opt-btn" href="https://tarjetajoven.lapampa.gob.ar/" target="_blank" rel="noopener">Sacala gratis →</a>
-          <p class="tj-opt-desc" style="margin-top:0.7rem">Y si ya la tenés pero no sabés tu número, escribinos tu <b>DNI</b> por WhatsApp o pedila en tu <b>Agencia Juvenil</b> o en la <b>delegación zonal</b> del Ministerio.</p>
-          <a class="tj-opt-btn wa" href="https://wa.me/5492954801601?text=%C2%A1Hola%21%20Para%20jugar%20en%20Pampa%20Mundialista%20quiero%20pedir%20o%20actualizar%20mi%20n%C3%BAmero%20de%20Tarjeta%20Joven.%20Mi%20DNI%20es%3A%20" target="_blank" rel="noopener">📲 Escribir a la Subse · 2954 80-1601</a>
+          <p class="tj-opt-desc">Sacala o gestionala <b>gratis</b> (14 a 30 años). <b>Después de sacarla</b> —o si ya la tenés y no sabés tu número— escribinos tu <b>DNI</b> por WhatsApp y te lo pasamos, o pedila en tu <b>Agencia Juvenil</b> o <b>delegación zonal</b>.</p>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.5rem">
+            <a class="tj-opt-btn" style="flex:1;text-align:center;margin-top:0" href="https://tarjetajoven.lapampa.gob.ar/" target="_blank" rel="noopener">Sacala gratis →</a>
+            <a class="tj-opt-btn wa" style="flex:1;text-align:center;margin-top:0" href="https://wa.me/5492954801601?text=%C2%A1Hola%21%20Para%20jugar%20en%20Pampa%20Mundialista%20quiero%20pedir%20o%20actualizar%20mi%20n%C3%BAmero%20de%20Tarjeta%20Joven.%20Mi%20DNI%20es%3A%20" target="_blank" rel="noopener">📲 Escribir · 2954 80-1601</a>
+          </div>
         </div>
       </div>
     </section>
 
     <div id="inscripcion" style="scroll-margin-top:0.5rem;background:rgba(47,159,212,0.1);border:1px solid rgba(47,159,212,0.4);border-radius:12px;padding:1rem;margin:1.1rem 0">
       <p style="margin:0 0 0.5rem"><b>📋 Inscribite (por Google Forms)</b> — es la acción principal:</p>
-      <span class="insc-btn insc-ind disabled" aria-disabled="true" title="link a confirmar">🙋 Anotate solo (individual)</span>
-      <p class="insc-desc">Para quien juega por su cuenta. <b>(link a confirmar)</b></p>
-      <span class="insc-btn insc-grp disabled" aria-disabled="true" title="link a confirmar">⚽ Anotá tu equipo (grupal)</span>
-      <p class="insc-desc">Para el <b><span class="gw" data-m="capitán" data-f="capitana" data-x="capitán o capitana">capitán o capitana</span></b> que anota a su equipo de fútbol cinco (<span class="gw" data-m="capitán" data-f="capitana" data-x="capitán o capitana">capitán o capitana</span> + cuatro, hasta tres suplentes). <b>(link a confirmar)</b></p>
+      <a class="insc-btn insc-ind" href="https://docs.google.com/forms/d/e/1FAIpQLSeaWv5yT9D1bJEWwQvyCj6RbH3-39yCckehrVQIrnI8EM3jOA/viewform" target="_blank" rel="noopener">🙋 Anotate solo (individual)</a>
+      <p class="insc-desc">Para quien juega por su cuenta.</p>
+      <a class="insc-btn insc-grp" href="https://docs.google.com/forms/d/e/1FAIpQLSeSyGKC6NvPrv27PHddkCAOWP0HOVrBTlBph9G1YJQNSlnMbA/viewform" target="_blank" rel="noopener">⚽ Anotá tu equipo (grupal)</a>
+      <p class="insc-desc">Para el <b><span class="gw" data-m="capitán" data-f="capitana" data-x="capitán o capitana">capitán o capitana</span></b> que anota a su equipo de fútbol cinco (<span class="gw" data-m="capitán" data-f="capitana" data-x="capitán o capitana">capitán o capitana</span> + cuatro, hasta tres suplentes).</p>
     </div>
 
     <p style="margin:0.6rem 0 0.2rem"><b>El equipo sube de nivel juntando sellos entre todos:</b></p>
@@ -555,19 +568,19 @@
 
   <!-- ===== SÉ PROTAGONISTA: búsqueda de talentos + programas de Juventud (más allá del Mundial) ===== -->
   <style>
-    .protag{background:#f4ecd8;color:#1a2b22;border:2px solid var(--gold);border-radius:18px;padding:1.5rem 1.3rem;margin-top:1.6rem;box-shadow:0 10px 30px rgba(0,0,0,0.35)}
-    .protag-tag{font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:#2f7d6b}
+    .protag{background:#ffffff;color:#16243F;border:2px solid var(--celeste);border-radius:18px;padding:1.5rem 1.3rem;margin-top:1.6rem;box-shadow:0 10px 30px rgba(0,0,0,0.35)}
+    .protag-tag{font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:#1c6aa3}
     .protag-title{font-family:Georgia,'Times New Roman',serif;font-size:clamp(1.8rem,7vw,2.6rem);color:#16243F;line-height:1.05;margin:0.3rem 0 0.6rem}
-    .protag-lead{font-size:0.95rem;line-height:1.55;margin-bottom:0.6rem;color:#283b33}
-    .protag-lead b{color:#1a6a52}
+    .protag-lead{font-size:0.95rem;line-height:1.55;margin-bottom:0.6rem;color:#27384e}
+    .protag-lead b{color:#1c6aa3}
     .protag-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0.6rem;margin:0.9rem 0}
-    .protag-item{background:#fff;border:1px solid rgba(22,36,63,0.12);border-left:4px solid #2f7d6b;border-radius:10px;padding:0.7rem 0.85rem;font-size:0.9rem;line-height:1.4}
+    .protag-item{background:#f3f8fd;border:1px solid rgba(22,36,63,0.12);border-left:4px solid var(--celeste);border-radius:10px;padding:0.7rem 0.85rem;font-size:0.9rem;line-height:1.4}
     .protag-item span{display:block;font-size:0.82rem;opacity:0.82;margin-top:0.2rem}
-    .protag-note{background:#fff7e3;border:1px solid #e7c969;border-radius:10px;padding:0.8rem 0.95rem;font-size:0.9rem;line-height:1.5;color:#3a3320}
-    .protag-note b{color:#7a5c12}
-    .protag-btn{display:block;text-align:center;text-decoration:none;background:linear-gradient(135deg,#2f7d6b,#3a9a83);color:#fff;font-family:'Anton',sans-serif;letter-spacing:0.06em;text-transform:uppercase;font-size:1.05rem;padding:0.95rem;border-radius:10px;margin-top:1rem}
+    .protag-note{background:#eaf3fb;border:1px solid rgba(47,159,212,0.4);border-radius:10px;padding:0.8rem 0.95rem;font-size:0.9rem;line-height:1.5;color:#1c3247}
+    .protag-note b{color:#1c6aa3}
+    .protag-btn{display:block;text-align:center;text-decoration:none;background:linear-gradient(135deg,#2f9fd4,#6cc0ec);color:#04212e;font-family:'Anton',sans-serif;letter-spacing:0.06em;text-transform:uppercase;font-size:1.05rem;padding:0.95rem;border-radius:10px;margin-top:1rem}
     .protag-btn:hover{filter:brightness(1.06)}
-    .protag-foot{font-size:0.8rem;opacity:0.7;margin-top:0.5rem;text-align:center;color:#283b33}
+    .protag-foot{font-size:0.8rem;opacity:0.7;margin-top:0.5rem;text-align:center;color:#27384e}
   </style>
   <div class="protag" id="protagonistas">
     <div class="protag-tag">Más allá del Mundial · Subsecretaría de Juventud</div>
@@ -580,7 +593,7 @@
       <div class="protag-item">📝 <b>¿Qué podés aportar?</b><span>Decinos qué sabés hacer, en qué querés colaborar y qué te gustaría que pase.</span></div>
     </div>
     <div class="protag-note">🎁 Completarla es <b>optativo</b> y no te obliga a sumarte a nada. Durante el Mundial, además, <b>suma a la categoría de sorteo Protagonistas</b> (en paralelo a las de individual y por equipo). Y es una <b>invitación permanente</b>: sigue abierta más allá del Mundial.</div>
-    <a class="protag-btn" id="encuesta-cta" href="https://forms.gle/A3ygymmHr6asr9189" target="_blank" rel="noopener">📝 Completá la encuesta de intereses</a>
+    <a class="protag-btn" id="encuesta-cta" href="https://forms.gle/cxcqJ4diVDyc6fL38" target="_blank" rel="noopener">📝 Completá la encuesta de intereses</a>
     <p class="protag-foot">La recibe y valida el equipo de la Subsecretaría de Juventud.</p>
   </div>
 
@@ -588,7 +601,7 @@
 
   <footer>
     <img class="footer-sol" src="assets/logo-sol-blanco.png" alt="Pampa Mundialista" width="413" height="513" loading="lazy">
-    <div style="font-family:'Archivo Black',sans-serif;font-size:1.5rem;letter-spacing:0.02em;margin-bottom:0.5rem;background:linear-gradient(90deg,#e0564e,#d4a82e,#4ade80,#2f9fd4,#9b6cf0);-webkit-background-clip:text;background-clip:text;color:transparent">JUVENTUDES</div>
+    <div style="font-family:'Archivo Black',sans-serif;font-size:1.5rem;letter-spacing:0.02em;margin-bottom:0.5rem;background:linear-gradient(90deg,#75AADB,#2f9fd4,#9bd6ef);-webkit-background-clip:text;background-clip:text;color:transparent">JUVENTUDES</div>
     <b>PAMPA MUNDIALISTA</b> · Una propuesta de la Subsecretaría de Juventud de La Pampa para el Mundial 2026<br>
     Seguinos en <a href="https://instagram.com/pampamundialista" target="_blank" rel="noopener"><b>@pampamundialista</b></a> · cuenta madre <a href="https://instagram.com/juventud_lapampa" target="_blank" rel="noopener">@juventud_lapampa</a> · Funciona en cualquier celular y PC · 100% gratis · Sin apuestas · Con mirada ESI<br>
     <span style="opacity:0.8">Esta propuesta no tiene relación oficial con la FIFA ni con el torneo. Es contenido cultural y de participación juvenil de la provincia de La Pampa.</span><br>
@@ -760,11 +773,11 @@
     const cp=document.getElementById('cuenta-prox'), cpWrap=document.getElementById('cuenta-prox-wrap');
     const FA=window.__FECHAS_ARG||[];
     if(cp && FA.length){
+      const cpLbl=document.getElementById('cuenta-prox-lbl');
       function nextMatch(){ const now=new Date(); for(let i=0;i<FA.length;i++){ const d=new Date(FA[i].iso); if(d-now>0) return {f:FA[i], d:d}; } return null; }
       function tickP(){ const nm=nextMatch();
-        if(!nm){ if(cpWrap) cpWrap.style.display='none'; return; }
-        const lbl=cpWrap?cpWrap.querySelector('.lbl'):null;
-        if(lbl) lbl.textContent='⚽ Falta para ARG vs '+nm.f.rival;
+        if(!nm){ if(cpLbl) cpLbl.textContent='⚽ Grupos terminados'; cp.textContent='—'; return; }
+        if(cpLbl) cpLbl.textContent='⚽ ARG vs '+nm.f.rival;
         const ms=nm.d-new Date(); cp.textContent = ms<=0 ? '¡EN JUEGO!' : fmt(ms);
       } tickP(); setInterval(tickP,1000);
     } else if(cpWrap){ cpWrap.style.display='none'; }
