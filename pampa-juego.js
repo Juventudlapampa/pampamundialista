@@ -97,7 +97,17 @@
   if(!S.loc) S.loc='';
   if(!S.dia) S.dia={date:'',racha:0,done:{}};
   if(typeof S.vip!=='boolean') S.vip=false; if(!S.vipNum) S.vipNum=''; if(typeof S.vipWelcome!=='boolean') S.vipWelcome=false;
+  if(typeof S.genero!=='string') S.genero=''; // ''=inclusivo · 'm'=pibe · 'f'=piba
   try{ if(S.vip) document.documentElement.classList.add('pj-vip'); }catch(e){}
+
+  // ===== Género (solo home): adapta palabras. Default = inclusivo =====
+  function gword(m,f,x){ var g=S.genero; return g==='m'?m : g==='f'?f : (x||(m+'/'+f)); }
+  function genLevel(name){ return String(name).replace(/Pibe/g, gword('Pibe','Piba','Pibe/Piba')).replace(/Capitán/g, gword('Capitán','Capitana','Capitán/Capitana')); }
+  function setGenero(g){ S.genero=(g==='m'||g==='f')?g:''; save(S); applyGenero(); refreshIndex(); }
+  function applyGenero(){ try{
+    document.querySelectorAll('.gw').forEach(function(el){ el.textContent=gword(el.getAttribute('data-m'),el.getAttribute('data-f'),el.getAttribute('data-x')); });
+    var xp=document.getElementById('pj-xp'); if(xp) xp.textContent=S.xp+' XP · '+genLevel(levelOf(S.xp).name);
+  }catch(e){} }
 
   function levelOf(xp){ var n=LEVELS[0][1], i=0; for(var k=0;k<LEVELS.length;k++){ if(xp>=LEVELS[k][0]){ n=LEVELS[k][1]; i=k; } } return {name:n, idx:i}; }
   function nextLevel(xp){ for(var k=0;k<LEVELS.length;k++){ if(xp<LEVELS[k][0]) return LEVELS[k]; } return null; }
@@ -119,7 +129,7 @@
 
   // ===== API: sumar XP / sello / logro =====
   function addXP(n){ var before=levelOf(S.xp).idx; S.xp+=(n||0); save(S); var after=levelOf(S.xp).idx;
-    if(after>before){ tone([523,659,880,1047],0.18,0.14); confetti(); toast('⬆️ ¡Subiste a <b>'+LEVELS[after][1]+'</b>!', true); }
+    if(after>before){ tone([523,659,880,1047],0.18,0.14); confetti(); toast('⬆️ ¡Subiste a <b>'+genLevel(LEVELS[after][1])+'</b>!', true); }
     refreshIndex(); }
   function unlock(id,label){ if(S.logros[id]) return false; S.logros[id]={t:label||id, d:Date.now()}; save(S);
     tone([700,1000,1300],0.14,0.13); toast('🏅 Logro: <b>'+(label||id)+'</b>'); refreshIndex(); return true; }
@@ -144,7 +154,9 @@
   function stamp(){ return Date.now(); }
   function hoyStr(){ var d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
   function seedFromDate(s){ var h=0; for(var i=0;i<s.length;i++){ h=(h*31+s.charCodeAt(i))>>>0; } return h; }
-  function desafioHoy(){ var s=hoyStr(); var idx=seedFromDate(s)%DESAFIOS.length; var dd=DESAFIOS[idx];
+  function desafioHoy(){ var s=hoyStr();
+    // Destacado fijo: Gambeteá como Leo (es el mejor para enganchar)
+    var dd=DESAFIOS.filter(function(x){return x.go.indexOf('28-gambeta')>=0;})[0] || DESAFIOS[seedFromDate(s)%DESAFIOS.length];
     var dobleHoy=DOBLE.indexOf(new Date().getDay())>=0;
     return {fecha:s, reto:dd, doble:dobleHoy, hecho: !!(S.dia.done&&S.dia.done[s]), racha:S.dia.racha||0}; }
   function marcarDesafio(){ var s=hoyStr(); if(!S.dia.done) S.dia.done={};
@@ -167,20 +179,37 @@
     if(S.loc && !force) return;
     var bd=document.createElement('div'); bd.className='pj-modal-bd';
     var opts='<option value="">— Elegí tu localidad —</option>'+LOCS.map(function(l){return '<option'+(l===S.loc?' selected':'')+'>'+l+'</option>';}).join('')+'<option value="__otra">Otra localidad…</option>';
+    // Paso de género solo en el home (no en los generadores; a veces prestan el celu). Opcional.
+    var genHtml = (!CUR) ? (
+      '<div class="pj-m-sub" style="margin:.2rem 0 .4rem">¿Cómo querés que te hablemos? <span style="opacity:.7">(opcional)</span></div>'+
+      '<div class="pj-gen" id="pj-gen">'+
+        '<button type="button" class="pj-gbtn'+(S.genero==='m'?' on':'')+'" data-g="m">Pibe</button>'+
+        '<button type="button" class="pj-gbtn'+(S.genero==='f'?' on':'')+'" data-g="f">Piba</button>'+
+        '<button type="button" class="pj-gbtn'+(S.genero===''?' on':'')+'" data-g="">Prefiero no decir</button>'+
+      '</div>'
+    ) : '';
     bd.innerHTML='<div class="pj-modal">'+
       '<div class="pj-m-tit">¿DE QUÉ LOCALIDAD SOS?</div>'+
       '<div class="pj-m-sub">Tu localidad va en tu figurita, tu crack y tu pasaporte. ¡Banca a los tuyos!</div>'+
       '<select class="pj-sel" id="pj-loc-sel">'+opts+'</select>'+
       '<input class="pj-inp" id="pj-loc-otra" placeholder="Escribí tu localidad" style="display:none">'+
+      genHtml+
       '<button class="pj-btn" id="pj-loc-ok">DALE, LISTO</button>'+
       (force?'<button class="pj-btn ghost" id="pj-loc-x">Cerrar</button>':'')+
       '</div>';
     document.body.appendChild(bd);
     var sel=bd.querySelector('#pj-loc-sel'), otra=bd.querySelector('#pj-loc-otra');
     sel.onchange=function(){ otra.style.display = sel.value==='__otra'?'block':'none'; };
+    var pendingGen=S.genero, genBox=bd.querySelector('#pj-gen');
+    if(genBox) genBox.querySelectorAll('.pj-gbtn').forEach(function(b){ b.onclick=function(){
+      pendingGen=b.getAttribute('data-g');
+      genBox.querySelectorAll('.pj-gbtn').forEach(function(x){ x.classList.remove('on'); });
+      b.classList.add('on');
+    }; });
     bd.querySelector('#pj-loc-ok').onclick=function(){
       var v = sel.value==='__otra' ? (otra.value.trim()) : sel.value;
       if(!v){ sel.focus(); return; }
+      if(genBox) setGenero(pendingGen);
       setLoc(v); bd.remove(); toast('🇦🇷 ¡Vamos '+v+'!');
     };
     var x=bd.querySelector('#pj-loc-x'); if(x) x.onclick=function(){ bd.remove(); };
@@ -199,12 +228,12 @@
     var bd=document.createElement('div'); bd.className='pj-modal-bd';
     bd.innerHTML='<div class="pj-modal pj-pass">'+
       '<button class="pj-x" id="pj-pass-x">✕</button>'+
-      '<div class="pj-p-head"><div class="pj-p-lvl">'+lv.name+'</div>'+
+      '<div class="pj-p-head"><div class="pj-p-lvl">'+genLevel(lv.name)+'</div>'+
         '<div class="pj-p-loc">'+(S.loc?('📍 '+S.loc):'📍 elegí tu localidad')+'</div>'+
         (titulo?'<div class="pj-p-title">«'+titulo+'»</div>':'')+
         (S.vip?'<div class="pj-p-title" style="color:#f4cd60">⭐ Jugador Oficial</div>':'')+'</div>'+
       '<div class="pj-xpbar"><div class="pj-xpfill" style="width:'+pct+'%"></div></div>'+
-      '<div class="pj-xptxt">'+S.xp+' XP'+(nx?(' · faltan '+(nx[0]-S.xp)+' para '+nx[1]):' · ¡máximo nivel!')+'</div>'+
+      '<div class="pj-xptxt">'+S.xp+' XP'+(nx?(' · faltan '+(nx[0]-S.xp)+' para '+genLevel(nx[1])):' · ¡máximo nivel!')+'</div>'+
       '<div class="pj-p-lab">SELLOS ('+arr.length+'/'+TOOLS.length+')</div>'+
       '<div class="pj-grid">'+grid+'</div>'+
       '<div class="pj-p-lab">LOGROS</div><div class="pj-badges">'+logrosHtml+'</div>'+
@@ -262,27 +291,31 @@
     S.vip=true; S.vipNum=clean; if(first) S.vipWelcome=true; save(S); applyVip();
     if(first){ addXP(30); unlock('jugador-oficial','Jugador Oficial ⭐'); }
     refreshIndex(); try{ confetti(46); }catch(e){}
-    toast('⭐ ¡Listo, crack! Sos <b>Jugador Oficial</b> de Pampa Mundialista. Duplicás tus chances en el sorteo y tu figurita ahora tiene el dorado.', true);
+    toast('⭐ ¡Listo, crack! Sos <b>Jugador Oficial</b> de Pampa Mundialista. Tus cartas tienen el dorado ✨ y ya estás habilitado para buscar tu premio si ganás.', true);
     return {ok:true};
   }
+  function limpiarTarjeta(){ S.vip=false; S.vipNum=''; save(S); applyVip(); refreshIndex(); }
   function tarjetaWidget(el){
     if(!el) return;
     function render(){
       if(S.vip){
         el.innerHTML='<div class="pj-vip-on"><div class="pj-vip-t">⭐ MODO JUGADOR OFICIAL ACTIVO</div>'+
-          '<div class="pj-vip-d">Tus cartas tienen el dorado y <b>duplicás tus chances en el sorteo</b>. Ya estás en la lista para los premios.</div>'+
-          (S.vipNum?'<div class="pj-vip-n">Tarjeta •••• '+S.vipNum.slice(-4)+'</div>':'')+'</div>';
+          '<div class="pj-vip-d">Tus cartas tienen el dorado ✨. Ya estás habilitado para <b>buscar tu premio si ganás</b>.</div>'+
+          (S.vipNum?'<div class="pj-vip-n">Tarjeta •••• '+S.vipNum.slice(-4)+'</div>':'')+
+          '<button class="pj-btn ghost" id="pj-tjw-clear" style="margin-top:.5rem">🗑️ Borrar / cambiar número</button></div>';
       } else {
         el.innerHTML='<div class="pj-tjw"><div class="pj-tjw-t">🎟️ Validá tu Tarjeta Joven</div>'+
-          '<div class="pj-tjw-s">Activá el <b>Modo Jugador Oficial</b>: dorado en tus cartas y <b>duplicás tus chances en el sorteo</b> de premios.</div>'+
+          '<div class="pj-tjw-s">Activá el <b>Modo Jugador Oficial</b>: tus cartas se ponen <b>doradas</b> ✨. La Tarjeta la necesitás para <b>buscar tu premio si ganás</b> (jugar y entrar a los sorteos es libre).</div>'+
           '<input class="pj-inp" id="pj-tjw-num" inputmode="numeric" autocomplete="off" placeholder="Número de tu Tarjeta Joven">'+
           '<button class="pj-btn" id="pj-tjw-ok">ACTIVAR MODO JUGADOR OFICIAL</button>'+
           '<div class="pj-tjw-err" id="pj-tjw-err" role="alert"></div>'+
-          '<div class="pj-tjw-legal">Solo validamos que el número tenga <b>forma válida</b>; <b>no se envía a ningún lado</b> (no hay servidor). El número se verifica de verdad recién cuando reclamás un premio.</div>'+
+          '<div class="pj-tjw-legal">Solo validamos que el número tenga <b>forma válida</b>; <b>no se envía a ningún lado</b> (no hay servidor). El número se verifica de verdad recién cuando buscás tu premio.</div>'+
           '<a class="pj-tjw-link" href="https://tarjetajoven.lapampa.gob.ar" target="_blank" rel="noopener">¿No la tenés? Sacala gratis en 3 minutos 👇</a></div>';
       }
       var ok=el.querySelector('#pj-tjw-ok');
       if(ok) ok.onclick=function(){ var inp=el.querySelector('#pj-tjw-num'); var r=activarTarjeta(inp?inp.value:''); if(!r.ok){ var e=el.querySelector('#pj-tjw-err'); if(e) e.textContent=r.msg; } else { render(); } };
+      var clr=el.querySelector('#pj-tjw-clear');
+      if(clr) clr.onclick=function(){ limpiarTarjeta(); render(); };
     }
     el.__pjRender=render; render();
   }
@@ -305,14 +338,14 @@
   function tituloActual(){
     var lv=levelOf(S.xp).idx, L=S.loc||'La Pampa';
     if(lv>=5) return 'Leyenda de '+L;
-    if(lv>=4) return 'El Crack de '+L;
+    if(lv>=4) return gword('El Crack de','La Crack de','El/La Crack de')+' '+L;
     if(lv>=3) return 'Referente de '+L;
-    if(lv>=2) return 'Capitán de '+L;
+    if(lv>=2) return gword('Capitán de','Capitana de','Capitán/Capitana de')+' '+L;
     if(lv>=1) return 'Titular de '+L;
     return '';
   }
   function downloadPass(node){
-    var lv=levelOf(S.xp).name, L=S.loc||'mi pueblo';
+    var lv=genLevel(levelOf(S.xp).name), L=S.loc||'mi pueblo';
     var cap='Voy '+lv+' en Pampa Mundialista, sumando para '+L+' 🔥 '+CUENTA;
     // 9:16 listo para historias (pampa-share compone el formato vertical)
     if(typeof window.pampaStory==='function'){
@@ -435,7 +468,7 @@
 
   // ===== refrescar contadores del index si existen =====
   function refreshIndex(){
-    var n=document.getElementById('pj-xp'); if(n) n.textContent=S.xp+' XP · '+levelOf(S.xp).name;
+    var n=document.getElementById('pj-xp'); if(n) n.textContent=S.xp+' XP · '+genLevel(levelOf(S.xp).name);
     if(typeof window.renderSellos==='function'){ try{ window.renderSellos(); }catch(e){} }
   }
 
@@ -453,6 +486,9 @@
     '.pj-sel,.pj-inp{width:100%;background:rgba(0,0,0,.5);border:2px solid rgba(244,236,216,.3);color:#f4ecd8;padding:.7rem;border-radius:8px;font-family:inherit;font-size:1rem;margin-bottom:.6rem}'+
     '.pj-btn{width:100%;background:linear-gradient(135deg,#75AADB,#4d8fc7);color:#04212e;border:none;padding:.85rem;border-radius:10px;font-family:"Anton",sans-serif;letter-spacing:.08em;font-size:1.05rem;cursor:pointer;text-transform:uppercase;margin-top:.3rem}'+
     '.pj-btn.ghost{background:transparent;border:1px solid rgba(244,236,216,.35);color:#f4ecd8;font-size:.9rem}'+
+    '.pj-gen{display:flex;gap:.4rem;margin:0 0 .5rem}'+
+    '.pj-gbtn{flex:1;background:rgba(0,0,0,.4);border:1px solid rgba(244,236,216,.3);color:#f4ecd8;border-radius:8px;padding:.5rem .3rem;font-family:inherit;font-size:.82rem;cursor:pointer}'+
+    '.pj-gbtn.on{border-color:#75AADB;background:rgba(117,170,219,.2);color:#9ec9ed;font-weight:700}'+
     '.pj-x{position:absolute;top:8px;right:12px;background:none;border:none;color:#f4ecd8;font-size:1.2rem;cursor:pointer;opacity:.7}'+
     '.pj-p-head{text-align:center;margin-bottom:.6rem}'+
     '.pj-p-lvl{font-family:"Anton",sans-serif;font-size:1.6rem;color:#f4cd60;line-height:1}'+
@@ -497,6 +533,7 @@
 
   function boot(){
     applyVip();
+    applyGenero();
     var tjEl=document.getElementById('pj-tarjeta'); if(tjEl) tarjetaWidget(tjEl);
     // Capa 2: pedir localidad la 1ª vez
     askLoc(false);
@@ -513,6 +550,7 @@
     openPasaporte:openPasaporte, pasaporteGrupal:pasaporteGrupal, desafioHoy:desafioHoy, marcarDesafio:marcarDesafio,
     confetti:confetti, golazo:golazo, compartir:compartir, SITE:SITE,
     tieneTarjeta:tieneTarjeta, activarTarjeta:activarTarjeta, tarjetaWidget:tarjetaWidget,
-    levelName:function(){return levelOf(S.xp).name;}, xp:function(){return S.xp;}, titulo:tituloActual, TOOLS:TOOLS, CUENTA:CUENTA
+    levelName:function(){return genLevel(levelOf(S.xp).name);}, xp:function(){return S.xp;}, titulo:tituloActual, TOOLS:TOOLS, CUENTA:CUENTA,
+    genero:function(){return S.genero;}, setGenero:setGenero, applyGenero:applyGenero
   };
 })();
