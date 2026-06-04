@@ -236,6 +236,9 @@
     .gh-steps span{background:rgba(0,0,0,0.35);border:1px solid rgba(244,236,216,0.18);border-radius:20px;padding:0.32rem 0.62rem;font-size:0.66rem}
     .gh-steps b{color:var(--gold-2);font-family:'Anton',sans-serif;margin-right:0.25rem}
     .gh-cta{display:inline-block;color:var(--celeste-2);font-family:'JetBrains Mono',monospace;font-size:0.68rem;letter-spacing:0.05em;text-decoration:none;border-bottom:1px dashed rgba(158,201,237,0.5);padding-bottom:1px}
+    .gh-mas{font-size:0.78rem;line-height:1.4;max-width:560px;margin:-0.25rem auto 0.85rem;padding:0.5rem 0.7rem;background:rgba(117,170,219,0.12);border:1px solid rgba(117,170,219,0.32);border-radius:10px}
+    .gh-mas b{color:var(--gold-2)}
+    .gh-bases{display:block;margin-top:0.55rem;color:var(--gold-2);font-family:'JetBrains Mono',monospace;font-size:0.64rem;letter-spacing:0.04em;text-decoration:none;opacity:0.92}
     @media(max-width:480px){.gh-fecha{min-width:30%;flex:1}}
   </style>
   <section class="ganar-hero" id="ganar">
@@ -243,8 +246,10 @@
     <h2 class="gh-title">JUGÁ, LLENÁ TU PASAPORTE Y <span>GANÁ</span></h2>
     <p class="gh-sub">En <b>cada fecha de la Selección</b> sorteamos premios entre los que tengan el <b>pasaporte completo y subido</b>. Cuanto antes lo completás y más aguante le metés <b>compartiendo</b> (es una misión del pasaporte), en <b>más sorteos</b> entrás.</p>
     <div class="gh-fechas" id="gh-fechas"></div>
+    <div class="gh-mas">🇦🇷 Y cuanto <b>más avanza la Selección</b>, más fechas y más sorteos: octavos, cuartos, semi y la final. ¡Si Argentina llega lejos, hay más chances para todos!</div>
     <div class="gh-steps"><span><b>1</b>Llená tu pasaporte jugando</span><span><b>2</b>Subilo al formulario</span><span><b>3</b>Entrás al sorteo de esa fecha</span></div>
-    <a class="gh-cta" href="#concurso">Ver las bases y cómo se gana 👇</a>
+    <a class="gh-cta" href="#concurso">Ver cómo se gana 👇</a>
+    <a class="gh-bases" href="#bases">📄 Leé las Bases del concurso ↓</a>
   </section>
   <script>
   (function(){
@@ -441,9 +446,10 @@
     <p style="margin:1.2rem 0 0.3rem"><b>🎁 ¿Cómo se gana? Sorteos por fecha</b></p>
     <div class="part-out" style="border-left-color:var(--verde-fluo);background:rgba(74,222,128,0.08)">
       Durante todo el Mundial, <b>en cada fecha de la Selección Argentina hacemos sorteos</b>: uno <b>individual</b> y uno <b>grupal</b>, entre todos los que tengan el <b>pasaporte completo y subido</b> al formulario.<br><br>
+      🇦🇷 <b>Cuanto más avanza la Selección, más sorteos:</b> hay una fecha por cada partido —fase de grupos, octavos, cuartos, semi y la final—. Si Argentina llega lejos, más chances para todos.<br><br>
       ⏱️ <b>Cuanto antes completás y subís tu pasaporte, en más sorteos entrás.</b> El único requisito para participar es ese: tener el pasaporte completado y subido.<br><br>
       📣 Y los que <b>más participan y comparten</b> en redes (etiquetando a <b>@pampamundialista</b>) pueden ser <b>destacados y republicados</b> en la cuenta.<br><br>
-      ✅ Los premios de cada fecha se anuncian en las redes de la Subse y en las Bases.
+      🎁 <b>¿Qué se gana?</b> Premios para hinchas: <b>pelotas, camisetas e indumentaria deportiva</b>, merch mundialista y beneficios de Tarjeta Joven. El detalle de cada fecha se anuncia en las redes de la Subse y en las Bases.
     </div>
 
     <p style="margin:1.2rem 0 0.2rem"><b>🎙️ Misiones de Creación</b> — además de jugar, podés crear y mandar:</p>
@@ -460,7 +466,7 @@
     <p class="insc-desc">Para el que juega por su cuenta.</p>
     <a class="insc-btn insc-grp" href="https://forms.gle/21fojnyVVPRdDYvf8" target="_blank" rel="noopener">⚽ Anotá tu equipo (grupal)</a>
     <p class="insc-desc">Para el <b>capitán</b> que anota a su equipo de fútbol cinco (capitán + cuatro, hasta tres suplentes).</p>
-    <a class="bases-btn" href="./bases.pdf" target="_blank" rel="noopener">📄 Bases y Condiciones</a>
+    <a class="bases-btn" id="bases" href="./bases.pdf" target="_blank" rel="noopener">📄 Bases y Condiciones del Concurso</a>
   </div>
 
   <!-- (El bloque de Tarjeta Joven se movió arriba como "Modo Jugador Oficial") -->
