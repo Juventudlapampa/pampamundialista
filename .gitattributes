@@ -1,0 +1,18 @@
+# Tratar binarios como binarios: git nunca convierte saltos de línea (no corrompe PDFs/imágenes)
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.svg -text
+*.ico binary
+*.mp3 binary
+*.wav binary
+*.ogg binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary
+*.zip binary
+*.rar binary
