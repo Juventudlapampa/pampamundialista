@@ -16,20 +16,22 @@
 <meta name="twitter:image" content="https://pampamundialista.vercel.app/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/brand.css">
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* Piel de marca: variables legacy aliasadas a los tokens del home (assets/brand.css) */
   :root {
-    --bg: #050d08;
-    --verde: #1a8a4a;
-    --verde-2: #0d4a2c;
-    --verde-fluo: #4ade80;
-    --gold: #d4a82e;
-    --gold-2: #f4cd60;
-    --crema: #f4ecd8;
-    --rojo: #dc2626;
-    --azul: #75AADB;
+    --bg: var(--pm-navy);
+    --verde: var(--pm-panel);
+    --verde-2: var(--pm-navy);
+    --verde-fluo: var(--pm-celeste-2);
+    --gold: var(--pm-celeste);
+    --gold-2: var(--pm-celeste-2);
+    --crema: var(--pm-ink);
+    --rojo: var(--pm-celeste-claro);
+    --azul: var(--pm-celeste-claro);
   }
   body {
     font-family: 'DM Sans', sans-serif;
@@ -58,14 +60,14 @@
     margin-top: 0.3rem;
     line-height: 0.95;
   }
-  h1 span { color: var(--gold); text-shadow: 0 0 30px rgba(212,168,46,0.5); }
+  h1 span { color: var(--gold); text-shadow: 0 0 30px rgba(47,159,212,0.5); }
   .screen { display: none; }
   .screen.active { display: block; animation: fadeIn 0.3s; }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
   .panel {
     background: rgba(0,0,0,0.6);
-    border: 2px solid rgba(212,168,46,0.3);
+    border: 2px solid rgba(47,159,212,0.3);
     border-radius: 16px;
     padding: 1.3rem;
   }
@@ -84,7 +86,7 @@
   select {
     width: 100%;
     background: rgba(0,0,0,0.5);
-    border: 1px solid rgba(212,168,46,0.4);
+    border: 1px solid rgba(47,159,212,0.4);
     color: var(--crema);
     padding: 0.6rem;
     border-radius: 6px;
@@ -116,7 +118,7 @@
   }
   .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 0 #7f1d1d; }
   .btn:active { transform: translateY(3px); box-shadow: 0 3px 0 #7f1d1d; }
-  .btn-gold { background: linear-gradient(135deg, var(--gold), var(--gold-2)); color: #000; box-shadow: 0 6px 0 #927200; }
+  .btn-gold { background: linear-gradient(135deg, var(--gold), var(--gold-2)); color: #000; box-shadow: 0 6px 0 #1a6a9e; }
   .btn-secondary { background: rgba(0,0,0,0.4); border: 2px solid var(--gold); color: var(--crema); box-shadow: none; }
 
   /* GAME HUD */
@@ -149,7 +151,7 @@
 
   /* CANCHA - vista lateral 2D */
   .cancha-wrap {
-    background: linear-gradient(180deg, #1a3a2a 0%, #0d4a2c 100%);
+    background: linear-gradient(180deg, #1d3a5c 0%, #16243F 100%);
     border: 3px solid rgba(255,255,255,0.4);
     border-radius: 10px;
     padding: 1rem 0.5rem;
@@ -188,8 +190,8 @@
     z-index: 3;
   }
   .zona {
-    background: rgba(212,168,46,0.1);
-    border: 2px dashed rgba(212,168,46,0.4);
+    background: rgba(47,159,212,0.1);
+    border: 2px dashed rgba(47,159,212,0.4);
     border-radius: 5px;
     cursor: pointer;
     display: flex;
@@ -201,13 +203,13 @@
     transition: all 0.15s;
   }
   .zona:hover, .zona:active {
-    background: rgba(212,168,46,0.4);
+    background: rgba(47,159,212,0.4);
     border-color: var(--gold);
     border-style: solid;
     transform: scale(1.05);
   }
   .zona.selected {
-    background: rgba(74,222,128,0.4);
+    background: rgba(47,159,212,0.4);
     border-color: var(--verde-fluo);
     border-style: solid;
     color: var(--verde-fluo);
@@ -350,11 +352,11 @@
   .power-bar-track {
     height: 28px;
     background: linear-gradient(90deg,
-      #dc2626 0%, #dc2626 20%,
+      #2f9fd4 0%, #2f9fd4 20%,
       #f59e0b 20%, #f59e0b 35%,
       var(--verde-fluo) 35%, var(--verde-fluo) 75%,
       #f59e0b 75%, #f59e0b 92%,
-      #dc2626 92%, #dc2626 100%);
+      #2f9fd4 92%, #2f9fd4 100%);
     border-radius: 4px;
     position: relative;
     cursor: pointer;
@@ -385,7 +387,7 @@
   }
   .curve-wrap.active { display: grid; grid-template-columns: 1fr 1fr 1fr; }
   .curve-btn {
-    background: rgba(37,99,235,0.4);
+    background: rgba(47,159,212,0.4);
     border: 2px solid var(--azul);
     color: white;
     padding: 0.8rem;
@@ -408,7 +410,7 @@
 .grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
 </style>
 </head>
-<body>
+<body class="pm-skin">
 <div class="container">
   <header>
     <div class="header-tag">Tiros Libres · Mundial 2026</div>
@@ -456,8 +458,8 @@
         <svg class="arquero" id="arquero" viewBox="0 0 38 50">
           <circle class="arquero-head" cx="19" cy="9" r="6.5" stroke="#000" stroke-width="0.8"/>
           <rect class="arquero-body" x="11" y="15" width="16" height="20" rx="2"/>
-          <rect x="6" y="18" width="6" height="10" rx="2" fill="#dc2626"/>
-          <rect x="26" y="18" width="6" height="10" rx="2" fill="#dc2626"/>
+          <rect x="6" y="18" width="6" height="10" rx="2" fill="#2f9fd4"/>
+          <rect x="26" y="18" width="6" height="10" rx="2" fill="#2f9fd4"/>
           <rect x="11" y="35" width="7" height="13" fill="#000"/>
           <rect x="20" y="35" width="7" height="13" fill="#000"/>
         </svg>
@@ -819,7 +821,7 @@ function showBigMsg(text, type) {
 function shake() { document.body.classList.add('shaking'); setTimeout(() => document.body.classList.remove('shaking'), 400); }
 function vibe(ms){ try{ if(navigator.vibrate) navigator.vibrate(ms); }catch(e){} }
 function confeti(){
-  const cols=['#4ade80','#d4a82e','#f4cd60','#38bdf8','#fff','#f87171'];
+  const cols=['#2f9fd4','#6cc0ec','#9BD6EF','#75AADB','#fff','#2BAADC'];
   for(let i=0;i<30;i++){ const c=document.createElement('div');
     c.style.cssText=`position:fixed;top:-12px;left:${10+Math.random()*80}vw;width:9px;height:14px;z-index:9999;pointer-events:none;background:${cols[i%cols.length]};transform:rotate(${Math.random()*360}deg)`;
     document.body.appendChild(c); const dur=1100+Math.random()*900;
@@ -851,7 +853,7 @@ document.getElementById('r-download').onclick = () => {
   const node = document.getElementById('result-panel');
   const w = node.offsetWidth, h = node.offsetHeight;
   html2canvas(node, {
-    backgroundColor: '#050d08', scale: 2, useCORS: true, allowTaint: true, logging: false,
+    backgroundColor: '#16243F', scale: 2, useCORS: true, allowTaint: true, logging: false,
     width: w, height: h,
     windowWidth: document.documentElement.clientWidth,
     windowHeight: document.documentElement.clientHeight
