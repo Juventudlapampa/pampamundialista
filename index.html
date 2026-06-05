@@ -426,22 +426,22 @@
     </div>
   </section>
 
-  <!-- PUERTA 4: TU PRONÓSTICO -->
+  <!-- PUERTA 4: RINCÓN DE HINCHA -->
   <section class="puerta" style="--ac:var(--relato)">
     <button class="puerta-head" onclick="togglePuerta(this)">
       <div class="puerta-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M7 4h10v4.5a5 5 0 0 1-10 0z"/><path d="M7 5.5H4.2v1.8a2.8 2.8 0 0 0 2.8 2.8M17 5.5h2.8v1.8a2.8 2.8 0 0 1-2.8 2.8"/><path d="M12 13.5v3.5M9 20h6M10 17h4"/></svg></div>
       <div class="puerta-info">
-        <div class="puerta-name">Tu Pronóstico</div>
-        <div class="puerta-desc">Bancá tu corazonada: decí quién levanta la Copa y jugátela.</div>
-        <div class="puerta-chips">Predictor del campeón · Fixture completo · Cartón mundialista</div>
+        <div class="puerta-name">Rincón de Hincha</div>
+        <div class="puerta-desc">Tu lugar para vivir el Mundial a tu manera.</div>
+        <div class="puerta-chips">Fixture · Oráculo de Cábalas · Armá tu banda</div>
       </div>
       <div class="puerta-badge">3</div><div class="puerta-arrow">▼</div>
     </button>
     <div class="puerta-body">
       <div class="grid-tools">
-        <a class="tool-card" data-id="predictor" href="#" onclick="return prontoSello(this)" aria-disabled="true"><span class="seal">🔵</span><div class="tool-icon">🧣</div><div class="tool-name">El Rincón del Hincha <span class="pronto-badge">PRONTO</span></div><div class="tool-desc">🔧 Se viene un espacio nuevo para los hinchas. Tocá para sumar tu sello — ¡muy pronto!</div></a>
-        <a class="tool-card" data-id="fixture" href="herramientas/09-fixture.html"><span class="seal">🔵</span><div class="tool-icon">📋</div><div class="tool-name">Fixture Completo</div><div class="tool-desc">Las 48 selecciones, del grupo a la final. Armá el cuadro y guardá tu campeón.</div></a>
-        <a class="tool-card" data-id="carton" href="#" onclick="return prontoSello(this)" aria-disabled="true"><span class="seal">🔵</span><div class="tool-icon">🎯</div><div class="tool-name">Cartón Mundialista <span class="pronto-badge">PRONTO</span></div><div class="tool-desc">🔧 Lo estamos preparando. Tocá para sumar tu sello — vuelve muy pronto.</div></a>
+        <a class="tool-card" data-id="fixture" href="herramientas/09-fixture.html"><span class="seal">🔵</span><div class="tool-icon">📋</div><div class="tool-name">Fixture</div><div class="tool-desc">El calendario oficial: partidos, días y sedes. Seguí a la Selección.</div></a>
+        <a class="tool-card" data-id="predictor" href="juegos/29-oraculo-cabalas.html"><span class="seal">🔵</span><div class="tool-icon">🔮</div><div class="tool-name">Oráculo de Cábalas</div><div class="tool-desc">No predice resultados: te dice cómo vas a vivir cada partido. Placas para bajar y compartir.</div></a>
+        <a class="tool-card" data-id="carton" href="#" onclick="return prontoSello(this)" aria-disabled="true"><span class="seal">🔵</span><div class="tool-icon">🥁</div><div class="tool-name">Armá tu banda <span class="pronto-badge">PRONTO</span></div><div class="tool-desc">🔧 Tu trapo, tu bombo y tus accesorios de hincha. Tocá para sumar tu sello — ¡muy pronto!</div></a>
       </div>
     </div>
   </section>
@@ -817,7 +817,7 @@
       chart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 4v16h16"/><rect x="7" y="12" width="3" height="5" fill="currentColor" stroke="none"/><rect x="12" y="8" width="3" height="9" fill="currentColor" stroke="none"/><rect x="17" y="14" width="3" height="3" fill="currentColor" stroke="none"/></svg>',
       heart:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7-4.5-9.3-9C1 8.5 2.5 5 6 5c2 0 3.2 1.2 4 2.3C10.8 6.2 12 5 14 5c3.5 0 5 3.5 3.3 7C19 16.5 12 21 12 21z"/></svg>'
     };
-    const MAP = { crack:'jersey', figu:'card', carnet:'id', once:'ball', penales:'trophy', tiros:'target', picado:'board', gambeta:'boot', carrera:'dice', trivia:'bolt', quesel:'crystal', escape:'lock', memo:'card', fixture:'board', carton:'grid', aula:'chalk', promo:'cap', simu:'chart', esi:'heart' };
+    const MAP = { crack:'jersey', figu:'card', carnet:'id', once:'ball', penales:'trophy', tiros:'target', picado:'board', gambeta:'boot', carrera:'dice', trivia:'bolt', quesel:'crystal', escape:'lock', memo:'card', fixture:'board', aula:'chalk', promo:'cap', simu:'chart', esi:'heart' };
     document.querySelectorAll('.tool-card[data-id]').forEach(c => {
       const ic = IC[MAP[c.dataset.id]]; const el = c.querySelector('.tool-icon');
       if (ic && el) el.innerHTML = ic;
