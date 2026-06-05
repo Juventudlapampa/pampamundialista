@@ -16,11 +16,13 @@
 <meta name="twitter:image" content="https://pampamundialista.vercel.app/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/brand.css">
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-  :root { --bg:#050d08; --verde:#0d3b26; --verde-fluo:#4ade80; --gold:#d4a82e; --gold-2:#f4cd60; --crema:#f4ecd8; --rojo:#f87171; --azul:#38bdf8; }
+  /* Piel de marca: variables legacy aliasadas a los tokens del home (assets/brand.css) */
+  :root { --bg:var(--pm-navy); --verde:var(--pm-panel); --verde-fluo:var(--pm-celeste-2); --gold:var(--pm-celeste); --gold-2:var(--pm-celeste-2); --crema:var(--pm-ink); --rojo:var(--pm-celeste-claro); --azul:var(--pm-celeste-2); }
   body { font-family:'DM Sans',sans-serif; background:var(--bg); min-height:100vh; color:var(--crema); padding:1rem; }
   .container { max-width:560px; margin:0 auto; }
   header { text-align:center; margin-bottom:0.8rem; }
@@ -30,24 +32,24 @@
   .screen { display:none; }
   .screen.active { display:block; animation:fade 0.3s; }
   @keyframes fade { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
-  .panel { background:rgba(0,0,0,0.5); border:2px solid rgba(212,168,46,0.3); border-radius:16px; padding:1.1rem; }
+  .panel { background:rgba(0,0,0,0.5); border:2px solid rgba(47,159,212,0.3); border-radius:16px; padding:1.1rem; }
   .lbl { font-family:'JetBrains Mono',monospace; font-size:0.64rem; letter-spacing:0.18em; color:var(--verde-fluo); text-transform:uppercase; margin:0.9rem 0 0.4rem; }
   input, select { width:100%; background:rgba(0,0,0,0.5); border:1px solid rgba(244,236,216,0.25); color:var(--crema); padding:0.6rem 0.65rem; border-radius:8px; font-family:inherit; font-size:0.92rem; }
   input:focus, select:focus { outline:none; border-color:var(--gold); }
   .btn { background:linear-gradient(135deg,var(--gold),var(--gold-2)); color:#000; border:none; padding:0.95rem; font-family:'Anton',sans-serif; letter-spacing:0.08em; border-radius:10px; cursor:pointer; width:100%; text-transform:uppercase; font-size:1.02rem; margin-top:0.7rem; }
   .btn:active { transform:scale(0.98); }
   .btn-sec { background:rgba(0,0,0,0.4); color:var(--crema); border:1px solid var(--gold); }
-  .btn-share { background:linear-gradient(135deg,#22c55e,#16a34a); color:#04210f; }
+  .btn-share { background:linear-gradient(135deg,#2f9fd4,#6cc0ec); color:#04212e; }
   .row { display:flex; gap:0.5rem; }
   .row > * { flex:1; }
   .chips { display:flex; gap:0.4rem; flex-wrap:wrap; }
-  .chip { background:rgba(0,0,0,0.4); border:2px solid rgba(212,168,46,0.25); border-radius:9px; padding:0.45rem 0.7rem; cursor:pointer; font-size:0.82rem; }
-  .chip.sel { border-color:var(--gold); background:rgba(212,168,46,0.16); color:var(--gold-2); }
+  .chip { background:rgba(0,0,0,0.4); border:2px solid rgba(47,159,212,0.25); border-radius:9px; padding:0.45rem 0.7rem; cursor:pointer; font-size:0.82rem; }
+  .chip.sel { border-color:var(--gold); background:rgba(47,159,212,0.16); color:var(--gold-2); }
   .dice-btn { flex:none; background:rgba(56,189,248,0.15); border:1px solid var(--azul); color:var(--azul); border-radius:8px; padding:0 0.6rem; font-size:1.05rem; cursor:pointer; }
 
   .rosters { display:grid; grid-template-columns:1fr 1fr; gap:0.7rem; }
   @media (max-width:520px){ .rosters { grid-template-columns:1fr; } }
-  .roster { background:rgba(0,0,0,0.35); border:1px solid rgba(212,168,46,0.25); border-radius:12px; padding:0.7rem; }
+  .roster { background:rgba(0,0,0,0.35); border:1px solid rgba(47,159,212,0.25); border-radius:12px; padding:0.7rem; }
   .roster.mine { border-color:var(--verde-fluo); }
   .roster-h { font-family:'Anton',sans-serif; letter-spacing:0.04em; font-size:0.95rem; margin-bottom:0.5rem; }
   .pl { margin-bottom:0.45rem; }
@@ -62,31 +64,31 @@
   .b-min { text-align:center; font-family:'JetBrains Mono',monospace; color:var(--verde-fluo); font-size:0.95rem; margin-bottom:0.5rem; font-weight:700; }
   .minbar { height:7px; background:rgba(0,0,0,0.5); border-radius:4px; overflow:hidden; margin:0.2rem 0 0.6rem; }
   .minbar-fill { height:100%; background:linear-gradient(90deg,var(--verde-fluo),var(--gold)); transition:width 0.5s; }
-  .log { background:rgba(0,0,0,0.45); border:1px solid rgba(212,168,46,0.2); border-radius:10px; padding:0.7rem 0.8rem; font-size:0.86rem; line-height:1.5; max-height:200px; overflow-y:auto; margin-bottom:0.7rem; }
+  .log { background:rgba(0,0,0,0.45); border:1px solid rgba(47,159,212,0.2); border-radius:10px; padding:0.7rem 0.8rem; font-size:0.86rem; line-height:1.5; max-height:200px; overflow-y:auto; margin-bottom:0.7rem; }
   .log div { margin-bottom:0.3rem; padding-bottom:0.3rem; border-bottom:1px solid rgba(255,255,255,0.05); }
   .log .gol { color:var(--gold-2); font-weight:700; }
   .log .ev { color:var(--azul); }
   .log .mom { opacity:0.7; font-style:italic; }
-  .decision { background:rgba(212,168,46,0.1); border:1px solid var(--gold); border-radius:12px; padding:0.9rem; }
+  .decision { background:rgba(47,159,212,0.1); border:1px solid var(--gold); border-radius:12px; padding:0.9rem; }
   .decision-q { font-size:0.95rem; line-height:1.45; margin-bottom:0.7rem; }
   .decision-q b { color:var(--gold-2); }
-  .opt { display:block; width:100%; text-align:left; background:rgba(13,59,38,0.7); border:2px solid rgba(244,236,216,0.18); color:var(--crema); padding:0.7rem 0.8rem; border-radius:10px; cursor:pointer; font-family:inherit; font-size:0.9rem; margin-bottom:0.45rem; line-height:1.3; }
-  .opt:hover { border-color:var(--gold); background:rgba(212,168,46,0.14); }
+  .opt { display:block; width:100%; text-align:left; background:rgba(30,54,87,0.7); border:2px solid rgba(244,236,216,0.18); color:var(--crema); padding:0.7rem 0.8rem; border-radius:10px; cursor:pointer; font-family:inherit; font-size:0.9rem; margin-bottom:0.45rem; line-height:1.3; }
+  .opt:hover { border-color:var(--gold); background:rgba(47,159,212,0.14); }
   .opt small { display:block; font-family:'JetBrains Mono',monospace; font-size:0.62rem; color:var(--verde-fluo); margin-top:0.2rem; opacity:0.85; }
 
   /* RESULT */
-  .res-card { text-align:center; background:linear-gradient(160deg,#0d3b26,#050d08); border:2px solid var(--gold); border-radius:16px; padding:1.6rem 1.3rem; }
+  .res-card { text-align:center; background:linear-gradient(160deg,#1e3657,#16243F); border:2px solid var(--gold); border-radius:16px; padding:1.6rem 1.3rem; }
   .res-emoji { font-size:3.2rem; }
   .res-score { font-family:'Anton',sans-serif; font-size:2.6rem; color:var(--gold-2); line-height:1; margin-top:0.2rem; }
   .res-teams { font-family:'JetBrains Mono',monospace; font-size:0.72rem; letter-spacing:0.06em; opacity:0.85; margin-top:0.3rem; }
   .res-rank { font-family:'Anton',sans-serif; font-size:1.5rem; color:var(--gold); letter-spacing:0.04em; margin-top:0.7rem; text-transform:uppercase; }
   .res-fig { font-size:0.9rem; margin-top:0.5rem; line-height:1.4; }
   .res-fig b { color:var(--gold-2); }
-  .res-wm { font-family:'JetBrains Mono',monospace; font-size:0.55rem; letter-spacing:0.2em; color:rgba(212,168,46,0.9); margin-top:0.9rem; }
+  .res-wm { font-family:'JetBrains Mono',monospace; font-size:0.55rem; letter-spacing:0.2em; color:rgba(47,159,212,0.9); margin-top:0.9rem; }
 .grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
 </style>
 </head>
-<body>
+<body class="pm-skin">
 <div class="container">
   <header>
     <div class="header-tag">El Picado · Simulador entre amigos</div>
@@ -438,7 +440,7 @@ $('replay').onclick=()=>{ // mismos equipos, re-leer inputs
   show('match'); window.scrollTo(0,0); nextStop();
 };
 $('to-intro').onclick=()=>show('s1');
-$('download').onclick=()=>{ const node=$('res-card'); const w=node.offsetWidth,h=node.offsetHeight; html2canvas(node,{backgroundColor:'#050d08',scale:2,useCORS:true,allowTaint:true,logging:false,width:w,height:h,windowWidth:document.documentElement.clientWidth,windowHeight:document.documentElement.clientHeight}).then(c=>{ const l=document.createElement('a'); l.download='el-picado-mundial-2026.png'; l.href=c.toDataURL('image/png'); l.click(); }); };
+$('download').onclick=()=>{ const node=$('res-card'); const w=node.offsetWidth,h=node.offsetHeight; html2canvas(node,{backgroundColor:'#16243F',scale:2,useCORS:true,allowTaint:true,logging:false,width:w,height:h,windowWidth:document.documentElement.clientWidth,windowHeight:document.documentElement.clientHeight}).then(c=>{ const l=document.createElement('a'); l.download='el-picado-mundial-2026.png'; l.href=c.toDataURL('image/png'); l.click(); }); };
 $('share').onclick=()=>{ const r= teamA.goles>teamB.goles?'ganamos':teamA.goles<teamB.goles?'perdimos':'empatamos'; shareReto(`⚽ Simulé el picado del barrio (${teamA?teamA.name:''} vs ${teamB?teamB.name:''}) y ${r} ${teamA?teamA.goles:0}-${teamB?teamB.goles:0} en "El Picado" del Mundial 2026. Armá el tuyo 📲 pampamundialista.vercel.app · @juventud_lapampa`); };
 function shareReto(text){ if(navigator.share){navigator.share({title:'El Picado · Pampa Mundialista',text}).catch(()=>{});} else if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>alert('¡Reto copiado! Mandáselo a un amigo 📲'),()=>prompt('Copiá tu reto:',text));} else {prompt('Copiá tu reto:',text);} }
 </script>
