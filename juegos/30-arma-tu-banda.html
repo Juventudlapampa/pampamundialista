@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Armá tu banda · Pampa Mundialista</title>
+<meta name="description" content="Armá la identidad de tu banda de hinchas: trapo, bombo y accesorios. Bajá tu kit de hincha. Juventudes La Pampa · Mundial 2026.">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Armá tu banda · Pampa Mundialista">
+<meta property="og:description" content="Tu trapo, tu bombo y tus accesorios de hincha. Bajá tu kit.">
+<meta property="og:image" content="https://pampamundialista.vercel.app/og-image.png">
+<meta property="og:url" content="https://pampamundialista.vercel.app/juegos/30-arma-tu-banda.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/brand.css">
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'DM Sans',sans-serif; color:var(--pm-ink); min-height:100vh; padding:1.2rem 1rem 2rem; }
+  .container { max-width:600px; margin:0 auto; position:relative; z-index:1; }
+  .back { display:inline-block; color:var(--pm-celeste-2); text-decoration:none; font-family:'JetBrains Mono',monospace; font-size:0.72rem; letter-spacing:0.12em; margin-bottom:1rem; }
+  header { text-align:center; margin-bottom:1.2rem; }
+  .eyebrow { font-family:'JetBrains Mono',monospace; font-size:0.66rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--pm-celeste-2); }
+  h1 { font-family:'Anton',sans-serif; font-size:clamp(2rem,8vw,3rem); letter-spacing:0.03em; text-transform:uppercase; line-height:0.95; margin:0.3rem 0 0.4rem; }
+  h1 span { color:var(--pm-celeste); }
+  .bajada { font-size:0.92rem; opacity:0.9; line-height:1.45; max-width:440px; margin:0 auto; }
+
+  .paso { background:rgba(0,0,0,0.28); border:1px solid var(--pm-line); border-radius:14px; padding:1.1rem; margin-bottom:0.9rem; }
+  .paso-tit { font-family:'Anton',sans-serif; font-size:1.1rem; letter-spacing:0.04em; text-transform:uppercase; color:var(--pm-celeste-2); margin-bottom:0.7rem; }
+  .paso-tit .n { display:inline-flex; align-items:center; justify-content:center; width:1.5rem; height:1.5rem; border-radius:50%; background:var(--pm-grad); color:#04212e; font-size:0.85rem; margin-right:0.5rem; }
+  label.f { display:block; font-size:0.78rem; color:var(--pm-celeste-2); margin:0.5rem 0 0.25rem; font-family:'JetBrains Mono',monospace; letter-spacing:0.06em; text-transform:uppercase; }
+  input[type=text], select { width:100%; background:rgba(0,0,0,0.4); border:1px solid var(--pm-line); color:var(--pm-ink); padding:0.7rem; border-radius:8px; font-family:inherit; font-size:0.95rem; }
+  input:focus, select:focus { outline:none; border-color:var(--pm-celeste); }
+  .colores { display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.3rem; }
+  .swatch { width:2.1rem; height:2.1rem; border-radius:50%; cursor:pointer; border:3px solid transparent; }
+  .swatch.on { border-color:var(--pm-white); transform:scale(1.08); }
+  .acc-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; margin-top:0.3rem; }
+  .acc { display:flex; align-items:center; gap:0.5rem; background:rgba(0,0,0,0.35); border:1px solid var(--pm-line); border-radius:10px; padding:0.6rem 0.7rem; cursor:pointer; font-size:0.9rem; }
+  .acc.on { border-color:var(--pm-celeste); background:rgba(47,159,212,0.14); }
+  .acc .em { font-size:1.3rem; }
+
+  /* LÁMINA / KIT (lo que se descarga) */
+  .lamina { background:linear-gradient(160deg,#1d3157 0%,#16243F 75%); border:2px solid var(--pm-celeste); border-radius:18px; padding:1.4rem 1.2rem 1.6rem; margin-top:0.4rem; position:relative; overflow:hidden; }
+  .lam-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem; }
+  .lam-estrellas { color:var(--pm-celeste-2); letter-spacing:0.15em; }
+  .lam-tag { font-family:'JetBrains Mono',monospace; font-size:0.6rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--pm-celeste-2); }
+  .lam-nombre { font-family:'Anton',sans-serif; font-size:clamp(1.6rem,7vw,2.2rem); text-transform:uppercase; line-height:1; letter-spacing:0.02em; text-align:center; margin:0.3rem 0 0.1rem; }
+  .lam-loc { text-align:center; font-family:'JetBrains Mono',monospace; font-size:0.7rem; letter-spacing:0.12em; color:var(--pm-celeste-2); text-transform:uppercase; margin-bottom:1rem; }
+  .piezas { display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; }
+  .pieza { background:rgba(0,0,0,0.25); border:1px solid var(--pm-line); border-radius:12px; padding:0.7rem; text-align:center; }
+  .pieza-lbl { font-family:'JetBrains Mono',monospace; font-size:0.58rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--pm-celeste-2); margin-bottom:0.5rem; }
+  /* Trapo */
+  .trapo { border-radius:6px; padding:0.7rem 0.5rem; min-height:74px; display:flex; flex-direction:column; justify-content:center; gap:0.2rem; box-shadow:0 3px 10px rgba(0,0,0,0.35); }
+  .trapo .tp-nom { font-family:'Anton',sans-serif; font-size:1rem; line-height:1; letter-spacing:0.02em; text-transform:uppercase; }
+  .trapo .tp-frase { font-size:0.66rem; opacity:0.95; line-height:1.2; }
+  /* Bombo */
+  .bombo { width:74px; height:74px; border-radius:50%; margin:0 auto; display:flex; align-items:center; justify-content:center; text-align:center; box-shadow:0 3px 10px rgba(0,0,0,0.35); border:3px solid rgba(255,255,255,0.85); }
+  .bombo span { font-family:'Anton',sans-serif; font-size:0.7rem; line-height:0.95; text-transform:uppercase; padding:0 4px; }
+  /* Accesorios pieza */
+  .acc-list { grid-column:1/3; display:flex; flex-wrap:wrap; gap:0.5rem; justify-content:center; }
+  .acc-chip { display:flex; align-items:center; gap:0.35rem; background:rgba(47,159,212,0.14); border:1px solid var(--pm-celeste); border-radius:999px; padding:0.3rem 0.7rem; font-size:0.78rem; }
+  .acc-empty { font-size:0.78rem; opacity:0.7; }
+  .lam-foot { display:flex; justify-content:space-between; margin-top:1rem; padding-top:0.7rem; border-top:1px solid var(--pm-line); font-family:'JetBrains Mono',monospace; font-size:0.56rem; letter-spacing:0.08em; color:var(--pm-celeste-2); }
+  .lam-foot b { font-family:'Anton',sans-serif; color:var(--pm-ink); }
+
+  .actions { display:flex; gap:0.5rem; margin-top:0.9rem; flex-wrap:wrap; }
+  .act { flex:1; min-width:160px; text-align:center; border:none; border-radius:10px; padding:0.9rem; font-family:'Anton',sans-serif; letter-spacing:0.06em; text-transform:uppercase; font-size:0.95rem; cursor:pointer; }
+  .act.dl { background:var(--pm-grad); color:#04212e; }
+  .act.sec { background:rgba(0,0,0,0.3); color:var(--pm-celeste-2); border:1px solid var(--pm-celeste); }
+  .nota { text-align:center; font-size:0.78rem; color:var(--pm-celeste-2); opacity:0.85; margin-top:0.7rem; line-height:1.4; }
+</style>
+</head>
+<body class="pm-skin">
+<div class="container">
+  <a class="back" href="../index.html">← Volver a Pampa Mundialista</a>
+  <header>
+    <div class="eyebrow">🥁 Rincón de Hincha · Mundial 2026</div>
+    <h1>ARMÁ TU <span>BANDA</span></h1>
+    <p class="bajada">Tu trapo, tu bombo y tus accesorios. Armá la identidad de tu banda y bajá tu <b>kit de hincha</b> para la cancha (o el living).</p>
+  </header>
+
+  <!-- PASO 1: Datos -->
+  <div class="paso">
+    <div class="paso-tit"><span class="n">1</span>Datos de la banda</div>
+    <label class="f" for="nombre">Nombre de la banda</label>
+    <input type="text" id="nombre" maxlength="22" placeholder="Ej: Los del Caldén">
+    <label class="f">Colores</label>
+    <div class="colores" id="colores"></div>
+    <label class="f" for="loc">Localidad</label>
+    <select id="loc"></select>
+  </div>
+
+  <!-- PASO 2: Trapo -->
+  <div class="paso">
+    <div class="paso-tit"><span class="n">2</span>Tu trapo</div>
+    <label class="f" for="trapo-frase">Frase del trapo</label>
+    <input type="text" id="trapo-frase" maxlength="34" placeholder="Ej: De La Pampa al Mundial">
+  </div>
+
+  <!-- PASO 3: Bombo -->
+  <div class="paso">
+    <div class="paso-tit"><span class="n">3</span>Tu bombo</div>
+    <label class="f" for="bombo-parche">Parche / nombre en el bombo</label>
+    <input type="text" id="bombo-parche" maxlength="16" placeholder="Ej: EL CALDÉN">
+  </div>
+
+  <!-- PASO 4: Accesorios -->
+  <div class="paso">
+    <div class="paso-tit"><span class="n">4</span>Accesorios</div>
+    <div class="acc-grid" id="acc-grid"></div>
+  </div>
+
+  <!-- KIT / LÁMINA -->
+  <div class="paso-tit" style="margin:1.2rem 0 0.4rem"><span class="n">★</span>Tu kit de hincha</div>
+  <div class="lamina" id="lamina">
+    <div class="lam-top"><span class="lam-estrellas">★ ★ ★</span><span class="lam-tag">Kit de Hincha · Pampa Mundialista</span></div>
+    <div class="lam-nombre" id="lam-nombre">Tu banda</div>
+    <div class="lam-loc" id="lam-loc">📍 La Pampa</div>
+    <div class="piezas">
+      <div class="pieza">
+        <div class="pieza-lbl">El trapo</div>
+        <div class="trapo" id="lam-trapo"><div class="tp-nom" id="lam-trapo-nom">TU BANDA</div><div class="tp-frase" id="lam-trapo-frase">Tu frase acá</div></div>
+      </div>
+      <div class="pieza">
+        <div class="pieza-lbl">El bombo</div>
+        <div class="bombo" id="lam-bombo"><span id="lam-bombo-txt">BOMBO</span></div>
+      </div>
+      <div class="pieza" style="grid-column:1/3">
+        <div class="pieza-lbl">Accesorios</div>
+        <div class="acc-list" id="lam-acc"><span class="acc-empty">Elegí tus accesorios arriba</span></div>
+      </div>
+    </div>
+    <div class="lam-foot"><b>PAMPA MUNDIALISTA</b><span>@pampamundialista · pampamundialista.vercel.app</span></div>
+  </div>
+
+  <div class="actions">
+    <button class="act dl" id="descargar">📥 Descargá tu kit de hincha</button>
+    <button class="act sec" id="dl-trapo">🏴 Solo el trapo</button>
+  </div>
+  <p class="nota">Bajá tu kit y mandalo a la banda o subilo a tu historia etiquetando a <b>@pampamundialista</b>. 🥁🇦🇷</p>
+</div>
+
+<script>
+// 80 localidades de La Pampa
+const LOCS = ['25 de Mayo','Adolfo Van Praet','Agustoni','Algarrobo del Águila','Alpachiri','Alta Italia',
+  'Anguil','Arata','Ataliva Roca','Bernardo Larroudé','Bernasconi','Caleufú','Carro Quemado','Catriló',
+  'Ceballos','Chacharramendi','Colonia Barón','Conhelo','Coronel Hilario Lagos','Cuchillo-Có','Doblas',
+  'Eduardo Castex','Embajador Martini','Falucho','General Acha','General Pico','Gobernador Duval','Guatraché',
+  'Ingeniero Luiggi','Intendente Alvear','Jacinto Arauz','La Adela','La Humada','La Maruja','La Reforma',
+  'Limay Mahuida','Lonquimay','Luan Toro','Macachín','Maisonnave','Mariano Miró','Mauricio Mayer','Metileo',
+  'Miguel Riglos','Monte Nievas','Naicó','Parera','Pichi Huinca','Puelches','Puelén','Quehué','Quemú Quemú',
+  'Rancul','Realicó','Rolón','Santa Isabel','Santa Rosa','Sarah','Speluzzi','Telén','Toay',
+  'Tomás M. de Anchorena','Trenel','Uriburu','Vértiz','Victorica','Villa Mirasol','Winifreda'];
+
+// Colores brand-safe (sin verde/rojo/dorado): celestes, navy, blanco y los institucionales azul/violeta/magenta
+const COLORES = [
+  {n:'Celeste', c:'#2f9fd4'}, {n:'Celeste claro', c:'#9BD6EF'}, {n:'Azul', c:'#2B3A8F'},
+  {n:'Navy', c:'#16243F'}, {n:'Blanco', c:'#f4f8fc'}, {n:'Violeta', c:'#9B3DAA'}, {n:'Magenta', c:'#E8317A'}, {n:'Cian', c:'#2BAADC'}
+];
+const ACCS = [
+  {id:'gorro', em:'🧢', n:'Gorro'}, {id:'bufanda', em:'🧣', n:'Bufanda'},
+  {id:'vincha', em:'🎗️', n:'Vincha'}, {id:'pintura', em:'🎨', n:'Pintura en la cara'}
+];
+
+const $ = (id)=>document.getElementById(id);
+const state = { color:'#2f9fd4', color2:'#f4f8fc', acc:{} };
+
+// Poblar localidades
+$('loc').innerHTML = '<option value="">— Elegí tu localidad —</option>' + LOCS.map(l=>'<option>'+l+'</option>').join('');
+
+// Colores (elegís 2: el segundo toque define el color secundario)
+let colorPick = 0;
+$('colores').innerHTML = COLORES.map(c=>'<span class="swatch" data-c="'+c.c+'" title="'+c.n+'" style="background:'+c.c+'"></span>').join('');
+function paintSwatches(){
+  document.querySelectorAll('.swatch').forEach(s=>{ s.classList.toggle('on', s.dataset.c===state.color || s.dataset.c===state.color2); });
+}
+document.querySelectorAll('.swatch').forEach(s=>s.onclick=()=>{
+  if(colorPick===0){ state.color=s.dataset.c; colorPick=1; } else { state.color2=s.dataset.c; colorPick=0; }
+  paintSwatches(); render();
+});
+paintSwatches();
+
+// Accesorios
+$('acc-grid').innerHTML = ACCS.map(a=>'<div class="acc" data-id="'+a.id+'"><span class="em">'+a.em+'</span><span>'+a.n+'</span></div>').join('');
+document.querySelectorAll('.acc').forEach(el=>el.onclick=()=>{ const id=el.dataset.id; state.acc[id]=!state.acc[id]; el.classList.toggle('on',state.acc[id]); render(); });
+
+function txtColorFor(bg){ // texto legible sobre el color elegido
+  const c=bg.replace('#',''); const r=parseInt(c.substr(0,2),16),g=parseInt(c.substr(2,2),16),b=parseInt(c.substr(4,2),16);
+  return (r*299+g*587+b*114)/1000 > 150 ? '#16243F' : '#ffffff';
+}
+
+function render(){
+  const nombre = $('nombre').value.trim() || 'Tu banda';
+  const loc = $('loc').value || 'La Pampa';
+  const frase = $('trapo-frase').value.trim() || 'Tu frase acá';
+  const parche = $('bombo-parche').value.trim() || (LOCS.includes(loc)?loc:'BOMBO');
+  $('lam-nombre').textContent = nombre.toUpperCase();
+  $('lam-loc').textContent = '📍 ' + loc;
+  // trapo con los 2 colores
+  const trapo = $('lam-trapo');
+  trapo.style.background = 'linear-gradient(135deg,'+state.color+' 0%,'+state.color+' 55%,'+state.color2+' 55%,'+state.color2+' 100%)';
+  $('lam-trapo-nom').textContent = (LOCS.includes(loc)?loc:nombre).toUpperCase();
+  $('lam-trapo-nom').style.color = txtColorFor(state.color);
+  $('lam-trapo-frase').textContent = frase;
+  $('lam-trapo-frase').style.color = txtColorFor(state.color);
+  // bombo
+  const bombo = $('lam-bombo');
+  bombo.style.background = 'radial-gradient(circle at 35% 30%, '+state.color2+', '+state.color+')';
+  const bt = $('lam-bombo-txt'); bt.textContent = parche.toUpperCase(); bt.style.color = txtColorFor(state.color);
+  // accesorios
+  const sel = ACCS.filter(a=>state.acc[a.id]);
+  $('lam-acc').innerHTML = sel.length ? sel.map(a=>'<span class="acc-chip"><span>'+a.em+'</span>'+a.n+'</span>').join('') : '<span class="acc-empty">Sin accesorios (sumá arriba)</span>';
+}
+['nombre','trapo-frase','bombo-parche','loc'].forEach(id=>$(id).addEventListener('input',render));
+$('loc').addEventListener('change',render);
+render();
+
+// Descargas
+function bajar(node, file, btn){
+  const prev = btn.textContent; btn.textContent='⏳ Generando…';
+  html2canvas(node, { backgroundColor:'#16243F', scale:2, useCORS:true, logging:false }).then(function(canvas){
+    const a=document.createElement('a'); a.href=canvas.toDataURL('image/png'); a.download=file; a.click();
+    btn.textContent='✅ ¡Listo!'; setTimeout(()=>btn.textContent=prev,2400);
+  }).catch(function(){ btn.textContent=prev; alert('No se pudo generar la imagen. Probá de nuevo.'); });
+}
+$('descargar').onclick = function(){ bajar($('lamina'), 'kit-de-hincha-pampa-mundialista.png', this); };
+$('dl-trapo').onclick = function(){ bajar($('lam-trapo'), 'mi-trapo-pampa-mundialista.png', this); };
+</script>
+<script src="../pampa-marca.js"></script>
+</body>
+</html>
