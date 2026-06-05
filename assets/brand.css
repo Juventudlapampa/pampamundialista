@@ -66,3 +66,31 @@ body.pm-skin a { color: var(--pm-celeste-2); }
    celeste lleno = un lado, celeste tenue = el otro. No lee ganador/perdedor. */
 .pm-vs-full { background: var(--pm-celeste); }
 .pm-vs-soft { background: rgba(47,159,212,0.22); }
+
+/* ============================================================================
+   Override de la UI compartida de pampa-juego.js (localidad, pasaporte, toasts,
+   Tarjeta Joven, modo VIP) a celeste/navy. En el home esto ya se pisa inline;
+   acá lo centralizamos para que TODA herramienta que cargue brand.css matchee.
+   ============================================================================ */
+.pj-modal { border-color: var(--pm-celeste) !important; }
+.pj-m-tit, .pj-p-lvl, .pj-p-lab, .pj-p-title, .pj-tjw-t, .pj-vip-t, .pj-toast b {
+  color: var(--pm-celeste-2) !important;
+}
+.pj-badge {
+  color: var(--pm-celeste-2) !important;
+  background: rgba(47,159,212,0.15) !important;
+  border-color: rgba(47,159,212,0.5) !important;
+}
+.pj-toast { border-color: var(--pm-celeste) !important; background: #16243F !important; }
+.pj-toast.big { border-color: var(--pm-celeste-2) !important; background: #16243F !important; }
+.pj-xpfill { background: linear-gradient(90deg, #2f9fd4, #6cc0ec) !important; }
+.pj-cell.on { border-color: var(--pm-celeste) !important; background: rgba(47,159,212,0.14) !important; }
+.pj-vip-on {
+  border-color: var(--pm-celeste) !important;
+  background: linear-gradient(135deg, rgba(47,159,212,0.16), rgba(108,192,236,0.05)) !important;
+}
+#pj-pass-grupo { background: linear-gradient(135deg, #2f9fd4, #6cc0ec) !important; color: #04212e !important; }
+html.pj-vip .pj-foilable {
+  box-shadow: 0 0 0 3px #2f9fd4, 0 0 18px rgba(47,159,212,0.5) !important;
+  animation: none !important;
+}

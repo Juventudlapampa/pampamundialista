@@ -16,19 +16,21 @@
 <meta name="twitter:image" content="https://pampamundialista.vercel.app/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/brand.css">
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* Piel de marca: variables legacy aliasadas a los tokens del home (assets/brand.css) */
   :root {
-    --bg: #050d08;
-    --verde: #0d3b26;
-    --verde-fluo: #4ade80;
-    --gold: #d4a82e;
-    --gold-2: #f4cd60;
-    --crema: #f4ecd8;
-    --rojo: #dc2626;
-    --azul: #75AADB;
-    --azul-claro: #60a5fa;
+    --bg: var(--pm-navy);
+    --verde: var(--pm-panel);
+    --verde-fluo: var(--pm-celeste-2);
+    --gold: var(--pm-celeste);
+    --gold-2: var(--pm-celeste-2);
+    --crema: var(--pm-ink);
+    --rojo: var(--pm-celeste-claro);
+    --azul: var(--pm-celeste-claro);
+    --azul-claro: var(--pm-celeste-2);
   }
   body {
     font-family: 'DM Sans', sans-serif;
@@ -63,7 +65,7 @@
 
   .panel {
     background: rgba(0,0,0,0.5);
-    border: 1px solid rgba(212,168,46,0.3);
+    border: 1px solid rgba(47,159,212,0.3);
     border-radius: 12px;
     padding: 1.3rem;
     margin-bottom: 1rem;
@@ -104,7 +106,7 @@
     font-family: 'Anton', sans-serif;
     color: var(--gold);
     font-size: 2.5rem;
-    text-shadow: 0 0 20px rgba(212,168,46,0.5);
+    text-shadow: 0 0 20px rgba(47,159,212,0.5);
   }
   select {
     width: 100%;
@@ -200,10 +202,10 @@
     text-transform: uppercase;
     font-size: 1.15rem;
     transition: transform 0.15s;
-    box-shadow: 0 6px 0 #927200;
+    box-shadow: 0 6px 0 #1a6a9e;
   }
-  .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 0 #927200; }
-  .btn:active { transform: translateY(3px); box-shadow: 0 3px 0 #927200; }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 0 #1a6a9e; }
+  .btn:active { transform: translateY(3px); box-shadow: 0 3px 0 #1a6a9e; }
   .btn-secondary {
     background: rgba(0,0,0,0.4);
     color: var(--crema);
@@ -214,7 +216,7 @@
 
   /* SIMULACIÓN */
   .marcador {
-    background: linear-gradient(180deg, #000 0%, #1a1a1a 100%);
+    background: linear-gradient(180deg, #16243F 0%, #1e3657 100%);
     border: 2px solid var(--gold);
     border-radius: 12px;
     padding: 1rem;
@@ -240,7 +242,7 @@
     color: var(--gold);
     line-height: 1;
     letter-spacing: 0.05em;
-    text-shadow: 0 0 30px rgba(212,168,46,0.5);
+    text-shadow: 0 0 30px rgba(47,159,212,0.5);
   }
   .marc-min {
     text-align: center;
@@ -252,7 +254,7 @@
   }
 
   .sim-ground {
-    background: linear-gradient(180deg, #1a8a4a 0%, #0d4a2c 100%);
+    background: linear-gradient(180deg, #1d3a5c 0%, #16243F 100%);
     background-image: repeating-linear-gradient(0deg, transparent, transparent 12%, rgba(255,255,255,0.04) 12%, rgba(255,255,255,0.04) 24%);
     border: 2px solid rgba(255,255,255,0.3);
     border-radius: 8px;
@@ -322,12 +324,12 @@
     font-size: 0.8rem;
   }
   .evento-text {}
-  .evento.gol { background: rgba(74,222,128,0.15); border-left: 3px solid var(--verde-fluo); padding-left: 0.5rem; }
+  .evento.gol { background: rgba(47,159,212,0.15); border-left: 3px solid var(--verde-fluo); padding-left: 0.5rem; }
   .evento.gol .evento-text { font-weight: 700; color: var(--verde-fluo); }
-  .evento.tarjeta { background: rgba(212,168,46,0.1); }
-  .evento.roja { background: rgba(220,38,38,0.15); }
-  .evento.penal { background: rgba(37,99,235,0.15); border-left: 3px solid var(--azul-claro); padding-left: 0.5rem; }
-  .evento.final { background: linear-gradient(90deg, rgba(212,168,46,0.3), transparent); border-left: 3px solid var(--gold); padding-left: 0.5rem; font-weight: 700; }
+  .evento.tarjeta { background: rgba(47,159,212,0.1); }
+  .evento.roja { background: rgba(47,159,212,0.15); }
+  .evento.penal { background: rgba(47,159,212,0.15); border-left: 3px solid var(--azul-claro); padding-left: 0.5rem; }
+  .evento.final { background: linear-gradient(90deg, rgba(47,159,212,0.3), transparent); border-left: 3px solid var(--gold); padding-left: 0.5rem; font-weight: 700; }
 
   .controls-bar {
     display: grid;
@@ -346,7 +348,7 @@
     font-size: 0.85rem;
     letter-spacing: 0.1em;
   }
-  .ctrl-btn:hover { background: rgba(212,168,46,0.15); }
+  .ctrl-btn:hover { background: rgba(47,159,212,0.15); }
   .ctrl-btn.active {
     background: linear-gradient(135deg, var(--gold), var(--gold-2));
     color: #000;
@@ -354,7 +356,7 @@
 
   .et-banner {
     text-align: center;
-    background: rgba(220,38,38,0.2);
+    background: rgba(47,159,212,0.2);
     border: 2px solid var(--rojo);
     border-radius: 8px;
     padding: 0.8rem;
@@ -365,8 +367,8 @@
     animation: pulse 1s infinite alternate;
   }
   @keyframes pulse {
-    from { box-shadow: 0 0 0 rgba(220,38,38,0.5); }
-    to { box-shadow: 0 0 20px rgba(220,38,38,0.8); }
+    from { box-shadow: 0 0 0 rgba(47,159,212,0.5); }
+    to { box-shadow: 0 0 20px rgba(47,159,212,0.8); }
   }
 
   /* RESULTADO */
@@ -409,7 +411,7 @@
 .grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
 </style>
 </head>
-<body>
+<body class="pm-skin">
 <div class="container">
   <header>
     <div class="header-tag">Simulador de Partido · Mundial 2026</div>
