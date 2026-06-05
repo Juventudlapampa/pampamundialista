@@ -16,11 +16,13 @@
 <meta name="twitter:image" content="https://pampamundialista.vercel.app/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/brand.css">
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-  :root { --bg:#070d14; --verde-fluo:#4ade80; --gold:#d4a82e; --gold-2:#f4cd60; --crema:#f4ecd8; --azul:#38bdf8; --rojo:#f87171; --purple:#9ec9ed; }
+  /* Piel de marca (UI). Los colores del avatar (piel/pelo/camisetas/memes) son contenido y NO se aliasan. */
+  :root { --bg:var(--pm-navy); --verde-fluo:var(--pm-celeste-2); --gold:var(--pm-celeste); --gold-2:var(--pm-celeste-2); --crema:var(--pm-ink); --azul:var(--pm-celeste-2); --rojo:var(--pm-celeste-claro); --purple:var(--pm-celeste-2); }
   body { font-family:'DM Sans',sans-serif; background:var(--bg); background-image:linear-gradient(transparent,transparent); min-height:100vh; color:var(--crema); padding:1rem; touch-action:manipulation; }
   .container { max-width:520px; margin:0 auto; }
   header { text-align:center; margin-bottom:0.6rem; }
@@ -33,7 +35,7 @@
   @keyframes slidein { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
 
   .stage { background:radial-gradient(115% 80% at 50% 14%, rgba(56,189,248,0.28), transparent 58%), radial-gradient(60% 30% at 50% 95%, rgba(0,0,0,0.55), transparent 72%), linear-gradient(160deg,#0d2438,#06101a); border:2px solid rgba(56,189,248,0.3); border-radius:18px; padding:0.6rem 0.6rem 0.9rem; position:relative; overflow:hidden; box-shadow:inset 0 0 42px rgba(0,0,0,0.45); }
-  .stage::before { content:''; position:absolute; top:-30%; left:50%; transform:translateX(-50%); width:140%; height:90%; background:radial-gradient(ellipse at center top, rgba(244,205,96,0.10), transparent 60%); pointer-events:none; }
+  .stage::before { content:''; position:absolute; top:-30%; left:50%; transform:translateX(-50%); width:140%; height:90%; background:radial-gradient(ellipse at center top, rgba(108,192,236,0.10), transparent 60%); pointer-events:none; }
   .avatar-wrap { width:166px; margin:0 auto; transition:transform 0.2s; position:relative; z-index:1; }
   #avatar-prev svg { animation:floaty 3.6s ease-in-out infinite; transform-origin:center bottom; }
   @keyframes floaty { 0%,100%{transform:translateY(0) rotate(-0.7deg)} 50%{transform:translateY(-5px) rotate(0.7deg)} }
@@ -46,9 +48,9 @@
   .sect-title { font-family:'JetBrains Mono',monospace; font-size:0.68rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--azul); margin-bottom:0.4rem; display:flex; align-items:center; gap:0.4rem; }
   .chips { display:flex; gap:0.4rem; overflow-x:auto; padding-bottom:0.3rem; }
   .chips.wrap { flex-wrap:wrap; overflow:visible; }
-  .chip { flex:none; background:rgba(0,0,0,0.4); border:2px solid rgba(212,168,46,0.2); border-radius:10px; padding:0.35rem 0.5rem; cursor:pointer; color:var(--crema); font-family:inherit; font-size:0.72rem; display:flex; flex-direction:column; align-items:center; gap:0.15rem; min-width:50px; transition:all 0.12s; }
+  .chip { flex:none; background:rgba(0,0,0,0.4); border:2px solid rgba(47,159,212,0.2); border-radius:10px; padding:0.35rem 0.5rem; cursor:pointer; color:var(--crema); font-family:inherit; font-size:0.72rem; display:flex; flex-direction:column; align-items:center; gap:0.15rem; min-width:50px; transition:all 0.12s; }
   .chip:active { transform:scale(0.93); }
-  .chip.on { border-color:var(--gold); background:rgba(212,168,46,0.18); }
+  .chip.on { border-color:var(--gold); background:rgba(47,159,212,0.18); }
   .chip .sw { width:30px; height:30px; border-radius:7px; border:1px solid rgba(0,0,0,0.4); }
   .chip svg { width:36px; height:40px; }
   .chip .ic { font-size:1.3rem; line-height:1; }
@@ -62,14 +64,14 @@
   .dice:active { transform:scale(0.9); }
 
   .toggle-row { display:flex; gap:0.45rem; flex-wrap:wrap; margin-top:0.5rem; }
-  .tg { flex:1; min-width:120px; background:rgba(0,0,0,0.4); border:2px solid rgba(212,168,46,0.2); border-radius:10px; padding:0.55rem; cursor:pointer; text-align:center; font-size:0.8rem; transition:all 0.12s; }
-  .tg.on { border-color:var(--gold); background:rgba(212,168,46,0.18); color:var(--gold-2); }
+  .tg { flex:1; min-width:120px; background:rgba(0,0,0,0.4); border:2px solid rgba(47,159,212,0.2); border-radius:10px; padding:0.55rem; cursor:pointer; text-align:center; font-size:0.8rem; transition:all 0.12s; }
+  .tg.on { border-color:var(--gold); background:rgba(47,159,212,0.18); color:var(--gold-2); }
   .tg.meme.on { border-color:var(--purple); background:rgba(158,201,237,0.18); color:var(--purple); }
 
   .btn { background:linear-gradient(135deg,var(--azul),#0ea5e9); color:#04212e; border:none; padding:1rem; font-family:'Anton',sans-serif; letter-spacing:0.1em; border-radius:12px; cursor:pointer; width:100%; text-transform:uppercase; font-size:1.05rem; margin-top:0.6rem; transition:transform 0.1s; }
   .btn:active { transform:scale(0.97); }
   .btn-gold { background:linear-gradient(135deg,var(--gold),var(--gold-2)); color:#000; }
-  .btn-share { background:linear-gradient(135deg,#22c55e,#16a34a); color:#04210f; }
+  .btn-share { background:linear-gradient(135deg,#2f9fd4,#6cc0ec); color:#04212e; }
   .btn-sec { background:rgba(0,0,0,0.4); color:var(--crema); border:1px solid var(--azul); }
 
   /* juego */
@@ -105,14 +107,14 @@
 /* evolución del crack según sellos del pasaporte */
 .stage.evo1,.stage.evo2,.stage.evo3{position:relative}
 .stage.evo1{box-shadow:inset 0 0 45px rgba(117,170,219,.45)}
-.stage.evo2{box-shadow:inset 0 0 55px rgba(212,168,46,.45)}
-.stage.evo3{box-shadow:inset 0 0 70px rgba(212,168,46,.6),inset 0 0 0 3px rgba(244,205,96,.55)}
-#result-card.evo3{box-shadow:0 0 26px rgba(212,168,46,.5)}
-.evo-badge{position:absolute;top:8px;right:8px;z-index:6;font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.05em;background:rgba(0,0,0,.6);border:1px solid rgba(244,205,96,.65);color:#f4cd60;border-radius:20px;padding:.2rem .55rem;pointer-events:none}
+.stage.evo2{box-shadow:inset 0 0 55px rgba(47,159,212,.45)}
+.stage.evo3{box-shadow:inset 0 0 70px rgba(47,159,212,.6),inset 0 0 0 3px rgba(108,192,236,.55)}
+#result-card.evo3{box-shadow:0 0 26px rgba(47,159,212,.5)}
+.evo-badge{position:absolute;top:8px;right:8px;z-index:6;font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.05em;background:rgba(0,0,0,.6);border:1px solid rgba(108,192,236,.65);color:#6cc0ec;border-radius:20px;padding:.2rem .55rem;pointer-events:none}
 </style>
 </head>
-<body>
-<a href="../index.html" style="display:inline-block;margin:0.6rem 0 0 0.8rem;color:#d4a82e;font-size:0.8rem;font-family:system-ui,sans-serif;text-decoration:none;opacity:0.85;">← Volver a Pampa Mundialista</a>
+<body class="pm-skin">
+<a href="../index.html" style="display:inline-block;margin:0.6rem 0 0 0.8rem;color:#6cc0ec;font-size:0.8rem;font-family:system-ui,sans-serif;text-decoration:none;opacity:0.85;">← Volver a Pampa Mundialista</a>
 <div class="container">
   <header>
     <div class="header-tag">Creá tu Crack · Mundial 2026</div>
@@ -155,7 +157,7 @@
     <div class="sect" id="sect-meme" style="display:none"><div class="sect-title" style="color:var(--purple)">🤡 Locuras (modo meme)</div><div class="chips wrap" id="c-meme"></div></div>
 
     <button class="btn" id="play-dominio">⚽ A jugar: Jueguito (dominá la pelota)</button>
-    <button class="btn" id="play-penales" style="background:linear-gradient(135deg,#f59e0b,#d4a82e);color:#04212e">🥅 A jugar: Penales con tu Crack</button>
+    <button class="btn" id="play-penales" style="background:linear-gradient(135deg,#2f9fd4,#6cc0ec);color:#04212e">🥅 A jugar: Penales con tu Crack</button>
     <button class="btn btn-gold" id="dl-editor">📸 Bajá tu figurita</button>
     <button class="btn btn-share" id="dl-sticker">🟢 Bajá el sticker (sin fondo)</button>
   </div>
@@ -185,7 +187,7 @@
         <div class="card-wm">CREÁ TU CRACK · MUNDIAL 2026 · @JUVENTUD_LAPAMPA</div>
       </div>
     </div>
-    <div style="background:rgba(212,168,46,0.12);border:1px solid var(--gold);border-radius:12px;padding:0.9rem 1rem;margin-top:0.8rem;font-size:0.9rem;line-height:1.45">
+    <div style="background:rgba(47,159,212,0.12);border:1px solid var(--gold);border-radius:12px;padding:0.9rem 1rem;margin-top:0.8rem;font-size:0.9rem;line-height:1.45">
       🏅 <b style="color:var(--gold-2)">Tu misión, crack:</b> armá tu jugador con tu mote, bajá la figurita y subila a tu historia etiquetando a <b>@pampamundialista</b>. ¡Te sumás un sello! 🎟️
     </div>
     <button class="btn btn-gold" id="dl-result">📸 Bajá tu figurita</button>
@@ -583,7 +585,7 @@ function drawPen(){
   ctx.strokeStyle='rgba(255,255,255,0.6)'; ctx.strokeRect(PGX1,0,PGX2-PGX1,PGY);
   drawPenDude(pg.keeper.x,PKY,'#f4cd60');
   if(avatarImg){ const w=70,h=w*252/200; ctx.drawImage(avatarImg,CW/2-w/2,CH-h-2,w,h); }
-  if(pg.aim){ ctx.strokeStyle='rgba(212,168,46,0.9)'; ctx.lineWidth=3; ctx.setLineDash([6,5]); ctx.beginPath(); ctx.moveTo(pg.ball.x,pg.ball.y); ctx.lineTo(pg.aim.cx,pg.aim.cy); ctx.stroke(); ctx.setLineDash([]); }
+  if(pg.aim){ ctx.strokeStyle='rgba(47,159,212,0.9)'; ctx.lineWidth=3; ctx.setLineDash([6,5]); ctx.beginPath(); ctx.moveTo(pg.ball.x,pg.ball.y); ctx.lineTo(pg.aim.cx,pg.aim.cy); ctx.stroke(); ctx.setLineDash([]); }
   ctx.beginPath(); ctx.arc(pg.ball.x,pg.ball.y,pg.ball.r,0,7); ctx.fillStyle='#fff'; ctx.fill(); ctx.lineWidth=2; ctx.strokeStyle='#111'; ctx.stroke();
   ctx.beginPath(); ctx.arc(pg.ball.x,pg.ball.y,pg.ball.r*0.45,0,7); ctx.fillStyle='#111'; ctx.fill();
   if(pg.flashT>0){ ctx.fillStyle='#fff'; ctx.font='bold 26px Anton, sans-serif'; ctx.textAlign='center'; ctx.fillText(pg.flash,CW/2,CH/2); }
@@ -628,7 +630,7 @@ function dlCardFromState(){ // carta temporal con fondo y pose
   const card=document.createElement('div'); card.className='card'; card.style.cssText+='position:fixed;left:-9999px;top:0;width:340px;';
   card.innerHTML=`<div class="card-bg" style="background:${BGS[av.bg].css}">${$('card-bg').innerHTML}</div><div class="card-inner"><div class="card-pre">★ Mi Crack ★</div><div class="avatar-wrap" style="width:150px;margin:0.3rem auto">${buildAvatarSVG(av)}</div><div class="card-name" style="color:#fff">${(av.mote||'Mi Crack').toUpperCase()}</div>${av.frase?`<div class="card-frase">${av.frase}</div>`:''}<div class="card-team">#${av.number} · ${KITS[av.kit].n}</div><div class="card-wm" style="margin-top:0.8rem">CREÁ TU CRACK · MUNDIAL 2026 · @JUVENTUD_LAPAMPA</div></div>`;
   document.body.appendChild(card);
-  setTimeout(()=>{ snap(card,`mi-crack-${(av.mote||'crack').toLowerCase().replace(/[^a-z0-9]+/g,'-')}.png`,'#070d14'); setTimeout(()=>card.remove(),700); },60);
+  setTimeout(()=>{ snap(card,`mi-crack-${(av.mote||'crack').toLowerCase().replace(/[^a-z0-9]+/g,'-')}.png`,'#16243F'); setTimeout(()=>card.remove(),700); },60);
 }
 function dlSticker(){ // solo avatar, fondo transparente
   const box=document.createElement('div'); box.style.cssText='position:fixed;left:-9999px;top:0;width:300px;padding:10px;';
