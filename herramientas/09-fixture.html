@@ -16,25 +16,27 @@
 <meta name="twitter:image" content="https://pampamundialista.vercel.app/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/brand.css">
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* Piel de marca: variables legacy aliasadas a los tokens del home (assets/brand.css) */
   :root {
-    --verde: #0d3b26;
-    --verde-2: #145c39;
-    --verde-fluo: #4ade80;
-    --gold: #d4a82e;
-    --gold-2: #f4cd60;
-    --crema: #f4ecd8;
-    --rojo: #dc2626;
-    --azul: #1e40af;
-    --azul-claro: #60a5fa;
-    --purple: #1f7a43;
+    --verde: var(--pm-panel);
+    --verde-2: var(--pm-card);
+    --verde-fluo: var(--pm-celeste-2);
+    --gold: var(--pm-celeste);
+    --gold-2: var(--pm-celeste-2);
+    --crema: var(--pm-ink);
+    --rojo: var(--pm-celeste-claro);
+    --azul: var(--pm-celeste);
+    --azul-claro: var(--pm-celeste-2);
+    --purple: var(--pm-celeste);
   }
   body {
     font-family: 'DM Sans', sans-serif;
-    background: #050d08;
+    background: var(--pm-navy);
     min-height: 100vh;
     color: var(--crema);
     padding: 1.5rem 1rem;
@@ -68,7 +70,7 @@
     justify-content: center;
     gap: 0;
     margin-bottom: 2rem;
-    border-bottom: 2px solid rgba(212,168,46,0.2);
+    border-bottom: 2px solid rgba(47,159,212,0.2);
   }
   .tab {
     background: transparent;
@@ -139,7 +141,7 @@
   }
   .grupo {
     background: rgba(0,0,0,0.4);
-    border: 1px solid rgba(212,168,46,0.3);
+    border: 1px solid rgba(47,159,212,0.3);
     border-radius: 12px;
     overflow: hidden;
   }
@@ -204,11 +206,11 @@
     white-space: nowrap;
   }
   .tabla-grupo tr:nth-child(-n+2) td {
-    background: rgba(74,222,128,0.05);
+    background: rgba(47,159,212,0.05);
     border-left: 3px solid var(--verde-fluo);
   }
   .tabla-grupo tr:nth-child(3) td {
-    background: rgba(212,168,46,0.05);
+    background: rgba(47,159,212,0.05);
     border-left: 3px solid var(--gold);
   }
   .tabla-grupo tr:nth-child(-n+2) td:first-child,
@@ -328,7 +330,7 @@
     margin-top: 0.8rem;
   }
   .clasificado-item {
-    background: rgba(74,222,128,0.1);
+    background: rgba(47,159,212,0.1);
     border-left: 3px solid var(--verde-fluo);
     padding: 0.5rem 0.8rem;
     border-radius: 4px;
@@ -341,7 +343,7 @@
     margin-right: 0.3rem;
   }
   .clasificado-item.tercero {
-    background: rgba(212,168,46,0.08);
+    background: rgba(47,159,212,0.08);
     border-left-color: var(--gold);
   }
   .clasificado-item.tercero .clasificado-pos { color: var(--gold); }
@@ -349,7 +351,7 @@
   /* === ELIMINATORIAS === */
   .bracket-info {
     background: rgba(0,0,0,0.5);
-    border: 1px solid rgba(212,168,46,0.3);
+    border: 1px solid rgba(47,159,212,0.3);
     border-radius: 8px;
     padding: 0.8rem 1rem;
     margin-bottom: 1rem;
@@ -403,7 +405,7 @@
   }
   .partido-elim {
     background: rgba(0,0,0,0.4);
-    border: 1px solid rgba(212,168,46,0.3);
+    border: 1px solid rgba(47,159,212,0.3);
     border-radius: 10px;
     padding: 0.8rem 1rem;
     cursor: pointer;
@@ -411,7 +413,7 @@
   }
   .partido-elim:hover {
     border-color: var(--gold);
-    background: rgba(212,168,46,0.05);
+    background: rgba(47,159,212,0.05);
   }
   .partido-elim.played {
     border-color: var(--verde-fluo);
@@ -464,12 +466,12 @@
     border-radius: 12px;
     text-align: center;
     margin-top: 1.5rem;
-    box-shadow: 0 0 60px rgba(212,168,46,0.4);
+    box-shadow: 0 0 60px rgba(47,159,212,0.4);
     animation: trophyGlow 2s ease-in-out infinite alternate;
   }
   @keyframes trophyGlow {
-    from { box-shadow: 0 0 40px rgba(212,168,46,0.3); }
-    to { box-shadow: 0 0 80px rgba(212,168,46,0.6); }
+    from { box-shadow: 0 0 40px rgba(47,159,212,0.3); }
+    to { box-shadow: 0 0 80px rgba(47,159,212,0.6); }
   }
   .campeon-trophy { font-size: 5rem; line-height: 1; }
   .campeon-label {
@@ -496,7 +498,7 @@
   .grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
 </style>
 </head>
-<body>
+<body class="pm-skin">
 <div class="container">
   <header>
     <div class="header-tag">Fixture Completo · Mundial 2026</div>
@@ -996,7 +998,7 @@
       return;
     }
     const card = document.createElement('div');
-    card.style.cssText = 'position:fixed;left:-9999px;top:0;width:420px;height:520px;background:linear-gradient(160deg,#d4a82e,#f4cd60);color:#000;text-align:center;padding:2.5rem 2rem;box-sizing:border-box;';
+    card.style.cssText = 'position:fixed;left:-9999px;top:0;width:420px;height:520px;background:linear-gradient(160deg,#1d3157,#16243F);color:#fff;text-align:center;padding:2.5rem 2rem;box-sizing:border-box;';
     const fc = FLAGCOLORS[nombre];
     const bigFlag = fc ? `<div class="flag ${fc[3]}" style="--f1:${fc[0]};--f2:${fc[1]};--f3:${fc[2]};width:96px;height:64px;margin:1rem auto 0;border-radius:6px"></div>` : '';
     card.innerHTML = `
@@ -1010,7 +1012,7 @@
     `;
     document.body.appendChild(card);
     html2canvas(card, {
-      backgroundColor: '#d4a82e', scale: 2, useCORS: true, allowTaint: true, logging: false,
+      backgroundColor: '#16243F', scale: 2, useCORS: true, allowTaint: true, logging: false,
       width: 420, height: 520,
       windowWidth: document.documentElement.clientWidth,
       windowHeight: document.documentElement.clientHeight
