@@ -17,7 +17,7 @@
     ['once','Armá tu 11','📋'], ['penales','Torneo de Penales','🥅'], ['tiros','Tiros Libres','⚽'],
     ['picado','El Picado','🏟️'], ['gambeta','Gambeteá','🪄'], ['carrera','Tu Carrera','🎲'],
     ['trivia','Trivia','🧠'], ['quesel','¿Qué Selección Sos?','🔮'], ['escape','Sala de Escape','🔓'],
-    ['memo','Memorice','🎴'], ['predictor','Predictor','📊'], ['fixture','Fixture','🗓️'],
+    ['memo','Memorice','🎴'], ['predictor','Rincón del Hincha','🧣'], ['fixture','Fixture','🗓️'],
     ['carton','Bingo','🔢'], ['aula','FUT5 del Aula','📸'], ['promo','Figurita Real','⭐'],
     ['simu','Simulador','🎮'], ['esi','Juego Limpio','💚']
   ];

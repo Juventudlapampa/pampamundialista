@@ -136,6 +136,7 @@
   .tool-desc { font-size: 0.76rem; opacity: 0.78; line-height: 1.35; }
   .tag-new { display: inline-block; background: var(--rojo); color: #fff; font-family: 'Anton', sans-serif; font-size: 0.55rem; padding: 1px 6px; border-radius: 4px; letter-spacing: 0.12em; margin-left: 0.3rem; vertical-align: middle; }
   .tag-esi { display: inline-block; background: #2f9fd4; color: #06222e; font-family: 'Anton', sans-serif; font-size: 0.55rem; padding: 1px 6px; border-radius: 4px; letter-spacing: 0.12em; margin-left: 0.3rem; vertical-align: middle; }
+  .pronto-badge { font-family: 'JetBrains Mono', monospace; font-size: 0.5rem; background: rgba(47,159,212,0.2); border: 1px solid var(--celeste); border-radius: 4px; padding: 1px 5px; letter-spacing: 0.08em; vertical-align: middle; color: var(--celeste-2); }
 
   /* SECCIONES */
   .block { background: rgba(0,0,0,0.4); border: 1px solid rgba(47,159,212,0.25); border-radius: 16px; padding: 1.3rem; margin-top: 1.6rem; }
@@ -438,9 +439,9 @@
     </button>
     <div class="puerta-body">
       <div class="grid-tools">
-        <a class="tool-card" data-id="predictor" href="#" onclick="return predictorSoon(this)" aria-disabled="true"><span class="seal">🔵</span><div class="tool-icon">🔮</div><div class="tool-name">Predictor del Mundial <span style="font-family:'JetBrains Mono',monospace;font-size:0.5rem;background:rgba(47,159,212,0.2);border:1px solid var(--celeste);border-radius:4px;padding:1px 5px;letter-spacing:0.08em;vertical-align:middle;color:var(--celeste-2)">PRONTO</span></div><div class="tool-desc">🔧 Lo estamos renovando. Tocá para sumar tu sello — vuelve con todo muy pronto.</div></a>
+        <a class="tool-card" data-id="predictor" href="#" onclick="return prontoSello(this)" aria-disabled="true"><span class="seal">🔵</span><div class="tool-icon">🧣</div><div class="tool-name">El Rincón del Hincha <span class="pronto-badge">PRONTO</span></div><div class="tool-desc">🔧 Se viene un espacio nuevo para los hinchas. Tocá para sumar tu sello — ¡muy pronto!</div></a>
         <a class="tool-card" data-id="fixture" href="herramientas/09-fixture.html"><span class="seal">🔵</span><div class="tool-icon">📋</div><div class="tool-name">Fixture Completo</div><div class="tool-desc">Las 48 selecciones, del grupo a la final. Armá el cuadro y guardá tu campeón.</div></a>
-        <a class="tool-card" data-id="carton" href="juegos/07-bingo.html"><span class="seal">🔵</span><div class="tool-icon">🎯</div><div class="tool-name">Cartón Mundialista</div><div class="tool-desc">Marcá las locuras que van a pasar en el Mundial. Se llena solo.</div></a>
+        <a class="tool-card" data-id="carton" href="#" onclick="return prontoSello(this)" aria-disabled="true"><span class="seal">🔵</span><div class="tool-icon">🎯</div><div class="tool-name">Cartón Mundialista <span class="pronto-badge">PRONTO</span></div><div class="tool-desc">🔧 Lo estamos preparando. Tocá para sumar tu sello — vuelve muy pronto.</div></a>
       </div>
     </div>
   </section>
@@ -816,7 +817,7 @@
       chart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 4v16h16"/><rect x="7" y="12" width="3" height="5" fill="currentColor" stroke="none"/><rect x="12" y="8" width="3" height="9" fill="currentColor" stroke="none"/><rect x="17" y="14" width="3" height="3" fill="currentColor" stroke="none"/></svg>',
       heart:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7-4.5-9.3-9C1 8.5 2.5 5 6 5c2 0 3.2 1.2 4 2.3C10.8 6.2 12 5 14 5c3.5 0 5 3.5 3.3 7C19 16.5 12 21 12 21z"/></svg>'
     };
-    const MAP = { crack:'jersey', figu:'card', carnet:'id', once:'ball', penales:'trophy', tiros:'target', picado:'board', gambeta:'boot', carrera:'dice', trivia:'bolt', quesel:'crystal', escape:'lock', memo:'card', predictor:'crystal', fixture:'board', carton:'grid', aula:'chalk', promo:'cap', simu:'chart', esi:'heart' };
+    const MAP = { crack:'jersey', figu:'card', carnet:'id', once:'ball', penales:'trophy', tiros:'target', picado:'board', gambeta:'boot', carrera:'dice', trivia:'bolt', quesel:'crystal', escape:'lock', memo:'card', fixture:'board', carton:'grid', aula:'chalk', promo:'cap', simu:'chart', esi:'heart' };
     document.querySelectorAll('.tool-card[data-id]').forEach(c => {
       const ic = IC[MAP[c.dataset.id]]; const el = c.querySelector('.tool-icon');
       if (ic && el) el.innerHTML = ic;
@@ -848,13 +849,14 @@
 })();
 </script>
 <script>
-  // ===== Predictor INHABILITADO temporalmente (se reemplaza la app). Suma el sello igual. =====
-  window.predictorSoon = function(el){
+  // ===== Tarjetas INHABILITADAS temporalmente (PRONTO). Tocar suma el sello igual, sin abrir nada. =====
+  window.prontoSello = function(el){
+    var id = (el && el.dataset && el.dataset.id) || '';
     try{
-      if(window.PampaJuego && PampaJuego.sello){ PampaJuego.sello('predictor'); }
-      else {
+      if(window.PampaJuego && PampaJuego.sello && id){ PampaJuego.sello(id); }
+      else if(id){
         var k='pampa-juega-sellos', a=[]; try{ a=JSON.parse(localStorage.getItem(k)||'[]'); }catch(e){}
-        if(a.indexOf('predictor')<0){ a.push('predictor'); try{ localStorage.setItem(k,JSON.stringify(a)); }catch(e){} }
+        if(a.indexOf(id)<0){ a.push(id); try{ localStorage.setItem(k,JSON.stringify(a)); }catch(e){} }
       }
     }catch(e){}
     // refresco del contador (después de que corran los listeners del click)
@@ -864,11 +866,12 @@
     if(!t){ t=document.createElement('div'); t.id='pred-soon-toast';
       t.style.cssText='position:fixed;left:50%;bottom:1.2rem;transform:translateX(-50%);max-width:90%;background:#16243F;color:#eef4fa;border:2px solid #2f9fd4;border-radius:12px;padding:0.85rem 1.1rem;font-family:inherit;font-size:0.92rem;line-height:1.45;z-index:99999;box-shadow:0 6px 20px rgba(0,0,0,0.5);text-align:center;opacity:0;transition:opacity .25s';
       document.body.appendChild(t); }
-    t.innerHTML='🔮 <b>Predictor en preparación.</b> Lo estamos renovando y vuelve muy pronto.<br>¡Igual te sumamos el sello por pasar! ✅';
+    t.innerHTML='✨ <b>¡En preparación!</b> Lo estamos preparando y vuelve muy pronto.<br>¡Igual te sumamos el sello por pasar! ✅';
     requestAnimationFrame(function(){ t.style.opacity='1'; });
     clearTimeout(t.__h); t.__h=setTimeout(function(){ t.style.opacity='0'; }, 3600);
     return false;
   };
+  window.predictorSoon = window.prontoSello; // alias por compatibilidad
 </script>
 </body>
 </html>
