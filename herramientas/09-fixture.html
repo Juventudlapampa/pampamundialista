@@ -981,7 +981,7 @@
           <div class="campeon-flag">${g.flag}</div>
           <div class="campeon-nombre">${g.n}</div>
         </div>
-        <button class="btn btn-primary" id="download-campeon" style="width:100%;margin-top:1rem">📸 Bajar la foto del campeón</button>
+        <button class="btn btn-primary" id="download-campeon" style="width:100%;margin-top:1rem">${(new Date() < new Date('2026-07-19T00:00:00-03:00')) ? '📅 Descarga disponible desde el 19/7' : '📸 Bajar la foto del campeón'}</button>
         <button class="btn" id="share-cuadro" style="width:100%;margin-top:0.6rem">📲 Compartir mi cuadro</button>
       `;
       document.getElementById('download-campeon').onclick = () => downloadCampeon(g.n);
@@ -990,6 +990,11 @@
   }
 
   function downloadCampeon(nombre) {
+    // La descarga del cuadro se habilita recién desde el 19 de julio de 2026.
+    if (new Date() < new Date('2026-07-19T00:00:00-03:00')) {
+      alert('📅 Vas a poder descargar tu cuadro desde el 19 de julio.\n\nMientras tanto, completalo y simulá todo lo que quieras: tu pronóstico queda guardado.');
+      return;
+    }
     const card = document.createElement('div');
     card.style.cssText = 'position:fixed;left:-9999px;top:0;width:420px;height:520px;background:linear-gradient(160deg,#d4a82e,#f4cd60);color:#000;text-align:center;padding:2.5rem 2rem;box-sizing:border-box;';
     const fc = FLAGCOLORS[nombre];
