@@ -16,11 +16,13 @@
 <meta name="twitter:image" content="https://pampamundialista.vercel.app/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/brand.css">
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
-  :root { --bg:#0a0a14; --verde-fluo:#4ade80; --gold:#d4a82e; --gold-2:#f4cd60; --crema:#f4ecd8; --rojo:#f87171; --purple:#9ec9ed; --purple-d:#1f7a43; }
+  /* Piel de marca: variables legacy aliasadas a los tokens del home (assets/brand.css) */
+  :root { --bg:var(--pm-navy); --verde-fluo:var(--pm-celeste-2); --gold:var(--pm-celeste); --gold-2:var(--pm-celeste-2); --crema:var(--pm-ink); --rojo:var(--pm-celeste-claro); --purple:var(--pm-celeste-2); --purple-d:var(--pm-celeste); }
   body { font-family:'DM Sans',sans-serif; background:var(--bg); min-height:100vh; color:var(--crema); padding:1rem; }
   .container { max-width:600px; margin:0 auto; }
   header { text-align:center; margin-bottom:1rem; }
@@ -46,19 +48,19 @@
   .q-context { font-family:'JetBrains Mono',monospace; font-size:0.65rem; letter-spacing:0.15em; color:var(--purple); text-transform:uppercase; margin-bottom:0.4rem; }
   .q-text { font-size:1.1rem; line-height:1.45; margin-bottom:1rem; font-weight:700; }
   .opt { display:block; width:100%; text-align:left; background:rgba(255,255,255,0.04); border:2px solid rgba(244,236,216,0.15); color:var(--crema); padding:0.9rem 1rem; border-radius:10px; margin-bottom:0.6rem; cursor:pointer; font-family:inherit; font-size:0.95rem; line-height:1.35; transition:all 0.15s; }
-  .opt:hover:not(:disabled) { border-color:var(--purple); background:rgba(31,122,67,0.12); }
+  .opt:hover:not(:disabled) { border-color:var(--purple); background:rgba(47,159,212,0.12); }
   .opt:disabled { cursor:default; }
-  .opt.best { border-color:var(--verde-fluo); background:rgba(74,222,128,0.15); }
-  .opt.mid { border-color:var(--gold); background:rgba(212,168,46,0.12); }
-  .opt.bad { border-color:var(--rojo); background:rgba(248,113,113,0.12); }
+  .opt.best { border-color:var(--pm-celeste-2); background:rgba(47,159,212,0.20); }
+  .opt.mid { border-color:var(--pm-celeste); background:rgba(47,159,212,0.10); }
+  .opt.bad { border-color:rgba(238,244,250,0.28); background:rgba(255,255,255,0.04); }
   .opt.dim { opacity:0.45; }
 
-  .feedback { background:rgba(31,122,67,0.12); border-left:4px solid var(--purple); border-radius:8px; padding:1rem; margin-top:0.4rem; line-height:1.5; font-size:0.92rem; display:none; }
+  .feedback { background:rgba(47,159,212,0.12); border-left:4px solid var(--purple); border-radius:8px; padding:1rem; margin-top:0.4rem; line-height:1.5; font-size:0.92rem; display:none; }
   .feedback.show { display:block; animation:fade 0.3s; }
   .feedback .fb-pts { font-family:'Anton',sans-serif; color:var(--gold-2); letter-spacing:0.05em; }
 
   /* RESULTADO */
-  .res-card { text-align:center; background:linear-gradient(160deg,#1a1430,#0a0a14); border:2px solid var(--purple); border-radius:16px; padding:2rem 1.5rem; }
+  .res-card { text-align:center; background:linear-gradient(160deg,#1e3657,#16243F); border:2px solid var(--purple); border-radius:16px; padding:2rem 1.5rem; }
   .res-emoji { font-size:4rem; }
   .res-score { font-family:'Anton',sans-serif; font-size:3.5rem; color:var(--gold-2); line-height:1; }
   .res-score small { font-size:1.3rem; opacity:0.6; }
@@ -69,7 +71,7 @@
 .grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
 </style>
 </head>
-<body>
+<body class="pm-skin">
 <div class="container">
   <header>
     <div class="header-tag">Juego Limpio · Mundial 2026</div>
@@ -117,7 +119,7 @@
       <div class="res-wm">JUEGO LIMPIO · MUNDIAL 2026 · @JUVENTUD_LAPAMPA</div>
     </div>
     <button class="btn btn-gold" id="download">📸 DESCARGAR MI TARJETA</button>
-    <button class="btn" id="share" style="background:linear-gradient(135deg,#22c55e,#16a34a);color:#04210f">🔗 PICALE A UN AMIGO</button>
+    <button class="btn" id="share" style="background:linear-gradient(135deg,#2f9fd4,#6cc0ec);color:#04212e">🔗 PICALE A UN AMIGO</button>
     <button class="btn btn-sec" id="replay">🔁 Jugar la revancha</button>
   </div>
 </div>
@@ -325,7 +327,7 @@ function show(s) {
 $('download').onclick = () => {
   const node = $('res-card');
   const w = node.offsetWidth, h = node.offsetHeight;
-  html2canvas(node, { backgroundColor:'#0a0a14', scale:2, useCORS:true, allowTaint:true, logging:false,
+  html2canvas(node, { backgroundColor:'#16243F', scale:2, useCORS:true, allowTaint:true, logging:false,
     width:w, height:h, windowWidth:document.documentElement.clientWidth, windowHeight:document.documentElement.clientHeight
   }).then(canvas => {
     const link = document.createElement('a');
