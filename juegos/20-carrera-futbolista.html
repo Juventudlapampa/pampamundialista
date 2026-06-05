@@ -16,19 +16,21 @@
 <meta name="twitter:image" content="https://pampamundialista.vercel.app/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/brand.css">
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* Piel de marca: variables legacy aliasadas a los tokens del home (assets/brand.css) */
   :root {
-    --bg: #0a1f1a;
-    --verde: #0d3b26;
-    --verde-fluo: #4ade80;
-    --gold: #d4a82e;
-    --gold-2: #f4cd60;
-    --crema: #f4ecd8;
-    --rojo: #dc2626;
-    --azul: #75AADB;
+    --bg: var(--pm-navy);
+    --verde: var(--pm-panel);
+    --verde-fluo: var(--pm-celeste-2);
+    --gold: var(--pm-celeste);
+    --gold-2: var(--pm-celeste-2);
+    --crema: var(--pm-ink);
+    --rojo: var(--pm-celeste-claro);
+    --azul: var(--pm-celeste-claro);
   }
   body {
     font-family: 'DM Sans', sans-serif;
@@ -63,7 +65,7 @@
 
   .panel {
     background: rgba(0,0,0,0.5);
-    border: 2px solid rgba(212,168,46,0.3);
+    border: 2px solid rgba(47,159,212,0.3);
     border-radius: 16px;
     padding: 1.5rem;
   }
@@ -83,7 +85,7 @@
   select {
     width: 100%;
     background: rgba(0,0,0,0.5);
-    border: 1px solid rgba(212,168,46,0.4);
+    border: 1px solid rgba(47,159,212,0.4);
     color: var(--crema);
     padding: 0.7rem;
     border-radius: 6px;
@@ -153,7 +155,7 @@
   }
   .stat-pill {
     background: rgba(0,0,0,0.5);
-    border: 1px solid rgba(212,168,46,0.3);
+    border: 1px solid rgba(47,159,212,0.3);
     border-radius: 6px;
     padding: 0.4rem 0.3rem;
     text-align: center;
@@ -193,7 +195,7 @@
   /* Decisiones */
   .decisiones { display: grid; gap: 0.6rem; }
   .decision-btn {
-    background: rgba(13,59,38,0.7);
+    background: rgba(30,54,87,0.7);
     border: 2px solid rgba(244,236,216,0.2);
     color: var(--crema);
     padding: 1rem 1.2rem;
@@ -207,7 +209,7 @@
   }
   .decision-btn:hover {
     border-color: var(--gold);
-    background: rgba(212,168,46,0.15);
+    background: rgba(47,159,212,0.15);
     transform: translateY(-2px);
   }
   .decision-btn .decision-impact {
@@ -231,7 +233,7 @@
   .dice-box { text-align: center; max-width: 420px; width: 100%; }
   .dice-cube {
     font-size: 5.5rem; line-height: 1; margin-bottom: 0.3rem;
-    filter: drop-shadow(0 0 18px rgba(212,168,46,0.7));
+    filter: drop-shadow(0 0 18px rgba(47,159,212,0.7));
   }
   .dice-rolling { animation: shake 0.12s infinite; }
   @keyframes shake { 0%{transform:rotate(-13deg) scale(1.05)} 50%{transform:rotate(13deg) scale(0.95)} 100%{transform:rotate(-13deg) scale(1.05)} }
@@ -239,8 +241,8 @@
   .dice-msg { font-size:1rem; line-height:1.5; margin-bottom:0.9rem; color:var(--crema); min-height:1.5rem; }
   .dice-changes { display:flex; flex-wrap:wrap; gap:0.4rem; justify-content:center; margin-bottom:1.1rem; }
   .dice-chip { font-family:'JetBrains Mono',monospace; font-size:0.8rem; padding:0.25rem 0.6rem; border-radius:6px; border:1px solid; }
-  .dice-chip.up { color:var(--verde-fluo); border-color:rgba(74,222,128,0.5); }
-  .dice-chip.down { color:#f87171; border-color:rgba(248,113,113,0.5); }
+  .dice-chip.up { color:var(--verde-fluo); border-color:rgba(47,159,212,0.5); }
+  .dice-chip.down { color:#9fb2c4; border-color:rgba(126,147,168,0.5); }
 
   /* Final */
   .final-banner { text-align: center; padding: 2rem 1rem; }
@@ -283,7 +285,7 @@
 .grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
 </style>
 </head>
-<body>
+<body class="pm-skin">
 <div class="container">
   <header>
     <div class="header-tag">Carrera de Futbolista · Mundial 2026</div>
@@ -435,7 +437,7 @@
       </div>
     </div>
     <button class="btn" style="margin-top:0.6rem" id="r-download">📸 DESCARGAR MI HISTORIA</button>
-    <button class="btn" style="margin-top:0.5rem;background:linear-gradient(135deg,#22c55e,#16a34a);color:#04210f" id="r-share">🔗 DESAFIAR A UN AMIGO</button>
+    <button class="btn" style="margin-top:0.5rem;background:linear-gradient(135deg,#2f9fd4,#6cc0ec);color:#04212e" id="r-share">🔗 DESAFIAR A UN AMIGO</button>
     <button class="btn btn-secondary" style="margin-top:0.5rem" onclick="restart()">🔁 Vivir otra carrera</button>
   </div>
 </div>
@@ -483,12 +485,12 @@ const CLUB = () => { const t = TOWNS[game.origen]; return t ? t.club : ('el club
 // DADO DE LA VIDA
 // ========================================================================
 const LUCK = {
-  1: { label:'¡UF, TERRIBLE!',     txt:'La mandaste a la tribuna. A veces toca perder, así es el fútbol.',  mult:0.0, bonus:{}, penalty:{ fama:-6, fisico:-4 }, color:'#f87171' },
-  2: { label:'SALIÓ FLOJO',         txt:'No fue lo que buscabas, pero el partido sigue.',                   mult:0.4, bonus:{}, penalty:{ fama:-2 }, color:'#fbbf24' },
-  3: { label:'NORMAL',              txt:'Ni fu ni fa. Un día más de entrenamiento.',                        mult:0.7, bonus:{}, penalty:{}, color:'#d4a82e' },
-  4: { label:'SALIÓ BIEN',          txt:'La pisaste y salió redondo. Bien ahí.',                            mult:1.0, bonus:{}, penalty:{}, color:'#4ade80' },
-  5: { label:'¡MUY BIEN!',          txt:'Mejor de lo que esperabas. La estás rompiendo.',                   mult:1.3, bonus:{ talento:4 }, penalty:{}, color:'#4ade80' },
-  6: { label:'¡LA ROMPISTE!',       txt:'¡Golazo de mitad de cancha! Salió todo perfecto.',                 mult:1.7, bonus:{ talento:6, fama:6 }, penalty:{}, color:'#4ade80' }
+  1: { label:'¡UF, TERRIBLE!',     txt:'La mandaste a la tribuna. A veces toca perder, así es el fútbol.',  mult:0.0, bonus:{}, penalty:{ fama:-6, fisico:-4 }, color:'#7e93a8' },
+  2: { label:'SALIÓ FLOJO',         txt:'No fue lo que buscabas, pero el partido sigue.',                   mult:0.4, bonus:{}, penalty:{ fama:-2 }, color:'#9fb2c4' },
+  3: { label:'NORMAL',              txt:'Ni fu ni fa. Un día más de entrenamiento.',                        mult:0.7, bonus:{}, penalty:{}, color:'#75AADB' },
+  4: { label:'SALIÓ BIEN',          txt:'La pisaste y salió redondo. Bien ahí.',                            mult:1.0, bonus:{}, penalty:{}, color:'#2f9fd4' },
+  5: { label:'¡MUY BIEN!',          txt:'Mejor de lo que esperabas. La estás rompiendo.',                   mult:1.3, bonus:{ talento:4 }, penalty:{}, color:'#2f9fd4' },
+  6: { label:'¡LA ROMPISTE!',       txt:'¡Golazo de mitad de cancha! Salió todo perfecto.',                 mult:1.7, bonus:{ talento:6, fama:6 }, penalty:{}, color:'#2f9fd4' }
 };
 function resolveLuck(roll, s) {
   const luck = LUCK[roll], out = {};
@@ -931,7 +933,7 @@ $('r-download').onclick = () => {
   const node = $('final-panel');
   const w = node.offsetWidth, h = node.offsetHeight;
   html2canvas(node, {
-    backgroundColor: '#0a1f1a', scale: 2, useCORS: true, allowTaint: true, logging: false,
+    backgroundColor: '#16243F', scale: 2, useCORS: true, allowTaint: true, logging: false,
     width: w, height: h,
     windowWidth: document.documentElement.clientWidth,
     windowHeight: document.documentElement.clientHeight
