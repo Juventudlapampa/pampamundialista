@@ -16,20 +16,22 @@
 <meta name="twitter:image" content="https://pampamundialista.vercel.app/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/brand.css">
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="../pampa-share.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* Piel de marca: variables legacy aliasadas a los tokens del home (assets/brand.css) */
   :root {
-    --verde: #0d3b26;
-    --verde-2: #145c39;
-    --verde-fluo: #4ade80;
-    --gold: #d4a82e;
-    --gold-2: #f4cd60;
-    --crema: #f4ecd8;
+    --verde: var(--pm-panel);
+    --verde-2: var(--pm-card);
+    --verde-fluo: var(--pm-celeste-2);
+    --gold: var(--pm-celeste);
+    --gold-2: var(--pm-celeste-2);
+    --crema: var(--pm-ink);
     --negro: #0a0a0a;
-    --rojo: #dc2626;
+    --rojo: var(--pm-celeste-claro);
   }
   body {
     font-family: 'DM Sans', sans-serif;
@@ -69,7 +71,7 @@
 
   .panel {
     background: rgba(0,0,0,0.4);
-    border: 1px solid rgba(212,168,46,0.3);
+    border: 1px solid rgba(47,159,212,0.3);
     border-radius: 12px;
     padding: 1.3rem;
   }
@@ -107,14 +109,14 @@
 
   .jugador-row {
     background: rgba(0,0,0,0.3);
-    border: 1px solid rgba(212,168,46,0.2);
+    border: 1px solid rgba(47,159,212,0.2);
     border-radius: 8px;
     padding: 0.7rem;
     margin-bottom: 0.6rem;
   }
   .jugador-row.profe {
     border-color: var(--gold);
-    background: rgba(212,168,46,0.05);
+    background: rgba(47,159,212,0.05);
   }
   .jugador-row-header {
     font-family: 'Anton', sans-serif;
@@ -133,7 +135,7 @@
     width: 70px;
     height: 70px;
     background: rgba(0,0,0,0.5);
-    border: 2px dashed rgba(212,168,46,0.4);
+    border: 2px dashed rgba(47,159,212,0.4);
     border-radius: 50%;
     overflow: hidden;
     display: flex;
@@ -165,7 +167,7 @@
 
   /* CANCHA OUTPUT */
   .cancha-wrap {
-    background: linear-gradient(180deg, #1a7a4a 0%, #0d4a2c 100%);
+    background: linear-gradient(180deg, #1d3a5c 0%, #16243F 100%);
     background-image: repeating-linear-gradient(0deg, transparent, transparent 8%, rgba(255,255,255,0.04) 8%, rgba(255,255,255,0.04) 16%);
     border-radius: 12px;
     padding: 1.2rem 0.8rem;
@@ -264,7 +266,7 @@
 .grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
 </style>
 </head>
-<body>
+<body class="pm-skin">
 <div class="container">
   <header>
     <div class="header-tag">FUT5 del Aula · Mundial 2026</div>
@@ -295,7 +297,7 @@
 
       <button class="btn" id="download">⬇ BAJÁ EL EQUIPO</button>
       <button class="btn" id="download-story" style="margin-top:0.5rem;background:linear-gradient(135deg,#75AADB,#4d8fc7);color:#fff">📲 PARA LA HISTORIA (9:16)</button>
-      <button class="btn" id="share-fut5" style="margin-top:0.5rem;background:linear-gradient(135deg,#22c55e,#16a34a);color:#04210f">🔗 MANDALO AL GRUPO DEL CURSO</button>
+      <button class="btn" id="share-fut5" style="margin-top:0.5rem;background:linear-gradient(135deg,#2f9fd4,#6cc0ec);color:#04212e">🔗 MANDALO AL GRUPO DEL CURSO</button>
     </div>
 
     <!-- PREVIEW -->
