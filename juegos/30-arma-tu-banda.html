@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Armá tu banda · Pampa Mundialista</title>
-<meta name="description" content="Armá la identidad de tu banda de hinchas: trapo, bombo y accesorios. Bajá tu kit de hincha. Juventudes La Pampa · Mundial 2026.">
+<meta name="description" content="Armá la identidad de tu banda de hinchas: colores, trapo, bombo, accesorios, cántico y lore. Bajá tu kit de hincha. Juventudes La Pampa · Mundial 2026.">
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Armá tu banda · Pampa Mundialista">
-<meta property="og:description" content="Tu trapo, tu bombo y tus accesorios de hincha. Bajá tu kit.">
+<meta property="og:description" content="Colores, trapo, bombo, accesorios, cántico y lore. Bajá tu kit de hincha.">
 <meta property="og:image" content="https://pampamundialista.vercel.app/og-image.png">
 <meta property="og:url" content="https://pampamundialista.vercel.app/juegos/30-arma-tu-banda.html">
 <meta name="twitter:card" content="summary_large_image">
@@ -20,50 +20,70 @@
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
   body { font-family:'DM Sans',sans-serif; color:var(--pm-ink); min-height:100vh; padding:1.2rem 1rem 2rem; }
-  .container { max-width:600px; margin:0 auto; position:relative; z-index:1; }
+  .container { max-width:620px; margin:0 auto; position:relative; z-index:1; }
   .back { display:inline-block; color:var(--pm-celeste-2); text-decoration:none; font-family:'JetBrains Mono',monospace; font-size:0.72rem; letter-spacing:0.12em; margin-bottom:1rem; }
   header { text-align:center; margin-bottom:1.2rem; }
   .eyebrow { font-family:'JetBrains Mono',monospace; font-size:0.66rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--pm-celeste-2); }
   h1 { font-family:'Anton',sans-serif; font-size:clamp(2rem,8vw,3rem); letter-spacing:0.03em; text-transform:uppercase; line-height:0.95; margin:0.3rem 0 0.4rem; }
   h1 span { color:var(--pm-celeste); }
-  .bajada { font-size:0.92rem; opacity:0.9; line-height:1.45; max-width:440px; margin:0 auto; }
+  .bajada { font-size:0.92rem; opacity:0.9; line-height:1.45; max-width:460px; margin:0 auto; }
 
   .paso { background:rgba(0,0,0,0.28); border:1px solid var(--pm-line); border-radius:14px; padding:1.1rem; margin-bottom:0.9rem; }
   .paso-tit { font-family:'Anton',sans-serif; font-size:1.1rem; letter-spacing:0.04em; text-transform:uppercase; color:var(--pm-celeste-2); margin-bottom:0.7rem; }
   .paso-tit .n { display:inline-flex; align-items:center; justify-content:center; width:1.5rem; height:1.5rem; border-radius:50%; background:var(--pm-grad); color:#04212e; font-size:0.85rem; margin-right:0.5rem; }
-  label.f { display:block; font-size:0.78rem; color:var(--pm-celeste-2); margin:0.5rem 0 0.25rem; font-family:'JetBrains Mono',monospace; letter-spacing:0.06em; text-transform:uppercase; }
+  label.f { display:block; font-size:0.74rem; color:var(--pm-celeste-2); margin:0.6rem 0 0.25rem; font-family:'JetBrains Mono',monospace; letter-spacing:0.06em; text-transform:uppercase; }
   input[type=text], select { width:100%; background:rgba(0,0,0,0.4); border:1px solid var(--pm-line); color:var(--pm-ink); padding:0.7rem; border-radius:8px; font-family:inherit; font-size:0.95rem; }
   input:focus, select:focus { outline:none; border-color:var(--pm-celeste); }
-  .colores { display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.3rem; }
-  .swatch { width:2.1rem; height:2.1rem; border-radius:50%; cursor:pointer; border:3px solid transparent; }
-  .swatch.on { border-color:var(--pm-white); transform:scale(1.08); }
+  .colores { display:flex; gap:0.45rem; flex-wrap:wrap; margin-top:0.3rem; }
+  .swatch { width:2rem; height:2rem; border-radius:50%; cursor:pointer; border:3px solid transparent; transition:transform .1s; }
+  .swatch.on { border-color:var(--pm-white); transform:scale(1.1); }
+  /* grilla de opciones (distribución, posición, variantes, parche) */
+  .opciones { display:flex; gap:0.45rem; flex-wrap:wrap; margin-top:0.3rem; }
+  .op { flex:1; min-width:70px; background:rgba(0,0,0,0.35); border:1px solid var(--pm-line); border-radius:10px; padding:0.55rem 0.4rem; cursor:pointer; text-align:center; font-size:0.8rem; }
+  .op.on { border-color:var(--pm-celeste); background:rgba(47,159,212,0.16); color:var(--pm-celeste-2); font-weight:700; }
+  .op .mini { display:block; width:100%; height:26px; border-radius:5px; margin-bottom:0.3rem; }
   .acc-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; margin-top:0.3rem; }
-  .acc { display:flex; align-items:center; gap:0.5rem; background:rgba(0,0,0,0.35); border:1px solid var(--pm-line); border-radius:10px; padding:0.6rem 0.7rem; cursor:pointer; font-size:0.9rem; }
+  .acc { background:rgba(0,0,0,0.35); border:1px solid var(--pm-line); border-radius:10px; padding:0.6rem 0.7rem; cursor:pointer; }
   .acc.on { border-color:var(--pm-celeste); background:rgba(47,159,212,0.14); }
-  .acc .em { font-size:1.3rem; }
+  .acc-top { display:flex; align-items:center; gap:0.5rem; font-size:0.9rem; }
+  .acc .em { font-size:1.2rem; }
+  .acc-var { display:flex; gap:0.3rem; margin-top:0.4rem; }
+  .acc-var button { flex:1; background:rgba(0,0,0,0.3); border:1px solid var(--pm-line); color:var(--pm-ink); border-radius:7px; padding:0.25rem; font-family:inherit; font-size:0.7rem; cursor:pointer; }
+  .acc-var button.on { border-color:var(--pm-celeste); color:var(--pm-celeste-2); font-weight:700; }
+  .radio-list { display:grid; gap:0.4rem; margin-top:0.3rem; }
+  .radio { display:flex; gap:0.6rem; align-items:flex-start; background:rgba(0,0,0,0.3); border:1px solid var(--pm-line); border-radius:10px; padding:0.6rem 0.7rem; cursor:pointer; font-size:0.88rem; line-height:1.35; }
+  .radio.on { border-color:var(--pm-celeste); background:rgba(47,159,212,0.12); }
+  .radio .dot { flex:none; width:1.1rem; height:1.1rem; border-radius:50%; border:2px solid var(--pm-celeste); margin-top:0.1rem; }
+  .radio.on .dot { background:var(--pm-celeste); box-shadow:inset 0 0 0 3px rgba(0,0,0,0.4); }
 
   /* LÁMINA / KIT (lo que se descarga) */
-  .lamina { background:linear-gradient(160deg,#1d3157 0%,#16243F 75%); border:2px solid var(--pm-celeste); border-radius:18px; padding:1.4rem 1.2rem 1.6rem; margin-top:0.4rem; position:relative; overflow:hidden; }
-  .lam-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem; }
+  .lamina { background:linear-gradient(160deg,#1d3157 0%,#16243F 78%); border:2px solid var(--pm-celeste); border-radius:18px; padding:1.4rem 1.2rem 1.6rem; margin-top:0.4rem; position:relative; overflow:hidden; }
+  .lam-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.7rem; }
   .lam-estrellas { color:var(--pm-celeste-2); letter-spacing:0.15em; }
   .lam-tag { font-family:'JetBrains Mono',monospace; font-size:0.6rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--pm-celeste-2); }
   .lam-nombre { font-family:'Anton',sans-serif; font-size:clamp(1.6rem,7vw,2.2rem); text-transform:uppercase; line-height:1; letter-spacing:0.02em; text-align:center; margin:0.3rem 0 0.1rem; }
-  .lam-loc { text-align:center; font-family:'JetBrains Mono',monospace; font-size:0.7rem; letter-spacing:0.12em; color:var(--pm-celeste-2); text-transform:uppercase; margin-bottom:1rem; }
-  .piezas { display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; }
+  .lam-loc { text-align:center; font-family:'JetBrains Mono',monospace; font-size:0.7rem; letter-spacing:0.12em; color:var(--pm-celeste-2); text-transform:uppercase; margin-bottom:0.9rem; }
+  .piezas { display:grid; grid-template-columns:1fr 1fr; gap:0.7rem; }
   .pieza { background:rgba(0,0,0,0.25); border:1px solid var(--pm-line); border-radius:12px; padding:0.7rem; text-align:center; }
-  .pieza-lbl { font-family:'JetBrains Mono',monospace; font-size:0.58rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--pm-celeste-2); margin-bottom:0.5rem; }
+  .pieza-lbl { font-family:'JetBrains Mono',monospace; font-size:0.56rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--pm-celeste-2); margin-bottom:0.5rem; }
   /* Trapo */
-  .trapo { border-radius:6px; padding:0.7rem 0.5rem; min-height:74px; display:flex; flex-direction:column; justify-content:center; gap:0.2rem; box-shadow:0 3px 10px rgba(0,0,0,0.35); }
-  .trapo .tp-nom { font-family:'Anton',sans-serif; font-size:1rem; line-height:1; letter-spacing:0.02em; text-transform:uppercase; }
-  .trapo .tp-frase { font-size:0.66rem; opacity:0.95; line-height:1.2; }
+  .trapo { border-radius:6px; min-height:84px; display:flex; flex-direction:column; padding:0.6rem 0.55rem; gap:0.15rem; box-shadow:0 3px 10px rgba(0,0,0,0.35); position:relative; overflow:hidden; }
+  .trapo.pos-arriba { justify-content:flex-start; } .trapo.pos-centro { justify-content:center; } .trapo.pos-abajo { justify-content:flex-end; }
+  .trapo .tp-nom { font-family:'Anton',sans-serif; font-size:1rem; line-height:1; letter-spacing:0.02em; text-transform:uppercase; text-shadow:0 1px 2px rgba(0,0,0,0.4); }
+  .trapo .tp-frase { font-size:0.64rem; line-height:1.2; text-shadow:0 1px 2px rgba(0,0,0,0.4); }
   /* Bombo */
-  .bombo { width:74px; height:74px; border-radius:50%; margin:0 auto; display:flex; align-items:center; justify-content:center; text-align:center; box-shadow:0 3px 10px rgba(0,0,0,0.35); border:3px solid rgba(255,255,255,0.85); }
-  .bombo span { font-family:'Anton',sans-serif; font-size:0.7rem; line-height:0.95; text-transform:uppercase; padding:0 4px; }
-  /* Accesorios pieza */
-  .acc-list { grid-column:1/3; display:flex; flex-wrap:wrap; gap:0.5rem; justify-content:center; }
-  .acc-chip { display:flex; align-items:center; gap:0.35rem; background:rgba(47,159,212,0.14); border:1px solid var(--pm-celeste); border-radius:999px; padding:0.3rem 0.7rem; font-size:0.78rem; }
-  .acc-empty { font-size:0.78rem; opacity:0.7; }
-  .lam-foot { display:flex; justify-content:space-between; margin-top:1rem; padding-top:0.7rem; border-top:1px solid var(--pm-line); font-family:'JetBrains Mono',monospace; font-size:0.56rem; letter-spacing:0.08em; color:var(--pm-celeste-2); }
+  .bombo { width:84px; height:84px; border-radius:50%; margin:0 auto; display:flex; align-items:center; justify-content:center; text-align:center; box-shadow:0 3px 10px rgba(0,0,0,0.35); position:relative; }
+  .bombo span.bt { font-family:'Anton',sans-serif; font-size:0.68rem; line-height:0.95; text-transform:uppercase; padding:0 4px; z-index:2; }
+  .bombo .star { position:absolute; top:6px; left:50%; transform:translateX(-50%); font-size:0.7rem; z-index:2; }
+  .acc-list { grid-column:1/3; display:flex; flex-wrap:wrap; gap:0.4rem; justify-content:center; }
+  .acc-chip { display:flex; align-items:center; gap:0.35rem; background:rgba(47,159,212,0.14); border:1px solid var(--pm-celeste); border-radius:999px; padding:0.28rem 0.65rem; font-size:0.74rem; }
+  .acc-empty { font-size:0.76rem; opacity:0.7; }
+  .lam-extra { grid-column:1/3; }
+  .lam-canto, .lam-lore { background:rgba(0,0,0,0.22); border:1px solid var(--pm-line); border-radius:10px; padding:0.6rem 0.75rem; margin-top:0.6rem; }
+  .lam-canto .ll, .lam-lore .ll { font-family:'JetBrains Mono',monospace; font-size:0.55rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--pm-celeste-2); margin-bottom:0.2rem; }
+  .lam-canto .tx { font-size:0.82rem; line-height:1.35; font-style:italic; }
+  .lam-lore .tx { font-size:0.8rem; line-height:1.35; }
+  .lam-foot { display:flex; justify-content:space-between; margin-top:0.9rem; padding-top:0.7rem; border-top:1px solid var(--pm-line); font-family:'JetBrains Mono',monospace; font-size:0.56rem; letter-spacing:0.08em; color:var(--pm-celeste-2); }
   .lam-foot b { font-family:'Anton',sans-serif; color:var(--pm-ink); }
 
   .actions { display:flex; gap:0.5rem; margin-top:0.9rem; flex-wrap:wrap; }
@@ -79,25 +99,31 @@
   <header>
     <div class="eyebrow">🥁 Rincón de Hincha · Mundial 2026</div>
     <h1>ARMÁ TU <span>BANDA</span></h1>
-    <p class="bajada">Tu trapo, tu bombo y tus accesorios. Armá la identidad de tu banda y bajá tu <b>kit de hincha</b> para la cancha (o el living).</p>
+    <p class="bajada">Elegí tus colores, tu trapo, tu bombo, tus accesorios, tu cántico y la historia de la banda. Después bajá tu <b>kit de hincha</b> completo.</p>
   </header>
 
-  <!-- PASO 1: Datos -->
+  <!-- PASO 1: Identidad -->
   <div class="paso">
-    <div class="paso-tit"><span class="n">1</span>Datos de la banda</div>
+    <div class="paso-tit"><span class="n">1</span>Identidad de la banda</div>
     <label class="f" for="nombre">Nombre de la banda</label>
     <input type="text" id="nombre" maxlength="22" placeholder="Ej: Los del Caldén">
-    <label class="f">Colores</label>
-    <div class="colores" id="colores"></div>
     <label class="f" for="loc">Localidad</label>
     <select id="loc"></select>
+    <label class="f">Color principal</label>
+    <div class="colores" id="col1"></div>
+    <label class="f">Color secundario</label>
+    <div class="colores" id="col2"></div>
   </div>
 
   <!-- PASO 2: Trapo -->
   <div class="paso">
     <div class="paso-tit"><span class="n">2</span>Tu trapo</div>
-    <label class="f" for="trapo-frase">Frase del trapo</label>
+    <label class="f">¿Cómo se reparten los colores?</label>
+    <div class="opciones" id="distrib"></div>
+    <label class="f" for="trapo-frase">Frase de aliento</label>
     <input type="text" id="trapo-frase" maxlength="34" placeholder="Ej: De La Pampa al Mundial">
+    <label class="f">Posición del texto</label>
+    <div class="opciones" id="pos"></div>
   </div>
 
   <!-- PASO 3: Bombo -->
@@ -105,12 +131,26 @@
     <div class="paso-tit"><span class="n">3</span>Tu bombo</div>
     <label class="f" for="bombo-parche">Parche / nombre en el bombo</label>
     <input type="text" id="bombo-parche" maxlength="16" placeholder="Ej: EL CALDÉN">
+    <label class="f">Diseño del parche</label>
+    <div class="opciones" id="parche"></div>
   </div>
 
   <!-- PASO 4: Accesorios -->
   <div class="paso">
     <div class="paso-tit"><span class="n">4</span>Accesorios</div>
     <div class="acc-grid" id="acc-grid"></div>
+  </div>
+
+  <!-- PASO 5: Cántico -->
+  <div class="paso">
+    <div class="paso-tit"><span class="n">5</span>El cántico de la banda</div>
+    <div class="radio-list" id="cantos"></div>
+  </div>
+
+  <!-- PASO 6: Lore -->
+  <div class="paso">
+    <div class="paso-tit"><span class="n">6</span>La historia de la banda</div>
+    <div class="radio-list" id="lores"></div>
   </div>
 
   <!-- KIT / LÁMINA -->
@@ -122,15 +162,19 @@
     <div class="piezas">
       <div class="pieza">
         <div class="pieza-lbl">El trapo</div>
-        <div class="trapo" id="lam-trapo"><div class="tp-nom" id="lam-trapo-nom">TU BANDA</div><div class="tp-frase" id="lam-trapo-frase">Tu frase acá</div></div>
+        <div class="trapo pos-centro" id="lam-trapo"><div class="tp-nom" id="lam-trapo-nom">TU BANDA</div><div class="tp-frase" id="lam-trapo-frase">Tu frase acá</div></div>
       </div>
       <div class="pieza">
         <div class="pieza-lbl">El bombo</div>
-        <div class="bombo" id="lam-bombo"><span id="lam-bombo-txt">BOMBO</span></div>
+        <div class="bombo" id="lam-bombo"><span class="star" id="lam-bombo-star" style="display:none">★</span><span class="bt" id="lam-bombo-txt">BOMBO</span></div>
       </div>
       <div class="pieza" style="grid-column:1/3">
         <div class="pieza-lbl">Accesorios</div>
         <div class="acc-list" id="lam-acc"><span class="acc-empty">Elegí tus accesorios arriba</span></div>
+      </div>
+      <div class="lam-extra">
+        <div class="lam-canto"><div class="ll">🎶 Nuestro cántico</div><div class="tx" id="lam-canto">—</div></div>
+        <div class="lam-lore"><div class="ll">📖 Nuestra historia</div><div class="tx" id="lam-lore">—</div></div>
       </div>
     </div>
     <div class="lam-foot"><b>PAMPA MUNDIALISTA</b><span>@pampamundialista · pampamundialista.vercel.app</span></div>
@@ -155,67 +199,131 @@ const LOCS = ['25 de Mayo','Adolfo Van Praet','Agustoni','Algarrobo del Águila'
   'Rancul','Realicó','Rolón','Santa Isabel','Santa Rosa','Sarah','Speluzzi','Telén','Toay',
   'Tomás M. de Anchorena','Trenel','Uriburu','Vértiz','Victorica','Villa Mirasol','Winifreda'];
 
-// Colores brand-safe (sin verde/rojo/dorado): celestes, navy, blanco y los institucionales azul/violeta/magenta
+// Colores brand-safe (sin verde/rojo/dorado)
 const COLORES = [
   {n:'Celeste', c:'#2f9fd4'}, {n:'Celeste claro', c:'#9BD6EF'}, {n:'Azul', c:'#2B3A8F'},
   {n:'Navy', c:'#16243F'}, {n:'Blanco', c:'#f4f8fc'}, {n:'Violeta', c:'#9B3DAA'}, {n:'Magenta', c:'#E8317A'}, {n:'Cian', c:'#2BAADC'}
 ];
+const DISTRIB = [
+  {id:'h', n:'Franjas ⬌'}, {id:'v', n:'Franjas ⬍'}, {id:'d', n:'Diagonal'}, {id:'p', n:'Partida'}
+];
+const POS = [ {id:'arriba',n:'Arriba'}, {id:'centro',n:'Centro'}, {id:'abajo',n:'Abajo'} ];
+const PARCHE = [ {id:'simple',n:'Simple'}, {id:'borde',n:'Con borde'}, {id:'estrella',n:'Con estrella'} ];
 const ACCS = [
-  {id:'gorro', em:'🧢', n:'Gorro'}, {id:'bufanda', em:'🧣', n:'Bufanda'},
-  {id:'vincha', em:'🎗️', n:'Vincha'}, {id:'pintura', em:'🎨', n:'Pintura en la cara'}
+  {id:'gorro', em:'🧢', n:'Gorro', vars:null},
+  {id:'bufanda', em:'🧣', n:'Bufanda', vars:[{id:'lisa',n:'Lisa'},{id:'rayas',n:'A rayas'}]},
+  {id:'vincha', em:'🎗️', n:'Vincha', vars:null},
+  {id:'pintura', em:'🎨', n:'Pintura', vars:[{id:'una',n:'1 mejilla'},{id:'dos',n:'2 mejillas'}]}
+];
+const CANTOS = [
+  "¡Vamo' {p}, vamo' a alentar, que esta banda no te deja de cantar!",
+  "De {p} somos, de {p} venimos, y a la Selección hasta el fin la seguimos.",
+  "¡Dale campeón, dale campeón! Que {p} te alienta de corazón.",
+  "Esta es la banda de {p}, que no para de cantar: ¡vamos Argentina, hay que ganar!",
+  "Con bombo y bandera, {p} dice presente, alentando a la celeste con toda la gente."
+];
+const LORES = [
+  'Nacida en la previa de un asado que se hizo eterno.',
+  'Fundada en la última mesa del bar del pueblo.',
+  'Surgida de un grupo de WhatsApp que se fue de las manos.',
+  'Forjada en la canchita de tierra, abajo del caldén.',
+  'Creada un domingo de mate, cuando la charla derivó en Mundial.'
 ];
 
 const $ = (id)=>document.getElementById(id);
-const state = { color:'#2f9fd4', color2:'#f4f8fc', acc:{} };
+const state = { color:'#2f9fd4', color2:'#f4f8fc', distrib:'h', pos:'centro', parche:'simple', acc:{}, accVar:{bufanda:'lisa',pintura:'una'}, canto:0, lore:0 };
 
-// Poblar localidades
+// Localidades
 $('loc').innerHTML = '<option value="">— Elegí tu localidad —</option>' + LOCS.map(l=>'<option>'+l+'</option>').join('');
 
-// Colores (elegís 2: el segundo toque define el color secundario)
-let colorPick = 0;
-$('colores').innerHTML = COLORES.map(c=>'<span class="swatch" data-c="'+c.c+'" title="'+c.n+'" style="background:'+c.c+'"></span>').join('');
-function paintSwatches(){
-  document.querySelectorAll('.swatch').forEach(s=>{ s.classList.toggle('on', s.dataset.c===state.color || s.dataset.c===state.color2); });
+// Swatches principal / secundario
+function swatches(box, key){
+  box.innerHTML = COLORES.map(c=>'<span class="swatch" data-c="'+c.c+'" title="'+c.n+'" style="background:'+c.c+'"></span>').join('');
+  box.querySelectorAll('.swatch').forEach(s=>s.onclick=()=>{ state[key]=s.dataset.c; paintSel(); render(); });
 }
-document.querySelectorAll('.swatch').forEach(s=>s.onclick=()=>{
-  if(colorPick===0){ state.color=s.dataset.c; colorPick=1; } else { state.color2=s.dataset.c; colorPick=0; }
-  paintSwatches(); render();
+function paintSel(){
+  $('col1').querySelectorAll('.swatch').forEach(s=>s.classList.toggle('on', s.dataset.c===state.color));
+  $('col2').querySelectorAll('.swatch').forEach(s=>s.classList.toggle('on', s.dataset.c===state.color2));
+}
+swatches($('col1'),'color'); swatches($('col2'),'color2'); paintSel();
+
+// Opciones (distribución, posición, parche) con mini-preview
+function trapoBg(c1,c2,d){
+  if(d==='h') return 'repeating-linear-gradient(to bottom,'+c1+' 0 16.6%,'+c2+' 16.6% 33.3%)';
+  if(d==='v') return 'repeating-linear-gradient(to right,'+c1+' 0 16.6%,'+c2+' 16.6% 33.3%)';
+  if(d==='d') return 'linear-gradient(135deg,'+c1+' 0 50%,'+c2+' 50% 100%)';
+  return 'linear-gradient(to right,'+c1+' 0 50%,'+c2+' 50% 100%)';
+}
+function opcionGrid(box, list, key, withMini){
+  box.innerHTML = list.map(o=>'<div class="op'+(state[key]===o.id?' on':'')+'" data-id="'+o.id+'">'+(withMini?'<span class="mini" data-mini="'+o.id+'"></span>':'')+o.n+'</div>').join('');
+  box.querySelectorAll('.op').forEach(el=>el.onclick=()=>{ state[key]=el.dataset.id; opcionGrid(box,list,key,withMini); render(); });
+  if(withMini) box.querySelectorAll('[data-mini]').forEach(m=>{ m.style.background = trapoBg(state.color,state.color2,m.dataset.mini); });
+}
+function renderOpciones(){
+  opcionGrid($('distrib'),DISTRIB,'distrib',true);
+  opcionGrid($('pos'),POS,'pos',false);
+  opcionGrid($('parche'),PARCHE,'parche',false);
+}
+renderOpciones();
+
+// Accesorios con variantes
+$('acc-grid').innerHTML = ACCS.map(a=>{
+  const vars = a.vars ? '<div class="acc-var">'+a.vars.map(v=>'<button data-acc="'+a.id+'" data-var="'+v.id+'">'+v.n+'</button>').join('')+'</div>' : '';
+  return '<div class="acc" data-id="'+a.id+'"><div class="acc-top"><span class="em">'+a.em+'</span><span>'+a.n+'</span></div>'+vars+'</div>';
+}).join('');
+$('acc-grid').querySelectorAll('.acc').forEach(el=>{
+  el.querySelector('.acc-top').onclick=()=>{ const id=el.dataset.id; state.acc[id]=!state.acc[id]; el.classList.toggle('on',state.acc[id]); paintVars(); render(); };
 });
-paintSwatches();
+$('acc-grid').querySelectorAll('.acc-var button').forEach(b=>b.onclick=(e)=>{ e.stopPropagation(); state.accVar[b.dataset.acc]=b.dataset.var; paintVars(); render(); });
+function paintVars(){ $('acc-grid').querySelectorAll('.acc-var button').forEach(b=>b.classList.toggle('on', state.accVar[b.dataset.acc]===b.dataset.var)); }
+paintVars();
 
-// Accesorios
-$('acc-grid').innerHTML = ACCS.map(a=>'<div class="acc" data-id="'+a.id+'"><span class="em">'+a.em+'</span><span>'+a.n+'</span></div>').join('');
-document.querySelectorAll('.acc').forEach(el=>el.onclick=()=>{ const id=el.dataset.id; state.acc[id]=!state.acc[id]; el.classList.toggle('on',state.acc[id]); render(); });
-
-function txtColorFor(bg){ // texto legible sobre el color elegido
-  const c=bg.replace('#',''); const r=parseInt(c.substr(0,2),16),g=parseInt(c.substr(2,2),16),b=parseInt(c.substr(4,2),16);
-  return (r*299+g*587+b*114)/1000 > 150 ? '#16243F' : '#ffffff';
+// Cánticos y Lore (radios)
+function radioList(box, list, key){
+  box.innerHTML = list.map((t,i)=>'<div class="radio'+(state[key]===i?' on':'')+'" data-i="'+i+'"><span class="dot"></span><span data-tx>'+t.replace(/\{p\}/g,(pueblo()||'tu pueblo'))+'</span></div>').join('');
+  box.querySelectorAll('.radio').forEach(el=>el.onclick=()=>{ state[key]=+el.dataset.i; radioList(box,list,key); render(); });
 }
+function pueblo(){ return $('loc').value || ''; }
+function renderRadios(){ radioList($('cantos'),CANTOS,'canto'); radioList($('lores'),LORES,'lore'); }
+renderRadios();
+
+function txtColorFor(bg){ const c=bg.replace('#',''); const r=parseInt(c.substr(0,2),16),g=parseInt(c.substr(2,2),16),b=parseInt(c.substr(4,2),16); return (r*299+g*587+b*114)/1000 > 145 ? '#16243F' : '#ffffff'; }
 
 function render(){
   const nombre = $('nombre').value.trim() || 'Tu banda';
   const loc = $('loc').value || 'La Pampa';
   const frase = $('trapo-frase').value.trim() || 'Tu frase acá';
-  const parche = $('bombo-parche').value.trim() || (LOCS.includes(loc)?loc:'BOMBO');
+  const parcheTxt = $('bombo-parche').value.trim() || (LOCS.includes(loc)?loc:'BOMBO');
   $('lam-nombre').textContent = nombre.toUpperCase();
   $('lam-loc').textContent = '📍 ' + loc;
-  // trapo con los 2 colores
+  // TRAPO: distribución + texto + posición
   const trapo = $('lam-trapo');
-  trapo.style.background = 'linear-gradient(135deg,'+state.color+' 0%,'+state.color+' 55%,'+state.color2+' 55%,'+state.color2+' 100%)';
-  $('lam-trapo-nom').textContent = (LOCS.includes(loc)?loc:nombre).toUpperCase();
-  $('lam-trapo-nom').style.color = txtColorFor(state.color);
-  $('lam-trapo-frase').textContent = frase;
-  $('lam-trapo-frase').style.color = txtColorFor(state.color);
-  // bombo
+  trapo.style.background = trapoBg(state.color, state.color2, state.distrib);
+  trapo.className = 'trapo pos-' + state.pos;
+  const tnom = $('lam-trapo-nom'); tnom.textContent = (LOCS.includes(loc)?loc:nombre).toUpperCase(); tnom.style.color = txtColorFor(state.color);
+  const tfr = $('lam-trapo-frase'); tfr.textContent = frase; tfr.style.color = txtColorFor(state.color);
+  // BOMBO: parche variante
   const bombo = $('lam-bombo');
-  bombo.style.background = 'radial-gradient(circle at 35% 30%, '+state.color2+', '+state.color+')';
-  const bt = $('lam-bombo-txt'); bt.textContent = parche.toUpperCase(); bt.style.color = txtColorFor(state.color);
-  // accesorios
-  const sel = ACCS.filter(a=>state.acc[a.id]);
-  $('lam-acc').innerHTML = sel.length ? sel.map(a=>'<span class="acc-chip"><span>'+a.em+'</span>'+a.n+'</span>').join('') : '<span class="acc-empty">Sin accesorios (sumá arriba)</span>';
+  if(state.parche==='simple'){ bombo.style.background='radial-gradient(circle at 35% 30%,'+state.color2+','+state.color+')'; bombo.style.border='none'; }
+  else if(state.parche==='borde'){ bombo.style.background=state.color; bombo.style.border='5px solid '+state.color2; }
+  else { bombo.style.background='radial-gradient(circle at 35% 30%,'+state.color2+','+state.color+')'; bombo.style.border='3px solid '+state.color2; }
+  $('lam-bombo-star').style.display = state.parche==='estrella' ? 'block' : 'none';
+  $('lam-bombo-star').style.color = txtColorFor(state.color);
+  const bt = $('lam-bombo-txt'); bt.textContent = parcheTxt.toUpperCase(); bt.style.color = txtColorFor(state.color);
+  // ACCESORIOS con variante
+  const sel = ACCS.filter(a=>state.acc[a.id]).map(a=>{
+    let lbl = a.n;
+    if(a.id==='bufanda') lbl = 'Bufanda ' + (state.accVar.bufanda==='rayas'?'a rayas':'lisa');
+    if(a.id==='pintura') lbl = 'Pintura ' + (state.accVar.pintura==='dos'?'2 mejillas':'1 mejilla');
+    return '<span class="acc-chip"><span>'+a.em+'</span>'+lbl+'</span>';
+  });
+  $('lam-acc').innerHTML = sel.length ? sel.join('') : '<span class="acc-empty">Sin accesorios (sumá arriba)</span>';
+  // CÁNTICO + LORE
+  $('lam-canto').textContent = '"' + CANTOS[state.canto].replace(/\{p\}/g, (LOCS.includes(loc)?loc:nombre)) + '"';
+  $('lam-lore').textContent = LORES[state.lore];
 }
-['nombre','trapo-frase','bombo-parche','loc'].forEach(id=>$(id).addEventListener('input',render));
-$('loc').addEventListener('change',render);
+['nombre','trapo-frase','bombo-parche'].forEach(id=>$(id).addEventListener('input',render));
+$('loc').addEventListener('change',()=>{ renderRadios(); render(); });
 render();
 
 // Descargas
