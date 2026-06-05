@@ -17,20 +17,22 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/brand.css">
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="../pampa-share.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* Piel de marca: variables legacy aliasadas a los tokens del home (assets/brand.css) */
   :root {
-    --verde: #0d3b26;
-    --verde-2: #145c39;
-    --verde-fluo: #4ade80;
-    --dorado: #d4a82e;
-    --dorado-2: #f4cd60;
-    --crema: #f4ecd8;
+    --verde: var(--pm-panel);
+    --verde-2: var(--pm-card);
+    --verde-fluo: var(--pm-celeste-2);
+    --dorado: var(--pm-celeste);
+    --dorado-2: var(--pm-celeste-2);
+    --crema: var(--pm-ink);
     --negro: #0a0a0a;
-    --rojo: #dc2626;
+    --rojo: var(--pm-celeste-claro);
   }
   body {
     font-family: 'DM Sans', sans-serif;
@@ -83,7 +85,7 @@
   }
   .panel {
     background: rgba(0,0,0,0.3);
-    border: 1px solid rgba(212,168,46,0.3);
+    border: 1px solid rgba(47,159,212,0.3);
     border-radius: 16px;
     padding: 1.5rem;
     backdrop-filter: blur(10px);
@@ -123,7 +125,7 @@
     border-color: var(--dorado);
   }
   .file-upload {
-    border: 2px dashed rgba(212,168,46,0.4);
+    border: 2px dashed rgba(47,159,212,0.4);
     border-radius: 12px;
     padding: 1.5rem;
     text-align: center;
@@ -132,7 +134,7 @@
   }
   .file-upload:hover {
     border-color: var(--dorado);
-    background: rgba(212,168,46,0.05);
+    background: rgba(47,159,212,0.05);
   }
   .file-upload input { display: none; }
   .upload-icon { font-size: 2rem; margin-bottom: 0.5rem; }
@@ -209,7 +211,7 @@
     pointer-events: none;
   }
   .fig-inner {
-    background: linear-gradient(180deg, #145c39 0%, #0d3b26 100%);
+    background: linear-gradient(180deg, #2a4a72 0%, #1e3657 100%);
     width: 100%;
     height: 420px; /* 448 - 28 (padding) fijo en px */
     border-radius: 8px;
@@ -385,7 +387,7 @@
 .grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
 </style>
 </head>
-<body>
+<body class="pm-skin">
 <div class="container">
   <a href="../index.html" style="display:inline-block;font-family:'JetBrains Mono',monospace;font-size:0.75rem;letter-spacing:0.1em;color:var(--dorado);text-decoration:none;opacity:0.85;margin-bottom:0.8rem">← Volver a Pampa Mundialista</a>
   <header>
@@ -463,7 +465,7 @@
 
       <button class="btn" id="download">⬇ Bajá tu Figurita</button>
       <button class="btn" id="download-story" style="margin-top:0.5rem;background:linear-gradient(135deg,#75AADB,#4d8fc7);color:#fff">📲 Para la HISTORIA (9:16)</button>
-      <button class="btn" id="share-fig" style="margin-top:0.5rem;background:linear-gradient(135deg,#22c55e,#16a34a);color:#04210f">🔗 Subila y que se note</button>
+      <button class="btn" id="share-fig" style="margin-top:0.5rem;background:linear-gradient(135deg,#2f9fd4,#6cc0ec);color:#04212e">🔗 Subila y que se note</button>
     </div>
 
     <!-- PREVIEW -->
@@ -740,13 +742,13 @@
   function buildStory(cardCanvas) {
     const SW=1080, SH=1920, st=document.createElement('canvas'); st.width=SW; st.height=SH;
     const g=st.getContext('2d');
-    const grad=g.createLinearGradient(0,0,SW,SH); grad.addColorStop(0,'#081b10'); grad.addColorStop(1,'#0d3b26');
+    const grad=g.createLinearGradient(0,0,SW,SH); grad.addColorStop(0,'#0e1a30'); grad.addColorStop(1,'#16243F');
     g.fillStyle=grad; g.fillRect(0,0,SW,SH);
     // halos
-    g.fillStyle='rgba(212,168,46,0.10)'; g.beginPath(); g.arc(180,260,300,0,7); g.fill();
-    g.beginPath(); g.arc(900,1700,360,0,7); g.fillStyle='rgba(74,222,128,0.08)'; g.fill();
+    g.fillStyle='rgba(47,159,212,0.10)'; g.beginPath(); g.arc(180,260,300,0,7); g.fill();
+    g.beginPath(); g.arc(900,1700,360,0,7); g.fillStyle='rgba(47,159,212,0.08)'; g.fill();
     // titulo arriba
-    g.textAlign='center'; g.fillStyle='#d4a82e'; g.font='bold 46px Arial';
+    g.textAlign='center'; g.fillStyle='#2f9fd4'; g.font='bold 46px Arial';
     g.fillText('PAMPA MUNDIALISTA', SW/2, 150);
     g.fillStyle='rgba(244,236,216,0.85)'; g.font='28px Arial';
     g.fillText('MI FIGURITA DEL MUNDIAL 2026', SW/2, 200);
@@ -755,7 +757,7 @@
     g.save(); g.shadowColor='rgba(0,0,0,0.55)'; g.shadowBlur=40; g.shadowOffsetY=18;
     g.drawImage(cardCanvas, cx, cy, cw, ch); g.restore();
     // pie
-    g.fillStyle='#f4cd60'; g.font='bold 34px Arial';
+    g.fillStyle='#6cc0ec'; g.font='bold 34px Arial';
     g.fillText('Armá la tuya gratis 👇', SW/2, cy+ch+90);
     g.fillStyle='rgba(244,236,216,0.9)'; g.font='26px Arial';
     g.fillText('pampamundialista.vercel.app', SW/2, cy+ch+140);
