@@ -15,22 +15,24 @@
 <meta name="twitter:title" content="Pampa Mundialista - Mundial 2026">
 <meta name="twitter:image" content="https://pampamundialista.vercel.app/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/brand.css">
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* Piel de marca: variables legacy aliasadas a los tokens del home (assets/brand.css) */
   :root {
-    --bg: #0a0612;
-    --bg-2: #0a1420;
-    --purple: #10204b;
-    --purple-2: #1f7a43;
-    --gold: #d4a82e;
-    --gold-2: #f4cd60;
-    --crema: #f4ecd8;
-    --red: #c41e3a;
-    --green: #16a34a;
-    --blue: #75AADB;
+    --bg: var(--pm-navy);
+    --bg-2: var(--pm-navy-2);
+    --purple: var(--pm-panel);
+    --purple-2: var(--pm-celeste);
+    --gold: var(--pm-celeste);
+    --gold-2: var(--pm-celeste-2);
+    --crema: var(--pm-ink);
+    --red: var(--pm-celeste-claro);
+    --green: var(--pm-celeste-2);
+    --blue: var(--pm-celeste-claro);
   }
   body {
     font-family: 'DM Sans', sans-serif;
@@ -50,13 +52,13 @@
     text-transform: uppercase;
   }
   h1 {
-    font-family: 'Cinzel', serif;
+    font-family: 'Anton', sans-serif;
     font-size: clamp(1.8rem, 4.5vw, 3rem);
     letter-spacing: 0.03em;
     margin-top: 0.4rem;
     line-height: 1;
     color: var(--crema);
-    text-shadow: 0 0 30px rgba(212,168,46,0.5);
+    text-shadow: 0 0 30px rgba(47,159,212,0.5);
   }
   h1 span { color: var(--gold); font-style: italic; }
   .subtitle {
@@ -76,7 +78,7 @@
 
   .panel {
     background: rgba(0,0,0,0.5);
-    border: 1px solid rgba(212,168,46,0.3);
+    border: 1px solid rgba(47,159,212,0.3);
     border-radius: 16px;
     padding: 2rem 1.5rem;
     backdrop-filter: blur(10px);
@@ -94,7 +96,7 @@
     color: var(--crema);
     border: 1px solid var(--gold);
     padding: 1.1rem;
-    font-family: 'Cinzel', serif;
+    font-family: 'Anton', sans-serif;
     letter-spacing: 0.2em;
     font-weight: 700;
     border-radius: 10px;
@@ -106,7 +108,7 @@
   .btn:hover { background: linear-gradient(135deg, var(--purple), var(--purple-2)); }
   .btn-gold {
     background: linear-gradient(135deg, var(--gold), var(--gold-2));
-    color: #0a1420;
+    color: #04212e;
     border: none;
   }
   .btn-secondary {
@@ -139,7 +141,7 @@
     transition: width 0.4s;
   }
   .question-text {
-    font-family: 'Cinzel', serif;
+    font-family: 'Anton', sans-serif;
     font-size: 1.4rem;
     line-height: 1.4;
     margin: 1.5rem 0;
@@ -167,12 +169,12 @@
   }
   .option-btn:hover {
     border-color: var(--gold);
-    background: rgba(212,168,46,0.1);
+    background: rgba(47,159,212,0.1);
     transform: translateX(4px);
   }
   .option-btn.selected {
     border-color: var(--gold);
-    background: linear-gradient(135deg, rgba(212,168,46,0.2), rgba(74,26,107,0.3));
+    background: linear-gradient(135deg, rgba(47,159,212,0.2), rgba(30,54,87,0.3));
   }
 
   /* RESULT (RPG card) */
@@ -193,7 +195,7 @@
     50% { opacity: 1; }
   }
   .reveal-msg {
-    font-family: 'Cinzel', serif;
+    font-family: 'Anton', sans-serif;
     font-size: 1.5rem;
     margin: 1rem 0;
   }
@@ -201,7 +203,7 @@
   .rpg-card {
     background:
       linear-gradient(transparent,transparent),
-      linear-gradient(180deg, #0a1420 0%, #0a0612 100%);
+      linear-gradient(180deg, #1d2f4f 0%, #16243F 100%);
     border: 2px solid var(--gold);
     border-radius: 16px;
     padding: 2rem 1.5rem;
@@ -218,7 +220,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: repeating-linear-gradient(45deg, transparent 0, transparent 20px, rgba(212,168,46,0.05) 20px, rgba(212,168,46,0.05) 21px);
+    background: repeating-linear-gradient(45deg, transparent 0, transparent 20px, rgba(47,159,212,0.05) 20px, rgba(47,159,212,0.05) 21px);
     pointer-events: none;
   }
   .rpg-corner {
@@ -245,7 +247,7 @@
     text-align: center;
     font-size: 5rem;
     margin: 0.4rem 0;
-    filter: drop-shadow(0 4px 20px rgba(212,168,46,0.6));
+    filter: drop-shadow(0 4px 20px rgba(47,159,212,0.6));
     animation: floatFlag 3s ease-in-out infinite;
   }
   @keyframes floatFlag {
@@ -253,7 +255,7 @@
     50% { transform: translateY(-8px); }
   }
   .rpg-name {
-    font-family: 'Cinzel', serif;
+    font-family: 'Anton', sans-serif;
     font-size: 2rem;
     text-align: center;
     color: var(--crema);
@@ -273,7 +275,7 @@
   }
   .rpg-section {
     background: rgba(0,0,0,0.4);
-    border: 1px solid rgba(212,168,46,0.2);
+    border: 1px solid rgba(47,159,212,0.2);
     border-radius: 8px;
     padding: 1rem;
     margin-top: 1rem;
@@ -365,7 +367,7 @@
 .grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
 </style>
 </head>
-<body>
+<body class="pm-skin">
 <a href="../index.html" style="display:inline-block;margin:0.6rem 0 0 0.6rem;color:#9ca3af;font-size:0.8rem;text-decoration:none;opacity:0.85">← Volver a Pampa Mundialista</a>
 <div class="container">
   <header>
@@ -410,7 +412,7 @@
     <div id="result-card-container"></div>
     <div class="actions">
       <button class="btn btn-secondary" id="download">⬇ Bajá tu ficha</button>
-      <button class="btn" id="share" style="background:linear-gradient(135deg,#22c55e,#16a34a);color:#04210f">🔗 Picale a un amigo</button>
+      <button class="btn" id="share" style="background:linear-gradient(135deg,#2f9fd4,#6cc0ec);color:#04212e">🔗 Picale a un amigo</button>
       <button class="btn btn-gold" onclick="restart()">🔁 Dale de nuevo</button>
     </div>
   </div>
@@ -856,7 +858,7 @@
       `;width:${w}px!important;height:${h}px!important;max-width:${w}px!important;max-height:${h}px!important;overflow:hidden!important;box-sizing:border-box!important;`;
 
     html2canvas(card, {
-      backgroundColor: '#0a0612',
+      backgroundColor: '#16243F',
       scale: 2,
       useCORS: true,
       allowTaint: true,
