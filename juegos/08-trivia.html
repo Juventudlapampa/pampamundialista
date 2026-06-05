@@ -16,18 +16,20 @@
 <meta name="twitter:image" content="https://pampamundialista.vercel.app/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/brand.css">
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* Piel de marca: variables legacy aliasadas a los tokens del home (assets/brand.css) */
   :root {
-    --bg: #0a0a0a;
-    --bg-2: #1a0a1a;
-    --primary: #ff003c;
-    --primary-2: #ff4d6d;
-    --gold: #ffd700;
-    --green: #00ff88;
-    --crema: #f4ecd8;
-    --blue: #00d4ff;
+    --bg: var(--pm-navy);
+    --bg-2: var(--pm-navy-2);
+    --primary: var(--pm-celeste);
+    --primary-2: var(--pm-celeste-2);
+    --gold: var(--pm-celeste-claro);
+    --green: var(--pm-celeste-2);
+    --crema: var(--pm-ink);
+    --blue: var(--pm-celeste-3);
   }
   body {
     font-family: 'DM Sans', sans-serif;
@@ -65,7 +67,7 @@
   }
   h1 span {
     color: var(--primary);
-    text-shadow: 0 0 30px rgba(255,0,60,0.6);
+    text-shadow: 0 0 30px rgba(47,159,212,0.6);
   }
 
   .screen { display: none; }
@@ -74,7 +76,7 @@
 
   .panel {
     background: rgba(0,0,0,0.6);
-    border: 2px solid rgba(255,0,60,0.3);
+    border: 2px solid rgba(47,159,212,0.3);
     border-radius: 16px;
     padding: 2rem 1.5rem;
     backdrop-filter: blur(10px);
@@ -96,7 +98,7 @@
     margin: 1.2rem 0;
   }
   .stat-box {
-    background: rgba(255,0,60,0.1);
+    background: rgba(47,159,212,0.1);
     border: 1px solid var(--primary);
     border-radius: 8px;
     padding: 0.8rem 0.5rem;
@@ -266,9 +268,9 @@
     transition: all 0.15s;
   }
   .ans-v { border-color: var(--green); }
-  .ans-v:hover:not(.disabled) { background: rgba(0,255,136,0.2); transform: translateY(-3px); }
+  .ans-v:hover:not(.disabled) { background: rgba(47,159,212,0.2); transform: translateY(-3px); }
   .ans-f { border-color: var(--primary); }
-  .ans-f:hover:not(.disabled) { background: rgba(255,0,60,0.2); transform: translateY(-3px); }
+  .ans-f:hover:not(.disabled) { background: rgba(47,159,212,0.2); transform: translateY(-3px); }
   .ans-btn.correct {
     background: var(--green) !important;
     color: black;
@@ -328,7 +330,7 @@
     font-size: 4.5rem;
     color: var(--gold);
     line-height: 1;
-    text-shadow: 0 0 30px rgba(255,215,0,0.5);
+    text-shadow: 0 0 30px rgba(47,159,212,0.5);
   }
   .result-label {
     font-family: 'JetBrains Mono', monospace;
@@ -367,7 +369,7 @@
     font-size: 0.95rem;
   }
   .ranking-item.you {
-    background: rgba(255,0,60,0.15);
+    background: rgba(47,159,212,0.15);
     border-left: 3px solid var(--primary);
   }
   .rank-n {
@@ -383,9 +385,15 @@
     font-weight: 700;
   }
   .grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
+  /* Piel: respuesta CORRECTA en celeste, INCORRECTA en slate (sin verde/rojo) */
+  .ans-f { border-color:#7e93a8; }
+  .ans-f:hover:not(.disabled) { background:rgba(126,147,168,0.18); }
+  .ans-btn.wrong { background:#7e93a8 !important; border-color:#7e93a8 !important; color:#0a1622 !important; }
+  .feedback.wrong { color:#9fb2c4 !important; }
+  .timer-fg.danger { stroke:#6cc0ec !important; }
 </style>
 </head>
-<body>
+<body class="pm-skin">
 <div class="container">
   <header>
     <div class="header-tag">10 segundos por pregunta · Mundial 2026</div>
@@ -947,7 +955,7 @@
   document.getElementById('vs-download').onclick = () => {
     const go = () => {
       const node=document.getElementById('vs-panel'); const w=node.offsetWidth, h=node.offsetHeight;
-      html2canvas(node,{backgroundColor:'#0a0a0a',scale:2,useCORS:true,allowTaint:true,logging:false,width:w,height:h}).then(c=>{
+      html2canvas(node,{backgroundColor:'#16243F',scale:2,useCORS:true,allowTaint:true,logging:false,width:w,height:h}).then(c=>{
         const a=document.createElement('a'); a.download='trivia-versus-mundial-2026.png'; a.href=c.toDataURL('image/png'); a.click();
       }).catch(e=>alert('Error al descargar: '+e.message));
     };
@@ -969,7 +977,7 @@
       const node = document.getElementById('result-panel');
       const w = node.offsetWidth, h = node.offsetHeight;
       html2canvas(node, {
-        backgroundColor: '#0a0a0a',
+        backgroundColor: '#16243F',
         scale: 2,
         useCORS: true,
         allowTaint: true,
