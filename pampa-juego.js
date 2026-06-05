@@ -25,7 +25,7 @@
     '27-crear-crack':'crack','01-figurita':'figu','03-carnet':'carnet','02-armar-11':'once',
     '18-torneo-penales':'penales','15-tiros-libres':'tiros','25-picado':'picado','28-gambeta-leo':'gambeta',
     '20-carrera-futbolista':'carrera','08-trivia':'trivia','14-que-seleccion-sos':'quesel','21-sala-escape':'escape',
-    '23-memorice':'memo','24-predictor':'predictor','09-fixture':'fixture','07-bingo':'carton',
+    '23-memorice':'memo','29-oraculo-cabalas':'predictor','09-fixture':'fixture','30-arma-tu-banda':'carton',
     '19-fut5-aula':'aula','13-figurita-promo':'promo','16-simulador-partido':'simu','26-juego-limpio':'esi'
   };
   var TOOL_NAME = {}; var TOOL_ICON = {};
@@ -52,7 +52,7 @@
     {t:'Tanda perfecta', d:'Ganá una tanda en el Torneo de Penales.', go:'juegos/18-torneo-penales.html'},
     {t:'Caño del día', d:'Clavá 5 caños en Gambeteá, como en el potrero de tu pueblo.', go:'juegos/28-gambeta-leo.html'},
     {t:'Armá tu equipo', d:'Creá tu Crack y bajá la figurita.', go:'juegos/27-crear-crack.html'},
-    {t:'Ojo de relator', d:'Hacé tu Predicción del Mundial.', go:'herramientas/24-predictor.html'},
+    {t:'Cábala del día', d:'Mirá cómo vas a vivir la próxima fecha en el Oráculo de Cábalas.', go:'juegos/29-oraculo-cabalas.html'},
     {t:'Pizarrón fino', d:'Armá tu 11 ideal y descargalo.', go:'generadores/02-armar-11.html'},
     {t:'Memoria de hincha', d:'Ganá un Memorice en difícil.', go:'juegos/23-memorice.html'},
     {t:'Pim pam pum', d:'Embocá 5 tiros libres seguidos.', go:'juegos/15-tiros-libres.html'},
