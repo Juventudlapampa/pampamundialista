@@ -401,7 +401,7 @@
         Llave mata-mata con <strong>8 selecciones</strong>: cuartos → semis → final. Elegís tu camiseta y la IA te planta cara ronda tras ronda.
       </p>
       <p style="line-height:1.5;font-size:0.86rem;margin-bottom:1rem;opacity:0.9">
-        ⚽ <strong>Cuando pateás:</strong> leé para qué palo se perfila el arquero (🧤) y mandala lejos, después <strong>pegale justo</strong> con el medidor de potencia (zona verde). 🧤 <strong>Cuando atajás:</strong> leé el amague y volá al palo. ¡Aguantá los nervios desde los doce pasos!
+        ⚽ <strong>Cuando pateás:</strong> leé para qué palo se perfila el arquero (🧤) y mandala lejos, después <strong>pegale justo</strong> con el medidor de potencia (zona celeste). 🧤 <strong>Cuando atajás:</strong> leé el amague y volá al palo. ¡Aguantá los nervios desde los doce pasos!
       </p>
       <input type="text" class="input-name" id="player-name" placeholder="Tu nombre" maxlength="18">
       <div class="panel-title">🌍 ¿Con qué camiseta saltás a la cancha?</div>
@@ -449,7 +449,7 @@
     </div>
     <div class="power-wrap" id="power-wrap" style="display:none">
       <div class="power-meter" id="power-meter"><div class="power-target" id="power-target"></div><div class="power-fill" id="power-fill"></div></div>
-      <div class="power-hint">⏱️ Tocá (o ESPACIO) para pegarle JUSTO en la zona verde</div>
+      <div class="power-hint">⏱️ Tocá (o ESPACIO) para pegarle JUSTO en la zona celeste</div>
     </div>
   </div>
 
@@ -810,7 +810,7 @@ function startPower(zone) {
   const tgt = document.getElementById('power-target');
   tgt.style.left = bandPos + '%'; tgt.style.width = bandW + '%';
   document.getElementById('power-wrap').style.display = 'block';
-  document.getElementById('turn-label').textContent = '⚡ ¡PEGALE JUSTO! (zona verde)';
+  document.getElementById('turn-label').textContent = '⚡ ¡PEGALE JUSTO! (zona celeste)';
   let pos = 0, dir = 1; const speed = sudden ? 2.7 : 2.1;
   ms.powerActive = true;
   const fill = document.getElementById('power-fill');

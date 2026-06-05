@@ -422,7 +422,7 @@
     <div class="panel">
       <div style="font-family:'Anton',sans-serif;color:var(--gold);font-size:1.1rem;letter-spacing:0.1em;margin-bottom:0.7rem;text-transform:uppercase">⚽ Cómo jugar</div>
       <p style="line-height:1.5;font-size:0.85rem;margin-bottom:0.8rem">
-        <strong>3 toques y la clavás</strong>: 1) apuntá la zona del arco donde la querés meter, 2) tap en la barra de potencia (el verde del medio es el punto justo, no la reventés), 3) le ponés efecto: comba a la izquierda, a la derecha o derechito. Tenés 10 tiros para hacerte el Maradona y sumar puntos.
+        <strong>3 toques y la clavás</strong>: 1) apuntá la zona del arco donde la querés meter, 2) tap en la barra de potencia (el celeste del medio es el punto justo, no la reventés), 3) le ponés efecto: comba a la izquierda, a la derecha o derechito. Tenés 10 tiros para hacerte el Maradona y sumar puntos.
       </p>
       <p style="line-height:1.5;font-size:0.85rem;margin-bottom:1rem;color:var(--gold-2)">
         ⚡ <strong>Pateador real</strong> de la selección que elijas. <strong>Arquero IA</strong> de la lista oficial: el tipo te estudia y se tira para donde cree que la vas a poner. Si te hace el repetido, te lee y te la ataja.
@@ -478,7 +478,7 @@
       <div class="big-msg" id="big-msg"></div>
     </div>
     <div class="power-bar-wrap" id="power-bar-wrap">
-      <div class="power-bar-label">⚡ POTENCIA · FRENALA EN EL VERDE, NO LA REVIENTES</div>
+      <div class="power-bar-label">⚡ POTENCIA · FRENALA EN EL CELESTE, NO LA REVIENTES</div>
       <div class="power-bar-track" id="power-bar"><div class="power-marker" id="power-marker"></div></div>
     </div>
     <div class="curve-wrap" id="curve-wrap">
@@ -654,7 +654,7 @@ document.querySelectorAll('.zona').forEach(z => {
 
 function startPowerBar() {
   game.state = 'POWER';
-  setInstruction('⚡ FRENALA EN EL VERDE · NI BLANDA NI REVENTADA', 'power');
+  setInstruction('⚡ FRENALA EN EL CELESTE · NI BLANDA NI REVENTADA', 'power');
   document.getElementById('power-bar-wrap').classList.add('active');
   const marker = document.getElementById('power-marker');
   let pos = 0, dir = 1, speed = 3.0;
