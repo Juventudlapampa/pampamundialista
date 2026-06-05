@@ -9,11 +9,11 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="Pampa Mundialista - El Mundial de Juventudes La Pampa">
 <meta property="og:description" content="Jugá, armá tu carta y competí por premios mundialistas. 20 juegos gratis desde el celu.">
-<meta property="og:image" content="https://juventudes.lapampa.gob.ar/og-image.png">
-<meta property="og:url" content="https://juventudes.lapampa.gob.ar/">
+<meta property="og:image" content="https://pampamundialista.vercel.app/og-image.png">
+<meta property="og:url" content="https://pampamundialista.vercel.app/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Pampa Mundialista - El Mundial de Juventudes La Pampa">
-<meta name="twitter:image" content="https://juventudes.lapampa.gob.ar/og-image.png">
+<meta name="twitter:image" content="https://pampamundialista.vercel.app/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
@@ -168,7 +168,10 @@
   .tj-opt-btn.wa { background: rgba(0,0,0,0.35); color: var(--celeste-2); border: 1px solid var(--celeste); }
   .tj-note { font-size: 0.8rem; opacity: 0.85; margin-top: 0.9rem; font-style: italic; line-height: 1.5; }
 
-  footer { text-align: center; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(47,159,212,0.2); font-size: 0.8rem; opacity: 0.6; line-height: 1.6; }
+  footer { text-align: center; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(47,159,212,0.2); font-size: 0.8rem; opacity: 0.78; line-height: 1.6; }
+  .pm-foot{display:none!important} /* en el index: un solo pie, sin la barra arcoíris ni JUVENTUDES duplicado */
+  .footer-min{height:44px;width:auto;display:block;margin:1rem auto 0.2rem;opacity:0.95}
+  .footer-datos{display:inline-block;opacity:0.72;font-size:0.72rem;margin-top:0.2rem;max-width:520px}
   footer a { color: var(--gold); }
 
   /* NIVELES */
@@ -220,7 +223,7 @@
   <div class="cuenta"><span class="lbl">⚽ Falta para que ruede la pelota</span><span class="num" id="cuenta-num">—</span></div>
   <!-- Botón Seguí nuestra Selección: contador de Argentina + deriva al camino (abajo) -->
   <a class="segui-btn" id="cuenta-prox-wrap" href="#camino-seleccion">
-    <span class="sb-t">🇦🇷 SEGUÍ NUESTRA SELECCIÓN</span>
+    <span class="sb-t">SEGUÍ NUESTRA SELECCIÓN</span>
     <span class="sb-c"><span id="cuenta-prox-lbl">⚽ Próximo partido</span>: <b><span id="cuenta-prox">—</span></b></span>
     <span class="sb-go">VER EL CAMINO DE LA SELECCIÓN ↓</span>
   </a>
@@ -229,7 +232,7 @@
     <div class="brand-inst-top">Subsecretaría de Juventud · <b>La Pampa</b></div>
     <img class="hero-logo" src="assets/logo-copa.png" alt="Pampa Mundialista — Coronados de gloria vivamos" width="448" height="518" fetchpriority="high">
     <h1 class="visually-hidden">PAMPA MUNDIALISTA</h1>
-    <p class="subtitle"><b>Del potrero al Mundial 2026</b>: jugá gratis desde el celu, de Bernardo Larroudé a 25 de Mayo, de La Humada a La Adela.</p>
+    <p class="subtitle"><b>Del potrero al Mundial 2026</b>: jugá gratis desde el celu, de Bernardo Larroudé a 25 de Mayo, de La Humada a La Adela. <b>Para competir por los premios: de 14 a 30 años.</b></p>
   </header>
 
   <!-- ===== GANCHO: para qué jugás (premio + sorteo) ===== -->
@@ -350,7 +353,7 @@
   </div>
 
   <div class="pj-row">
-    <div id="pj-desafio" class="pj-dia">Cargando el desafío del día…</div>
+    <div id="pj-desafio" class="pj-dia">🔥 Desafío del Día — tocá una herramienta de arriba 👆 y sumá tu sello.</div>
     <button class="pj-pass-btn" id="pj-pass-open">🎟️ Mi Pasaporte<small id="pj-xp">0 XP</small></button>
   </div>
 
@@ -464,10 +467,10 @@
 
   <!-- EL CAMINO DE LA SELECCIÓN (debajo de los juegos; el botón de arriba deriva acá) -->
   <section class="block" id="camino-seleccion" style="text-align:center;scroll-margin-top:0.5rem">
-    <div class="block-title" style="text-align:center">🇦🇷 EL CAMINO DE LA SELECCIÓN</div>
+    <div class="block-title" style="text-align:center">EL CAMINO DE LA SELECCIÓN</div>
     <p style="text-align:center">El camino de Argentina en la fase de grupos (horario de Argentina). En <b>cada fecha</b> sorteamos premios entre los pasaportes completos y subidos.</p>
     <div class="gh-fechas" id="gh-fechas"></div>
-    <div class="gh-mas" style="margin:0.9rem auto 0">🇦🇷 Y cuanto <b>más avanza la Selección</b>, más fechas y más sorteos: octavos, cuartos, semi y la final. ¡Si Argentina llega lejos, hay más chances para todos!</div>
+    <div class="gh-mas" style="margin:0.9rem auto 0">Y cuanto <b>más avanza la Selección</b>, más fechas y más sorteos: octavos, cuartos, semi y la final. ¡Si Argentina llega lejos, hay más chances para todos!</div>
   </section>
   <script>
   (function(){
@@ -504,7 +507,7 @@
     <section class="tj" id="modo-oficial" style="margin-top:1.3rem">
       <div class="tj-tag">🎟️ Modo Jugador Oficial</div>
       <h2>Validá tu <span>Tarjeta Joven</span> y jugá por los premios</h2>
-      <p><b>Jugar y entrar a los sorteos es libre, sin Tarjeta y sin registro.</b> La Tarjeta Joven la necesitás solo para <b>buscar tu premio si ganás</b>: si no la tenés, podés sumar igual y hacer el trámite solo si llegás a ganar. Para inscribirte te pedimos el número de Tarjeta Joven, así que conviene sacarla antes (es gratis y rápida). Mientras jugás, todo queda en tu celu; recién cuando te inscribís nos compartís tu pasaporte. 💙</p>
+      <p><b>Jugar y usar las herramientas es libre</b>, sin Tarjeta y sin registro. Para <b>inscribirte al concurso y competir por los premios</b> necesitás la <b>Tarjeta Joven con Modo Jugador Oficial</b> (14 a 30 años): el número se pide en el formulario, así que <b>sacala antes de anotarte</b> (es gratis y rápida). Mientras jugás, todo queda en tu celu; recién cuando te inscribís nos compartís tu pasaporte. 💙</p>
       <div id="pj-tarjeta" style="margin:0.5rem 0 0.6rem"></div>
       <div class="tj-note" style="background:rgba(47,159,212,0.1);border:1px solid rgba(47,159,212,0.35);border-radius:10px;padding:0.7rem 0.9rem;text-align:center">
         ⏳ <b>Son dos plazos distintos:</b> validás tu Tarjeta Joven (<b>hasta el 26 de julio</b>) para buscar tu premio si ganás, y entrás a los <b>sorteos</b> completando y subiendo tu pasaporte <b>en cada fecha</b> de la Selección. <b>Podés jugar y sumar sellos desde ya.</b> 😉
@@ -539,20 +542,20 @@
     <p style="margin:1.1rem 0 0.2rem"><b>⚽ Esto se juega POR EQUIPOS, como un fútbol cinco.</b></p>
     <div class="part-out" id="part-out" style="border-left-color:var(--gold);background:rgba(47,159,212,0.08)">
       <b>Armá tu equipo:</b> vos de <b><span class="gw" data-m="capitán" data-f="capitana" data-x="capitán o capitana">capitán o capitana</span></b> + <b>cuatro <span class="gw" data-m="compañeros" data-f="compañeras" data-x="compañeros y compañeras">compañeros y compañeras</span> del fulbito</b> = 5 titulares. Si querés, sumá hasta <b>3 suplentes</b> (plantel de hasta <b>8</b>).<br><br>
-      🌎 Armá tu equipo con tu banda: amigos y amigas, el club, la peña, la iglesia, la biblioteca, la facu, el grupo del asado, con los que tomás mates o salís — de toda La Pampa. No importa que sean de pueblos distintos.<br><br>
+      🌎 Sumá a tu banda: amigos y amigas, el club, la peña, la iglesia, la biblioteca, la facu, el grupo del asado, con los que tomás mates o salís — de toda La Pampa, no importa que sean de pueblos distintos.<br><br>
       🏷️ Elegí un <b>nombre con mística</b> para el equipo (tipo "Los de Siempre" o "Juntada FC"). Ese nombre es el protagonista en la inscripción y en el pasaporte del equipo.<br><br>
-      🎟️ Para los <b>premios</b>, cada integrante necesita su <b>Tarjeta Joven</b> (14 a 30 años) con el Modo Jugador Oficial. Jugar y sumar al equipo es libre: quien no la tenga puede hacer el trámite solo si llegan a ganar.<br><br>
+      🎟️ Para <b>competir por los premios</b>, cada integrante necesita su <b>Tarjeta Joven</b> (14 a 30 años) con el <b>Modo Jugador Oficial</b>: el número se pide en la inscripción. Jugar y sumar al equipo es libre, pero <b>sacala antes de anotarte</b>.<br><br>
       🏆 El equipo <b>junta sellos entre todos</b> sus integrantes — a meterle a las herramientas y misiones de arriba.
     </div>
     <p style="margin:0.9rem 0 0.2rem;font-size:0.9rem">👉 Armá y descargá el <b>pasaporte de tu equipo</b> desde <b>🎟️ Mi Pasaporte</b>.</p>
 
     <p style="margin:1.2rem 0 0.3rem"><b>🎁 ¿Cómo se gana? Sorteos por fecha</b></p>
     <div class="part-out" style="border-left-color:var(--verde-fluo);background:rgba(47,159,212,0.08)">
-      Durante todo el Mundial, <b>en cada fecha de la Selección Argentina hacemos sorteos</b>: uno <b>individual</b> y uno <b>grupal</b>, entre todos los que tengan el <b>pasaporte completo y subido</b> al formulario. <b>Los premios más grandes son los grupales</b>, así que conviene armar equipo (y como cada integrante suma su Tarjeta, se arman más Tarjetas).<br><br>
-      🇦🇷 <b>Cuanto más avanza la Selección, más sorteos:</b> hay una fecha por cada partido —fase de grupos, octavos, cuartos, semi y la final—. Si Argentina llega lejos, más chances para todos.<br><br>
-      ⏱️ <b>Cuanto antes completás y subís tu pasaporte, en más sorteos entrás.</b> El único requisito para participar es ese: tener el pasaporte completado y subido.<br><br>
+      Durante todo el Mundial, <b>en cada fecha de la Selección Argentina hacemos sorteos</b>: uno <b>individual</b> y uno <b>grupal</b>, entre todos los que tengan el <b>pasaporte completo y subido</b> al formulario. <b>Los premios más grandes son los grupales</b>, así que conviene armar equipo.<br><br>
+      <b>Cuanto más avanza la Selección, más sorteos:</b> hay una fecha por cada partido —fase de grupos, octavos, cuartos, semi y la final—. Si Argentina llega lejos, más chances para todos.<br><br>
+      ⏱️ <b>Cuanto antes completás y subís tu pasaporte, en más sorteos entrás.</b><br><br>
       📣 Y los que <b>más participan y comparten</b> en redes (etiquetando a <b>@pampamundialista</b>) pueden ser <b>destacados y republicados</b> en la cuenta.<br><br>
-      🎁 <b>¿Qué se gana?</b> Premios para hinchas: <b>pelotas, camisetas e indumentaria deportiva</b>, merch mundialista y beneficios de Tarjeta Joven. El detalle de cada fecha se anuncia en las redes de la Subse y en las Bases.
+      🎁 <b>¿Qué se gana?</b> Premios para hinchas: <b>pelotas, camisetas e indumentaria deportiva</b>, merch mundialista y beneficios de Tarjeta Joven. El detalle de cada fecha se anuncia en las redes de la Subse.
     </div>
 
     <p style="margin:1.2rem 0 0.2rem"><b>🎙️ Misiones de Creación</b> — además de jugar, podés crear y mandar:</p>
@@ -594,7 +597,7 @@
       <div class="protag-item">⭐ <b>Mostrá tus talentos</b><span>Música, dibujo, deporte, relatar, organizar… contanos lo tuyo.</span></div>
       <div class="protag-item">📝 <b>¿Qué podés aportar?</b><span>Decinos qué sabés hacer, en qué querés colaborar y qué te gustaría que pase.</span></div>
     </div>
-    <div class="protag-note">🎁 Completarla es <b>optativo</b> y no te obliga a sumarte a nada. Durante el Mundial, además, <b>suma a la categoría de sorteo Protagonistas</b> (en paralelo a las de individual y por equipo). Y es una <b>invitación permanente</b>: sigue abierta más allá del Mundial.</div>
+    <div class="protag-note">🎁 Completarla es <b>optativo</b> y no te obliga a sumarte a nada. Es una <b>puerta a los programas</b> de la Subse (voluntariados, relatores, talentos) y una <b>invitación permanente</b>: sigue abierta más allá del Mundial.</div>
     <a class="protag-btn" id="encuesta-cta" href="https://forms.gle/cxcqJ4diVDyc6fL38" target="_blank" rel="noopener">📝 Completá la encuesta de intereses</a>
     <p class="protag-foot">La recibe y valida el equipo de la Subsecretaría de Juventud.</p>
   </div>
@@ -603,11 +606,12 @@
 
   <footer>
     <img class="footer-sol" src="assets/logo-sol-blanco.png" alt="Pampa Mundialista" width="413" height="513" loading="lazy">
-    <div style="font-family:'Archivo Black',sans-serif;font-size:1.5rem;letter-spacing:0.02em;margin-bottom:0.5rem;color:#ffffff">JUVENTUDES</div>
     <b>PAMPA MUNDIALISTA</b> · Una propuesta de la Subsecretaría de Juventud de La Pampa para el Mundial 2026<br>
     Seguinos en <a href="https://instagram.com/pampamundialista" target="_blank" rel="noopener"><b>@pampamundialista</b></a> · cuenta madre <a href="https://instagram.com/juventud_lapampa" target="_blank" rel="noopener">@juventud_lapampa</a> · Funciona en cualquier celular y PC · 100% gratis · Sin apuestas · Con mirada ESI<br>
     <span style="opacity:0.8">Esta propuesta no tiene relación oficial con la FIFA ni con el torneo. Es contenido cultural y de participación juvenil de la provincia de La Pampa.</span><br>
+    <span class="footer-datos">Tus datos se tratan conforme a la <b>Ley Nº 25.326</b> de Protección de Datos Personales (detalle en las Bases).</span><br>
     <a class="ayuda-footer" href="./salud-mental.html">💬 ¿Necesitás ayuda? Hablar te hace bien</a>
+    <img class="footer-min" src="assets/logo-subse-blanco.png" alt="Subsecretaría de Juventud · Ministerio de Desarrollo Social y Derechos Humanos · La Pampa" loading="lazy">
   </footer>
 </div>
 

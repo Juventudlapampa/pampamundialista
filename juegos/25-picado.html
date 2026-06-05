@@ -9,11 +9,11 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="El Picado · Pampa Mundialista">
 <meta property="og:description" content="Armá el picado de tu barrio (5v5), poné a tus amigos y simulá el partido tomando decisiones.">
-<meta property="og:image" content="https://juventudes.lapampa.gob.ar/og-image.png">
-<meta property="og:url" content="https://juventudes.lapampa.gob.ar/juegos/25-picado.html">
+<meta property="og:image" content="https://pampamundialista.vercel.app/og-image.png">
+<meta property="og:url" content="https://pampamundialista.vercel.app/juegos/25-picado.html">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="El Picado · Pampa Mundialista">
-<meta name="twitter:image" content="https://juventudes.lapampa.gob.ar/og-image.png">
+<meta name="twitter:image" content="https://pampamundialista.vercel.app/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -438,7 +438,7 @@ $('replay').onclick=()=>{ // mismos equipos, re-leer inputs
 };
 $('to-intro').onclick=()=>show('s1');
 $('download').onclick=()=>{ const node=$('res-card'); const w=node.offsetWidth,h=node.offsetHeight; html2canvas(node,{backgroundColor:'#050d08',scale:2,useCORS:true,allowTaint:true,logging:false,width:w,height:h,windowWidth:document.documentElement.clientWidth,windowHeight:document.documentElement.clientHeight}).then(c=>{ const l=document.createElement('a'); l.download='el-picado-mundial-2026.png'; l.href=c.toDataURL('image/png'); l.click(); }); };
-$('share').onclick=()=>{ const r= teamA.goles>teamB.goles?'ganamos':teamA.goles<teamB.goles?'perdimos':'empatamos'; shareReto(`⚽ Simulé el picado del barrio (${teamA?teamA.name:''} vs ${teamB?teamB.name:''}) y ${r} ${teamA?teamA.goles:0}-${teamB?teamB.goles:0} en "El Picado" del Mundial 2026. Armá el tuyo 📲 juventudes.lapampa.gob.ar · @juventud_lapampa`); };
+$('share').onclick=()=>{ const r= teamA.goles>teamB.goles?'ganamos':teamA.goles<teamB.goles?'perdimos':'empatamos'; shareReto(`⚽ Simulé el picado del barrio (${teamA?teamA.name:''} vs ${teamB?teamB.name:''}) y ${r} ${teamA?teamA.goles:0}-${teamB?teamB.goles:0} en "El Picado" del Mundial 2026. Armá el tuyo 📲 pampamundialista.vercel.app · @juventud_lapampa`); };
 function shareReto(text){ if(navigator.share){navigator.share({title:'El Picado · Pampa Mundialista',text}).catch(()=>{});} else if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>alert('¡Reto copiado! Mandáselo a un amigo 📲'),()=>prompt('Copiá tu reto:',text));} else {prompt('Copiá tu reto:',text);} }
 </script>
 <div class="grain"></div>

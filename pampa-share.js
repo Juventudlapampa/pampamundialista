@@ -3,7 +3,7 @@
          pampaShare(nodo, 'texto para compartir')
    Requiere html2canvas ya cargado en la página. */
 (function(){
-  const SITE = 'juventudes.lapampa.gob.ar';
+  const SITE = 'pampamundialista.vercel.app';
   const CUENTA = '@pampamundialista';
 
   function capture(node){
