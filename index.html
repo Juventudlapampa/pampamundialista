@@ -438,7 +438,7 @@
     </button>
     <div class="puerta-body">
       <div class="grid-tools">
-        <a class="tool-card" data-id="predictor" href="herramientas/24-predictor.html"><span class="seal">🔵</span><div class="tool-icon">🔮</div><div class="tool-name">Predictor del Mundial</div><div class="tool-desc">Jugátela: decí quién pasa cada grupo y quién levanta la Copa.</div></a>
+        <a class="tool-card" data-id="predictor" href="#" onclick="return predictorSoon(this)" aria-disabled="true"><span class="seal">🔵</span><div class="tool-icon">🔮</div><div class="tool-name">Predictor del Mundial <span style="font-family:'JetBrains Mono',monospace;font-size:0.5rem;background:rgba(47,159,212,0.2);border:1px solid var(--celeste);border-radius:4px;padding:1px 5px;letter-spacing:0.08em;vertical-align:middle;color:var(--celeste-2)">PRONTO</span></div><div class="tool-desc">🔧 Lo estamos renovando. Tocá para sumar tu sello — vuelve con todo muy pronto.</div></a>
         <a class="tool-card" data-id="fixture" href="herramientas/09-fixture.html"><span class="seal">🔵</span><div class="tool-icon">📋</div><div class="tool-name">Fixture Completo</div><div class="tool-desc">Las 48 selecciones, del grupo a la final. Armá el cuadro y guardá tu campeón.</div></a>
         <a class="tool-card" data-id="carton" href="juegos/07-bingo.html"><span class="seal">🔵</span><div class="tool-icon">🎯</div><div class="tool-name">Cartón Mundialista</div><div class="tool-desc">Marcá las locuras que van a pasar en el Mundial. Se llena solo.</div></a>
       </div>
@@ -846,6 +846,29 @@
   }
   init();
 })();
+</script>
+<script>
+  // ===== Predictor INHABILITADO temporalmente (se reemplaza la app). Suma el sello igual. =====
+  window.predictorSoon = function(el){
+    try{
+      if(window.PampaJuego && PampaJuego.sello){ PampaJuego.sello('predictor'); }
+      else {
+        var k='pampa-juega-sellos', a=[]; try{ a=JSON.parse(localStorage.getItem(k)||'[]'); }catch(e){}
+        if(a.indexOf('predictor')<0){ a.push('predictor'); try{ localStorage.setItem(k,JSON.stringify(a)); }catch(e){} }
+      }
+    }catch(e){}
+    // refresco del contador (después de que corran los listeners del click)
+    setTimeout(function(){ if(window.renderSellos){ try{ window.renderSellos(); }catch(e){} } }, 0);
+    // aviso breve, en marca
+    var t=document.getElementById('pred-soon-toast');
+    if(!t){ t=document.createElement('div'); t.id='pred-soon-toast';
+      t.style.cssText='position:fixed;left:50%;bottom:1.2rem;transform:translateX(-50%);max-width:90%;background:#16243F;color:#eef4fa;border:2px solid #2f9fd4;border-radius:12px;padding:0.85rem 1.1rem;font-family:inherit;font-size:0.92rem;line-height:1.45;z-index:99999;box-shadow:0 6px 20px rgba(0,0,0,0.5);text-align:center;opacity:0;transition:opacity .25s';
+      document.body.appendChild(t); }
+    t.innerHTML='🔮 <b>Predictor en preparación.</b> Lo estamos renovando y vuelve muy pronto.<br>¡Igual te sumamos el sello por pasar! ✅';
+    requestAnimationFrame(function(){ t.style.opacity='1'; });
+    clearTimeout(t.__h); t.__h=setTimeout(function(){ t.style.opacity='0'; }, 3600);
+    return false;
+  };
 </script>
 </body>
 </html>
