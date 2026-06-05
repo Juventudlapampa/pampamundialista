@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oráculo de Cábalas · Pampa Mundialista</title>
+<meta name="description" content="El Oráculo de Cábalas del Mundial 2026: cómo vas a vivir cada partido de la Selección. Placas para descargar y compartir. Juventudes La Pampa.">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Oráculo de Cábalas · Pampa Mundialista">
+<meta property="og:description" content="Cómo vas a vivir cada partido de la Selección. Placas para descargar y compartir.">
+<meta property="og:image" content="https://pampamundialista.vercel.app/og-image.png">
+<meta property="og:url" content="https://pampamundialista.vercel.app/juegos/29-oraculo-cabalas.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/brand.css">
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'DM Sans',sans-serif; color:var(--pm-ink); min-height:100vh; padding:1.2rem 1rem 2rem; }
+  .container { max-width:560px; margin:0 auto; position:relative; z-index:1; }
+  .back { display:inline-block; color:var(--pm-celeste-2); text-decoration:none; font-family:'JetBrains Mono',monospace; font-size:0.72rem; letter-spacing:0.12em; margin-bottom:1rem; }
+  header { text-align:center; margin-bottom:1.1rem; }
+  .eyebrow { font-family:'JetBrains Mono',monospace; font-size:0.66rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--pm-celeste-2); }
+  h1 { font-family:'Anton',sans-serif; font-size:clamp(2rem,8vw,3rem); letter-spacing:0.03em; text-transform:uppercase; line-height:0.95; margin:0.3rem 0 0.4rem; }
+  h1 span { color:var(--pm-celeste); }
+  .bajada { font-size:0.92rem; color:var(--pm-ink); opacity:0.9; line-height:1.45; max-width:460px; margin:0 auto; }
+
+  /* Selector de fechas */
+  .fechas-nav { display:flex; flex-wrap:wrap; gap:0.4rem; justify-content:center; margin:1.1rem 0; }
+  .fecha-chip { font-family:'JetBrains Mono',monospace; font-size:0.72rem; font-weight:700; width:2.2rem; height:2.2rem; display:flex; align-items:center; justify-content:center; border-radius:8px; background:rgba(47,159,212,0.10); border:1px solid var(--pm-line); color:var(--pm-celeste-2); cursor:pointer; transition:all 0.15s; }
+  .fecha-chip:hover { border-color:var(--pm-celeste); }
+  .fecha-chip.on { background:var(--pm-grad); color:#04212e; border-color:var(--pm-celeste); }
+
+  /* PLACA (lo que se descarga) */
+  .placa { background:linear-gradient(160deg,#1d3157 0%,#16243F 70%); border:2px solid var(--pm-celeste); border-radius:18px; padding:1.5rem 1.3rem 1.7rem; position:relative; overflow:hidden; }
+  .placa::after { content:''; position:absolute; inset:0; pointer-events:none; background:radial-gradient(420px 220px at 50% -20%, rgba(47,159,212,0.18), transparent 70%); }
+  .placa-top { display:flex; align-items:center; justify-content:space-between; position:relative; z-index:1; margin-bottom:0.8rem; }
+  .estrellas { color:var(--pm-celeste-2); font-size:0.9rem; letter-spacing:0.15em; }
+  .placa-tag { font-family:'JetBrains Mono',monospace; font-size:0.6rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--pm-celeste-2); opacity:0.9; }
+  .placa-fecha { font-family:'JetBrains Mono',monospace; font-size:0.66rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--pm-celeste-2); position:relative; z-index:1; }
+  .placa-titulo { font-family:'Anton',sans-serif; font-size:clamp(1.7rem,7vw,2.3rem); text-transform:uppercase; line-height:0.95; letter-spacing:0.02em; margin:0.15rem 0 0.5rem; position:relative; z-index:1; }
+  .placa-titulo span { color:var(--pm-celeste); }
+  .intensidad { display:flex; align-items:center; gap:0.4rem; font-family:'JetBrains Mono',monospace; font-size:0.58rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--pm-celeste-2); margin-bottom:0.9rem; position:relative; z-index:1; }
+  .int-track { flex:1; height:6px; background:rgba(255,255,255,0.10); border-radius:3px; overflow:hidden; }
+  .int-fill { height:100%; background:var(--pm-grad); }
+  .placa-oraculo { font-size:0.95rem; line-height:1.55; position:relative; z-index:1; margin-bottom:0.9rem; }
+  .placa-oraculo b { color:var(--pm-celeste-2); }
+  .cabalas-tit { font-family:'JetBrains Mono',monospace; font-size:0.62rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--pm-celeste); margin-bottom:0.4rem; position:relative; z-index:1; }
+  .cabalas { list-style:none; display:grid; gap:0.5rem; position:relative; z-index:1; margin-bottom:0.9rem; }
+  .cabalas li { display:flex; gap:0.55rem; font-size:0.9rem; line-height:1.4; }
+  .cabalas li .st { color:var(--pm-celeste); flex:none; }
+  .placa-cierre { font-size:0.92rem; line-height:1.5; font-style:italic; color:var(--pm-ink); border-top:1px solid var(--pm-line); padding-top:0.8rem; position:relative; z-index:1; }
+  .placa-foot { display:flex; align-items:center; justify-content:space-between; margin-top:1rem; padding-top:0.7rem; border-top:1px solid var(--pm-line); font-family:'JetBrains Mono',monospace; font-size:0.58rem; letter-spacing:0.08em; color:var(--pm-celeste-2); opacity:0.92; position:relative; z-index:1; }
+  .placa-foot b { font-family:'Anton',sans-serif; letter-spacing:0.04em; color:var(--pm-ink); }
+
+  /* Controles */
+  .controls { display:flex; gap:0.5rem; margin-top:1rem; }
+  .ctrl { flex:1; text-align:center; background:rgba(47,159,212,0.10); border:1px solid var(--pm-celeste); color:var(--pm-ink); border-radius:10px; padding:0.75rem; font-family:'Anton',sans-serif; letter-spacing:0.06em; text-transform:uppercase; font-size:0.9rem; cursor:pointer; }
+  .ctrl:hover { background:rgba(47,159,212,0.2); }
+  .ctrl.arrow { flex:0 0 3rem; font-size:1.1rem; }
+  .actions { display:flex; gap:0.5rem; margin-top:0.6rem; }
+  .act { flex:1; text-align:center; text-decoration:none; border:none; border-radius:10px; padding:0.85rem; font-family:'Anton',sans-serif; letter-spacing:0.06em; text-transform:uppercase; font-size:0.95rem; cursor:pointer; }
+  .act.dl { background:var(--pm-grad); color:#04212e; }
+  .act.sh { background:rgba(0,0,0,0.3); color:var(--pm-celeste-2); border:1px solid var(--pm-celeste); }
+  .nota { text-align:center; font-size:0.78rem; color:var(--pm-celeste-2); opacity:0.85; margin-top:0.8rem; line-height:1.45; }
+</style>
+</head>
+<body class="pm-skin">
+<div class="container">
+  <a class="back" href="../index.html">← Volver a Pampa Mundialista</a>
+  <header>
+    <div class="eyebrow">🔮 Rincón de Hincha · Mundial 2026</div>
+    <h1>ORÁCULO DE <span>CÁBALAS</span></h1>
+    <p class="bajada">No predice resultados. Te dice <b>cómo vas a vivir</b> cada partido de la Selección. Elegí la fecha, mirá tu cábala y bajala para mandarla a tu banda.</p>
+  </header>
+
+  <div class="fechas-nav" id="fechas-nav"></div>
+
+  <!-- PLACA descargable -->
+  <div class="placa" id="placa">
+    <div class="placa-top">
+      <span class="estrellas">★ ★ ★</span>
+      <span class="placa-tag">Oráculo · Pampa Mundialista</span>
+    </div>
+    <div class="placa-fecha" id="p-fecha">Partido 1</div>
+    <div class="placa-titulo" id="p-titulo"></div>
+    <div class="intensidad"><span id="p-int-lbl">Intensidad</span><span class="int-track"><span class="int-fill" id="p-int-fill"></span></span></div>
+    <p class="placa-oraculo" id="p-oraculo"></p>
+    <div class="cabalas-tit">Tus cábalas de hoy</div>
+    <ul class="cabalas" id="p-cabalas"></ul>
+    <p class="placa-cierre" id="p-cierre"></p>
+    <div class="placa-foot"><b>PAMPA MUNDIALISTA</b><span>@pampamundialista · pampamundialista.vercel.app</span></div>
+  </div>
+
+  <div class="controls">
+    <button class="ctrl arrow" id="prev" aria-label="Fecha anterior">◀</button>
+    <button class="ctrl" id="next-lbl">Siguiente fecha</button>
+    <button class="ctrl arrow" id="next" aria-label="Fecha siguiente">▶</button>
+  </div>
+  <div class="actions">
+    <button class="act dl" id="descargar">📥 Descargar placa</button>
+    <button class="act sh" id="compartir">📲 Compartir</button>
+  </div>
+  <p class="nota">Bajala como imagen y mandala por WhatsApp o subila a tu historia etiquetando a <b>@pampamundialista</b>. Coronados de gloria, vivámoslo. 🇦🇷</p>
+</div>
+
+<script>
+// ===== 8 fechas que jugaría Argentina hasta la final (sube de intensidad) =====
+// Textos provistos por la Subsecretaría de Juventud. Tono cabulero, público joven.
+const FECHAS = [
+  { etapa:'Fase de grupos · Fecha 1', titulo:'El debut',
+    oraculo:'El Oráculo ve esto: te vas a levantar diciendo «tranqui, es solo el debut», y para el minuto 3 vas a estar parado atrás del sillón. Hoy nace tu cábala, así que elegí con cuidado: lo que hagas ahora lo repetís todo el Mundial.',
+    cabalas:[
+      'La remera que tengas puesta cuando llegue el primer gol queda confirmada hasta la final. No la laves.',
+      'Sentate donde estás y no te muevas. Si te levantás justo cuando nos hacen un gol, ya sabés de quién fue la culpa.',
+      'Cebá vos los mates. El que cambia de cebador en el debut arranca jugando con uno menos.',
+      'Y cuando te agarren los nervios, no la agarres con el técnico. Respirá y confiá.'
+    ],
+    cierre:'El Oráculo no te promete el resultado. Te promete que la vas a sufrir como corresponde. Arrastrá a tu banda: en patota se sufre mejor.' },
+
+  { etapa:'Fase de grupos · Fecha 2', titulo:'La confirmación',
+    oraculo:'El Oráculo te ve repasando mentalmente todo lo que hiciste en el debut, como si fuera un instructivo. Ya sos oficialmente cabulero: si salió bien, hiciste todo perfecto; si algo se complica, algo moviste.',
+    cabalas:[
+      'Misma remera, mismo lugar, mismo cebador. El comité ya está formado, no se aceptan suplentes.',
+      'El control remoto se queda exactamente donde quedó la última vez.',
+      'Si alguien estaba en el baño cuando pasó algo bueno, la próxima se vuelve al baño.',
+      'Nadie nombra el resultado en voz alta. Nadie.'
+    ],
+    cierre:'El Oráculo no garantiza nada, salvo que mañana vas a repetir todo esto. Mandáselo a tu banda, que nadie rompa la cábala.' },
+
+  { etapa:'Fase de grupos · Fecha 3', titulo:'La tabla',
+    oraculo:'El Oráculo te ve con la calculadora en la mano: «si empatamos y el otro no gana por dos…». Hacés cuentas que no entendés y mirás partidos que en tu vida te importaron.',
+    cabalas:[
+      'Prohibido festejar antes de tiempo. El Oráculo te vio gritar un gol mal anulado.',
+      'Tené el otro partido en otra pantalla, pero no lo mires vos. Que lo mire otro.',
+      'La calculadora la usa siempre la misma persona. Es la titular ahora.',
+      'Si la cuenta te da, no la digas en voz alta. No sea cosa.'
+    ],
+    cierre:'El resultado no te lo adelanto; la taquicardia sí. Pasá la cuenta a tu grupo, total nadie la entiende igual.' },
+
+  { etapa:'Dieciseisavos de final', titulo:'Dieciseisavos',
+    oraculo:'Se terminó el jueguito. A partir de acá es mata o mata, lo sabés y se te nota. Dormiste mal y estás raro desde el mediodía.',
+    cabalas:[
+      'La cábala ahora es ley. No se discute, no se vota.',
+      'Nada de ropa nueva. Todo lo viejo que venía funcionando.',
+      'Si comiste algo antes del último triunfo, hoy comés lo mismo. Aunque no tengas hambre.',
+      'Si llega a penales, silencio absoluto, y no mires: seguilo por el reflejo en la ventana.'
+    ],
+    cierre:'El Oráculo no sabe el resultado, sabe que no vas a respirar bien. Avisale a tu banda: hoy se sufre en serio.' },
+
+  { etapa:'Octavos de final', titulo:'Octavos',
+    oraculo:'El Oráculo te ve insoportable. La remera ya tiene vida propia, nadie en casa se mueve sin permiso y vos hacés como que estás bien sin engañar a nadie.',
+    cabalas:[
+      'El que llegó tarde al último triunfo, que llegue tarde de nuevo. Es parte del ritual.',
+      'El mate va en el mismo orden de siempre. El que se saltea la ronda arruina todo.',
+      'Hasta el perro tiene su lugar asignado, no lo muevas.',
+      'Cero fotos al televisor hasta el pitazo final.'
+    ],
+    cierre:'El Oráculo te promete una sola cosa: vas a estar imposible. Compartilo igual, que tu banda esté igual de loca.' },
+
+  { etapa:'Cuartos de final', titulo:'Cuartos',
+    oraculo:'Modo brujo activado. Ya no son cábalas, es brujería. Inventás rituales nuevos cada hora, tocás madera y mirás para otro lado en cada córner.',
+    cabalas:[
+      'Prohibido pronunciar la palabra que empieza con C hasta que toque. Vos sabés cuál.',
+      'El que dijo «ya está, ganamos» se va a otra habitación a pensar en lo que hizo.',
+      'Si alguien encontró una posición rara que trae suerte, la mantiene aunque le duela la espalda.',
+      'Nadie cambia de canal. Ni en el entretiempo.'
+    ],
+    cierre:'El Oráculo no adivina el marcador, adivina que vas a hacer cosas que después no vas a poder explicar. Mandáselo a la banda, que el aquelarre sea grupal.' },
+
+  { etapa:'Semifinal', titulo:'Semifinal',
+    oraculo:'Esto ya te excede. Lo que hacés vos lo hace toda la cuadra. Si funcionó hasta acá no se toca ni con el pensamiento, y te tiembla algo que no sabés bien qué es.',
+    cabalas:[
+      'Lo que hizo el barrio entero la fase pasada se repite calcado. No sos vos solo.',
+      'El que canta desafinado y trajo suerte, que cante. Es titular indiscutido.',
+      'Prohibido hacer planes para «si pasamos». El Oráculo te está mirando.',
+      'Y si te ganan los nervios, agua, aire, y no te la agarres con nadie.'
+    ],
+    cierre:'El resultado no te lo doy; el nudo en la garganta es gratis. Esta se sufre todos juntos o no vale: pasásela a tu banda.' },
+
+  { etapa:'La final', titulo:'La final',
+    oraculo:'Llegaste. No lo podés creer y no querés creerlo, por las dudas. El Oráculo, después de seguirte siete partidos, hoy también está hecho percha.',
+    cabalas:[
+      'Todo lo que venías haciendo, absolutamente todo, se hace una vez más. Sin improvisar.',
+      'La remera, el lugar, el mate, el orden, la palabra prohibida: hoy no se cambia nada.',
+      'Rodeate de tu gente. La final no se mira solo.',
+      'Y pase lo que pase, respirá despacio, que la cortás vos.'
+    ],
+    cierre:'El Oráculo no te promete la Copa. Te promete que, salga como salga, la viviste como un campeón. Coronados de gloria, vivámoslo. Mandáselo a tu banda: hoy es el día.' }
+];
+
+let idx = 0;
+const $ = (id) => document.getElementById(id);
+
+function renderNav(){
+  const nav = $('fechas-nav');
+  nav.innerHTML = FECHAS.map((f,i)=>'<button class="fecha-chip'+(i===idx?' on':'')+'" data-i="'+i+'">'+(i+1)+'</button>').join('');
+  nav.querySelectorAll('.fecha-chip').forEach(b=>b.onclick=()=>{ idx=+b.dataset.i; render(); });
+}
+
+function render(){
+  const f = FECHAS[idx];
+  $('p-fecha').textContent = 'Partido ' + (idx+1) + ' · ' + f.etapa;
+  $('p-titulo').innerHTML = '<span>' + f.titulo + '</span>';
+  $('p-oraculo').textContent = f.oraculo;
+  $('p-cabalas').innerHTML = f.cabalas.map(c=>'<li><span class="st">★</span><span>'+c+'</span></li>').join('');
+  $('p-cierre').textContent = f.cierre;
+  const pct = Math.round(((idx+1)/FECHAS.length)*100);
+  $('p-int-fill').style.width = pct + '%';
+  $('p-int-lbl').textContent = idx>=7 ? 'Intensidad: DELIRIO TOTAL' : (idx>=5 ? 'Intensidad: brujería' : (idx>=3 ? 'Intensidad: mata o mata' : 'Intensidad: arranca'));
+  $('next-lbl').textContent = idx < FECHAS.length-1 ? ('Siguiente: ' + FECHAS[idx+1].titulo) : 'Última fecha';
+  renderNav();
+}
+
+$('prev').onclick = ()=>{ idx = (idx-1+FECHAS.length)%FECHAS.length; render(); };
+$('next').onclick = ()=>{ idx = (idx+1)%FECHAS.length; render(); };
+$('next-lbl').onclick = ()=>{ idx = (idx+1)%FECHAS.length; render(); };
+
+// ===== Descargar placa como imagen =====
+$('descargar').onclick = function(){
+  const node = $('placa');
+  const btn = this; const prev = btn.textContent; btn.textContent = '⏳ Generando…';
+  html2canvas(node, { backgroundColor:'#16243F', scale:2, useCORS:true, logging:false }).then(function(canvas){
+    const a = document.createElement('a');
+    a.href = canvas.toDataURL('image/png');
+    a.download = 'oraculo-fecha-' + (idx+1) + '-pampa-mundialista.png';
+    a.click();
+    btn.textContent = '✅ ¡Lista! Revisá tus descargas';
+    setTimeout(()=>btn.textContent = prev, 2600);
+  }).catch(function(){ btn.textContent = prev; alert('No se pudo generar la imagen. Probá de nuevo.'); });
+};
+
+// ===== Compartir =====
+$('compartir').onclick = function(){
+  const f = FECHAS[idx];
+  const txt = '🔮 El Oráculo de Cábalas — ' + f.titulo + '\n\n' + f.oraculo + '\n\n¿Cómo vas a vivir el Mundial? Mirá la tuya en Pampa Mundialista 🇦🇷\npampamundialista.vercel.app/juegos/29-oraculo-cabalas.html\n#PampaMundialista @pampamundialista';
+  if (navigator.share) { navigator.share({ title:'Oráculo de Cábalas', text:txt }).catch(function(){}); }
+  else if (navigator.clipboard) { navigator.clipboard.writeText(txt).then(function(){ alert('¡Texto copiado! Pegalo en WhatsApp o en tu historia. (Y no te olvides de bajar la placa 📥)'); }); }
+  else { window.open('https://wa.me/?text=' + encodeURIComponent(txt), '_blank'); }
+};
+
+render();
+</script>
+<script src="../pampa-marca.js"></script>
+</body>
+</html>
