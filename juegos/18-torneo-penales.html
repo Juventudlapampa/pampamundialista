@@ -16,20 +16,22 @@
 <meta name="twitter:image" content="https://pampamundialista.vercel.app/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/brand.css">
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* Piel de marca: variables legacy aliasadas a los tokens del home (assets/brand.css) */
   :root {
-    --bg: #050d08;
-    --verde: #1a8a4a;
-    --verde-2: #0d4a2c;
-    --verde-fluo: #4ade80;
-    --gold: #d4a82e;
-    --gold-2: #f4cd60;
-    --crema: #f4ecd8;
-    --rojo: #dc2626;
-    --azul: #75AADB;
+    --bg: var(--pm-navy);
+    --verde: var(--pm-panel);
+    --verde-2: var(--pm-navy);
+    --verde-fluo: var(--pm-celeste-2);
+    --gold: var(--pm-celeste);
+    --gold-2: var(--pm-celeste-2);
+    --crema: var(--pm-ink);
+    --rojo: var(--pm-celeste-claro);
+    --azul: var(--pm-celeste-claro);
   }
   body {
     font-family: 'DM Sans', sans-serif;
@@ -61,14 +63,14 @@
   }
   h1 span {
     color: var(--rojo);
-    text-shadow: 0 0 30px rgba(220,38,38,0.5);
+    text-shadow: 0 0 30px rgba(47,159,212,0.5);
   }
   .screen { display: none; }
   .screen.active { display: block; animation: fadeIn 0.3s; }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   .panel {
     background: rgba(0,0,0,0.6);
-    border: 2px solid rgba(212,168,46,0.3);
+    border: 2px solid rgba(47,159,212,0.3);
     border-radius: 16px;
     padding: 1.5rem;
   }
@@ -101,8 +103,8 @@
   }
   .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 0 #7f1d1d; }
   .btn:active { transform: translateY(3px); box-shadow: 0 3px 0 #7f1d1d; }
-  .btn-gold { background: linear-gradient(135deg, var(--gold), var(--gold-2)); color: #000; box-shadow: 0 6px 0 #927200; }
-  .btn-gold:hover { box-shadow: 0 8px 0 #927200; }
+  .btn-gold { background: linear-gradient(135deg, var(--gold), var(--gold-2)); color: #000; box-shadow: 0 6px 0 #1a6a9e; }
+  .btn-gold:hover { box-shadow: 0 8px 0 #1a6a9e; }
   .btn-secondary { background: rgba(0,0,0,0.4); color: var(--crema); border: 2px solid var(--gold); box-shadow: none; }
 
   /* SETUP */
@@ -134,9 +136,9 @@
   }
   .equipo-card:hover { border-color: var(--gold); }
   .equipo-card.selected {
-    background: rgba(74,222,128,0.2);
+    background: rgba(47,159,212,0.2);
     border-color: var(--verde-fluo);
-    box-shadow: 0 0 12px rgba(74,222,128,0.4);
+    box-shadow: 0 0 12px rgba(47,159,212,0.4);
   }
   .equipo-flag {
     display: inline-block;
@@ -170,13 +172,13 @@
   }
   .match {
     background: rgba(0,0,0,0.5);
-    border: 1px solid rgba(212,168,46,0.3);
+    border: 1px solid rgba(47,159,212,0.3);
     border-radius: 6px;
     padding: 0.5rem 0.6rem;
     font-size: 0.75rem;
     line-height: 1.4;
   }
-  .match.playing { border-color: var(--gold); box-shadow: 0 0 10px rgba(212,168,46,0.3); }
+  .match.playing { border-color: var(--gold); box-shadow: 0 0 10px rgba(47,159,212,0.3); }
   .match.done { border-color: var(--verde-fluo); }
   .match-row { display: flex; justify-content: space-between; align-items: center; }
   .match-row.winner { color: var(--verde-fluo); font-weight: 700; }
@@ -230,7 +232,7 @@
     font-size: 3rem;
     color: var(--gold);
     line-height: 1;
-    text-shadow: 0 0 30px rgba(212,168,46,0.5);
+    text-shadow: 0 0 30px rgba(47,159,212,0.5);
   }
   .ronda-info {
     text-align: center;
@@ -251,7 +253,7 @@
     max-width: 500px;
     margin-left: auto;
     margin-right: auto;
-    background: linear-gradient(180deg, #2d4a3e 0%, #1a3a2a 100%);
+    background: linear-gradient(180deg, #1d3a5c 0%, #16243F 100%);
     border: 3px solid white;
     border-radius: 8px;
     padding: 0.6rem;
@@ -269,22 +271,22 @@
     color: white;
     transition: all 0.15s;
   }
-  .zone:hover, .zone:active { background: rgba(212,168,46,0.4); border-color: var(--gold); }
+  .zone:hover, .zone:active { background: rgba(47,159,212,0.4); border-color: var(--gold); }
   .zone.hint {
     background: rgba(96,165,250,0.35);
     border-color: var(--azul);
     border-style: solid;
-    box-shadow: 0 0 16px rgba(37,99,235,0.7);
+    box-shadow: 0 0 16px rgba(47,159,212,0.7);
     animation: zoneHint 0.45s ease-in-out infinite alternate;
   }
-  @keyframes zoneHint { from { box-shadow: 0 0 8px rgba(37,99,235,0.5); } to { box-shadow: 0 0 22px rgba(37,99,235,0.9); } }
+  @keyframes zoneHint { from { box-shadow: 0 0 8px rgba(47,159,212,0.5); } to { box-shadow: 0 0 22px rgba(47,159,212,0.9); } }
   .zone.locked { pointer-events: none; opacity: 0.85; }
-  .zone.keeper { background: rgba(212,168,46,0.30); border-color: var(--gold); border-style: solid; box-shadow: 0 0 18px rgba(212,168,46,0.7); }
+  .zone.keeper { background: rgba(47,159,212,0.30); border-color: var(--gold); border-style: solid; box-shadow: 0 0 18px rgba(47,159,212,0.7); }
   .zone.keeper::after { content:'🧤'; font-size: 1.7rem; }
   /* medidor de potencia/precisión */
   .power-wrap { max-width: 500px; margin: 0.7rem auto 0; }
   .power-meter { position: relative; height: 28px; background: rgba(0,0,0,0.55); border: 2px solid var(--gold); border-radius: 14px; overflow: hidden; cursor: pointer; }
-  .power-target { position: absolute; top: 0; bottom: 0; background: rgba(74,222,128,0.40); border-left: 2px solid var(--verde-fluo); border-right: 2px solid var(--verde-fluo); }
+  .power-target { position: absolute; top: 0; bottom: 0; background: rgba(47,159,212,0.40); border-left: 2px solid var(--verde-fluo); border-right: 2px solid var(--verde-fluo); }
   .power-fill { position: absolute; top: 2px; bottom: 2px; left: 0; width: 5px; background: var(--gold-2); border-radius: 3px; box-shadow: 0 0 12px var(--gold-2); }
   .power-hint { text-align: center; font-size: 0.8rem; opacity: 0.85; margin-top: 0.35rem; font-family: 'JetBrains Mono', monospace; }
   .turn-label {
@@ -345,8 +347,8 @@
     animation: trophyGlow 2s ease-in-out infinite alternate;
   }
   @keyframes trophyGlow {
-    from { box-shadow: 0 0 30px rgba(212,168,46,0.3); }
-    to { box-shadow: 0 0 80px rgba(212,168,46,0.7); }
+    from { box-shadow: 0 0 30px rgba(47,159,212,0.3); }
+    to { box-shadow: 0 0 80px rgba(47,159,212,0.7); }
   }
   .champion-trophy { font-size: 4.5rem; line-height: 1; }
   .champion-label {
@@ -384,7 +386,7 @@
 .grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
 </style>
 </head>
-<body>
+<body class="pm-skin">
 <div class="container">
   <header>
     <div class="header-tag">Torneo de Penales · Mundial 2026</div>
@@ -505,7 +507,7 @@ const sfx = {
 };
 function vibe(ms){ try{ if(navigator.vibrate) navigator.vibrate(ms); }catch(e){} }
 function confeti(){
-  const cols=['#4ade80','#d4a82e','#f4cd60','#38bdf8','#fff','#f87171'];
+  const cols=['#2f9fd4','#6cc0ec','#9BD6EF','#75AADB','#fff','#2BAADC'];
   for(let i=0;i<28;i++){ const c=document.createElement('div');
     c.style.cssText=`position:fixed;top:-12px;left:${10+Math.random()*80}vw;width:9px;height:14px;z-index:9999;pointer-events:none;background:${cols[i%cols.length]};transform:rotate(${Math.random()*360}deg)`;
     document.body.appendChild(c); const dur=1100+Math.random()*900;
@@ -959,7 +961,7 @@ document.getElementById('share-champion').onclick = () => {
   const node = document.querySelector('.champion-banner');
   const w = node.offsetWidth, h = node.offsetHeight;
   html2canvas(node, {
-    backgroundColor: '#050d08',
+    backgroundColor: '#16243F',
     scale: 2, useCORS: true, allowTaint: true, logging: false,
     width: w, height: h,
     windowWidth: document.documentElement.clientWidth,
