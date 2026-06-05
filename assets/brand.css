@@ -1,0 +1,68 @@
+/* ============================================================================
+   Pampa Mundialista · brand.css
+   Piel de marca compartida. FUENTE DE VERDAD: index.html (el home).
+   Tokens canónicos (navy + celeste) para que TODAS las herramientas matcheen
+   exacto con la home. Esto es SOLO la capa visual: no toca lógica ni layout.
+
+   Uso en cada herramienta:
+     <link rel="stylesheet" href="../assets/brand.css">   (en /juegos, /generadores, /herramientas)
+     <body class="pm-skin">                                 (activa el fondo navy del home)
+   y en el :root propio de la herramienta, aliasar sus variables legacy a los
+   tokens --pm-* (ver ejemplo abajo). El footer institucional lo pone pampa-marca.js.
+
+   Paleta legacy del proyecto (dorado/verde/rojo) -> PROHIBIDA como interfaz.
+   ============================================================================ */
+
+:root {
+  /* Navy / superficies (del home) */
+  --pm-navy: #16243F;          /* fondo principal */
+  --pm-navy-2: #1d2f4f;        /* centro del gradiente del fondo */
+  --pm-panel: #1e3657;         /* paneles / bloques */
+  --pm-card: #2a4a72;          /* superficie de tarjeta / césped */
+
+  /* Celestes de marca (acentos, links, botones, resaltados) */
+  --pm-celeste: #2f9fd4;       /* celeste principal */
+  --pm-celeste-2: #6cc0ec;     /* celeste claro (acento 2) */
+  --pm-celeste-3: #34a3df;     /* celeste medio */
+  --pm-celeste-claro: #75AADB; /* celeste de apoyo */
+
+  /* Texto */
+  --pm-ink: #eef4fa;           /* texto principal (casi blanco) */
+  --pm-white: #ffffff;
+
+  /* Bordes / líneas sutiles */
+  --pm-line: rgba(47,159,212,0.30);
+
+  /* Gradiente de acento estándar (celeste -> azul), igual que el home */
+  --pm-grad: linear-gradient(135deg, #2f9fd4, #6cc0ec);
+}
+
+/* Fondo navy del home, idéntico (gradiente radial + textura sutil).
+   Se activa poniendo class="pm-skin" en el <body> de la herramienta.
+   No redefine padding/otros: solo fondo y color de texto. */
+body.pm-skin {
+  background: #16243F;
+  background-image: radial-gradient(1200px 600px at 50% -10%, #1d2f4f 0%, #16243F 60%);
+  background-attachment: fixed;
+  color: var(--pm-ink);
+}
+body.pm-skin::before {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  mix-blend-mode: overlay; opacity: 0.22;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+/* Links en celeste claro, como el home */
+body.pm-skin a { color: var(--pm-celeste-2); }
+
+/* Botón / acento estándar de marca (celeste -> azul). Clase opcional de ayuda. */
+.pm-btn {
+  background: var(--pm-grad);
+  color: #04212e;
+  border: none;
+}
+
+/* Escala "mano a mano" monocromática (reemplaza verde-vs-rojo):
+   celeste lleno = un lado, celeste tenue = el otro. No lee ganador/perdedor. */
+.pm-vs-full { background: var(--pm-celeste); }
+.pm-vs-soft { background: rgba(47,159,212,0.22); }
