@@ -16,12 +16,14 @@
 <meta name="twitter:image" content="https://pampamundialista.vercel.app/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/brand.css">
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  :root { --bg:#0a1f1a; --verde:#0d3b26; --verde-fluo:#4ade80; --gold:#d4a82e; --gold-2:#f4cd60; --crema:#f4ecd8; --rojo:#dc2626; }
-  body { font-family:'DM Sans',sans-serif; background:var(--bg); min-height:100vh; color:var(--crema); padding:1rem; }
+  /* Piel de marca: variables legacy aliasadas a los tokens del home (assets/brand.css) */
+  :root { --bg:var(--pm-navy); --verde:var(--pm-panel); --verde-fluo:var(--pm-celeste-2); --gold:var(--pm-celeste); --gold-2:var(--pm-celeste-2); --crema:var(--pm-ink); --rojo:var(--pm-celeste-claro); }
+  body.pm-skin { font-family:'DM Sans',sans-serif; min-height:100vh; color:var(--crema); padding:1rem; }
   .container { max-width:600px; margin:0 auto; }
   header { text-align:center; margin-bottom:1rem; }
   .header-tag { font-family:'JetBrains Mono',monospace; font-size:0.7rem; letter-spacing:0.25em; color:var(--gold); text-transform:uppercase; }
@@ -36,17 +38,17 @@
   .progress { height:8px; background:rgba(0,0,0,0.5); border-radius:4px; overflow:hidden; max-width:320px; margin:0.4rem auto 0; }
   .progress-fill { height:100%; width:0; background:linear-gradient(90deg,var(--verde-fluo),var(--gold)); transition:width 0.4s; }
   .card-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:5px; margin:1.2rem 0; }
-  .bingo-cell { aspect-ratio:1; background:rgba(0,0,0,0.4); border:1px solid rgba(212,168,46,0.3); border-radius:6px; display:flex; align-items:center; justify-content:center; text-align:center; padding:3px; font-size:0.52rem; cursor:pointer; transition:all 0.15s; line-height:1.12; overflow:hidden; }
+  .bingo-cell { aspect-ratio:1; background:rgba(0,0,0,0.4); border:1px solid rgba(47,159,212,0.3); border-radius:6px; display:flex; align-items:center; justify-content:center; text-align:center; padding:3px; font-size:0.52rem; cursor:pointer; transition:all 0.15s; line-height:1.12; overflow:hidden; }
   .bingo-cell:hover { border-color:var(--gold); }
   .bingo-cell.marked { background:var(--verde-fluo); color:#04210f; font-weight:700; }
-  .bingo-cell.free { background:rgba(212,168,46,0.35); color:#000; font-weight:700; }
-  .juv-watermark { font-family:'JetBrains Mono',monospace; font-size:0.6rem; letter-spacing:0.2em; color:rgba(212,168,46,0.7); text-align:center; margin-top:0.8rem; }
+  .bingo-cell.free { background:rgba(47,159,212,0.35); color:#000; font-weight:700; }
+  .juv-watermark { font-family:'JetBrains Mono',monospace; font-size:0.6rem; letter-spacing:0.2em; color:rgba(47,159,212,0.7); text-align:center; margin-top:0.8rem; }
   .juv-watermark span { color:var(--verde-fluo); }
   .hint { text-align:center; font-size:0.75rem; opacity:0.65; margin-top:0.6rem; line-height:1.4; }
   .grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
 </style>
 </head>
-<body>
+<body class="pm-skin">
 <div class="container">
   <header>
     <div class="header-tag">Cartón Mundialista · Mundial 2026</div>
@@ -126,7 +128,7 @@
   document.getElementById('nueva').onclick = () => { if(confirm('¿Arrancamos un cartón nuevo? Ojo que el de ahora se borra y no vuelve.')) nuevoCarton(); };
   document.getElementById('download').onclick = () => {
     const node = document.querySelector('.container');
-    html2canvas(node, { backgroundColor:'#0a1f1a', scale:2, useCORS:true, allowTaint:true, logging:false, windowWidth:document.documentElement.clientWidth, windowHeight:document.documentElement.clientHeight })
+    html2canvas(node, { backgroundColor:'#16243F', scale:2, useCORS:true, allowTaint:true, logging:false, windowWidth:document.documentElement.clientWidth, windowHeight:document.documentElement.clientHeight })
       .then(canvas => { const link=document.createElement('a'); link.download='mi-carton-mundialista.png'; link.href=canvas.toDataURL('image/png'); link.click(); });
   };
   document.getElementById('share').onclick = () => window.PampaJuego.compartir({texto:'Mi cartón para el partido de hoy 🎰 Llená el tuyo', modo:'share'});

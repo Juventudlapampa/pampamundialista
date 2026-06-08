@@ -68,7 +68,7 @@
   .bubble.l { left:6px; border-bottom-left-radius:3px; }
   .bubble.r { right:6px; text-align:right; border-bottom-right-radius:3px; }
   .bubble.ole { background:linear-gradient(135deg,#6cc0ec,#2f9fd4); color:#04212e; }
-  .bubble.bronca { background:linear-gradient(135deg,#b91c1c,#ef4444); color:#fff; }
+  .bubble.bronca { background:linear-gradient(135deg,#2a3a52,#3e5168); color:#fff; }
   .bubble.festejo { background:linear-gradient(135deg,#2f9fd4,#6cc0ec); color:#1a1205; }
   @keyframes bubpop { 0%{opacity:0;transform:translateY(8px) scale(0.85)} 14%{opacity:1;transform:translateY(0) scale(1.06)} 26%{transform:scale(1)} 80%{opacity:1} 100%{opacity:0;transform:translateY(-7px) scale(0.95)} }
   /* reloj en apuro */
@@ -489,7 +489,7 @@ function resolveShot(){
   const d=DIFF[diff];
   const aim=G.aimX, dive=G.keeperDive, hi=G.aimY;
   // afuera / travesaño
-  if(Math.abs(aim)>0.94 || hi>0.92){ G.shotRes='afuera'; flash('¡Afuera por poco! 😖','#fbbf24',55); shake=4; vibe(30); }
+  if(Math.abs(aim)>0.94 || hi>0.92){ G.shotRes='afuera'; flash('¡Afuera por poco! 😖','#75AADB',55); shake=4; vibe(30); }
   else {
     const dist=Math.abs(aim-dive);
     const range=0.26+d.gk*0.22;
@@ -503,7 +503,7 @@ function resolveShot(){
       gol = (Math.abs(dive)>0.4) ? true : (dist>range+0.12); // si el arquero se tiró, la pica; si se queda, la come
     }
     if(gol){ G.goles++; G.shotRes='gol'; flash('¡GOOOOL! ⚽','#2f9fd4',60); burst(CX,H*0.42,42); shake=10; vibe(80); sGol(); bubble(rnd(GOL_BUBBLES),'festejo'); $('sb-goles').textContent=G.goles; }
-    else { G.shotRes='atajada'; flash('¡La atajó el arquero! 🧤','#fbbf24',55); shake=6; vibe([20,40]); sSave(); if(Math.random()<0.7) bubble(rnd(SAVE_BUBBLES),'bronca'); }
+    else { G.shotRes='atajada'; flash('¡La atajó el arquero! 🧤','#75AADB',55); shake=6; vibe([20,40]); sSave(); if(Math.random()<0.7) bubble(rnd(SAVE_BUBBLES),'bronca'); }
   }
   G.celT=1.1; G.phase='cel'; setControls('run');
 }

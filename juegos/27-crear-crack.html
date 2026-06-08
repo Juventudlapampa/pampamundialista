@@ -583,7 +583,7 @@ function drawPen(){
   ctx.strokeStyle='rgba(255,255,255,0.35)'; ctx.lineWidth=2; ctx.strokeRect(60,PGY,CW-120,92);
   ctx.fillStyle='rgba(255,255,255,0.9)'; ctx.fillRect(PGX1,PGY-6,PGX2-PGX1,6);
   ctx.strokeStyle='rgba(255,255,255,0.6)'; ctx.strokeRect(PGX1,0,PGX2-PGX1,PGY);
-  drawPenDude(pg.keeper.x,PKY,'#f4cd60');
+  drawPenDude(pg.keeper.x,PKY,'#75AADB');
   if(avatarImg){ const w=70,h=w*252/200; ctx.drawImage(avatarImg,CW/2-w/2,CH-h-2,w,h); }
   if(pg.aim){ ctx.strokeStyle='rgba(47,159,212,0.9)'; ctx.lineWidth=3; ctx.setLineDash([6,5]); ctx.beginPath(); ctx.moveTo(pg.ball.x,pg.ball.y); ctx.lineTo(pg.aim.cx,pg.aim.cy); ctx.stroke(); ctx.setLineDash([]); }
   ctx.beginPath(); ctx.arc(pg.ball.x,pg.ball.y,pg.ball.r,0,7); ctx.fillStyle='#fff'; ctx.fill(); ctx.lineWidth=2; ctx.strokeStyle='#111'; ctx.stroke();
@@ -621,7 +621,7 @@ function showResult(){
   }
 }
 
-function confettiBurst(){ const cols=['#4ade80','#d4a82e','#38bdf8','#f87171','#f4cd60']; for(let i=0;i<26;i++){ const c=document.createElement('div'); c.className='confetti'; c.style.left=(10+Math.random()*80)+'vw'; c.style.background=cols[i%cols.length]; c.style.transform=`rotate(${Math.random()*360}deg)`; document.body.appendChild(c); const dur=1200+Math.random()*900; c.animate([{top:'-10px',opacity:1},{top:'100vh',opacity:0.9}],{duration:dur,easing:'cubic-bezier(.3,.6,.6,1)'}); setTimeout(()=>c.remove(),dur); } }
+function confettiBurst(){ const cols=['#2f9fd4','#6cc0ec','#38bdf8','#9BD6EF','#75AADB']; for(let i=0;i<26;i++){ const c=document.createElement('div'); c.className='confetti'; c.style.left=(10+Math.random()*80)+'vw'; c.style.background=cols[i%cols.length]; c.style.transform=`rotate(${Math.random()*360}deg)`; document.body.appendChild(c); const dur=1200+Math.random()*900; c.animate([{top:'-10px',opacity:1},{top:'100vh',opacity:0.9}],{duration:dur,easing:'cubic-bezier(.3,.6,.6,1)'}); setTimeout(()=>c.remove(),dur); } }
 
 /* ===================== DESCARGAS ===================== */
 function snap(node,filename,bg){ const w=node.offsetWidth,h=node.offsetHeight; html2canvas(node,{backgroundColor:bg,scale:2,useCORS:true,allowTaint:true,logging:false,width:w,height:h,windowWidth:document.documentElement.clientWidth,windowHeight:document.documentElement.clientHeight}).then(canvas=>{ const link=document.createElement('a'); link.download=filename; link.href=canvas.toDataURL('image/png'); link.click(); }); }
