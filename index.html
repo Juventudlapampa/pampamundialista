@@ -744,7 +744,7 @@
     const bunting = document.getElementById('bunting');
     if (bunting) { const cols=['#75AADB','#ffffff']; let h=''; for(let i=0;i<32;i++) h+=`<i style="--c:${cols[i%2]};animation-delay:${(i%5)*0.12}s"></i>`; bunting.innerHTML=h; }
     // Banner de la Selección: los 26 + el DT
-    const PLANTEL='Emiliano Martínez · Gerónimo Rulli · Juan Musso · Gonzalo Montiel · Nahuel Molina · Lisandro Martínez · Nicolás Otamendi · Leonardo Balerdi · Cristian Romero · Nicolás Tagliafico · Facundo Medina · Giovani Lo Celso · Leandro Paredes · Rodrigo De Paul · Exequiel Palacios · Enzo Fernández · Alexis Mac Allister · Valentín Barco · Lionel Messi · Nicolás González · Giuliano Simeone · Lautaro Martínez · José Manuel López · Julián Álvarez · Thiago Almada · Nico Paz · DT Lionel Scaloni';
+    const PLANTEL='Emiliano Martínez · Gerónimo Rulli · Juan Musso · Gonzalo Montiel · Nahuel Molina · Lisandro Martínez · Nicolás Otamendi · Marcos Senesi · Cristian Romero · Nicolás Tagliafico · Facundo Medina · Giovani Lo Celso · Leandro Paredes · Rodrigo De Paul · Exequiel Palacios · Enzo Fernández · Alexis Mac Allister · Valentín Barco · Lionel Messi · Nicolás González · Giuliano Simeone · Lautaro Martínez · José Manuel López · Julián Álvarez · Thiago Almada · Nico Paz · DT Lionel Scaloni';
     const pmq=document.getElementById('players-mq'); if(pmq) pmq.textContent='⚽ '+PLANTEL+' · ⚽ '+PLANTEL+' · ';
 
     // hinchada de fondo (ruido filtrado en loop, con oleaje)
