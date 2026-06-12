@@ -167,8 +167,8 @@
 
   /* CANCHA OUTPUT */
   .cancha-wrap {
-    background: linear-gradient(180deg, #1d3a5c 0%, #16243F 100%);
-    background-image: repeating-linear-gradient(0deg, transparent, transparent 8%, rgba(255,255,255,0.04) 8%, rgba(255,255,255,0.04) 16%);
+    background-color: #16243F;
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 8%, rgba(255,255,255,0.04) 8%, rgba(255,255,255,0.04) 16%), linear-gradient(180deg, #1d3a5c 0%, #16243F 100%);
     border-radius: 12px;
     padding: 1.2rem 0.8rem;
     position: relative;
@@ -186,8 +186,8 @@
   }
   .equipo-formacion {
     display: grid;
-    grid-template-rows: auto auto auto;
-    gap: 1rem;
+    grid-template-rows: auto auto auto auto;
+    gap: 0.8rem;
     height: calc(100% - 80px);
     align-content: space-evenly;
   }
@@ -449,7 +449,7 @@ document.getElementById('download').onclick = async () => {
   try { if (document.fonts && document.fonts.ready) await document.fonts.ready; } catch(e){}
   await new Promise(function(r){ requestAnimationFrame(function(){ requestAnimationFrame(function(){ setTimeout(r, 100); }); }); });
   html2canvas(node, {
-    backgroundColor: null, scale: 2, useCORS: true, allowTaint: true, logging: false,
+    backgroundColor: '#16243F', scale: 2, useCORS: true, allowTaint: true, logging: false,
     width: w, height: h,
     windowWidth: document.documentElement.clientWidth,
     windowHeight: document.documentElement.clientHeight,
