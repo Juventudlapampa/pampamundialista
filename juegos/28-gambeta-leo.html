@@ -72,7 +72,7 @@
   .bubble.festejo { background:linear-gradient(135deg,#2f9fd4,#6cc0ec); color:#1a1205; }
   @keyframes bubpop { 0%{opacity:0;transform:translateY(8px) scale(0.85)} 14%{opacity:1;transform:translateY(0) scale(1.06)} 26%{transform:scale(1)} 80%{opacity:1} 100%{opacity:0;transform:translateY(-7px) scale(0.95)} }
   /* reloj en apuro */
-  @keyframes urgpulse { 0%,100%{box-shadow:0 0 0 rgba(248,113,113,0)} 50%{box-shadow:0 0 16px rgba(248,113,113,0.95)} }
+  @keyframes urgpulse { 0%,100%{box-shadow:0 0 0 rgba(47,159,212,0)} 50%{box-shadow:0 0 16px rgba(47,159,212,0.95)} }
   .sb-box.urg { border-color:#6cc0ec !important; animation:urgpulse 0.6s infinite; }
   .sb-box.urg .sb-num { color:#6cc0ec !important; }
 
@@ -649,7 +649,7 @@ function draw(){
     // mira
     if(G.phase==='aim'||G.phase==='charge'){
       const ax=CX+G.aimX*GOAL.half*0.92, ay=GOAL.baseY - G.aimY*GOAL.h*0.8;
-      ctx.strokeStyle='rgba(244,205,96,0.95)'; ctx.lineWidth=2.5;
+      ctx.strokeStyle='rgba(108,192,236,0.95)'; ctx.lineWidth=2.5;
       ctx.beginPath(); ctx.arc(ax,ay,12,0,7); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(ax-18,ay); ctx.lineTo(ax+18,ay); ctx.moveTo(ax,ay-18); ctx.lineTo(ax,ay+18); ctx.stroke();
       // medidor de carga

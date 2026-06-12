@@ -167,7 +167,7 @@
     right: 12px;
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.65rem;
-    color: rgba(212, 168, 46, 0.95);
+    color: rgba(47, 159, 212, 0.95);
     letter-spacing: 0.08em;
     z-index: 10;
     pointer-events: none;
@@ -912,7 +912,7 @@
     if (state[activeModo].asignados[currentSlot] !== undefined) {
       const btn = document.createElement('div');
       btn.className = 'player';
-      btn.style.background = 'rgba(220,38,38,0.2)';
+      btn.style.background = 'rgba(47,159,212,0.2)';
       btn.innerHTML = `<span></span><span>✕ Quitar jugador actual</span><span></span>`;
       btn.onclick = () => {
         delete state[activeModo].asignados[currentSlot];
