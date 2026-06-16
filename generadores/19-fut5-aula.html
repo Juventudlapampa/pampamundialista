@@ -170,10 +170,9 @@
     background-color: #16243F;
     background-image: repeating-linear-gradient(0deg, transparent, transparent 8%, rgba(255,255,255,0.04) 8%, rgba(255,255,255,0.04) 16%), linear-gradient(180deg, #1d3a5c 0%, #16243F 100%);
     border-radius: 12px;
-    padding: 1.2rem 0.8rem;
+    padding: 1.3rem 0.8rem 2rem;
     position: relative;
     border: 3px solid rgba(255,255,255,0.4);
-    aspect-ratio: 5/7;
   }
   .equipo-title {
     text-align: center;
@@ -185,11 +184,10 @@
     text-shadow: 0 2px 4px rgba(0,0,0,0.6);
   }
   .equipo-formacion {
-    display: grid;
-    grid-template-rows: auto auto auto auto;
-    gap: 0.8rem;
-    height: calc(100% - 80px);
-    align-content: space-evenly;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 0.8rem 0 0.4rem;
   }
   .formacion-row {
     display: flex;
