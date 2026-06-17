@@ -373,7 +373,7 @@
     </button>
     <div class="puerta-body">
       <div class="grid-tools">
-        <a class="tool-card" data-id="crack" href="juegos/27-crear-crack.html"><span class="seal">🔵</span><div class="tool-icon">🎽</div><div class="tool-name">Creá tu Crack</div><div class="tool-desc">Armá tu jugador a tu pinta y jugá 2 minijuegos. Bajá tu carta y mandala al grupo.</div></a>
+        <a class="tool-card" data-id="crack" href="juegos/27-crear-crack.html"><span class="seal">🔵</span><div class="tool-icon">🎽</div><div class="tool-name">Creá tu Crack</div><div class="tool-desc">Armá tu jugador a tu gusto y jugá 2 minijuegos. Bajá tu carta y mandala al grupo.</div></a>
         <a class="tool-card" data-id="figu" href="generadores/01-figurita.html"><span class="seal">🔵</span><div class="tool-icon">🃏</div><div class="tool-name">Tu Figurita Real</div><div class="tool-desc">Tu cara en una figurita Panini, con país y stats. Lista para bajar.</div></a>
         <a class="tool-card" data-id="carnet" href="generadores/03-carnet.html"><span class="seal">🔵</span><div class="tool-icon">🪪</div><div class="tool-name">Carnet de Hincha</div><div class="tool-desc">Tu credencial de hincha con foto e ID único. ¿De qué selección sos?</div></a>
         <a class="tool-card" data-id="once" href="generadores/02-armar-11.html"><span class="seal">🔵</span><div class="tool-icon">⚽</div><div class="tool-name">Armá tu 11</div><div class="tool-desc">¿Tu once ideal aguanta? Armalo y compartilo con la barra.</div></a>
@@ -469,6 +469,7 @@
   <section class="block" id="camino-seleccion" style="text-align:center;scroll-margin-top:0.5rem">
     <div class="block-title" style="text-align:center">EL CAMINO DE LA SELECCIÓN</div>
     <p style="text-align:center">El camino de Argentina en la fase de grupos (horario de Argentina). En <b>cada fecha</b> sorteamos premios entre los pasaportes completos y subidos.</p>
+    <div style="margin:0.4rem auto 0.3rem;max-width:540px;background:rgba(108,192,236,0.12);border:1px solid rgba(108,192,236,0.42);border-radius:14px;padding:0.7rem 1rem;font-weight:600;line-height:1.45">⚽ <b>¡Arrancamos ganando!</b> Argentina <b style="color:#6cc0ec">3 - 0</b> a Argelia en la 1ª fecha. ✅ El <b>sorteo de la 1ª fecha</b> ya se hizo el <b>16/06</b>. ¡Ahora vamos por la 2ª (vs Austria)! 🎉</div>
     <div class="gh-fechas" id="gh-fechas"></div>
     <div class="gh-mas" style="margin:0.9rem auto 0">Y cuanto <b>más avanza la Selección</b>, más fechas y más sorteos: octavos, cuartos, semi y la final. ¡Si Argentina llega lejos, hay más chances para todos!</div>
   </section>
@@ -476,14 +477,20 @@
   (function(){
     // Fixture de grupos confirmado de Argentina (horario de Argentina, UTC-3).
     var FECHAS_SELECCION = [
-      { n:'1ª fecha', rival:'Argelia',  cuando:'16/6 · 22:00', iso:'2026-06-16T22:00:00-03:00' },
+      { n:'1ª fecha', rival:'Argelia',  cuando:'16/6 · 22:00', iso:'2026-06-16T22:00:00-03:00', resultado:'ARG 3 - 0 ARGELIA', sorteoHecho:'16/6' },
       { n:'2ª fecha', rival:'Austria',  cuando:'22/6 · 14:00', iso:'2026-06-22T14:00:00-03:00' },
       { n:'3ª fecha', rival:'Jordania', cuando:'27/6 · 23:00', iso:'2026-06-27T23:00:00-03:00' }
     ];
     window.__FECHAS_ARG = FECHAS_SELECCION;
     var el = document.getElementById('gh-fechas');
     if (el) el.innerHTML = FECHAS_SELECCION.map(function(f){
-      return '<div class="gh-fecha"><div class="ghf-n">'+f.n+'</div><div class="ghf-vs">ARG vs '+f.rival.toUpperCase()+'</div><div class="ghf-when">'+f.cuando+'</div><div class="ghf-prize">🎁 Sorteo de la fecha</div></div>';
+      var medio = f.resultado
+        ? '<div class="ghf-vs" style="color:#6cc0ec">'+f.resultado+'</div><div class="ghf-when" style="color:#6cc0ec;font-weight:700">✅ ¡Ganamos!</div>'
+        : '<div class="ghf-vs">ARG vs '+f.rival.toUpperCase()+'</div><div class="ghf-when">'+f.cuando+'</div>';
+      var abajo = f.sorteoHecho
+        ? '<div class="ghf-prize">✅ Sorteo ya realizado · '+f.sorteoHecho+'</div>'
+        : '<div class="ghf-prize">🎁 Sorteo de la fecha</div>';
+      return '<div class="gh-fecha">'+'<div class="ghf-n">'+f.n+'</div>'+medio+abajo+'</div>';
     }).join('');
   })();
   </script>
