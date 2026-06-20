@@ -700,6 +700,73 @@ $('start').onclick=startMatch; $('replay').onclick=startMatch; $('to-intro').onc
 $('download').onclick=()=>{ const node=$('res-card'); const w=node.offsetWidth,h=node.offsetHeight; html2canvas(node,{backgroundColor:'#16243F',scale:2,useCORS:true,allowTaint:true,logging:false,width:w,height:h,windowWidth:document.documentElement.clientWidth,windowHeight:document.documentElement.clientHeight}).then(c=>{ const l=document.createElement('a'); l.download='gambeta-como-leo-2026.png'; l.href=c.toDataURL('image/png'); l.click(); }); };
 $('share').onclick=()=>{ window.PampaJuego.compartir({texto:'Mirá la gambeta que me mandé ⚽ ¿Vos podés?', modo:'wsp'}); };
 function shareReto(text){ if(navigator.share){navigator.share({title:'Gambeteá como Leo · Pampa Mundialista',text}).catch(()=>{});} else if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>alert('¡Desafío copiado! Pasáselo a un amigo 📲'),()=>prompt('Copiá tu desafío:',text));} else {prompt('Copiá tu desafío:',text);} }
+
+/* ===================== MODO REEL (?demo=1) — auto-juego determinista para grabar ===================== */
+(function(){
+  if(!/[?&]demo/i.test(location.search)) return;
+  var WM='juventudes.lapampa.gob.ar';
+  diff='facil';
+  startMatch();
+  if(raf){ cancelAnimationFrame(raf); raf=null; }
+  if(timerInt){ clearInterval(timerInt); timerInt=null; }
+  if(G){ G.time=999; }
+  document.documentElement.style.background='#0b1424';
+  var st=document.createElement('style'); st.textContent=
+    '#reel{position:fixed;inset:0;z-index:2147483646;overflow:hidden;display:flex;flex-direction:column;align-items:center;'+
+    'background:radial-gradient(circle at 50% 28%,#1f3a63 0%,#16243F 50%,#0b1424 100%);color:#eef4fa;font-family:inherit}'+
+    '#reel-head{margin-top:7vh;display:flex;flex-direction:column;align-items:center;gap:1vh}'+
+    '.rh-k{font-weight:900;font-size:7vw;background:linear-gradient(135deg,#2f9fd4,#6cc0ec);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0.4vh 1vh rgba(0,0,0,.4)}'+
+    '.rh-s{font-weight:900;font-size:5.4vw;color:#fff;background:rgba(108,192,236,.18);border:1px solid rgba(108,192,236,.4);padding:0.4vh 3vw;border-radius:99px}'+
+    '#reel-stage{flex:1;display:flex;align-items:center;justify-content:center;width:100%}'+
+    '#reel-stage canvas{width:94vw;height:auto;border-radius:2.4vw;border:0.45vh solid rgba(108,192,236,.55);box-shadow:0 1.6vh 3.4vh rgba(0,0,0,.55)}'+
+    '#reel-wm{margin-bottom:4.6vh;display:flex;align-items:center;gap:2.4vw;opacity:.96}'+
+    '#reel-wm img{height:6.6vh;width:auto;filter:drop-shadow(0 0.3vh 0.8vh rgba(0,0,0,.5))}'+
+    '#reel-wm .wm-tx{display:flex;flex-direction:column;line-height:1.05}'+
+    '#reel-wm .wm-tx b{font-size:4vw;font-weight:900;letter-spacing:.03em;color:#fff}'+
+    '#reel-wm .wm-tx span{font-size:3.2vw;font-weight:700;color:#6cc0ec}';
+  document.head.appendChild(st);
+  var reel=document.createElement('div'); reel.id='reel';
+  reel.innerHTML='<div id="reel-head"><span class="rh-k">GAMBETEÁ COMO LEO</span><span class="rh-s" id="reel-sc">⚽ 0</span></div>'+
+    '<div id="reel-stage"></div>'+
+    '<div id="reel-wm"><img src="../assets/logo-10.png" onerror="this.style.display=\'none\'"><div class="wm-tx"><b>PAMPA MUNDIALISTA</b><span>'+WM+'</span></div></div>';
+  document.body.appendChild(reel);
+  document.getElementById('reel-stage').appendChild(cv);
+  var $sc=document.getElementById('reel-sc');
+
+  var DT=1/30, FPS=30, N=Math.round(13.5*FPS), moveCD=0;
+  function ai(){
+    if(!G) return;
+    if(G.phase==='run'){
+      if(moveCD>0) moveCD--;
+      var blocks=G.defs.filter(function(d){return d.state==='incoming'&&d.type==='block';});
+      if(blocks.length){
+        var cov={}; blocks.forEach(function(b){cov[b.laneIdx]=1;});
+        var open=[0,1,2].filter(function(l){return !cov[l];})[0]; if(open==null)open=1;
+        if(moveCD<=0){ if(G.laneIdx<open){pressDir('R');moveCD=4;} else if(G.laneIdx>open){pressDir('L');moveCD=4;} }
+      } else {
+        var lead=null; G.defs.forEach(function(d){ if(d.state==='incoming'&&(!lead||d.z>lead.z))lead=d; });
+        if(lead){
+          if(moveCD<=0 && G.laneIdx!==lead.laneIdx){ if(G.laneIdx<lead.laneIdx){pressDir('R');} else {pressDir('L');} moveCD=4; }
+          else if(G.laneIdx===lead.laneIdx && lead.z>0.66 && lead.z<0.9 && G.stun<=0 && !lead.__d){
+            lead.__d=true; if(lead.type==='slide')doSkill('U'); else if(lead.type==='stand')doSkill('D');
+          }
+        }
+      }
+    } else if(G.phase==='aim'){
+      var want=(G.keeperDive>0)?-0.62:0.62;            // apunto al palo contrario al arquero -> mete gol
+      G.aimX += Math.sign(want-G.aimX)*Math.min(0.09,Math.abs(want-G.aimX));
+      G.aimY += Math.sign(0.46-G.aimY)*Math.min(0.06,Math.abs(0.46-G.aimY));
+      if(Math.abs(G.aimX-want)<0.07){ G.__af=(G.__af||0)+1; if(G.__af>6){ chooseShot(['colocado','potente','picada'][(G.__sh=(G.__sh||0)+1)%3]); G.__af=0; } }
+    }
+  }
+  window.__reel={ N:N, fps:FPS, w:1080, h:1920, step:function(i){
+    ai();
+    try{ update(DT); }catch(e){}
+    try{ draw(); }catch(e){}
+    if($sc) $sc.textContent='⚽ '+(G?G.goles:0);
+  }};
+  window.__reel.step(0);
+})();
 </script>
 <div class="grain"></div>
 <script src="../pampa-ambiente.js"></script>

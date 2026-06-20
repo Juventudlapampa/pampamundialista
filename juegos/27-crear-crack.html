@@ -667,6 +667,138 @@ $('f-mote').value=av.mote||''; $('f-frase').value=av.frase||''; $('f-number').va
 $('cap-state').textContent=av.captain?'ON':'OFF'; $('tg-captain').classList.toggle('on',av.captain);
 $('meme-state').textContent=av.memeMode?'ON':'OFF'; $('tg-meme').classList.toggle('on',av.memeMode); $('sect-meme').style.display=av.memeMode?'block':'none';
 renderPreview(); refreshChips();
+
+/* ===================== MODO REEL (?demo=1) — demo determinista para grabar videos ===================== */
+(function(){
+  var _d=(location.search.match(/[?&]demo=?([^&]*)/)||[])[1];
+  if(_d==null || (_d!=='' && _d!=='1')) return;   // este corre solo para el reel del avatar
+  var WM='juventudes.lapampa.gob.ar';
+  document.documentElement.style.background='#0b1424';
+  var st=document.createElement('style'); st.textContent=
+    '#reel{position:fixed;inset:0;z-index:2147483646;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;'+
+    'background:radial-gradient(circle at 50% 30%,#1f3a63 0%,#16243F 46%,#0b1424 100%);font-family:inherit;color:#eef4fa}'+
+    '#reel-head{margin-top:9vh;text-align:center;display:flex;flex-direction:column;align-items:center;gap:1.2vh}'+
+    '.rh-k{font-weight:900;letter-spacing:.04em;font-size:7.2vw;color:#fff;text-shadow:0 0.4vh 1.2vh rgba(0,0,0,.5);background:linear-gradient(135deg,#2f9fd4,#6cc0ec);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}'+
+    '.rh-s{font-weight:800;font-size:4.6vw;letter-spacing:.18em;color:#6cc0ec;text-transform:uppercase}'+
+    '#reel-stage{flex:1;display:flex;align-items:center;justify-content:center;position:relative;width:100%}'+
+    '#reel-glow{position:absolute;width:74vw;height:74vw;border-radius:50%;background:radial-gradient(circle,rgba(108,192,236,.34),transparent 62%);filter:blur(2px)}'+
+    '#reel-av{position:relative;width:62vw;transform-origin:50% 60%;will-change:transform}'+
+    '#reel-av svg{width:100%;height:auto;display:block;filter:drop-shadow(0 1.4vh 2.2vh rgba(0,0,0,.45))}'+
+    '#reel-name{font-weight:900;font-size:6.4vw;margin:0 0 1vh;text-align:center;color:#fff;text-shadow:0 0.3vh 1vh rgba(0,0,0,.55)}'+
+    '#reel-name b{color:#6cc0ec}'+
+    '#reel-wm{margin-bottom:5.2vh;display:flex;align-items:center;gap:2.4vw;opacity:.96}'+
+    '#reel-wm img{height:7vh;width:auto;filter:drop-shadow(0 0.3vh 0.8vh rgba(0,0,0,.5))}'+
+    '#reel-wm .wm-tx{display:flex;flex-direction:column;line-height:1.05}'+
+    '#reel-wm .wm-tx b{font-size:4vw;font-weight:900;letter-spacing:.03em;color:#fff}'+
+    '#reel-wm .wm-tx span{font-size:3.2vw;font-weight:700;color:#6cc0ec}';
+  document.head.appendChild(st);
+  var reel=document.createElement('div'); reel.id='reel';
+  reel.innerHTML=
+    '<div id="reel-head"><span class="rh-k">CREÁ TU CRACK</span><span class="rh-s" id="reel-sub">—</span></div>'+
+    '<div id="reel-stage"><div id="reel-glow"></div><div id="reel-av"></div></div>'+
+    '<div id="reel-name"></div>'+
+    '<div id="reel-wm"><img src="../assets/logo-10.png" onerror="this.style.display=\'none\'"><div class="wm-tx"><b>PAMPA MUNDIALISTA</b><span>'+WM+'</span></div></div>';
+  document.body.appendChild(reel);
+
+  var BASE={genero:'m',skin:1,hair:2,hairColor:0,beard:0,kit:0,acc:[],meme:[],memeMode:false,pose:0,bg:1,captain:false,tattoo:0,number:10,mote:'',frase:''};
+  var LOOKS=[
+    {av:{kit:0, genero:'m',hair:4,hairColor:0,skin:1,beard:0,pose:1,captain:true,acc:[],number:10}, mote:'El Crack'},
+    {av:{kit:1, genero:'m',hair:3,hairColor:0,skin:4,beard:2,pose:5,acc:['aviador'],number:9},      mote:'O Mágico'},
+    {av:{kit:2, genero:'m',hair:2,hairColor:1,skin:3,beard:0,pose:3,acc:['cadenita'],number:7},      mote:'Le Zurdo'},
+    {av:{kit:8, genero:'m',hair:9,hairColor:0,skin:0,beard:3,pose:6,acc:[],number:21},               mote:'El Pampa'},
+    {av:{kit:3, genero:'f',hair:14,hairColor:3,skin:1,beard:0,pose:1,acc:['arito'],captain:true,number:6}, mote:'La Reina'},
+    {av:{kit:5, genero:'m',hair:8,hairColor:0,skin:2,beard:1,pose:4,acc:['vincha'],number:7},         mote:'El Tigre'},
+    {av:{kit:11,genero:'f',hair:16,hairColor:0,skin:3,beard:0,pose:2,acc:['flor'],number:10},         mote:'La Magia'},
+    {av:{kit:12,genero:'m',hair:0,hairColor:0,skin:4,beard:4,pose:1,acc:['bandana'],number:11},       mote:'El Halcón'},
+    {av:{kit:9, genero:'m',hair:1,hairColor:0,skin:3,beard:2,pose:3,acc:['gorra_atras'],number:14},   mote:'El Azteca'},
+    {av:{kit:15,genero:'f',hair:6,hairColor:0,skin:5,beard:0,pose:6,acc:['cadenita','arito'],number:10}, mote:'La Bestia'},
+    {av:{kit:13,genero:'f',hair:19,hairColor:0,skin:1,beard:0,pose:7,acc:['redondas'],number:8},      mote:'La Joya'},
+    {av:{kit:6, genero:'m',hair:7,hairColor:2,skin:1,beard:1,pose:4,acc:['beanie'],number:9},         mote:'La Muralla'},
+    {av:{kit:18,genero:'m',hair:2,hairColor:0,skin:0,beard:0,pose:1,captain:true,number:13},          mote:'El Capitán'},
+    {av:{kit:10,genero:'m',hair:5,hairColor:3,skin:2,beard:0,pose:5,acc:['y2k'],number:10},           mote:'El Mago'}
+  ];
+  var FPS=30, PER=24, N=LOOKS.length*PER;
+  function ease(t){ t=Math.max(0,Math.min(1,t)); return 1-Math.pow(1-t,3); }
+  var $av=document.getElementById('reel-av'), $sub=document.getElementById('reel-sub'), $nm=document.getElementById('reel-name');
+  window.__reel={ N:N, fps:FPS, w:1080, h:1920, step:function(i){
+    i=Math.max(0,Math.min(N-1,i));
+    var li=Math.floor(i/PER)%LOOKS.length, ph=(i%PER)/PER, L=LOOKS[li];
+    for(var k in BASE) av[k]=Array.isArray(BASE[k])?BASE[k].slice():BASE[k];
+    for(var k2 in L.av) av[k2]=Array.isArray(L.av[k2])?L.av[k2].slice():L.av[k2];
+    $av.innerHTML=buildAvatarSVG(av);
+    var sc = ph<0.34 ? (0.9+0.1*ease(ph/0.34)) : 1.0;
+    $av.style.transform='scale('+sc+')';
+    $sub.textContent=KITS[av.kit].n;
+    $nm.innerHTML=(L.mote||'')+' &middot; <b>#'+av.number+'</b>';
+  }};
+  window.__reel.step(0);
+})();
+
+/* ===================== MODO REEL PENALES (?demo=penales) ===================== */
+(function(){
+  if(!/[?&]demo=penales/i.test(location.search)) return;
+  var WM='juventudes.lapampa.gob.ar';
+  av.kit=0; av.genero='m'; av.hair=4; av.hairColor=0; av.skin=1; av.beard=0; av.pose=0; av.acc=[]; av.captain=true; av.number=10;
+  document.documentElement.style.background='#0b1424';
+  startPenales();
+  var st=document.createElement('style'); st.textContent=
+    '#reel{position:fixed;inset:0;z-index:2147483646;overflow:hidden;display:flex;flex-direction:column;align-items:center;'+
+    'background:radial-gradient(circle at 50% 28%,#1f3a63 0%,#16243F 50%,#0b1424 100%);color:#eef4fa;font-family:inherit}'+
+    '#reel-head{margin-top:7vh;display:flex;flex-direction:column;align-items:center;gap:1vh}'+
+    '.rh-k{font-weight:900;font-size:6.6vw;background:linear-gradient(135deg,#2f9fd4,#6cc0ec);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0.4vh 1vh rgba(0,0,0,.4)}'+
+    '.rh-s{font-weight:900;font-size:5.4vw;color:#fff;background:rgba(108,192,236,.18);border:1px solid rgba(108,192,236,.4);padding:0.4vh 3vw;border-radius:99px}'+
+    '#reel-stage{flex:1;display:flex;align-items:center;justify-content:center;width:100%}'+
+    '#reel-stage canvas{width:88vw;height:auto;border-radius:2.4vw;border:0.45vh solid rgba(108,192,236,.55);box-shadow:0 1.6vh 3.4vh rgba(0,0,0,.55)}'+
+    '#reel-wm{margin-bottom:4.6vh;display:flex;align-items:center;gap:2.4vw;opacity:.96}'+
+    '#reel-wm img{height:6.6vh;width:auto;filter:drop-shadow(0 0.3vh 0.8vh rgba(0,0,0,.5))}'+
+    '#reel-wm .wm-tx{display:flex;flex-direction:column;line-height:1.05}'+
+    '#reel-wm .wm-tx b{font-size:4vw;font-weight:900;letter-spacing:.03em;color:#fff}'+
+    '#reel-wm .wm-tx span{font-size:3.2vw;font-weight:700;color:#6cc0ec}';
+  document.head.appendChild(st);
+  var reel=document.createElement('div'); reel.id='reel';
+  reel.innerHTML='<div id="reel-head"><span class="rh-k">PENALES CON TU CRACK</span><span class="rh-s" id="reel-sc">⚽ 0</span></div>'+
+    '<div id="reel-stage"></div>'+
+    '<div id="reel-wm"><img src="../assets/logo-10.png" onerror="this.style.display=\'none\'"><div class="wm-tx"><b>PAMPA MUNDIALISTA</b><span>'+WM+'</span></div></div>';
+  document.body.appendChild(reel);
+  document.getElementById('reel-stage').appendChild(cv);
+  var $sc=document.getElementById('reel-sc');
+  var corners=[PGX1+34,(PGX1+PGX2)/2,PGX2-34];
+  var FPS=30, N=Math.round(13*FPS);
+  var ph='wait', tmr=0, shotIdx=0, goals=0, inited=false;
+  function setupShot(){ pg.ball={x:CW/2,y:CH-58,r:13}; pg.keeper={x:CW/2,diveTo:CW/2}; pg.aim=null; pg.flash=''; pg.flashT=0; ph='aim'; tmr=0; }
+  window.__reel={ N:N, fps:FPS, w:1080, h:1920, step:function(i){
+    if(penRaf){ cancelAnimationFrame(penRaf); penRaf=null; }
+    if(!pg || !avatarImg) return;
+    if(!inited){ inited=true; setupShot(); }
+    if(ph==='aim'){
+      tmr++;
+      var ci=(shotIdx%3===0)?0:(shotIdx%3===1)?2:1, corner=corners[ci];
+      var k=Math.min(1,tmr/11);
+      pg.aim={sx:CW/2,sy:CH-58,cx:CW/2+(corner-CW/2)*k,cy:(CH-58)+((PGY+8)-(CH-58))*k};
+      if(tmr>=14){
+        pg.from={x:CW/2,y:CH-58}; pg.target={x:corner,y:PGY+8}; pg.t=0; pg.aim=null;
+        var save=(shotIdx===3);
+        pg.keeper.diveTo = save ? corner : corners[(ci+1)%3];
+        ph='fly'; tmr=0;
+      }
+    } else if(ph==='fly'){
+      pg.t+=0.05; var t=Math.min(1,pg.t);
+      pg.ball.x=pg.from.x+(pg.target.x-pg.from.x)*t;
+      pg.ball.y=pg.from.y+(pg.target.y-pg.from.y)*t;
+      pg.keeper.x += (pg.keeper.diveTo-pg.keeper.x)*0.14;
+      if(t>=1){
+        var tx=pg.target.x, res=(Math.abs(pg.keeper.x-tx)<27)?'atajado':'gol';
+        if(res==='gol'){ goals++; pg.flash='¡GOOOOL! ⚽'; } else { pg.flash='¡La atajó! 🧤'; }
+        pg.flashT=40; ph='show'; tmr=0; shotIdx++;
+        if($sc) $sc.textContent='⚽ '+goals;
+      }
+    } else if(ph==='show'){
+      tmr++; if(pg.flashT>0)pg.flashT--;
+      if(tmr>=28){ if(shotIdx>=6){ shotIdx=0; goals=0; if($sc)$sc.textContent='⚽ 0'; } setupShot(); }
+    }
+    try{ drawPen(); }catch(e){}
+  }};
+})();
 </script>
 <div class="grain"></div>
 <script src="../pampa-ambiente.js"></script>
