@@ -596,6 +596,24 @@
   };
   const combos = [[0,1],[2,3],[0,2],[1,3],[0,3],[1,2]];
 
+  // Resultados REALES de la fase de grupos del Mundial 2026 (precargados).
+  // Cada grupo: 6 partidos {h,a} en el orden de combos: t0vt1, t2vt3, t0vt2, t1vt3, t0vt3, t1vt2.
+  const DEFAULT_GRUPOS = {
+    A: [{h:2,a:0},{h:2,a:1},{h:1,a:0},{h:1,a:1},{h:3,a:0},{h:1,a:0}],
+    B: [{h:1,a:1},{h:1,a:1},{h:6,a:0},{h:1,a:4},{h:2,a:3},{h:3,a:1}],
+    C: [{h:1,a:1},{h:0,a:1},{h:3,a:0},{h:1,a:0},{h:3,a:0},{h:4,a:2}],
+    D: [{h:4,a:1},{h:2,a:0},{h:2,a:0},{h:1,a:0},{h:2,a:3},{h:0,a:0}],
+    E: [{h:7,a:1},{h:1,a:0},{h:2,a:1},{h:0,a:0},{h:1,a:2},{h:0,a:2}],
+    F: [{h:2,a:2},{h:5,a:1},{h:5,a:1},{h:4,a:0},{h:3,a:1},{h:1,a:1}],
+    G: [{h:1,a:1},{h:2,a:2},{h:0,a:0},{h:3,a:1},{h:4,a:1},{h:1,a:1}],
+    H: [{h:0,a:0},{h:1,a:1},{h:4,a:0},{h:2,a:2},{h:1,a:0},{h:0,a:0}],
+    I: [{h:3,a:1},{h:1,a:4},{h:3,a:0},{h:2,a:3},{h:4,a:1},{h:5,a:0}],
+    J: [{h:3,a:0},{h:3,a:1},{h:2,a:0},{h:2,a:1},{h:3,a:1},{h:3,a:3}],
+    K: [{h:1,a:1},{h:1,a:3},{h:5,a:0},{h:0,a:1},{h:0,a:0},{h:3,a:1}],
+    L: [{h:4,a:2},{h:1,a:0},{h:0,a:0},{h:1,a:0},{h:2,a:0},{h:2,a:1}]
+  };
+  const cloneResults = o => JSON.parse(JSON.stringify(o));
+
   // Banderas dibujadas con CSS (no emoji): se ven igual en todos lados
   const FLAGCOLORS = {
     'México':['#006847','#FFFFFF','#CE1126','v'],'Egipto':['#CE1126','#FFFFFF','#000000','h'],'Nueva Zelanda':['#012169','#FFFFFF','#C8102E','h'],
@@ -630,8 +648,15 @@
   };
 
   function load() {
+    const raw = localStorage.getItem('mundial-fixture-2026-v2');
+    if (raw === null) {
+      // Primera visita: precargamos los resultados reales de la fase de grupos.
+      store = { grupos: cloneResults(DEFAULT_GRUPOS), elim: {} };
+      save();
+      return;
+    }
     try {
-      const s = JSON.parse(localStorage.getItem('mundial-fixture-2026-v2') || '{}');
+      const s = JSON.parse(raw || '{}');
       store = { grupos: s.grupos || {}, elim: s.elim || {} };
     } catch(e) { store = { grupos: {}, elim: {} }; }
   }
@@ -766,21 +791,46 @@
     return [...primeros, ...segundos, ...mejoresTerceros];
   }
 
-  // Genera los emparejamientos de 16avos.
-  // Esquema simple para evitar que dos del mismo grupo se crucen en 16avos:
-  // emparejamos seed[i] con seed[31-i], y si chocan del mismo grupo, swap con el siguiente.
+  // Cuadro REAL de 16avos del Mundial 2026 (orden oficial del bracket, de arriba abajo).
+  // Cada cruce se define por posición de grupo: {g:'A',p:1}=1° del grupo A, p:2=2°, p:3=mejor tercero.
+  const BRACKET_16 = [
+    [{g:'B',p:2},{g:'A',p:2}], [{g:'C',p:1},{g:'F',p:2}], [{g:'E',p:1},{g:'D',p:3}], [{g:'F',p:1},{g:'C',p:2}],
+    [{g:'E',p:2},{g:'I',p:2}], [{g:'I',p:1},{g:'F',p:3}], [{g:'A',p:1},{g:'E',p:3}], [{g:'L',p:1},{g:'K',p:3}],
+    [{g:'G',p:1},{g:'I',p:3}], [{g:'D',p:1},{g:'B',p:3}], [{g:'H',p:1},{g:'J',p:2}], [{g:'K',p:2},{g:'L',p:2}],
+    [{g:'B',p:1},{g:'J',p:3}], [{g:'G',p:2},{g:'D',p:2}], [{g:'J',p:1},{g:'H',p:2}], [{g:'K',p:1},{g:'L',p:3}]
+  ];
+
+  // Empareja los 16avos con el cuadro oficial. Si el usuario edita resultados y
+  // cambia qué terceros clasifican (y queda un casillero vacío), cae al armado
+  // automático para no romper la llave.
   function build16avos() {
+    const { primeros, segundos, mejoresTerceros } = getClasificados();
+    if (primeros.length < 12 || segundos.length < 12 || mejoresTerceros.length < 8) return null;
+    const p1 = {}, p2 = {}, p3 = {};
+    primeros.forEach(t => p1[t.grupo] = t);
+    segundos.forEach(t => p2[t.grupo] = t);
+    mejoresTerceros.forEach(t => p3[t.grupo] = t);
+    const pick = s => s.p === 1 ? p1[s.g] : s.p === 2 ? p2[s.g] : p3[s.g];
+    const pairs = [];
+    for (const [sa, sb] of BRACKET_16) {
+      const ta = pick(sa), tb = pick(sb);
+      if (!ta || !tb) return build16avosAuto();   // escenario editado por el usuario
+      pairs.push([ta, tb]);
+    }
+    return pairs;
+  }
+
+  // Armado automático (fallback): seed[i] vs seed[31-i] evitando cruces del mismo grupo.
+  function build16avosAuto() {
     const seeds = buildSeeds();
     if (!seeds) return null;
     const pairs = [];
     for (let i = 0; i < 16; i++) {
       pairs.push([seeds[i], seeds[31 - i]]);
     }
-    // Anti-colisión mismo grupo
     for (let i = 0; i < pairs.length; i++) {
       const [h, a] = pairs[i];
       if (h.grupo === a.grupo) {
-        // Buscar otro partido para swap
         for (let j = i + 1; j < pairs.length; j++) {
           const [h2, a2] = pairs[j];
           if (h.grupo !== a2.grupo && h2.grupo !== a.grupo) {
