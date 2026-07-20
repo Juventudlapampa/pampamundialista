@@ -469,7 +469,7 @@
   <section class="block" id="camino-seleccion" style="text-align:center;scroll-margin-top:0.5rem">
     <div class="block-title" style="text-align:center">EL CAMINO DE LA SELECCIÓN</div>
     <p style="text-align:center">El camino de Argentina en el Mundial (horario de Argentina). En <b>cada fecha</b> sorteamos premios entre los pasaportes completos y subidos.</p>
-    <div style="margin:0.4rem auto 0.3rem;max-width:540px;background:rgba(108,192,236,0.12);border:1px solid rgba(108,192,236,0.42);border-radius:14px;padding:0.7rem 1rem;font-weight:600;line-height:1.45">🏆 <b>¡ESTAMOS EN LA FINAL!</b> Argentina le ganó <b style="color:#6cc0ec">2 - 1</b> a Inglaterra en semis (Lautaro en el alargue). ✅ Ya venimos haciendo los <b>sorteos de cada fecha</b>. ¡La <b>FINAL es vs España, el domingo 19/7 · 16:00</b>! 🇦🇷🏆</div>
+    <div style="margin:0.4rem auto 0.3rem;max-width:540px;background:rgba(108,192,236,0.12);border:1px solid rgba(108,192,236,0.42);border-radius:14px;padding:0.7rem 1rem;font-weight:600;line-height:1.45">🥈 <b>SUBCAMPEONES DEL MUNDO.</b> Se nos escapó en la última: <b style="color:#6cc0ec">España 1 - 0</b> en el alargue (gol de Ferran Torres). Argentina hizo un Mundialazo, <b>invicta hasta la final</b>. <b>¡GRACIAS, SELECCIÓN!</b> 🇦🇷❤️ Seguimos jugando acá y con todo lo que viene de la Subse.</div>
     <div class="gh-fechas" id="gh-fechas"></div>
     <div class="gh-mas" style="margin:0.9rem auto 0">Y cuanto <b>más avanza la Selección</b>, más fechas y más sorteos: 16avos, octavos, cuartos, semi y la final. ¡Si Argentina llega lejos, hay más chances para todos!</div>
   </section>
@@ -484,14 +484,19 @@
       { n:'Octavos de final', rival:'Egipto', cuando:'7/7 · 13:00', iso:'2026-07-07T13:00:00-03:00', resultado:'ARG 3 - 2 EGIPTO', sorteoHecho:'7/7' },
       { n:'Cuartos de final', rival:'Suiza', cuando:'11/7 · 22:00', iso:'2026-07-11T22:00:00-03:00', resultado:'ARG 3 - 1 SUIZA', sorteoHecho:'11/7' },
       { n:'Semifinal', rival:'Inglaterra', cuando:'15/7 · 16:00', iso:'2026-07-15T16:00:00-03:00', resultado:'ARG 2 - 1 INGLATERRA', sorteoHecho:'15/7' },
-      { n:'🏆 LA FINAL', rival:'España', cuando:'DOM 19/7 · 16:00', iso:'2026-07-19T16:00:00-03:00' }
+      { n:'🥈 LA FINAL', rival:'España', cuando:'19/7 · 16:00', iso:'2026-07-19T16:00:00-03:00', resultado:'ARG 0 - 1 ESPAÑA', perdio:true, sorteoHecho:'19/7' }
     ];
     window.__FECHAS_ARG = FECHAS_SELECCION;
     var el = document.getElementById('gh-fechas');
     if (el) el.innerHTML = FECHAS_SELECCION.map(function(f){
-      var medio = f.resultado
-        ? '<div class="ghf-vs" style="color:#6cc0ec">'+f.resultado+'</div><div class="ghf-when" style="color:#6cc0ec;font-weight:700">✅ ¡Ganamos!</div>'
-        : '<div class="ghf-vs">ARG vs '+f.rival.toUpperCase()+'</div><div class="ghf-when">'+f.cuando+'</div>';
+      var medio;
+      if (f.resultado) {
+        var col = f.perdio ? '#9db4cc' : '#6cc0ec';
+        var linea = f.perdio ? '🥈 Subcampeones' : '✅ ¡Ganamos!';
+        medio = '<div class="ghf-vs" style="color:'+col+'">'+f.resultado+'</div><div class="ghf-when" style="color:'+col+';font-weight:700">'+linea+'</div>';
+      } else {
+        medio = '<div class="ghf-vs">ARG vs '+f.rival.toUpperCase()+'</div><div class="ghf-when">'+f.cuando+'</div>';
+      }
       var abajo = f.sorteoHecho
         ? '<div class="ghf-prize">✅ Sorteo ya realizado · '+f.sorteoHecho+'</div>'
         : '<div class="ghf-prize">🎁 Sorteo de la fecha</div>';
@@ -792,9 +797,9 @@
     const FA=window.__FECHAS_ARG||[];
     if(cp && FA.length){
       const cpLbl=document.getElementById('cuenta-prox-lbl');
-      function nextMatch(){ const now=new Date(); for(let i=0;i<FA.length;i++){ if(!FA[i].iso) continue; const d=new Date(FA[i].iso); if(d-now>0) return {f:FA[i], d:d}; } for(let i=0;i<FA.length;i++){ if(FA[i].prox) return {f:FA[i], d:null}; } return null; }
+      function nextMatch(){ const now=new Date(); for(let i=0;i<FA.length;i++){ if(FA[i].resultado||!FA[i].iso) continue; const d=new Date(FA[i].iso); if(d-now>0) return {f:FA[i], d:d}; } for(let i=0;i<FA.length;i++){ if(FA[i].prox&&!FA[i].resultado) return {f:FA[i], d:null}; } return null; }
       function tickP(){ const nm=nextMatch();
-        if(!nm){ if(cpLbl) cpLbl.textContent='⚽ ¡Vamos, Argentina!'; cp.textContent='🇦🇷'; return; }
+        if(!nm){ if(cpLbl) cpLbl.textContent='🥈 ¡Gracias, Selección!'; cp.textContent='🇦🇷❤️'; return; }
         if(cpLbl) cpLbl.textContent='⚽ ARG vs '+nm.f.rival;
         if(!nm.d){ cp.textContent=nm.f.cuando||'¡Se viene!'; return; }
         const ms=nm.d-new Date(); cp.textContent = ms<=0 ? '¡EN JUEGO!' : fmt(ms);
